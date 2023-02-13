@@ -1,29 +1,19 @@
 package com.example.musicmap;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.gson.Gson;
-import com.spotify.android.appremote.api.ConnectionParams;
-import com.spotify.android.appremote.api.Connector;
-import com.spotify.android.appremote.api.SpotifyAppRemote;
-
-import com.spotify.android.appremote.api.error.CouldNotFindSpotifyApp;
-import com.spotify.android.appremote.api.error.NotLoggedInException;
-import com.spotify.android.appremote.api.error.UserNotAuthorizedException;
-import com.spotify.protocol.client.Subscription;
-import com.spotify.protocol.types.PlayerState;
-import com.spotify.protocol.types.Track;
-import com.spotify.sdk.android.auth.AuthorizationClient;
-import com.spotify.sdk.android.auth.AuthorizationRequest;
-import com.spotify.sdk.android.auth.AuthorizationResponse;
-import com.squareup.picasso.Picasso;
-
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import com.spotify.android.appremote.api.ConnectionParams;
+import com.spotify.android.appremote.api.Connector;
+import com.spotify.android.appremote.api.SpotifyAppRemote;
+import com.spotify.sdk.android.auth.AuthorizationClient;
+import com.spotify.sdk.android.auth.AuthorizationRequest;
+import com.spotify.sdk.android.auth.AuthorizationResponse;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,22 +26,6 @@ public class MainActivity extends AppCompatActivity {
     EditText text1;
     EditText text2;
     ImageView image;
-
-    private void saveUserToSharedPreferences(UserInternal user) {
-        SharedPreferences sharedPreferences = getSharedPreferences("user_preferences", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(user);
-        editor.putString("user", json);
-        editor.apply();
-    }
-
-    private UserInternal retrieveUserFromSharedPreferences() {
-        SharedPreferences sharedPreferences = getSharedPreferences("user_preferences", MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString("user", null);
-        return gson.fromJson(json, UserInternal.class);
-    }
 
     private void signInWithSpotify() {
         AuthorizationRequest.Builder builder =
@@ -121,17 +95,5 @@ public class MainActivity extends AppCompatActivity {
                 image.setImageBitmap(bitmap);
             });
         });
-    }
-}
-
-class UserInternal {
-    String accessToken;
-    String name;
-    String id;
-
-    public UserInternal(String accessToken, String name, String id) {
-        this.accessToken = accessToken;
-        this.name = name;
-        this.id = id;
     }
 }
