@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".SignInActivity"
+    android:layout_centerInParent="true"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+    <Button
+        android:id="@+id/button"
+        android:layout_width="270dp"
+        android:layout_height="90dp"
+        android:background="#191414"
+        android:text="Sign in with spotify"
+        android:textColor="#1DB954"
+        tools:layout_editor_absoluteY="419dp" />
+</RelativeLayout>
