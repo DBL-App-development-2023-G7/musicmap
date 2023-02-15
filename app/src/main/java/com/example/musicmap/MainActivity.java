@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
     private void connected() {
         mSpotifyAppRemote.getPlayerApi().subscribeToPlayerState().setEventCallback(playerState -> {
             text1.setText(playerState.track.name);
+            Log.d("BACKGROUND_CHECK", playerState.track.name);
             text2.setText(playerState.isPaused ? "paused" : "playing");
             mSpotifyAppRemote.getImagesApi().getImage(playerState.track.imageUri).setResultCallback(bitmap -> {
                 image.setImageBitmap(bitmap);
