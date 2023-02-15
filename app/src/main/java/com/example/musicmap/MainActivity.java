@@ -3,6 +3,7 @@ package com.example.musicmap;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,11 +26,18 @@ public class MainActivity extends AppCompatActivity {
     private Button registerButton;
     private Button loginButton;
 
+    private FirebaseUser user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+
+        if(user != null) {
+            loadHome();
+        }
 
         emailInput = (EditText) findViewById(R.id.email_editText);
         passwordInput = (EditText) findViewById(R.id.password_editText);
@@ -43,6 +51,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         loginButton = (Button) findViewById(R.id.login_button);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                login(view);
+            }
+        });
     }
 
     @Override
@@ -70,11 +84,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    Log.d(TAG, "createUserWithEmail:success");
+                    Log.d(TAG, "createUser:success");
                     FirebaseUser user = auth.getCurrentUser();
-                    //updateUI(user);
+                    loadHome();
                 } else {
-                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                    Log.w(TAG, "createUser:failure", task.getException());
                     Toast.makeText(MainActivity.this, "Authentication failed.",
                             Toast.LENGTH_SHORT).show();
                 }
@@ -82,16 +96,29 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    protected void login(String email, String password) {
+    public void login(View view) {
+        String email = emailInput.getText().toString();
+        String password = passwordInput.getText().toString();
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-
+                    Log.d(TAG, "signInUser:success");
+                    FirebaseUser user = auth.getCurrentUser();
+                    loadHome();
                 } else {
-
+                    Toast.makeText(MainActivity.this, "Authentication failed.",
+                            Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "");
                 }
             }
         });
+    }
+
+    private void loadHome() {
+        Intent homeIntent = new Intent(this, HomeActivity.class);
+        homeIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(homeIntent);
+        finish();
     }
 }
