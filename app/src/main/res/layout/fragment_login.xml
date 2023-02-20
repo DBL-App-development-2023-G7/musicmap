@@ -17,34 +17,40 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <EditText
-            android:id="@+id/password_editText"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:autofillHints="password"
-            android:ems="10"
-            android:hint="Password"
-            android:inputType="textPassword" />
-
-        <EditText
             android:id="@+id/email_editText"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:autofillHints="emailAddress"
             android:ems="10"
-            android:hint="Email"
+            android:hint="@string/email"
             android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/password_editText"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:autofillHints="password"
+            android:ems="10"
+            android:hint="@string/password"
+            android:inputType="textPassword" />
 
         <Button
             android:id="@+id/login_button"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:text="Login" />
+            android:text="@string/login" />
 
         <Button
             android:id="@+id/register_button"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:text="Register" />
+            android:text="@string/register" />
+
+        <Button
+            android:id="@+id/registerArtist_button"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="@string/register_artist" />
 
     </LinearLayout>
 </FrameLayout>
