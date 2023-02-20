@@ -17,7 +17,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity {
+public class AuthActivity extends AppCompatActivity {
 
     private static final String TAG = "Firebase";
     private FirebaseAuth auth;
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_auth);
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (email.equals("") || password.equals("")) {
             Log.w(TAG, "createUserWithEmail:failure");
-            Toast.makeText(MainActivity.this, "Please enter a valid email and a password",
+            Toast.makeText(AuthActivity.this, "Please enter a valid email and a password",
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                     loadHome();
                 } else {
                     Log.w(TAG, "createUser:failure", task.getException());
-                    Toast.makeText(MainActivity.this, "Authentication failed.",
+                    Toast.makeText(AuthActivity.this, "Authentication failed.",
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                     FirebaseUser user = auth.getCurrentUser();
                     loadHome();
                 } else {
-                    Toast.makeText(MainActivity.this, "Authentication failed.",
+                    Toast.makeText(AuthActivity.this, "Authentication failed.",
                             Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "");
                 }
