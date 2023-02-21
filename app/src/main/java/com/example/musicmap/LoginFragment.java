@@ -26,8 +26,10 @@ public class LoginFragment extends Fragment {
 
     private EditText emailInput;
     private EditText passwordInput;
-    private Button registerButton;
     private Button loginButton;
+    private Button registerButton;
+    private Button registerArtistButton;
+
 
     public LoginFragment() {
         // Required empty public constructor
@@ -45,6 +47,14 @@ public class LoginFragment extends Fragment {
         emailInput = (EditText) getView().findViewById(R.id.email_editText);
         passwordInput = (EditText) getView().findViewById(R.id.password_editText);
 
+        loginButton = (Button) getView().findViewById(R.id.login_button);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                login();
+            }
+        });
+
         registerButton = (Button) getView().findViewById(R.id.register_button);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,13 +63,14 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        loginButton = (Button) getView().findViewById(R.id.login_button);
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        registerArtistButton = (Button) getView().findViewById(R.id.registerArtist_button);
+        registerArtistButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                login();
+                registerArtist();
             }
         });
+
     }
 
     @Override
@@ -67,11 +78,6 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_login, container, false);
-    }
-
-    private void register() {
-        AuthActivity authActivity = (AuthActivity) getActivity();
-        authActivity.loadRegister();
     }
 
     private void login() {
@@ -107,5 +113,15 @@ public class LoginFragment extends Fragment {
                 }
             });
         }
+    }
+
+    private void register() {
+        AuthActivity authActivity = (AuthActivity) getActivity();
+        authActivity.loadRegister();
+    }
+
+    private void registerArtist() {
+        AuthActivity authActivity = (AuthActivity) getActivity();
+        authActivity.loadRegisterArtist();
     }
 }
