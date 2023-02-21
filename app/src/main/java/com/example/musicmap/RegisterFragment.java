@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.os.Debug;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +15,15 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +38,7 @@ public class RegisterFragment extends Fragment {
     private EditText lastNameInput;
     private EditText emailInput;
     private EditText passwordInput;
-    private EditText confirmPasswordInput;
+    private EditText repeatPasswordInput;
     private Button registerButton;
     private Button backButton;
 
@@ -63,7 +61,7 @@ public class RegisterFragment extends Fragment {
         lastNameInput = (EditText) getView().findViewById(R.id.lastName_editText);
         emailInput = (EditText) getView().findViewById(R.id.emailRegister_editText);
         passwordInput = (EditText) getView().findViewById(R.id.passwordRegister_editText);
-        confirmPasswordInput = (EditText) getView().findViewById(R.id.repeatPasswordRegister_editText);
+        repeatPasswordInput = (EditText) getView().findViewById(R.id.repeatPasswordRegister_editText);
 
         registerButton = (Button) getView().findViewById(R.id.registerRegister_button);
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +93,13 @@ public class RegisterFragment extends Fragment {
 
         if (password.equals("")) {
             passwordInput.setError("");
+            valid = false;
+        }
+
+        String repeatPassword = repeatPasswordInput.getText().toString();
+        if (!repeatPassword.equals(password)) {
+            repeatPasswordInput.setError("");
+            valid = false;
         }
 
         if (email.equals("") || password.equals("")) {
@@ -158,7 +163,6 @@ public class RegisterFragment extends Fragment {
     }
 
     private void setupProfile(FirebaseUser user) {
-        //user.updatePhoneNumber();
         UserProfileChangeRequest request = new UserProfileChangeRequest.Builder().setDisplayName("").setPhotoUri(Uri.parse("")).build();
         user.updateProfile(request).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
