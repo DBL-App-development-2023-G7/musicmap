@@ -1,6 +1,5 @@
 package com.example.musicmap;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,7 +17,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class LoginFragment extends Fragment {
@@ -98,7 +96,8 @@ public class LoginFragment extends Fragment {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "registerUser:success");
                         FirebaseUser user = auth.getCurrentUser();
-                        loadHome();
+                        AuthActivity authActivity = (AuthActivity) getActivity();
+                        authActivity.loadNext();
                     } else {
                         Log.d(TAG, "registerUser:fail", task.getException());
                         Toast.makeText(getActivity(), "Incorrect email/password.",
@@ -107,12 +106,5 @@ public class LoginFragment extends Fragment {
                 }
             });
         }
-    }
-
-    private void loadHome() {
-        Intent homeIntent = new Intent(getActivity(), HomeActivity.class);
-        homeIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        startActivity(homeIntent);
-        getActivity().finish();
     }
 }

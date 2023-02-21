@@ -134,6 +134,7 @@ public class RegisterFragment extends Fragment {
         data.put("username", usernameInput.getText().toString());
         data.put("firstName", firstNameInput.getText().toString());
         data.put("lastName", lastNameInput.getText().toString());
+        data.put("artist", false);
 
         firestore.collection("Users").document(user.getUid()).set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
