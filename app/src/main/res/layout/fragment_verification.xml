@@ -8,6 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <TextView
@@ -26,6 +27,12 @@
             android:text="Since you registered as an artist we first need to make sure that your request is authentic."
             android:textAlignment="viewStart"
             android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/signout_verification_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log in with another account" />
     </LinearLayout>
 
 </FrameLayout>

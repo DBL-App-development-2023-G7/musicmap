@@ -7,8 +7,15 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class VerificationFragment extends Fragment {
+
+    private FirebaseAuth auth;
+
+    private Button signOutVerificationButton;
 
     public VerificationFragment() {
         // Required empty public constructor
@@ -22,6 +29,25 @@ public class VerificationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        auth = FirebaseAuth.getInstance();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        signOutVerificationButton = getView().findViewById(R.id.signout_verification_button);
+        signOutVerificationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signOut();
+            }
+        });
+    }
+
+    private void signOut() {
+        AuthActivity authActivity = (AuthActivity) getActivity();
+        authActivity.loadLogin();
+        auth.signOut();
     }
 
     @Override
