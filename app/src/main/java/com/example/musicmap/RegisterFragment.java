@@ -171,8 +171,8 @@ public class RegisterFragment extends Fragment {
                     Log.d(TAG, "updateProfile:success");
                 } else {
                     Log.d(TAG, "updateProfile:failed", task.getException());
-                    auth.signOut();
                 }
+                auth.signOut();
             }
         });
     }
