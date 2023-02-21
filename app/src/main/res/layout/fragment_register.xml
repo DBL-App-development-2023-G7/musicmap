@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:ems="10"
-            android:hint="First Name"
+            android:hint="@string/first_name"
             android:inputType="textPersonName" />
 
         <EditText
@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:ems="10"
-            android:hint="Last Name"
+            android:hint="@string/last_name"
             android:inputType="textPersonName" />
 
         <EditText
@@ -48,16 +48,8 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:ems="10"
-            android:hint="Password"
+            android:hint="@string/password"
             android:inputType="textPassword" />
-
-        <EditText
-            android:id="@+id/phone_editText"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:ems="10"
-            android:hint="Phone"
-            android:inputType="phone" />
 
         <EditText
             android:id="@+id/repeatPasswordRegister_editText"
@@ -68,11 +60,19 @@
             android:inputType="textPassword" />
 
         <EditText
-            android:id="@+id/editTextDate"
+            android:id="@+id/phone_editText"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:ems="10"
-            android:hint="Birthdate"
+            android:hint="@string/phone"
+            android:inputType="phone" />
+
+        <EditText
+            android:id="@+id/birthdate_editText"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:hint="@string/birthdate"
             android:inputType="date" />
 
         <Button
@@ -85,7 +85,7 @@
             android:id="@+id/back_button"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:text="Back" />
+            android:text="@string/back" />
 
     </LinearLayout>
 
