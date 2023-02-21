@@ -20,6 +20,22 @@
             android:inputType="textPersonName" />
 
         <EditText
+            android:id="@+id/firstName_editText"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:hint="First Name"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/lastName_editText"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:hint="Last Name"
+            android:inputType="textPersonName" />
+
+        <EditText
             android:id="@+id/emailRegister_editText"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
@@ -34,6 +50,14 @@
             android:ems="10"
             android:hint="Password"
             android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/phone_editText"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:hint="Phone"
+            android:inputType="phone" />
 
         <EditText
             android:id="@+id/repeatPasswordRegister_editText"
@@ -51,16 +75,17 @@
             android:hint="Birthdate"
             android:inputType="date" />
 
-        <Switch
-            android:id="@+id/switch1"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="Switch" />
+        <Button
+            android:id="@+id/registerRegister_button"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="@string/register" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/back_button"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="Back" />
 
     </LinearLayout>
 

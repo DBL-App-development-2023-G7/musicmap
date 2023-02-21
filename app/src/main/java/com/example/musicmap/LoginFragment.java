@@ -71,12 +71,12 @@ public class LoginFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
-    public void register() {
+    private void register() {
         AuthActivity authActivity = (AuthActivity) getActivity();
         authActivity.loadRegister();
     }
 
-    public void login() {
+    private void login() {
         boolean valid = true;
 
         String email = emailInput.getText().toString();

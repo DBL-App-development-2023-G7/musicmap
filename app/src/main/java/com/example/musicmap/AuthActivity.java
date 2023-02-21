@@ -47,12 +47,20 @@ public class AuthActivity extends AppCompatActivity {
         super.onStart();
     }
 
+    public void loadLogin() {
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.fragment_container_view, LoginFragment.class, null)
+                .commit();
+    }
+
     public void loadRegister() {
         getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
                 .replace(R.id.fragment_container_view, RegisterFragment.class, null)
                 .commit();
     }
+
     private void loadHome() {
         Intent homeIntent = new Intent(this, HomeActivity.class);
         homeIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
