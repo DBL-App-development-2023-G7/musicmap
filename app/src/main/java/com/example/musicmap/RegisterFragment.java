@@ -61,7 +61,8 @@ public class RegisterFragment extends Fragment {
         lastNameInput = (EditText) getView().findViewById(R.id.lastName_editText);
         emailInput = (EditText) getView().findViewById(R.id.emailRegister_editText);
         passwordInput = (EditText) getView().findViewById(R.id.passwordRegister_editText);
-        repeatPasswordInput = (EditText) getView().findViewById(R.id.repeatPasswordRegister_editText);
+        repeatPasswordInput =
+                (EditText) getView().findViewById(R.id.repeatPasswordRegister_editText);
 
         registerButton = (Button) getView().findViewById(R.id.registerRegister_button);
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +105,8 @@ public class RegisterFragment extends Fragment {
 
         if (email.equals("") || password.equals("")) {
             Log.w(TAG, "createUserWithEmail:failure");
-            Toast.makeText(getActivity(), "Please enter a valid email and a password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Please enter a valid email and a password",
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -122,7 +124,8 @@ public class RegisterFragment extends Fragment {
 
                     } else {
                         Log.w(TAG, "createUser:failure", task.getException());
-                        Toast.makeText(getActivity(), "Authentication failed.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -164,7 +167,8 @@ public class RegisterFragment extends Fragment {
     }
 
     private void setupProfile(FirebaseUser user) {
-        UserProfileChangeRequest request = new UserProfileChangeRequest.Builder().setDisplayName("").setPhotoUri(Uri.parse("")).build();
+        UserProfileChangeRequest request = new UserProfileChangeRequest.Builder().setDisplayName(
+                "").setPhotoUri(Uri.parse("")).build();
         user.updateProfile(request).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -184,7 +188,8 @@ public class RegisterFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_register, container, false);
     }

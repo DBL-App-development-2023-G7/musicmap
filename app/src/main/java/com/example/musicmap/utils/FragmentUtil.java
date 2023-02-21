@@ -12,30 +12,32 @@ import androidx.fragment.app.FragmentManager;
 public class FragmentUtil {
 
     /**
-     * @param fragmentManager
-     * @param containerID
-     * @param fragmentClass
+     * This method initializes the given container with the given fragment class.
+     *
+     * @param fragmentManager the given Fragment Manager
+     * @param containerID     the id of the container
+     * @param fragmentClass   the class of the fragment
      */
-    public static void initFragment(FragmentManager fragmentManager, @IdRes int containerID,
+    public static void initFragment(@NonNull FragmentManager fragmentManager,
+                                    @IdRes int containerID,
                                     @NonNull Class<? extends Fragment> fragmentClass) {
-        fragmentManager
-                .beginTransaction()
-                .setReorderingAllowed(true)
-                .add(containerID, fragmentClass, null)
-                .commit();
+        fragmentManager.beginTransaction().setReorderingAllowed(true).add(containerID,
+                fragmentClass, null).commit();
     }
 
+
     /**
-     * @param fragmentManager
-     * @param containerID
-     * @param fragmentClass
+     * This method replaces the current fragment inside the given container with the given
+     * fragment class.
+     *
+     * @param fragmentManager the given Fragment Manager
+     * @param containerID     the id of the container
+     * @param fragmentClass   the class of the fragment
      */
-    public static void replaceFragment(FragmentManager fragmentManager, @IdRes int containerID,
+    public static void replaceFragment(@NonNull FragmentManager fragmentManager,
+                                       @IdRes int containerID,
                                        @NonNull Class<? extends Fragment> fragmentClass) {
-        fragmentManager
-                .beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(containerID, fragmentClass, null)
-                .commit();
+        fragmentManager.beginTransaction().setReorderingAllowed(true).replace(containerID,
+                fragmentClass, null).commit();
     }
 }
