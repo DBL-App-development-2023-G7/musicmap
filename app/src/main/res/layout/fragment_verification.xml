@@ -3,4 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VerificationFragment"/>
+    tools:context=".VerificationFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Account awaiting verification."
+            android:textAlignment="viewStart"
+            android:textSize="48sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Since you registered as an artist we first need to make sure that your request is authentic."
+            android:textAlignment="viewStart"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+</FrameLayout>
