@@ -1,5 +1,7 @@
 package com.example.musicmap;
 
+import android.app.DatePickerDialog;
+import android.icu.util.Calendar;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -11,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -41,6 +44,7 @@ public class RegisterFragment extends Fragment {
     private EditText emailInput;
     private EditText passwordInput;
     private EditText repeatPasswordInput;
+    private EditText birthdateInput;
     private Button registerButton;
     private Button backButton;
 
@@ -75,6 +79,16 @@ public class RegisterFragment extends Fragment {
         passwordInput = (EditText) getView().findViewById(R.id.passwordRegister_editText);
         repeatPasswordInput =
                 (EditText) getView().findViewById(R.id.repeatPasswordRegister_editText);
+
+        birthdateInput = (EditText) getView().findViewById(R.id.birthdate_editText);
+        birthdateInput.setFocusable(false);
+        birthdateInput.setClickable(true);
+        birthdateInput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectDate();
+            }
+        });
 
         registerButton = (Button) getView().findViewById(R.id.registerRegister_button);
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -111,9 +125,31 @@ public class RegisterFragment extends Fragment {
         });
     }
 
+    private void selectDate() {
+        final Calendar calendar = Calendar.getInstance();
+        final int year = calendar.get(Calendar.YEAR);
+        final int month = calendar.get(Calendar.MONTH);
+        final int day = calendar.get(Calendar.DAY_OF_YEAR);
+        DatePickerDialog dialog = new DatePickerDialog(getActivity(),
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        month++;
+                        String date = day + "/" + month + "/" + year;
+                        birthdateInput.setText(date);
+                    }
+                }, year, month, day);
+
+        dialog.show();
+    }
+
     private void register() {
         boolean valid = true;
+        String username = usernameInput.getText().toString();
+        String firstName = usernameInput.getText().toString();
+        String lastName = usernameInput.getText().toString();
         String email = emailInput.getText().toString();
+
 
         if (email.equals("")) {
             emailInput.setError("");

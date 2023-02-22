@@ -72,7 +72,7 @@
             android:ems="10"
             android:hint="@string/birthdate"
             android:autofillHints="password"
-            android:inputType="date" />
+            android:inputType="none" />
 
         <Button
             android:id="@+id/registerRegister_button"
