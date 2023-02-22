@@ -23,6 +23,8 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,6 +59,16 @@ public class RegisterFragment extends Fragment {
     public void onStart() {
         super.onStart();
         usernameInput = (EditText) getView().findViewById(R.id.username_editText);
+        usernameInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    Log.d(TAG, "Username EditText is not focused");
+                    checkUsername(usernameInput.getText().toString());
+                }
+            }
+        });
+
         firstNameInput = (EditText) getView().findViewById(R.id.firstName_editText);
         lastNameInput = (EditText) getView().findViewById(R.id.lastName_editText);
         emailInput = (EditText) getView().findViewById(R.id.emailRegister_editText);
@@ -77,6 +89,24 @@ public class RegisterFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 back();
+            }
+        });
+    }
+
+    private void checkUsername(String username) {
+        Query query = firestore.collection("Users").whereEqualTo("username", username);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "usernameQuery:success");
+
+                    if (!task.getResult().isEmpty()) {
+                        usernameInput.setError("Username already exists!");
+                    }
+                } else {
+                    Log.d(TAG, "usernameQuery:fail");
+                }
             }
         });
     }
@@ -110,6 +140,7 @@ public class RegisterFragment extends Fragment {
             return;
         }
 
+        //TODO look for another way of writing this
         if (valid) {
             auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                 @Override

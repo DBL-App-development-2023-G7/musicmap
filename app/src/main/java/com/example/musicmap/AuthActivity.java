@@ -36,9 +36,7 @@ public class AuthActivity extends AppCompatActivity {
 
         if (user != null) {
             loadNext();
-        }
-
-        if (savedInstanceState == null) {
+        } else if (savedInstanceState == null) {
             FragmentUtil.initFragment(getSupportFragmentManager(), fragmentContainerID,
                     LoginFragment.class);
         }
@@ -78,6 +76,7 @@ public class AuthActivity extends AppCompatActivity {
 
     //TODO: rename this function & decompose it
     public void loadNext() {
+        user = auth.getCurrentUser();
         firestore.collection("Users").document(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
