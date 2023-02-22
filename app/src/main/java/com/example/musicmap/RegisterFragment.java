@@ -29,6 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -130,6 +131,7 @@ public class RegisterFragment extends Fragment {
         final int year = calendar.get(Calendar.YEAR);
         final int month = calendar.get(Calendar.MONTH);
         final int day = calendar.get(Calendar.DAY_OF_YEAR);
+
         DatePickerDialog dialog = new DatePickerDialog(getActivity(),
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -140,6 +142,9 @@ public class RegisterFragment extends Fragment {
                     }
                 }, year, month, day);
 
+        calendar.add(Calendar.YEAR, -13);
+        Date date = calendar.getTime();
+        dialog.getDatePicker().setMaxDate(date.getTime());
         dialog.show();
     }
 
