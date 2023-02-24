@@ -6,7 +6,7 @@ public class ValidationUtil {
     public enum ValidationResult {
         VALID,
         FORMAT,
-        EMPTY;
+        EMPTY
     }
 
     public static ValidationResult isMandatoryFieldValid(String string) {
@@ -33,6 +33,14 @@ public class ValidationUtil {
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             return ValidationResult.FORMAT;
         }
+        return ValidationResult.VALID;
+    }
+
+    public static ValidationResult isPasswordValid(String password) {
+        if (password.equals("")) {
+            return ValidationResult.EMPTY;
+        }
+        //TODO implement a invalid format for passwords & discuss about it
         return ValidationResult.VALID;
     }
 }
