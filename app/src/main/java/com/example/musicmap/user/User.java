@@ -1,5 +1,11 @@
 package com.example.musicmap.user;
 
+import com.google.firebase.Timestamp;
+
+import java.sql.Time;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -10,13 +16,16 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
-    private UUID uuid;
+    private Date birthdate;
+    private String uuid;
 
-    public User(String username, String firstName, String lastName, String email, UUID uuid) {
+    public User(String username, String firstName, String lastName, String email, Date birthdate,
+                String uuid) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.birthdate = birthdate;
         this.uuid = uuid;
     }
 
@@ -57,11 +66,44 @@ public class User {
     }
 
     /**
-     * This method retrives the uuid of the user.
+     * This method retrieves the birthdate of the user as a {@code Date}.
+     *
+     * @return the birthdate of the user
+     */
+    public Date getBirthdate() {
+        return birthdate;
+    }
+
+    /**
+     * This method retrieves the birthdate of the user as a {@code Firebase.Timestamp}.
+     *
+     * @return the birthdate of the user as a {@code Firebase.Timestamp}
+     */
+    public Timestamp getBirthdateTimestamp() {
+        return new Timestamp(birthdate);
+    }
+
+    /**
+     * This method retrieves the uuid of the user.
      *
      * @return the uuid of the user
      */
-    public UUID getUuid() {
+    public String getUuid() {
         return uuid;
+    }
+
+    /**
+     * This method retrieves all user attributes ready to be placed inside a Firestore Database.
+     *
+     * @return the user attributes as a {@code Map<String, Object>}
+     */
+    public Map<String, Object> getFirestoreAttributes() {
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("username", username);
+        attributes.put("firstName", firstName);
+        attributes.put("lastName", lastName);
+        attributes.put("birthdate", this.getBirthdateTimestamp());
+        attributes.put("artist", false);
+        return attributes;
     }
 }

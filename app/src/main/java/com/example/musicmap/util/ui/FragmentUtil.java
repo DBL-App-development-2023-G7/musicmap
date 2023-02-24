@@ -1,4 +1,4 @@
-package com.example.musicmap.utils;
+package com.example.musicmap.util.ui;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;

@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.musicmap.utils.FragmentUtil;
+import com.example.musicmap.util.ui.FragmentUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,7 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Map;
 
-public class AuthActivity extends AppCompatActivity {
+public class AuthActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
 
     private static final String TAG = "FirebaseAuth";
     private FirebaseAuth auth;
@@ -31,6 +31,7 @@ public class AuthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
         auth = FirebaseAuth.getInstance();
+        auth.addAuthStateListener(this);
         user = auth.getCurrentUser();
         firestore = FirebaseFirestore.getInstance();
 
@@ -40,6 +41,11 @@ public class AuthActivity extends AppCompatActivity {
             FragmentUtil.initFragment(getSupportFragmentManager(), fragmentContainerID,
                     LoginFragment.class);
         }
+    }
+
+    @Override
+    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
     }
 
     @Override
@@ -110,5 +116,11 @@ public class AuthActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        auth.removeAuthStateListener(this);
     }
 }

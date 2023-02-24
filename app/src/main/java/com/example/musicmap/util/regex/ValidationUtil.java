@@ -1,4 +1,4 @@
-package com.example.musicmap.utils;
+package com.example.musicmap.util.regex;
 
 import android.util.Patterns;
 
