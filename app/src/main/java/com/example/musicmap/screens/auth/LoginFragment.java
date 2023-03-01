@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.musicmap.R;
+import com.example.musicmap.util.regex.ValidationUtil;
 
 public class LoginFragment extends AuthFragment {
 
@@ -38,22 +39,47 @@ public class LoginFragment extends AuthFragment {
         return rootView;
     }
 
+    private boolean checkEmail(String email) {
+        switch (ValidationUtil.isEmailValid(email)) {
+            case EMPTY:
+                emailInput.setError("Please enter a email address.");
+                return false;
+            case FORMAT:
+                emailInput.setError("Please enter a valid email address.");
+                return false;
+            case VALID:
+                return true;
+            default:
+                emailInput.setError("Unexpected input.");
+                return false;
+        }
+    }
+
+    private boolean checkPassword(String password) {
+        switch (ValidationUtil.isPasswordValid(password)) {
+            case EMPTY:
+                passwordInput.setError("Please enter a password.");
+                return false;
+            case FORMAT:
+                passwordInput.setError("Please enter a valid password.");
+                return false;
+            case VALID:
+                return true;
+            default:
+                passwordInput.setError("Unexpected input.");
+                return false;
+        }
+    }
+
+    private boolean isInputValid(String email, String password) {
+        return checkEmail(email) & checkPassword(password);
+    }
+
     private void login() {
-        boolean valid = true;
-
         String email = emailInput.getText().toString();
-        if (email.isEmpty()) {
-            emailInput.setError("Enter a valid email");
-            valid = false;
-        }
-
         String password = passwordInput.getText().toString();
-        if (password.isEmpty()) {
-            passwordInput.setError("Enter a valid password");
-            valid = false;
-        }
 
-        if (valid) {
+        if (isInputValid(email, password)) {
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(activity,
                     task -> {
                         if (task.isSuccessful()) {
