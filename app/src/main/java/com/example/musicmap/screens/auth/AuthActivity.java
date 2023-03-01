@@ -1,4 +1,4 @@
-package com.example.musicmap;
+package com.example.musicmap.screens.auth;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,9 +7,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.musicmap.screens.HomeActivity;
+import com.example.musicmap.R;
 import com.example.musicmap.util.ui.FragmentUtil;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -34,19 +34,19 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
         auth.addAuthStateListener(this);
         user = auth.getCurrentUser();
         firestore = FirebaseFirestore.getInstance();
+    }
+
+    @Override
+    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+        auth = firebaseAuth;
+        user = auth.getCurrentUser();
 
         if (user != null) {
             loadNext();
-        } else if (savedInstanceState == null) {
+        } else {
             FragmentUtil.initFragment(getSupportFragmentManager(), fragmentContainerID,
                     LoginFragment.class);
         }
-    }
-
-    //TODO
-    @Override
-    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-
     }
 
     @Override
@@ -84,9 +84,8 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
     //TODO: rename this function & decompose it
     public void loadNext() {
         user = auth.getCurrentUser();
-        firestore.collection("Users").document(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+        firestore.collection("Users").document(user.getUid()).get().addOnCompleteListener(task -> {
+            {
                 if (task.isSuccessful()) {
                     Log.d(TAG, "firestore:success");
                     DocumentSnapshot doc = task.getResult();

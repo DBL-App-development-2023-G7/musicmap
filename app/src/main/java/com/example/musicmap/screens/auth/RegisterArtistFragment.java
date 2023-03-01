@@ -1,4 +1,4 @@
-package com.example.musicmap;
+package com.example.musicmap.screens.auth;
 
 import android.os.Bundle;
 

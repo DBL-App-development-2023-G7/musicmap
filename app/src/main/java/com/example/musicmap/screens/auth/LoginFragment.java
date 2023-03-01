@@ -1,9 +1,8 @@
-package com.example.musicmap;
+package com.example.musicmap.screens.auth;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,22 +12,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.musicmap.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class LoginFragment extends Fragment {
+public class LoginFragment extends AuthFragment {
 
     private static final String TAG = "FirebaseLogin";
-    private FirebaseAuth auth;
 
     private EditText emailInput;
     private EditText passwordInput;
-    private Button loginButton;
-    private Button registerButton;
-    private Button registerArtistButton;
 
 
     public LoginFragment() {
@@ -38,7 +33,6 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        auth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -47,7 +41,7 @@ public class LoginFragment extends Fragment {
         emailInput = getView().findViewById(R.id.email_editText);
         passwordInput = getView().findViewById(R.id.password_editText);
 
-        loginButton = getView().findViewById(R.id.login_button);
+        Button loginButton = getView().findViewById(R.id.login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,7 +49,7 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        registerButton = getView().findViewById(R.id.register_button);
+        Button registerButton = getView().findViewById(R.id.register_button);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,7 +57,7 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        registerArtistButton = getView().findViewById(R.id.registerArtist_button);
+        Button registerArtistButton = getView().findViewById(R.id.registerArtist_button);
         registerArtistButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
