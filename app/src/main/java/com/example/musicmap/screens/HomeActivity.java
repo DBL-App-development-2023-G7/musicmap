@@ -65,4 +65,5 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
         super.onStop();
         auth.removeAuthStateListener(this);
     }
+
 }
