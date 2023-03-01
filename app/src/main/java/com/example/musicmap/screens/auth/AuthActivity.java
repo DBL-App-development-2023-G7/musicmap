@@ -18,19 +18,21 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Map;
 
 public class AuthActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
+
+    private static final int FRAGMENT_CONTAINER_ID = R.id.fragment_container_view;
+
     private static final String TAG = "FirebaseAuth";
 
     private FirebaseAuth auth;
     private FirebaseUser user;
     private FirebaseFirestore firestore;
 
-    private static final int fragmentContainerID = R.id.fragment_container_view;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_auth);
+
         auth = FirebaseAuth.getInstance();
         auth.addAuthStateListener(this);
         user = auth.getCurrentUser();
@@ -45,28 +47,28 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
         if (user != null) {
             loadActivityBasedOnVerificationStatus();
         } else {
-            FragmentUtil.initFragment(getSupportFragmentManager(), fragmentContainerID,
+            FragmentUtil.initFragment(getSupportFragmentManager(), FRAGMENT_CONTAINER_ID,
                     LoginFragment.class);
         }
     }
 
     public void loadLoginFragment() {
-        FragmentUtil.replaceFragment(getSupportFragmentManager(), fragmentContainerID,
+        FragmentUtil.replaceFragment(getSupportFragmentManager(), FRAGMENT_CONTAINER_ID,
                 LoginFragment.class);
     }
 
     public void loadRegisterFragment() {
-        FragmentUtil.replaceFragment(getSupportFragmentManager(), fragmentContainerID,
+        FragmentUtil.replaceFragment(getSupportFragmentManager(), FRAGMENT_CONTAINER_ID,
                 RegisterFragment.class);
     }
 
     public void loadRegisterArtistFragment() {
-        FragmentUtil.replaceFragment(getSupportFragmentManager(), fragmentContainerID,
+        FragmentUtil.replaceFragment(getSupportFragmentManager(), FRAGMENT_CONTAINER_ID,
                 RegisterArtistFragment.class);
     }
 
     private void loadVerificationFragment() {
-        FragmentUtil.replaceFragment(getSupportFragmentManager(), fragmentContainerID,
+        FragmentUtil.replaceFragment(getSupportFragmentManager(), FRAGMENT_CONTAINER_ID,
                 VerificationFragment.class);
     }
 
@@ -78,10 +80,9 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
     }
 
     public void loadActivityBasedOnVerificationStatus() {
-        user = auth.getCurrentUser();
         firestore.collection("Users").document(user.getUid()).get()
                 .addOnCompleteListener(task -> {
-
+                    // TODO separate frontend (Activity) from Firebase interaction
                     if (!task.isSuccessful()) {
                         Log.d(TAG, "firestore:fail");
                         return;
@@ -89,7 +90,6 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
                     Log.d(TAG, "firestore:success");
 
                     DocumentSnapshot doc = task.getResult();
-
                     if (!doc.exists()) {
                         Log.d(TAG, "findDoc:fail");
                         return;
@@ -141,4 +141,5 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
         super.onStop();
         auth.removeAuthStateListener(this);
     }
+
 }
