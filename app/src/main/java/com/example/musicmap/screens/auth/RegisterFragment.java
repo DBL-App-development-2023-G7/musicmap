@@ -10,8 +10,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
-
 import com.example.musicmap.R;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.firebase.Queries;
@@ -25,11 +23,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class RegisterFragment extends Fragment {
+public class RegisterFragment extends AuthFragment {
 
     private static final String TAG = "FirebaseRegister";
 
-    private FirebaseAuth auth;
     private FirebaseFirestore firestore;
 
     //region declaration of the register form elements
@@ -42,8 +39,6 @@ public class RegisterFragment extends Fragment {
     private EditText birthdateInput;
     //endregion
 
-    private AuthActivity activity;
-
     public RegisterFragment() {
         // Required empty public constructor
     }
@@ -51,7 +46,6 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
     }
 
@@ -84,12 +78,6 @@ public class RegisterFragment extends Fragment {
         Button backButton = rootView.findViewById(R.id.back_button);
         backButton.setOnClickListener(view -> back());
         return rootView;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        activity = (AuthActivity) getActivity();
     }
 
     private void selectDate() {

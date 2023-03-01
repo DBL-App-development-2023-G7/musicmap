@@ -1,14 +1,14 @@
 package com.example.musicmap.screens.auth;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.musicmap.screens.HomeActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.musicmap.R;
+import com.example.musicmap.screens.HomeActivity;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,6 +29,7 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_auth);
         auth = FirebaseAuth.getInstance();
         auth.addAuthStateListener(this);
@@ -42,16 +43,11 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
         user = auth.getCurrentUser();
 
         if (user != null) {
-            loadNext();
+            loadActivityBasedOnVerificationStatus();
         } else {
             FragmentUtil.initFragment(getSupportFragmentManager(), fragmentContainerID,
                     LoginFragment.class);
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 
     public void loadLoginFragment() {
@@ -81,41 +77,63 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
         finish();
     }
 
-    //TODO: rename this function & decompose it
-    public void loadNext() {
+    public void loadActivityBasedOnVerificationStatus() {
         user = auth.getCurrentUser();
-        firestore.collection("Users").document(user.getUid()).get().addOnCompleteListener(task -> {
-            {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "firestore:success");
-                    DocumentSnapshot doc = task.getResult();
-                    if (doc.exists()) {
-                        Log.d(TAG, "findDoc:success");
-                        Map<String, Object> data = doc.getData();
-                        boolean artist = (boolean) data.get("artist");
+        firestore.collection("Users").document(user.getUid()).get()
+                .addOnCompleteListener(task -> {
 
-                        if (artist) {
-                            boolean verified = (boolean) data.get("verified");
-                            Log.d(TAG, "User is an artist");
-                            if (!verified) {
-                                Log.d(TAG, "Artist is not verified");
-                                Log.d(TAG, "Loading the verification fragment");
-                                loadVerificationFragment();
-                                return;
-                            }
-                            Log.d(TAG, "Artist is verified");
-                        } else {
-                            Log.d(TAG, "Loading the home activity");
-                            loadHomeActivity();
-                        }
-                    } else {
-                        Log.d(TAG, "findDoc:fail");
+                    if (!task.isSuccessful()) {
+                        Log.d(TAG, "firestore:fail");
+                        return;
                     }
-                } else {
-                    Log.d(TAG, "firestore:fail");
-                }
-            }
-        });
+                    Log.d(TAG, "firestore:success");
+
+                    DocumentSnapshot doc = task.getResult();
+
+                    if (!doc.exists()) {
+                        Log.d(TAG, "findDoc:fail");
+                        return;
+                    }
+                    Log.d(TAG, "findDoc:success");
+
+                    Map<String, Object> data = doc.getData();
+                    if (data == null) {
+                        Log.d(TAG, "data:fail");
+                        return;
+                    }
+                    Log.d(TAG, "data:success");
+
+                    Object artistFirebaseBoolean = data.get("artist");
+                    if (!(artistFirebaseBoolean instanceof Boolean)) {
+                        Log.e(TAG, "userStructure:mismatch");
+                        return;
+                    }
+
+                    boolean isArtist = (boolean) artistFirebaseBoolean;
+
+                    if (isArtist) {
+                        Log.d(TAG, "User is an artist");
+
+                        Object verifiedFirebaseBoolean = data.get("verified");
+                        if (!(verifiedFirebaseBoolean instanceof Boolean)) {
+                            Log.e(TAG, "userStructure:mismatch");
+                            return;
+                        }
+
+                        boolean verified = (boolean) verifiedFirebaseBoolean;
+
+                        if (!verified) {
+                            Log.d(TAG, "Artist is not verified");
+                            Log.d(TAG, "Loading the verification fragment");
+                            loadVerificationFragment();
+                            return;
+                        }
+                        Log.d(TAG, "Artist is verified");
+                    } else {
+                        Log.d(TAG, "Loading the home activity");
+                        loadHomeActivity();
+                    }
+                });
     }
 
     @Override

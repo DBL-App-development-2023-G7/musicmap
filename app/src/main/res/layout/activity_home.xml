@@ -7,8 +7,8 @@
     tools:context=".screens.HomeActivity">
 
     <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="729dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -19,25 +19,22 @@
         <TextView
             android:id="@+id/uuid_textView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/email_textView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/username_textView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/logout_button"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:text="Log out" />
+            android:text="@string/logout" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

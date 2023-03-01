@@ -61,7 +61,6 @@ public class LoginFragment extends AuthFragment {
                     task -> {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "registerUser:success");
-                            activity.loadNext();
                         } else {
                             Log.d(TAG, "registerUser:fail", task.getException());
                             Toast.makeText(getActivity(), "Incorrect email/password.",
