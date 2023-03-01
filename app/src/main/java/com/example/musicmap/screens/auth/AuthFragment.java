@@ -23,4 +23,5 @@ public abstract class AuthFragment extends Fragment {
         super.onStart();
         activity = (AuthActivity) getActivity();
     }
+
 }

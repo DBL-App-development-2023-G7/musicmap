@@ -30,4 +30,5 @@ public class VerificationFragment extends AuthFragment {
         activity.loadLoginFragment();
         auth.signOut();
     }
+
 }

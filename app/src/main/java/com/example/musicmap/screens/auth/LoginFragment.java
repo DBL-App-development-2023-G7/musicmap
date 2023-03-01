@@ -14,12 +14,9 @@ import com.example.musicmap.R;
 public class LoginFragment extends AuthFragment {
 
     private static final String TAG = "FirebaseLogin";
+
     private EditText emailInput;
     private EditText passwordInput;
-
-    public LoginFragment() {
-        // Required empty public constructor
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,13 +42,13 @@ public class LoginFragment extends AuthFragment {
         boolean valid = true;
 
         String email = emailInput.getText().toString();
-        if (email.equals("")) {
+        if (email.isEmpty()) {
             emailInput.setError("Enter a valid email");
             valid = false;
         }
 
         String password = passwordInput.getText().toString();
-        if (password.equals("")) {
+        if (password.isEmpty()) {
             passwordInput.setError("Enter a valid password");
             valid = false;
         }
@@ -77,4 +74,5 @@ public class LoginFragment extends AuthFragment {
     private void loadRegisterArtistFragment() {
         activity.loadRegisterArtistFragment();
     }
+
 }

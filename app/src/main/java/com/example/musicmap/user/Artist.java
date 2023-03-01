@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Map;
 
 public class Artist extends User {
+
     public Artist(User user) {
         super(user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail(),
                 user.getBirthdate(), user.getUuid());
@@ -22,4 +23,5 @@ public class Artist extends User {
         attributes.put("artist", true);
         return attributes;
     }
+
 }

@@ -9,10 +9,13 @@ import androidx.annotation.NonNull;
 import java.util.Date;
 
 public class BirthdatePickerDialog extends DatePickerDialog {
+
     public BirthdatePickerDialog(@NonNull Context context) {
         super(context);
+
         final Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, -13);
+
         Date date = calendar.getTime();
         this.getDatePicker().setMaxDate(date.getTime());
     }
@@ -21,4 +24,5 @@ public class BirthdatePickerDialog extends DatePickerDialog {
         this(context);
         this.setOnDateSetListener(listener);
     }
+
 }

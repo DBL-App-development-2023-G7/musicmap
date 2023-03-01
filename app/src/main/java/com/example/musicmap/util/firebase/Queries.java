@@ -12,4 +12,5 @@ public class Queries {
         Query query = firestore.collection("Users").whereEqualTo("username", username);
         return query.get();
     }
+
 }

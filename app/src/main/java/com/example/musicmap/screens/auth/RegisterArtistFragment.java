@@ -22,4 +22,5 @@ public class RegisterArtistFragment extends RegisterFragment {
                              Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
+
 }

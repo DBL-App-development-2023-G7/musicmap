@@ -2,22 +2,21 @@ package com.example.musicmap.user;
 
 import com.google.firebase.Timestamp;
 
-import java.sql.Time;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * The user.
  */
 public class User {
-    private String username;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private Date birthdate;
-    private String uuid;
+
+    private final String username;
+    private final String firstName;
+    private final String lastName;
+    private final String email;
+    private final Date birthdate;
+    private final String uuid;
 
     public User(String username, String firstName, String lastName, String email, Date birthdate,
                 String uuid) {
@@ -106,4 +105,5 @@ public class User {
         attributes.put("artist", false);
         return attributes;
     }
+
 }
