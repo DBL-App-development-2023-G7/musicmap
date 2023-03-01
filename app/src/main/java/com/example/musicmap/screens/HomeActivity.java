@@ -1,12 +1,11 @@
 package com.example.musicmap.screens;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.musicmap.R;
 import com.example.musicmap.screens.auth.AuthActivity;
@@ -15,8 +14,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity {
 
-    FirebaseAuth auth;
-    FirebaseUser user;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +22,11 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
+        FirebaseUser user = auth.getCurrentUser();
 
-        TextView uuidText = (TextView) findViewById(R.id.uuid_textView);
-        TextView emailText = (TextView) findViewById(R.id.email_textView);
-        TextView usernameText = (TextView) findViewById(R.id.username_textView);
+        TextView uuidText = findViewById(R.id.uuid_textView);
+        TextView emailText = findViewById(R.id.email_textView);
+        TextView usernameText = findViewById(R.id.username_textView);
 
         if (user != null) {
             uuidText.setText(user.getUid());
@@ -36,13 +34,8 @@ public class HomeActivity extends AppCompatActivity {
             usernameText.setText(user.getDisplayName());
         }
 
-        Button logoutButton = (Button) findViewById(R.id.logout_button);
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                logout();
-            }
-        });
+        Button logoutButton = findViewById(R.id.logout_button);
+        logoutButton.setOnClickListener(view -> logout());
     }
 
     public void logout() {
@@ -52,4 +45,5 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(loginIntent);
         finish();
     }
+
 }
