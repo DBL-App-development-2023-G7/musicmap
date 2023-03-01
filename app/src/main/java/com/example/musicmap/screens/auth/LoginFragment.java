@@ -1,9 +1,6 @@
 package com.example.musicmap.screens.auth;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,65 +10,35 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.musicmap.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseUser;
 
 public class LoginFragment extends AuthFragment {
 
     private static final String TAG = "FirebaseLogin";
-
     private EditText emailInput;
     private EditText passwordInput;
-
 
     public LoginFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        emailInput = getView().findViewById(R.id.email_editText);
-        passwordInput = getView().findViewById(R.id.password_editText);
-
-        Button loginButton = getView().findViewById(R.id.login_button);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                login();
-            }
-        });
-
-        Button registerButton = getView().findViewById(R.id.register_button);
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadRegisterFragment();
-            }
-        });
-
-        Button registerArtistButton = getView().findViewById(R.id.registerArtist_button);
-        registerArtistButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                registerArtist();
-            }
-        });
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_login, container, false);
+
+        emailInput = rootView.findViewById(R.id.email_editText);
+        passwordInput = rootView.findViewById(R.id.password_editText);
+
+        Button loginButton = rootView.findViewById(R.id.login_button);
+        loginButton.setOnClickListener(view -> login());
+
+        Button registerButton = rootView.findViewById(R.id.register_button);
+        registerButton.setOnClickListener(view -> loadRegisterFragment());
+
+        Button registerArtistButton = rootView.findViewById(R.id.registerArtist_button);
+        registerArtistButton.setOnClickListener(view -> loadRegisterArtistFragment());
+
+        return rootView;
     }
 
     private void login() {
@@ -90,32 +57,25 @@ public class LoginFragment extends AuthFragment {
         }
 
         if (valid) {
-            auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(getActivity(),
-                    new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Log.d(TAG, "registerUser:success");
-                                FirebaseUser user = auth.getCurrentUser();
-                                AuthActivity authActivity = (AuthActivity) getActivity();
-                                authActivity.loadNext();
-                            } else {
-                                Log.d(TAG, "registerUser:fail", task.getException());
-                                Toast.makeText(getActivity(), "Incorrect email/password.",
-                                        Toast.LENGTH_SHORT).show();
-                            }
+            auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(activity,
+                    task -> {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "registerUser:success");
+                            activity.loadNext();
+                        } else {
+                            Log.d(TAG, "registerUser:fail", task.getException());
+                            Toast.makeText(getActivity(), "Incorrect email/password.",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     });
         }
     }
 
     private void loadRegisterFragment() {
-        AuthActivity authActivity = (AuthActivity) getActivity();
-        authActivity.loadRegisterFragment();
+        activity.loadRegisterFragment();
     }
 
-    private void registerArtist() {
-        AuthActivity authActivity = (AuthActivity) getActivity();
-        authActivity.loadRegisterArtistFragment();
+    private void loadRegisterArtistFragment() {
+        activity.loadRegisterArtistFragment();
     }
 }

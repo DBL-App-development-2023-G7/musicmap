@@ -10,7 +10,6 @@ public abstract class AuthFragment extends Fragment {
 
     protected FirebaseAuth auth;
 
-
     protected AuthActivity activity;
 
     @Override

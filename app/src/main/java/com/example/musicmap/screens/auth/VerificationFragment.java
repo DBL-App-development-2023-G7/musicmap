@@ -11,30 +11,10 @@ import androidx.fragment.app.Fragment;
 import com.example.musicmap.R;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class VerificationFragment extends Fragment {
-
-    private FirebaseAuth auth;
-    private AuthActivity activity;
+public class VerificationFragment extends AuthFragment {
 
     public VerificationFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        auth = FirebaseAuth.getInstance();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        activity = (AuthActivity) getActivity();
-    }
-
-    private void signOut() {
-        activity.loadLoginFragment();
-        auth.signOut();
     }
 
     @Override
@@ -46,5 +26,10 @@ public class VerificationFragment extends Fragment {
         signOutVerificationButton.setOnClickListener(view -> signOut());
 
         return rootView;
+    }
+
+    private void signOut() {
+        activity.loadLoginFragment();
+        auth.signOut();
     }
 }
