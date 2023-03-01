@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".screens.auth.RegisterFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/username_editText"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:autofillHints="username"
+                android:ems="10"
+                android:hint="@string/username"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/firstName_editText"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:autofillHints="name"
+                android:ems="10"
+                android:hint="@string/first_name"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/lastName_editText"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:autofillHints="name"
+                android:ems="10"
+                android:hint="@string/last_name"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/emailRegister_editText"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:autofillHints="emailAddress"
+                android:ems="10"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress" />
+
+            <EditText
+                android:id="@+id/passwordRegister_editText"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:autofillHints="password"
+                android:ems="10"
+                android:hint="@string/password"
+                android:inputType="textPassword" />
+
+            <EditText
+                android:id="@+id/repeatPasswordRegister_editText"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:autofillHints="password"
+                android:ems="10"
+                android:hint="@string/repeat_password"
+                android:inputType="textPassword" />
+
+            <EditText
+                android:id="@+id/birthdate_editText"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:autofillHints="password"
+                android:ems="10"
+                android:hint="@string/birthdate"
+                android:inputType="none" />
+
+            <Button
+                android:id="@+id/registerRegister_button"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:text="@string/register" />
+
+            <Button
+                android:id="@+id/back_button"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:text="@string/back" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>
