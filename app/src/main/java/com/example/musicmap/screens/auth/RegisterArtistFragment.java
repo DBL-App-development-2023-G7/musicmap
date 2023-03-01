@@ -8,10 +8,6 @@ import android.view.ViewGroup;
 
 public class RegisterArtistFragment extends RegisterFragment {
 
-    public RegisterArtistFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

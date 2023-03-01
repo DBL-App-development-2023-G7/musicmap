@@ -39,10 +39,6 @@ public class RegisterFragment extends AuthFragment {
     private EditText birthdateInput;
     //endregion
 
-    public RegisterFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
