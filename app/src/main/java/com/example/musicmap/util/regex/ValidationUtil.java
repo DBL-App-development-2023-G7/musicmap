@@ -41,7 +41,10 @@ public class ValidationUtil {
         if (password.isEmpty()) {
             return Result.EMPTY;
         }
-        //TODO implement an invalid format for passwords & discuss about it
+        //TODO discuss about the FORMAT error for passwords
+        if (!MMPatterns.PASSWORD.matcher(password).matches()) {
+            return Result.FORMAT;
+        }
         return Result.VALID;
     }
 
