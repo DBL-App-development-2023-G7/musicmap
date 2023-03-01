@@ -67,7 +67,7 @@ public class AuthSystem {
         Task<AuthResult> registerAccount = auth.createUserWithEmailAndPassword(email, password);
         return registerAccount.continueWithTask(task -> {
             FirebaseUser firebaseUser = task.getResult().getUser();
-            if (firebaseUser == null) {
+            if (firebaseUser != null) {
                 User user = new User(username, firstName, lastName, email, birthdate,
                         firebaseUser.getUid());
 

@@ -44,10 +44,10 @@ public class LoginFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        emailInput = (EditText) getView().findViewById(R.id.email_editText);
-        passwordInput = (EditText) getView().findViewById(R.id.password_editText);
+        emailInput = getView().findViewById(R.id.email_editText);
+        passwordInput = getView().findViewById(R.id.password_editText);
 
-        loginButton = (Button) getView().findViewById(R.id.login_button);
+        loginButton = getView().findViewById(R.id.login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,15 +55,15 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        registerButton = (Button) getView().findViewById(R.id.register_button);
+        registerButton = getView().findViewById(R.id.register_button);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                register();
+                loadRegisterFragment();
             }
         });
 
-        registerArtistButton = (Button) getView().findViewById(R.id.registerArtist_button);
+        registerArtistButton = getView().findViewById(R.id.registerArtist_button);
         registerArtistButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,30 +98,30 @@ public class LoginFragment extends Fragment {
         if (valid) {
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(getActivity(),
                     new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "registerUser:success");
-                        FirebaseUser user = auth.getCurrentUser();
-                        AuthActivity authActivity = (AuthActivity) getActivity();
-                        authActivity.loadNext();
-                    } else {
-                        Log.d(TAG, "registerUser:fail", task.getException());
-                        Toast.makeText(getActivity(), "Incorrect email/password.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "registerUser:success");
+                                FirebaseUser user = auth.getCurrentUser();
+                                AuthActivity authActivity = (AuthActivity) getActivity();
+                                authActivity.loadNext();
+                            } else {
+                                Log.d(TAG, "registerUser:fail", task.getException());
+                                Toast.makeText(getActivity(), "Incorrect email/password.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
         }
     }
 
-    private void register() {
+    private void loadRegisterFragment() {
         AuthActivity authActivity = (AuthActivity) getActivity();
-        authActivity.loadRegister();
+        authActivity.loadRegisterFragment();
     }
 
     private void registerArtist() {
         AuthActivity authActivity = (AuthActivity) getActivity();
-        authActivity.loadRegisterArtist();
+        authActivity.loadRegisterArtistFragment();
     }
 }

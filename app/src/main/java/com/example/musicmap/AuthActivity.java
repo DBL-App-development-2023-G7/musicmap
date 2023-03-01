@@ -18,8 +18,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Map;
 
 public class AuthActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
-
     private static final String TAG = "FirebaseAuth";
+
     private FirebaseAuth auth;
     private FirebaseUser user;
     private FirebaseFirestore firestore;
@@ -43,6 +43,7 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
         }
     }
 
+    //TODO
     @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
@@ -53,27 +54,27 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
         super.onStart();
     }
 
-    public void loadLogin() {
+    public void loadLoginFragment() {
         FragmentUtil.replaceFragment(getSupportFragmentManager(), fragmentContainerID,
                 LoginFragment.class);
     }
 
-    public void loadRegister() {
+    public void loadRegisterFragment() {
         FragmentUtil.replaceFragment(getSupportFragmentManager(), fragmentContainerID,
                 RegisterFragment.class);
     }
 
-    public void loadRegisterArtist() {
+    public void loadRegisterArtistFragment() {
         FragmentUtil.replaceFragment(getSupportFragmentManager(), fragmentContainerID,
                 RegisterArtistFragment.class);
     }
 
-    private void loadVerification() {
+    private void loadVerificationFragment() {
         FragmentUtil.replaceFragment(getSupportFragmentManager(), fragmentContainerID,
                 VerificationFragment.class);
     }
 
-    private void loadHome() {
+    private void loadHomeActivity() {
         Intent homeIntent = new Intent(this, HomeActivity.class);
         homeIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(homeIntent);
@@ -100,13 +101,13 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
                             if (!verified) {
                                 Log.d(TAG, "Artist is not verified");
                                 Log.d(TAG, "Loading the verification fragment");
-                                loadVerification();
+                                loadVerificationFragment();
                                 return;
                             }
                             Log.d(TAG, "Artist is verified");
                         } else {
                             Log.d(TAG, "Loading the home activity");
-                            loadHome();
+                            loadHomeActivity();
                         }
                     } else {
                         Log.d(TAG, "findDoc:fail");
