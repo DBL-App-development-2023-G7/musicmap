@@ -17,7 +17,8 @@ public class VerificationFragment extends AuthFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_verification, container, false);
+        View rootView =
+                inflater.inflate(R.layout.fragment_verification, container, false);
 
         Button signOutVerificationButton = rootView.findViewById(R.id.signout_verification_button);
         signOutVerificationButton.setOnClickListener(view -> signOut());
