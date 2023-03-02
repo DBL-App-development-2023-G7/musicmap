@@ -202,8 +202,8 @@ public class RegisterFragment extends AuthFragment {
         }
     }
 
-    private boolean isInputValid(String username, String firstName, String lastName, String email
-            , String password, String repeatPassword, Date birthdate) {
+    private boolean isInputValid(String username, String firstName, String lastName, String email,
+                                 String password, String repeatPassword, Date birthdate) {
         return checkUsername(username)
                 & checkFirstName(firstName) & checkLastName(lastName)
                 & checkEmail(email)
