@@ -10,13 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.musicmap.R;
 import com.example.musicmap.screens.auth.AuthActivity;
-import com.example.musicmap.screens.auth.LoginFragment;
-import com.example.musicmap.util.ui.FragmentUtil;
-import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class HomeActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener{
+public class HomeActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
 
     private FirebaseAuth auth;
 
