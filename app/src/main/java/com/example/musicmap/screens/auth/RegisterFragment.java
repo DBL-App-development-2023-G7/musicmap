@@ -15,7 +15,6 @@ import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.firebase.Queries;
 import com.example.musicmap.util.regex.ValidationUtil;
 import com.example.musicmap.util.ui.BirthdatePickerDialog;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
@@ -38,10 +37,6 @@ public class RegisterFragment extends AuthFragment {
     private EditText repeatPasswordInput;
     private EditText birthdateInput;
     //endregion
-
-    public RegisterFragment() {
-        // Required empty public constructor
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -207,8 +202,8 @@ public class RegisterFragment extends AuthFragment {
         }
     }
 
-    private boolean isInputValid(String username, String firstName, String lastName, String email
-            , String password, String repeatPassword, Date birthdate) {
+    private boolean isInputValid(String username, String firstName, String lastName, String email,
+                                 String password, String repeatPassword, Date birthdate) {
         return checkUsername(username)
                 & checkFirstName(firstName) & checkLastName(lastName)
                 & checkEmail(email)

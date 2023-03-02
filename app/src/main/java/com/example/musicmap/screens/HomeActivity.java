@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.musicmap.R;
@@ -12,7 +13,7 @@ import com.example.musicmap.screens.auth.AuthActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
 
     private FirebaseAuth auth;
 
@@ -38,12 +39,28 @@ public class HomeActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(view -> logout());
     }
 
+    @Override
+    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+        auth = firebaseAuth;
+        FirebaseUser user = auth.getCurrentUser();
+
+        if (user != null) {
+            Intent authIntent = new Intent(this, AuthActivity.class);
+            authIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(authIntent);
+            finish();
+        }
+    }
+
     public void logout() {
         auth.signOut();
-        Intent loginIntent = new Intent(this, AuthActivity.class);
-        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        startActivity(loginIntent);
         finish();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        auth.removeAuthStateListener(this);
     }
 
 }

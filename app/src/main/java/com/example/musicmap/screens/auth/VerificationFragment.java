@@ -10,10 +10,6 @@ import com.example.musicmap.R;
 
 public class VerificationFragment extends AuthFragment {
 
-    public VerificationFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

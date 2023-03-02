@@ -37,6 +37,11 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
         auth.addAuthStateListener(this);
         user = auth.getCurrentUser();
         firestore = FirebaseFirestore.getInstance();
+
+        if (savedInstanceState == null) {
+            FragmentUtil.initFragment(getSupportFragmentManager(), FRAGMENT_CONTAINER_ID,
+                    LoginFragment.class);
+        }
     }
 
     @Override
@@ -47,7 +52,7 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
         if (user != null) {
             loadActivityBasedOnVerificationStatus();
         } else {
-            FragmentUtil.initFragment(getSupportFragmentManager(), FRAGMENT_CONTAINER_ID,
+            FragmentUtil.replaceFragment(getSupportFragmentManager(), FRAGMENT_CONTAINER_ID,
                     LoginFragment.class);
         }
     }
