@@ -3,6 +3,8 @@ package com.example.musicmap.util.ui;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.icu.util.Calendar;
+import android.widget.DatePicker;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 
@@ -23,6 +25,14 @@ public class BirthdatePickerDialog extends DatePickerDialog {
     public BirthdatePickerDialog(@NonNull Context context, OnDateSetListener listener) {
         this(context);
         this.setOnDateSetListener(listener);
+    }
+
+    public static OnDateSetListener applyDateToEditText(EditText editText) {
+        return (datePicker, year, month, day) -> {
+            month++;
+            String date = day + "/" + month + "/" + year;
+            editText.setText(date);
+        };
     }
 
 }
