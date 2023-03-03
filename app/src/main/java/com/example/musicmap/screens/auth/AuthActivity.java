@@ -92,21 +92,18 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
                         Log.d(TAG, "firestore:fail");
                         return;
                     }
-                    Log.d(TAG, "firestore:success");
 
                     DocumentSnapshot doc = task.getResult();
                     if (!doc.exists()) {
                         Log.d(TAG, "findDoc:fail");
                         return;
                     }
-                    Log.d(TAG, "findDoc:success");
 
                     Map<String, Object> data = doc.getData();
                     if (data == null) {
                         Log.d(TAG, "data:fail");
                         return;
                     }
-                    Log.d(TAG, "data:success");
 
                     Object artistFirebaseBoolean = data.get("artist");
                     if (!(artistFirebaseBoolean instanceof Boolean)) {

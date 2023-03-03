@@ -5,7 +5,8 @@ import java.util.Map;
 
 public class Artist extends User {
 
-    public Artist(UserData userData, String uid) {
-        super(userData, uid);
+    public Artist(ArtistData artistData, String uid) {
+        super(artistData, uid);
     }
+
 }

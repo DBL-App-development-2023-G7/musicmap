@@ -23,6 +23,8 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
         setContentView(R.layout.activity_home);
 
         auth = FirebaseAuth.getInstance();
+        auth.addAuthStateListener(this);
+
         FirebaseUser user = auth.getCurrentUser();
 
         TextView uuidText = findViewById(R.id.uuid_textView);
@@ -44,7 +46,7 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
         auth = firebaseAuth;
         FirebaseUser user = auth.getCurrentUser();
 
-        if (user != null) {
+        if (user == null) {
             Intent authIntent = new Intent(this, AuthActivity.class);
             authIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(authIntent);
@@ -54,7 +56,6 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
 
     public void logout() {
         auth.signOut();
-        finish();
     }
 
     @Override

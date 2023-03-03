@@ -1,12 +1,12 @@
 package com.example.musicmap.screens.auth;
 
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.Date;
+import com.example.musicmap.user.ArtistData;
+import com.example.musicmap.user.UserData;
 
 public class RegisterArtistFragment extends RegisterFragment {
 
@@ -22,11 +22,9 @@ public class RegisterArtistFragment extends RegisterFragment {
     }
 
     @Override
-    protected boolean isInputValid(String username, String firstName, String lastName, String email
-            , String password, String repeatPassword, Date birthdate) {
-
-        return super.isInputValid(username, firstName, lastName, email, password, repeatPassword,
-                birthdate);
+    protected UserData getTempUser() {
+        return new ArtistData(super.getTempUser(), false);
     }
+
 
 }
