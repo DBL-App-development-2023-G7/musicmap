@@ -5,6 +5,7 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 
 import com.example.musicmap.user.User;
+import com.example.musicmap.user.UserData;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
@@ -44,8 +45,8 @@ public class AuthSystem {
      */
     public static Task<Void> addUserToFirestore(@NonNull User user) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        Map<String, Object> data = user.getFirestoreAttributes();
-        return firestore.collection("Users").document(user.getUuid()).set(data);
+        Map<String, Object> data = user.getData().getFirestoreAttributes();
+        return firestore.collection("Users").document(user.getUid()).set(data);
     }
 
     /**
@@ -53,28 +54,23 @@ public class AuthSystem {
      * that is not contained in the profile of the user to the Firestore Database and sends a
      * verification email to the given user's email address.
      *
-     * @param email     the email of the user to be registered
-     * @param password  the password of the user to be registered
-     * @param username  the username of the user to be registered
-     * @param firstName the first name of the user to be registered
-     * @param lastName  the last name of the user to be registered
-     * @param birthdate the birthdate of the user to be registered
+     * @param userData     the user to be registered
+     * @param password the password of the user to be registered
      * @return the result of this task
      */
-    public static Task<Void> register(String email, String password, String username,
-                                      String firstName, String lastName, Date birthdate) {
+    public static Task<Void> register(UserData userData, String password) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
+        String email = userData.getEmail();
+
         Task<AuthResult> registerAccount = auth.createUserWithEmailAndPassword(email, password);
         return registerAccount.continueWithTask(task -> {
             FirebaseUser firebaseUser = task.getResult().getUser();
-            if (firebaseUser != null) {
-                User user = new User(username, firstName, lastName, email, birthdate,
-                        firebaseUser.getUid());
 
+            if (firebaseUser != null) {
                 Task<Void> setupProfile = updateUserProfile(firebaseUser,
-                        firstName + " " + lastName, "");
+                        userData.getFirstName() + " " + userData.getLastName(), "");
                 Task<Void> sendEmail = firebaseUser.sendEmailVerification();
-                Task<Void> addUser = addUserToFirestore(user);
+                Task<Void> addUser = addUserToFirestore(new User (userData, firebaseUser.getUid()));
                 return Tasks.whenAll(setupProfile, sendEmail, addUser);
             }
 

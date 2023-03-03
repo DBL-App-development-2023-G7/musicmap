@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.musicmap.R;
+import com.example.musicmap.user.User;
+import com.example.musicmap.user.UserData;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.firebase.Queries;
 import com.example.musicmap.util.regex.ValidationUtil;
@@ -202,8 +204,13 @@ public class RegisterFragment extends AuthFragment {
         }
     }
 
+<<<<<<< Updated upstream
     private boolean isInputValid(String username, String firstName, String lastName, String email,
                                  String password, String repeatPassword, Date birthdate) {
+=======
+    protected boolean isInputValid(String username, String firstName, String lastName, String email
+            , String password, String repeatPassword, Date birthdate) {
+>>>>>>> Stashed changes
         return checkUsername(username)
                 & checkFirstName(firstName) & checkLastName(lastName)
                 & checkEmail(email)
@@ -221,25 +228,27 @@ public class RegisterFragment extends AuthFragment {
         Date birthdate = new Date();
         Log.d(TAG, "firstName " + firstName);
 
-        if (isInputValid(username, firstName, lastName, email, password, repeatPassword,
+        if (!isInputValid(username, firstName, lastName, email, password, repeatPassword,
                 birthdate)) {
-            AuthSystem.register(email, password, username, firstName, lastName, birthdate)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            auth.signOut();
-                        } else {
-                            String exceptionText = "Unknown exception.";
-                            if (task.getException() != null) {
-                                exceptionText = task.getException().toString();
-                            }
-                            Toast.makeText(getActivity(), exceptionText,
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        } else {
             Toast.makeText(getActivity(), "Some of the fields are incomplete or contain " +
                     "invalid values.", Toast.LENGTH_LONG).show();
+            return;
         }
+
+        UserData userData = new UserData(username, firstName, lastName, email, birthdate);
+        AuthSystem.register(userData, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        auth.signOut();
+                    } else {
+                        String exceptionText = "Unknown exception.";
+                        if (task.getException() != null) {
+                            exceptionText = task.getException().toString();
+                        }
+                        Toast.makeText(getActivity(), exceptionText,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void back() {
