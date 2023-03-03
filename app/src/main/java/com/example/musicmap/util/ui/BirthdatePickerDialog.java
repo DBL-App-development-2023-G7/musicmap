@@ -27,6 +27,13 @@ public class BirthdatePickerDialog extends DatePickerDialog {
         this.setOnDateSetListener(listener);
     }
 
+    /**
+     * This method returns an {@code OnDateSetListener} that applies the selected date to the given
+     * EditText attribute.
+     *
+     * @param editText the given {@code EditText} view to apply the selected date
+     * @return the OnDateSetListener
+     */
     public static OnDateSetListener applyDateToEditText(EditText editText) {
         return (datePicker, year, month, day) -> {
             month++;
