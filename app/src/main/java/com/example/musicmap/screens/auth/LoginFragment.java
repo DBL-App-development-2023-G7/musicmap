@@ -83,9 +83,9 @@ public class LoginFragment extends AuthFragment {
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(activity,
                     task -> {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "registerUser:success");
+                            Log.d(TAG, "loginUser:success");
                         } else {
-                            Log.d(TAG, "registerUser:fail", task.getException());
+                            Log.d(TAG, "loginUser:fail", task.getException());
                             Toast.makeText(getActivity(), "Incorrect email/password.",
                                     Toast.LENGTH_SHORT).show();
                         }

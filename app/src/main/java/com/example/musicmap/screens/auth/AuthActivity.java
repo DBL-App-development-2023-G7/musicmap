@@ -35,6 +35,7 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
 
         auth = FirebaseAuth.getInstance();
         auth.addAuthStateListener(this);
+
         user = auth.getCurrentUser();
         firestore = FirebaseFirestore.getInstance();
 
@@ -81,6 +82,7 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
         Intent homeIntent = new Intent(this, HomeActivity.class);
         homeIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(homeIntent);
+        Log.d(TAG, "Started Home Activity");
         finish();
     }
 
@@ -131,10 +133,10 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
                             return;
                         }
                         Log.d(TAG, "Artist is verified");
-                    } else {
-                        Log.d(TAG, "Loading the home activity");
-                        loadHomeActivity();
                     }
+
+                    Log.d(TAG, "Loading the home activity");
+                    loadHomeActivity();
                 });
     }
 
