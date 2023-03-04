@@ -16,9 +16,9 @@ public class UserData {
     private final String lastName;
     private final String email;
     private final Date birthdate;
-    private String uid;
 
-    public UserData(String username, String firstName, String lastName, String email, Date birthdate) {
+    public UserData(String username, String firstName, String lastName, String email,
+                    Date birthdate) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -90,6 +90,7 @@ public class UserData {
         attributes.put("username", username);
         attributes.put("firstName", firstName);
         attributes.put("lastName", lastName);
+        attributes.put("email", email);
         attributes.put("birthdate", this.getBirthdateTimestamp());
         attributes.put("artist", false);
         return attributes;

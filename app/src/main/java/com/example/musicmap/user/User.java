@@ -12,7 +12,7 @@ import java.util.Map;
 public class User {
 
     protected UserData data;
-    private String uid;
+    private final String uid;
 
     public User(UserData data, String uid) {
         this.data = data;
@@ -29,10 +29,20 @@ public class User {
     }
 
     /**
+     * This method retrieves the user's data.
      *
-     * @return
+     * @return the {@code UserData} of this user
      */
     public UserData getData() {
         return data;
+    }
+
+    /**
+     * This method returns true if the user is an artist.
+     *
+     * @return true if the user is an artist
+     */
+    public boolean isArtist() {
+        return this instanceof Artist;
     }
 }

@@ -8,16 +8,21 @@ import java.util.Map;
 public class ArtistData extends UserData {
 
     private final boolean verified;
+
     public ArtistData(UserData userData, boolean verified) {
         super(userData.getUsername(), userData.getFirstName(), userData.getLastName(),
                 userData.getEmail(), userData.getBirthdate());
         this.verified = verified;
     }
 
-//    public ArtistData(String username, String firstName, String lastName, String email,
-//                      Date birthdate) {
-//        super(username, firstName, lastName, email, birthdate);
-//    }
+    /**
+     * This method retrieves the verification status of the artist.
+     *
+     * @return the verification status of the artist
+     */
+    public boolean getVerified() {
+        return verified;
+    }
 
     /**
      * This method retrieves all user attributes ready to be placed inside a Firestore Database.
