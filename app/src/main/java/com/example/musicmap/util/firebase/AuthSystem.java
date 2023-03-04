@@ -86,47 +86,22 @@ public class AuthSystem {
 
     private static UserData getUserData(Map<String, Object> data) throws IllegalArgumentException {
 
-        Object usernameFirebaseString = data.get("username");
-        if (!(usernameFirebaseString instanceof String)) {
-            throw (new IllegalArgumentException("The username field does not exist or is " +
-                    "invalid!"));
-        }
-        String username = (String) usernameFirebaseString;
+        for (Map.Entry<String, Object> entry :
+                UserData.getFirestoreAttributesDefault().entrySet()) {
 
-        Object firstNameFirebaseString = data.get("firstName");
-        if (!(firstNameFirebaseString instanceof String)) {
-            throw (new IllegalArgumentException("The first name field does not exist or is " +
-                    "invalid!"));
+            Object object = data.get(entry.getKey());
+            if (object == null || !object.getClass().equals(entry.getValue().getClass())) {
+                throw (new IllegalArgumentException("The " + entry.getKey() + " field does not " +
+                        "exist or is invalid!"));
+            }
         }
-        String firstName = (String) firstNameFirebaseString;
 
-        Object lastNameFirebaseString = data.get("lastName");
-        if (!(lastNameFirebaseString instanceof String)) {
-            throw (new IllegalArgumentException("The last name field does not exist or is " +
-                    "invalid!"));
-        }
-        String lastName = (String) lastNameFirebaseString;
-
-        Object emailFirebaseString = data.get("email");
-        if (!(emailFirebaseString instanceof String)) {
-            throw (new IllegalArgumentException("The last name field does not exist or is " +
-                    "invalid!"));
-        }
-        String email = (String) emailFirebaseString;
-
-        Object birthdateFirebaseTimestamp = data.get("birthdate");
-        if (!(birthdateFirebaseTimestamp instanceof Timestamp)) {
-            throw (new IllegalArgumentException("The birthdate field does not exist or is " +
-                    "invalid!"));
-        }
-        Date birthdate = ((Timestamp) birthdateFirebaseTimestamp).toDate();
-
-        Object artistFirebaseBoolean = data.get("artist");
-        if (!(artistFirebaseBoolean instanceof Boolean)) {
-            throw (new IllegalArgumentException("The last name field does not exist or is " +
-                    "invalid!"));
-        }
-        boolean artist = (boolean) artistFirebaseBoolean;
+        String username = (String) data.get("username");
+        String firstName = (String) data.get("firstName");
+        String lastName = (String) data.get("lastName");
+        String email = (String) data.get("email");
+        Date birthdate = ((Timestamp) data.get("birthdate")).toDate();
+        boolean artist = (boolean) data.get("artist");
 
         UserData userData = new UserData(username, firstName, lastName, email, birthdate);
 

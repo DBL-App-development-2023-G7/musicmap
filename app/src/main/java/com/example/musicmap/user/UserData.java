@@ -96,4 +96,15 @@ public class UserData {
         return attributes;
     }
 
+    public static Map<String, Object> getFirestoreAttributesDefault() {
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("username", "");
+        attributes.put("firstName", "");
+        attributes.put("lastName", "");
+        attributes.put("email", "");
+        attributes.put("birthdate", new Timestamp(new Date()));
+        attributes.put("artist", false);
+        return attributes;
+    }
+
 }
