@@ -46,13 +46,13 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
             // using ifs instead of switch as resource IDs will be non-final by default in
             // Android Gradle Plugin version 8.0, therefore not to be used in switch
             if (item.getItemId() == R.id.navbarFeed) {
-                FragmentUtil.initFragment(getSupportFragmentManager(), R.id.fragment_view,
+                FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.fragment_view,
                         FeedFragment.class);
                 return true;
             }
-            
+
             if (item.getItemId() == R.id.navbarPost) {
-                FragmentUtil.initFragment(getSupportFragmentManager(), R.id.fragment_view,
+                FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.fragment_view,
                         PostFragment.class);
                 return true;
             }
