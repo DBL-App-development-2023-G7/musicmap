@@ -7,10 +7,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 import com.example.musicmap.R;
 import com.example.musicmap.screens.auth.AuthActivity;
+import com.example.musicmap.util.ui.FragmentUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,7 +19,6 @@ import com.google.firebase.auth.FirebaseUser;
 public class HomeActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
 
     private FirebaseAuth auth;
-    private Fragment currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +43,20 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
         logoutButton.setOnClickListener(view -> logout());
 
         bottomNavigationView.setOnItemSelectedListener((NavigationBarView.OnItemSelectedListener) item -> {
-            switch (item.getItemId()) {
-                case R.id.navbarFeed:
-                    return true;
-                case R.id.navbarMap:
-                    return true;
-                case R.id.navbarPost:
-                    return true;
+            // using ifs instead of switch as resource IDs will be non-final by default in
+            // Android Gradle Plugin version 8.0, therefore not to be used in switch
+            if (item.getItemId() == R.id.navbarFeed) {
+                FragmentUtil.initFragment(getSupportFragmentManager(), R.id.fragment_view,
+                        FeedFragment.class);
+                return true;
             }
+            
+            if (item.getItemId() == R.id.navbarPost) {
+                FragmentUtil.initFragment(getSupportFragmentManager(), R.id.fragment_view,
+                        PostFragment.class);
+                return true;
+            }
+
             return false;
         });
     }
