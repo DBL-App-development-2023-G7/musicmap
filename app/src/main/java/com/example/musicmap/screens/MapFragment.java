@@ -110,8 +110,7 @@ public class MapFragment extends Fragment {
 
             // Overwrite default person icon
             Resources resources = mapView.getContext().getResources();
-            setPersonIcon(BitmapFactory.decodeResource(resources, R.drawable.map_marker_48));
-            // TODO find out the right way of doing bitmap resources, i.e. not 4 separate resources
+            setPersonIcon(BitmapFactory.decodeResource(resources, R.drawable.map_marker));
             setPersonAnchor(0.5f, 1f);
         }
 
