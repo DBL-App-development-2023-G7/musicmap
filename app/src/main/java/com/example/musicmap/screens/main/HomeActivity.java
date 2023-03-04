@@ -2,12 +2,12 @@ package com.example.musicmap.screens.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.example.musicmap.R;
 import com.example.musicmap.screens.auth.AuthActivity;
@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class HomeActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
 
     private FirebaseAuth auth;
+    private Fragment currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +44,15 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
         logoutButton.setOnClickListener(view -> logout());
 
         bottomNavigationView.setOnItemSelectedListener((NavigationBarView.OnItemSelectedListener) item -> {
-            int id = item.getItemId();
-            return true;
+            switch (item.getItemId()) {
+                case R.id.navbarFeed:
+                    return true;
+                case R.id.navbarMap:
+                    return true;
+                case R.id.navbarPost:
+                    return true;
+            }
+            return false;
         });
     }
 
