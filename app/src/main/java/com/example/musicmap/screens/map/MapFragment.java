@@ -1,4 +1,4 @@
-package com.example.musicmap.screens;
+package com.example.musicmap.screens.map;
 
 import android.Manifest;
 import android.app.Activity;
@@ -24,17 +24,19 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.Projection;
+import org.osmdroid.views.overlay.Overlay;
+import org.osmdroid.views.overlay.OverlayManager;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 public class MapFragment extends Fragment {
 
-    // TODO figure out the meaning of these
     private static final int PERMISSION_ACCESS_FINE_LOCATION_REQUEST_CODE = 1;
     private static final int PERMISSION_ACCESS_COARSE_LOCATION_REQUEST_CODE = 2;
 
     /**
-     * The MapView itself. Can be accessed by subclasses to add overlays,
-     * see for example {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * The MapView used by this fragment.
+     *
+     * @see #addOverlays() on how to add overlays to this map view.
      */
     protected MapView mapView;
 
@@ -57,7 +59,8 @@ public class MapFragment extends Fragment {
 
         // Request needed permissions if applicable
         // TODO message explaining the permissions, see https://developer.android.com/training/permissions/requesting#explain
-        //  also, check if the app can function without these permission
+        //  check if permissions were granted, check if the app can function without these permission
+        //  probably do permissions elsewhere
         if (activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             // Request coarse location access permission
@@ -76,15 +79,14 @@ public class MapFragment extends Fragment {
         mapView = rootView.findViewById(R.id.map);
         mapView.setTileSource(TileSourceFactory.MAPNIK); // the default OSM tile source (data source)
 
-        // Add overlay showing current location
-        CustomMyLocationOverlay customMyLocationOverlay = new CustomMyLocationOverlay(mapView);
-        mapView.getOverlayManager().add(0, customMyLocationOverlay);
+        // Add all overlays
+        addOverlays();
 
         // Set initial screen to a full view of the Netherlands
         // TODO start with current location at first open,
         //  and reset last controller's position
         mapView.getController().setCenter(new GeoPoint(52.132303, 5.645042));
-        mapView.getController().setZoom(8.0D);
+        mapView.getController().setZoom(8.0);
 
         return rootView;
     }
@@ -102,21 +104,55 @@ public class MapFragment extends Fragment {
     }
 
     /**
+     * Can be overridden to hide the current location marker.
+     *
+     * @return whether the current phone location should be displayed on the map.
+     */
+    protected boolean shouldDisplayCurrentLocation() {
+        return true;
+    }
+
+    /**
+     * A method that can be overridden to add overlays.
+     *
+     * If a subclass wants to add an overlay, it should do so by overriding this method,
+     * using {@link #addOverlay(Overlay)}.
+     */
+    protected void addOverlays() {
+        // Default overlay showing current location (only if needed)
+        if (shouldDisplayCurrentLocation()) {
+            CurrentLocationOverlay currentLocationOverlay = new CurrentLocationOverlay(mapView);
+            mapView.getOverlayManager().add(0, currentLocationOverlay);
+        }
+    }
+
+    /**
+     * Adds the given overlay to the {@link #mapView}.
+     *
+     * @param overlay the overlay to add.
+     */
+    protected void addOverlay(Overlay overlay) {
+        OverlayManager overlayManager = mapView.getOverlayManager();
+        overlayManager.add(overlayManager.size(), overlay);
+    }
+
+    /**
      * A map overlay showing your current location, but without bearing.
      */
-    public static class CustomMyLocationOverlay extends MyLocationNewOverlay {
-        public CustomMyLocationOverlay(MapView mapView) {
+    public static class CurrentLocationOverlay extends MyLocationNewOverlay {
+        public CurrentLocationOverlay(MapView mapView) {
             super(mapView);
 
             // Overwrite default person icon
             Resources resources = mapView.getContext().getResources();
             setPersonIcon(BitmapFactory.decodeResource(resources, R.drawable.map_marker));
-            setPersonAnchor(0.5f, 1f);
+            setPersonAnchor(0.5f, 1f); // bottom middle
         }
 
         @Override
         protected void drawMyLocation(Canvas canvas, Projection pj, Location lastFix) {
             lastFix.removeBearing();
+
             super.drawMyLocation(canvas, pj, lastFix);
         }
     }
