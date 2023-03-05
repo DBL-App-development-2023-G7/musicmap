@@ -18,8 +18,6 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.checkerframework.checker.units.qual.A;
-
 public class AuthSystem {
 
     /**
@@ -31,6 +29,7 @@ public class AuthSystem {
      * @param photoUri     the changed profile photo uri of the user
      * @return the result of this tasks
      */
+    @Deprecated
     public static Task<Void> updateUserProfile(@NonNull FirebaseUser firebaseUser,
                                                String displayName, String photoUri) {
         UserProfileChangeRequest request =
@@ -68,11 +67,9 @@ public class AuthSystem {
             FirebaseUser firebaseUser = task.getResult().getUser();
 
             if (firebaseUser != null) {
-                Task<Void> setupProfile = updateUserProfile(firebaseUser,
-                        userData.getFirstName() + " " + userData.getLastName(), "");
                 Task<Void> sendEmail = firebaseUser.sendEmailVerification();
                 Task<Void> addUser = addUserToFirestore(new User(userData, firebaseUser.getUid()));
-                return Tasks.whenAll(setupProfile, sendEmail, addUser);
+                return Tasks.whenAll(sendEmail, addUser);
             }
 
             TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
@@ -82,8 +79,11 @@ public class AuthSystem {
     }
 
     /**
-     * @param uid
-     * @return
+     * This method retrieves the user that has the given uid and their data if the task is
+     * successful.
+     *
+     * @param uid the given uid of the user
+     * @return the result of this task
      */
     public static Task<User> getUserFromUid(String uid) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -122,6 +122,25 @@ public class AuthSystem {
 
             return tcs.getTask();
         });
+    }
+
+    /**
+     * This method retrieves the connected user and their data if the task is successful.
+     *
+     * @return the result of this task
+     */
+    public static Task<User> getUser() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = auth.getCurrentUser();
+
+
+        if (firebaseUser == null) {
+            TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
+            tcs.setException(new Exception("There is no user connected!"));
+            return tcs.getTask();
+        }
+
+        return getUserFromUid(firebaseUser.getUid());
     }
 
 }
