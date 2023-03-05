@@ -85,7 +85,7 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
     }
 
     public void loadActivityBasedOnVerificationStatus() {
-        AuthSystem.getUserFromUid(firebaseUser.getUid()).addOnCompleteListener(task -> {
+        AuthSystem.getUser().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 User user = task.getResult();
                 if (user.isArtist() && !((Artist) user).isVerified()) {

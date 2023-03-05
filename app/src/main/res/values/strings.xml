@@ -16,4 +16,6 @@
     <string name="navbarPost">Post</string>
     <string name="navbarFeed">Feed</string>
     <string name="navbarMap">Map</string>
+    <string name="email_verified">Your email is verified!</string>
+    <string name="email_not_verified">Your email is not verified!</string>
 </resources>
