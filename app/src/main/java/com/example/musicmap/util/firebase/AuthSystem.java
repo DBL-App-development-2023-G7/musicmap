@@ -4,23 +4,17 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
-import com.example.musicmap.user.Artist;
-import com.example.musicmap.user.ArtistData;
 import com.example.musicmap.user.User;
 import com.example.musicmap.user.UserData;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.Date;
-import java.util.Map;
 
 public class AuthSystem {
 
@@ -49,8 +43,7 @@ public class AuthSystem {
      */
     public static Task<Void> addUserToFirestore(@NonNull User user) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        Map<String, Object> data = user.getData().getFirestoreAttributes();
-        return firestore.collection("Users").document(user.getUid()).set(data);
+        return firestore.collection("Users").document(user.getUid()).set(user.getData());
     }
 
     /**
@@ -84,48 +77,6 @@ public class AuthSystem {
         });
     }
 
-    private static UserData getUserData(Map<String, Object> data) throws IllegalArgumentException {
-
-        for (Map.Entry<String, Object> entry :
-                UserData.getFirestoreAttributesDefault().entrySet()) {
-
-            Object object = data.get(entry.getKey());
-            if (object == null || !object.getClass().equals(entry.getValue().getClass())) {
-                throw (new IllegalArgumentException("The " + entry.getKey() + " field does not " +
-                        "exist or is invalid!"));
-            }
-        }
-
-        String username = (String) data.get("username");
-        String firstName = (String) data.get("firstName");
-        String lastName = (String) data.get("lastName");
-        String email = (String) data.get("email");
-        Date birthdate = ((Timestamp) data.get("birthdate")).toDate();
-        boolean artist = (boolean) data.get("artist");
-
-        UserData userData = new UserData(username, firstName, lastName, email, birthdate);
-
-        if (artist) {
-            userData = getArtistData(data, userData);
-        }
-
-        return userData;
-    }
-
-    private static ArtistData getArtistData(Map<String, Object> data, UserData userData)
-            throws IllegalArgumentException {
-
-        Object verifiedFirebaseBoolean = data.get("verified");
-        if (!(verifiedFirebaseBoolean instanceof Boolean)) {
-            throw (new IllegalArgumentException("The verified field does not exist or is " +
-                    "invalid!"));
-        }
-
-        boolean verified = (boolean) verifiedFirebaseBoolean;
-
-        return new ArtistData(userData, verified);
-    }
-
     public static Task<User> getUserFromUid(String uid) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
@@ -141,26 +92,19 @@ public class AuthSystem {
             }
 
             DocumentSnapshot doc = task.getResult();
+
             if (!doc.exists()) {
                 tcs.setException(new Exception("Firestore Document does not exist!"));
                 return tcs.getTask();
             }
 
-            Map<String, Object> data = doc.getData();
-            if (data == null) {
-                tcs.setException(new Exception("Firestore Document does not have any data!"));
-                return tcs.getTask();
-            }
+            UserData userData = doc.toObject(UserData.class);
 
-            try {
-                UserData userData = getUserData(data);
-                if (userData instanceof ArtistData) {
-                    tcs.setResult(new Artist((ArtistData) userData, uid));
-                } else {
-                    tcs.setResult(new User(userData, uid));
-                }
-            } catch (IllegalArgumentException exception) {
-                tcs.setException(exception);
+            if (userData != null) {
+                tcs.setResult(new User(userData, uid));
+            } else {
+                tcs.setException(new Exception("An error has occurred while trying to retrieve " +
+                        "and apply the user's data from firebase."));
             }
 
             return tcs.getTask();

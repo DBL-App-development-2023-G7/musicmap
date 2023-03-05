@@ -228,7 +228,7 @@ public class RegisterFragment extends AuthFragment {
     }
 
     protected UserData getTempUser() {
-        return new UserData(username, firstName, lastName, email, birthdate);
+        return new UserData(username, firstName, lastName, email, birthdate, false);
     }
 
     protected void register() {
