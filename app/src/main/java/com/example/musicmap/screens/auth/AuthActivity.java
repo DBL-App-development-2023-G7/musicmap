@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.musicmap.R;
-import com.example.musicmap.screens.HomeActivity;
+import com.example.musicmap.screens.main.HomeActivity;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
