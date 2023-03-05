@@ -43,6 +43,7 @@ public class User {
      * @return true if the user is an artist
      */
     public boolean isArtist() {
-        return this instanceof Artist;
+        return data.isArtist();
     }
+
 }
