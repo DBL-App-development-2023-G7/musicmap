@@ -27,7 +27,6 @@
         <module name="UnusedImports"/>
         <module name="GenericWhitespace"/>
         <module name="ArrayTypeStyle"/>
-        <module name="Indentation"/>
         <module name="NoWhitespaceBefore"/>
         <module name="OneStatementPerLine"/>
         <module name="ParenPad"/>
