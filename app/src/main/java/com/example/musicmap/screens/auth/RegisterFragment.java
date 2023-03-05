@@ -76,7 +76,7 @@ public class RegisterFragment extends AuthFragment {
     }
 
     private void selectDate() {
-        DatePickerDialog dialog = new BirthdatePickerDialog(activity, (datePicker, year, month,
+        DatePickerDialog dialog = new BirthdatePickerDialog(this.getAuthActivity(), (datePicker, year, month,
                                                                        day) -> {
             month++;
             String date = day + "/" + month + "/" + year;
@@ -226,7 +226,7 @@ public class RegisterFragment extends AuthFragment {
             AuthSystem.register(email, password, username, firstName, lastName, birthdate)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            auth.signOut();
+                            this.getAuth().signOut();
                         } else {
                             String exceptionText = "Unknown exception.";
                             if (task.getException() != null) {
@@ -243,7 +243,7 @@ public class RegisterFragment extends AuthFragment {
     }
 
     private void back() {
-        activity.loadLoginFragment();
+        this.getAuthActivity().loadLoginFragment();
     }
 
 }

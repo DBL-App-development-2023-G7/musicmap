@@ -10,7 +10,7 @@ import com.example.musicmap.R;
 
 
 public class PostFragment extends MainFragment {
-
+g
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

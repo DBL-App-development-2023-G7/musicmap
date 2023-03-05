@@ -3,6 +3,7 @@ package com.example.musicmap.screens.main;
 import android.app.Activity;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -14,7 +15,14 @@ public abstract class MainFragment extends Fragment {
     /**
      * The hosting activity of the fragment.
      */
-    protected Activity activity;
+    private Activity activity;
+
+    /**
+     * Returns the MainActivity object (host activity)
+     */
+    public Activity getMainActivity() {
+        return activity;
+    }
 
     /**
      * Called to do initial creation of the fragment.
