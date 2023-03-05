@@ -3,7 +3,7 @@ package com.example.musicmap.user;
 import java.util.Date;
 
 /**
- * The user.
+ * The user data class.
  */
 public class UserData {
 
@@ -12,6 +12,7 @@ public class UserData {
     private String lastName;
     private String email;
     private Date birthdate;
+    private String profilePicture;
 
     private boolean artist;
 
@@ -27,6 +28,7 @@ public class UserData {
         this.email = email;
         this.birthdate = birthdate;
         this.artist = artist;
+        this.profilePicture = "";
     }
 
     /**
@@ -73,6 +75,13 @@ public class UserData {
     public Date getBirthdate() {
         return birthdate;
     }
+
+    /**
+     * This method retrieves the profile picture uri of the user.
+     *
+     * @return the profile picture uri of the user
+     */
+    public String getProfilePicture() {return profilePicture;}
 
     public boolean isArtist() {
         return artist;

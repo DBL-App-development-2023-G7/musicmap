@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The user.
+ * The user class.
  */
 public class User {
 

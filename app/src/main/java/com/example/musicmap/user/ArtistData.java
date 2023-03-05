@@ -1,7 +1,7 @@
 package com.example.musicmap.user;
 
 /**
- * The user.
+ * The artist data class.
  */
 public class ArtistData extends UserData {
 
