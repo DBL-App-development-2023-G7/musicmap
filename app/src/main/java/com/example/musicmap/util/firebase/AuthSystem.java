@@ -4,6 +4,8 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
+import com.example.musicmap.user.Artist;
+import com.example.musicmap.user.ArtistData;
 import com.example.musicmap.user.User;
 import com.example.musicmap.user.UserData;
 import com.google.android.gms.tasks.Task;
@@ -15,6 +17,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.checkerframework.checker.units.qual.A;
 
 public class AuthSystem {
 
@@ -77,6 +81,10 @@ public class AuthSystem {
         });
     }
 
+    /**
+     * @param uid
+     * @return
+     */
     public static Task<User> getUserFromUid(String uid) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
@@ -101,7 +109,12 @@ public class AuthSystem {
             UserData userData = doc.toObject(UserData.class);
 
             if (userData != null) {
-                tcs.setResult(new User(userData, uid));
+                if (userData.isArtist()) {
+                    ArtistData artistData = doc.toObject(ArtistData.class);
+                    tcs.setResult(new Artist(artistData, uid));
+                } else {
+                    tcs.setResult(new User(userData, uid));
+                }
             } else {
                 tcs.setException(new Exception("An error has occurred while trying to retrieve " +
                         "and apply the user's data from firebase."));
