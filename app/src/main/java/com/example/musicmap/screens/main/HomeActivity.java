@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.musicmap.R;
 import com.example.musicmap.screens.auth.AuthActivity;
+import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,12 +50,15 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
         Button logoutButton = findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(view -> logout());
 
+        Button deleteAccountButton = findViewById(R.id.deleteAccount_button);
+        deleteAccountButton.setOnClickListener(view -> deleteAccount());
+
         bottomNavigationView.setOnItemSelectedListener(item -> {
             // using ifs instead of switch as resource IDs will be non-final by default in
             // Android Gradle Plugin version 8.0, therefore not to be used in switch
             if (item.getItemId() == R.id.navbarFeed) {
                 FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.fragment_view,
-                        FeedFragment.class);
+                FeedFragment.class);
                 return true;
             }
 
@@ -83,6 +87,10 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
 
     public void logout() {
         auth.signOut();
+    }
+
+    public void deleteAccount() {
+        AuthSystem.deleteUser();
     }
 
     @Override
