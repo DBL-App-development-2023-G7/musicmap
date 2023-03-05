@@ -22,4 +22,5 @@ public class PostFragment extends MainFragment {
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_post, container, false);
     }
+
 }

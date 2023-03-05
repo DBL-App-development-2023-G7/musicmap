@@ -20,4 +20,5 @@ public class FeedFragment extends MainFragment {
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_feed, container, false);
     }
+
 }
