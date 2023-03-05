@@ -1,17 +1,19 @@
 package com.example.musicmap.user;
 
-import java.util.Map;
-
 /**
  * The user.
  */
 public class ArtistData extends UserData {
 
-    private final boolean verified;
+    private boolean verified;
+
+    public ArtistData() {
+
+    }
 
     public ArtistData(UserData userData, boolean verified) {
         super(userData.getUsername(), userData.getFirstName(), userData.getLastName(),
-                userData.getEmail(), userData.getBirthdate());
+                userData.getEmail(), userData.getBirthdate(), true);
         this.verified = verified;
     }
 
@@ -23,18 +25,4 @@ public class ArtistData extends UserData {
     public boolean getVerified() {
         return verified;
     }
-
-    /**
-     * This method retrieves all user attributes ready to be placed inside a Firestore Database.
-     *
-     * @return the user attributes as a {@code Map<String, Object>}
-     */
-    @Override
-    public Map<String, Object> getFirestoreAttributes() {
-        Map<String, Object> attributes = super.getFirestoreAttributes();
-        attributes.put("artist", true);
-        attributes.put("verified", verified);
-        return attributes;
-    }
-
 }
