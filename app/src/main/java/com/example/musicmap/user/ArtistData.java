@@ -7,8 +7,9 @@ public class ArtistData extends UserData {
 
     private boolean verified;
 
-    public ArtistData() {
 
+    public ArtistData() {
+        // Required for setting the data using the toObject() method
     }
 
     public ArtistData(UserData userData, boolean verified) {
