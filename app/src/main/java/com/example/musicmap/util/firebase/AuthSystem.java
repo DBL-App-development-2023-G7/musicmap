@@ -35,7 +35,8 @@ public class AuthSystem {
     public static Task<Void> updateUserProfile(@NonNull FirebaseUser firebaseUser,
                                                String displayName, String photoUri) {
         UserProfileChangeRequest request =
-                new UserProfileChangeRequest.Builder().setDisplayName(displayName).setPhotoUri(Uri.parse(photoUri)).build();
+                new UserProfileChangeRequest.Builder().setDisplayName(displayName)
+                        .setPhotoUri(Uri.parse(photoUri)).build();
 
         return firebaseUser.updateProfile(request);
     }
