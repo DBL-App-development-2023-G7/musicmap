@@ -2,7 +2,9 @@ package com.example.musicmap.util.firebase;
 
 import android.net.Uri;
 
+import androidx.annotation.Discouraged;
 import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
 
 import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.ArtistData;
@@ -33,8 +35,7 @@ public class AuthSystem {
     public static Task<Void> updateUserProfile(@NonNull FirebaseUser firebaseUser,
                                                String displayName, String photoUri) {
         UserProfileChangeRequest request =
-                new UserProfileChangeRequest.Builder().setDisplayName(displayName)
-                        .setPhotoUri(Uri.parse(photoUri)).build();
+                new UserProfileChangeRequest.Builder().setDisplayName(displayName).setPhotoUri(Uri.parse(photoUri)).build();
 
         return firebaseUser.updateProfile(request);
     }
@@ -79,8 +80,7 @@ public class AuthSystem {
     }
 
     /**
-     * This method retrieves the user that has the given uid and their data if the task is
-     * successful.
+     * This method retrieves the user that has the given uid and their data.
      *
      * @param uid the given uid of the user
      * @return the result of this task
@@ -116,8 +116,8 @@ public class AuthSystem {
                     tcs.setResult(new User(userData, uid));
                 }
             } else {
-                tcs.setException(new Exception("An error has occurred while trying to retrieve " +
-                        "and apply the user's data from firebase."));
+                tcs.setException(new Exception("An error has occurred while trying to retrieve "
+                        + "and apply the user's data from firebase."));
             }
 
             return tcs.getTask();
@@ -125,14 +125,13 @@ public class AuthSystem {
     }
 
     /**
-     * This method retrieves the connected user and their data if the task is successful.
+     * This method retrieves the connected user and their data.
      *
      * @return the result of this task
      */
     public static Task<User> getUser() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
-
 
         if (firebaseUser == null) {
             TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
@@ -143,4 +142,49 @@ public class AuthSystem {
         return getUserFromUid(firebaseUser.getUid());
     }
 
+    /**
+     * This method remove the data stored in the Firestore database of the user that has the
+     * given uid. This method is intentionally made private.
+     *
+     * @param uid the uid of the user
+     * @return the result of this task
+     */
+    private static Task<Void> removeUserFromFirestore(String uid) {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        return firestore.collection("Users").document(uid).delete();
+    }
+
+    /**
+     * This method deletes the connected user and its data from the Firestore database.
+     *
+     * @return the result of this task
+     */
+    @UiThread
+    @Discouraged(message = "This task is destructive!")
+    public static Task<Void> deleteUser() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = auth.getCurrentUser();
+
+        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+        if (firebaseUser == null) {
+            tcs.setException(new Exception("There is no user connected!"));
+            return tcs.getTask();
+        }
+
+        return firebaseUser.delete()
+                .continueWithTask(task -> {
+                    if (task.isSuccessful()) {
+                        return removeUserFromFirestore(firebaseUser.getUid());
+                    } else {
+                        Exception exception = task.getException();
+                        if (exception != null) {
+                            tcs.setException(exception);
+                        } else {
+                            tcs.setException(new Exception("An unknown error has occurred while " +
+                                    "trying to delete the user."));
+                        }
+                        return tcs.getTask();
+                    }
+                });
+    }
 }
