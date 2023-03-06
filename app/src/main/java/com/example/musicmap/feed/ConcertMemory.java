@@ -9,6 +9,7 @@ import java.util.Date;
  */
 public class ConcertMemory extends FeedObject {
 
+    // TODO remaining details, e.g. name of concert
     private final String video;
 
     public ConcertMemory(Date timePosted, GeoPoint location, String video) {
