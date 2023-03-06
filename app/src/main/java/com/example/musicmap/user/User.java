@@ -5,7 +5,7 @@ package com.example.musicmap.user;
  */
 public class User {
 
-    protected UserData data;
+    private UserData data;
     private final String uid;
 
     public User(UserData data, String uid) {

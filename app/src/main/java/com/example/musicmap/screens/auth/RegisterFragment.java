@@ -235,8 +235,8 @@ public class RegisterFragment extends AuthFragment {
         updateFormValues();
 
         if (!validate()) {
-            Toast.makeText(getActivity(), "Some of the fields are incomplete or contain " +
-                    "invalid values.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Some of the fields are incomplete or contain "
+                    + "invalid values.", Toast.LENGTH_LONG).show();
             return;
         }
 

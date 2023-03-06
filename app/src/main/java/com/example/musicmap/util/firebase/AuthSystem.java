@@ -166,8 +166,8 @@ public class AuthSystem {
                         if (exception != null) {
                             tcs.setException(exception);
                         } else {
-                            tcs.setException(new Exception("An unknown error has occurred while " +
-                                    "trying to delete the user."));
+                            tcs.setException(new Exception("An unknown error has occurred while "
+                                    + "trying to delete the user."));
                         }
                         return tcs.getTask();
                     }

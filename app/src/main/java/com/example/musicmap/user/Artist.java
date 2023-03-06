@@ -15,7 +15,7 @@ public class Artist extends User {
      * @return the {@code ArtistData} of this artist
      */
     public ArtistData getArtistData() {
-        return (ArtistData) super.getData();
+        return (ArtistData) this.getData();
     }
 
     /**
