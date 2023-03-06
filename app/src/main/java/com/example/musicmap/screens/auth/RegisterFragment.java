@@ -243,12 +243,14 @@ public class RegisterFragment extends AuthFragment {
         AuthSystem.register(getTempUser(), password)
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
-                        String exceptionText = "Unknown exception.";
+                        String exceptionText;
                         if (task.getException() != null) {
                             exceptionText = task.getException().toString();
+                        } else {
+                            exceptionText = "Unknown exception";
                         }
-                        Toast.makeText(getActivity(), exceptionText,
-                                Toast.LENGTH_SHORT).show();
+
+                        Toast.makeText(getActivity(), exceptionText, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
