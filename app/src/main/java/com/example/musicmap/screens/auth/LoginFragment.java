@@ -80,7 +80,7 @@ public class LoginFragment extends AuthFragment {
         String password = passwordInput.getText().toString();
 
         if (isInputValid(email, password)) {
-            auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(activity,
+            this.getAuth().signInWithEmailAndPassword(email, password).addOnCompleteListener(this.getAuthActivity(),
                     task -> {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "loginUser:success");
@@ -94,11 +94,11 @@ public class LoginFragment extends AuthFragment {
     }
 
     private void loadRegisterFragment() {
-        activity.loadRegisterFragment();
+        this.getAuthActivity().loadRegisterFragment();
     }
 
     private void loadRegisterArtistFragment() {
-        activity.loadRegisterArtistFragment();
+        this.getAuthActivity().loadRegisterArtistFragment();
     }
 
 }

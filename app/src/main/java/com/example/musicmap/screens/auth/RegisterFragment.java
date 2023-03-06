@@ -256,7 +256,7 @@ public class RegisterFragment extends AuthFragment {
     }
 
     private void back() {
-        activity.loadLoginFragment();
+        this.getAuthActivity().loadLoginFragment();
     }
 
 }
