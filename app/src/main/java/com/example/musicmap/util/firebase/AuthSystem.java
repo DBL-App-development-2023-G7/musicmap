@@ -21,26 +21,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AuthSystem {
-
-    /**
-     * This method updates the profile(the display name of that account and the link to the
-     * profile picture) of the given use ({@code Firebase User}).
-     *
-     * @param firebaseUser the given Firebase User
-     * @param displayName  the changed display name of the user
-     * @param photoUri     the changed profile photo uri of the user
-     * @return the result of this tasks
-     */
-    @Deprecated
-    public static Task<Void> updateUserProfile(@NonNull FirebaseUser firebaseUser,
-                                               String displayName, String photoUri) {
-        UserProfileChangeRequest request =
-                new UserProfileChangeRequest.Builder().setDisplayName(displayName)
-                        .setPhotoUri(Uri.parse(photoUri)).build();
-
-        return firebaseUser.updateProfile(request);
-    }
-
+    
     /**
      * This method adds the user and its attributes to the Firebase Firestore database.
      *
@@ -160,8 +141,6 @@ public class AuthSystem {
      *
      * @return the result of this task
      */
-    @UiThread
-    @Discouraged(message = "This task is destructive!")
     public static Task<Void> deleteUser() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
