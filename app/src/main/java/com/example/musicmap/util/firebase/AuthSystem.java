@@ -1,10 +1,6 @@
 package com.example.musicmap.util.firebase;
 
-import android.net.Uri;
-
-import androidx.annotation.Discouraged;
 import androidx.annotation.NonNull;
-import androidx.annotation.UiThread;
 
 import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.ArtistData;
@@ -16,12 +12,11 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AuthSystem {
-    
+
     /**
      * This method adds the user and its attributes to the Firebase Firestore database.
      *
@@ -77,14 +72,24 @@ public class AuthSystem {
             TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
 
             if (!task.isSuccessful()) {
-                tcs.setException(new Exception("Firestore Exception"));
+                Exception exception = task.getException();
+                if (exception != null) {
+                    tcs.setException(exception);
+                } else {
+                    tcs.setException(new Exception("Firestore Exception"));
+                }
                 return tcs.getTask();
             }
 
             DocumentSnapshot doc = task.getResult();
 
             if (!doc.exists()) {
-                tcs.setException(new Exception("Firestore Document does not exist!"));
+                Exception exception = task.getException();
+                if (exception != null) {
+                    tcs.setException(exception);
+                } else {
+                    tcs.setException(new Exception("Firestore Document does not exist!"));
+                }
                 return tcs.getTask();
             }
 
@@ -167,5 +172,5 @@ public class AuthSystem {
                     }
                 });
     }
-    
+
 }
