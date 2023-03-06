@@ -87,7 +87,7 @@ public class RegisterFragment extends AuthFragment {
     }
 
     private void selectDate() {
-        DatePickerDialog dialog = new BirthdatePickerDialog(activity,
+        DatePickerDialog dialog = new BirthdatePickerDialog(this.getAuthActivity(),
                 BirthdatePickerDialog.applyDateToEditText(birthdateInput));
         dialog.show();
     }
