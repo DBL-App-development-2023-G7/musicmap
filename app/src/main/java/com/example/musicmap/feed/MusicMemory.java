@@ -5,7 +5,7 @@ import com.google.firebase.firestore.GeoPoint;
 import java.util.Date;
 
 /**
- * The MusicMemory class.
+ * The music memory class.
  */
 public class MusicMemory extends FeedObject {
 

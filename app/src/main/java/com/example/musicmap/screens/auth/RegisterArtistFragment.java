@@ -26,5 +26,4 @@ public class RegisterArtistFragment extends RegisterFragment {
         return new ArtistData(super.getTempUser(), false);
     }
 
-
 }

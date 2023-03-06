@@ -5,7 +5,7 @@ import com.google.firebase.firestore.GeoPoint;
 import java.util.Date;
 
 /**
- * The ConcertMemory class.
+ * The concert memory class.
  */
 public class ConcertMemory extends FeedObject {
 
