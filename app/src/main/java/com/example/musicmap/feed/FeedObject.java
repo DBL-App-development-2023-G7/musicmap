@@ -4,6 +4,9 @@ import com.google.firebase.firestore.GeoPoint;
 
 import java.util.Date;
 
+/**
+ * The generalized class of feed objects.
+ */
 public abstract class FeedObject {
     private final Date timePosted;
     private final GeoPoint location;

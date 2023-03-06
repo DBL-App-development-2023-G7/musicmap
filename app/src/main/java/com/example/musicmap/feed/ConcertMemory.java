@@ -4,6 +4,9 @@ import com.google.firebase.firestore.GeoPoint;
 
 import java.util.Date;
 
+/**
+ * The ConcertMemory class.
+ */
 public class ConcertMemory extends FeedObject {
 
     private String video;
