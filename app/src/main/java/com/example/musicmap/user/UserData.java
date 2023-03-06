@@ -18,9 +18,11 @@ public class UserData {
 
     public UserData() {
 
+    public UserData(String username, String firstName, String lastName, String email, Date birthdate) {
+        this(username, firstName, lastName, email, birthdate, false);
     }
 
-    public UserData(String username, String firstName, String lastName, String email,
+    protected UserData(String username, String firstName, String lastName, String email,
                     Date birthdate, boolean artist) {
         this.username = username;
         this.firstName = firstName;
