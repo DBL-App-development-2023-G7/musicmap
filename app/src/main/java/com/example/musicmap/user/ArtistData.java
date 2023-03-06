@@ -7,7 +7,6 @@ public class ArtistData extends UserData {
 
     private boolean verified;
 
-
     public ArtistData() {
         // Required for setting the data using the toObject() method
     }
@@ -26,4 +25,5 @@ public class ArtistData extends UserData {
     public boolean getVerified() {
         return verified;
     }
+
 }

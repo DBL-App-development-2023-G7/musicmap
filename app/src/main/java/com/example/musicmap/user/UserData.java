@@ -81,7 +81,9 @@ public class UserData {
      *
      * @return the profile picture uri of the user
      */
-    public String getProfilePicture() {return profilePicture;}
+    public String getProfilePicture() {
+        return profilePicture;
+    }
 
     public boolean isArtist() {
         return artist;

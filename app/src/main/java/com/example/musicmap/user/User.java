@@ -1,11 +1,5 @@
 package com.example.musicmap.user;
 
-import com.google.firebase.Timestamp;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * The user class.
  */

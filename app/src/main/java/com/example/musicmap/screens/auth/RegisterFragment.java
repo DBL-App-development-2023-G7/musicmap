@@ -232,7 +232,6 @@ public class RegisterFragment extends AuthFragment {
     }
 
     protected void register() {
-
         updateFormValues();
 
         if (!validate()) {

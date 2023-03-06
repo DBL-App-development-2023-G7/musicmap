@@ -58,7 +58,7 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
             // Android Gradle Plugin version 8.0, therefore not to be used in switch
             if (item.getItemId() == R.id.navbarFeed) {
                 FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.fragment_view,
-                FeedFragment.class);
+                        FeedFragment.class);
                 return true;
             }
 
