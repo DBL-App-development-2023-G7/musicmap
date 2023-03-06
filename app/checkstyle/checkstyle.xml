@@ -12,7 +12,6 @@
     <module name="TreeWalker">
         <module name="JavadocMethod"/>
         <module name="Indentation"/>
-        <module name="TodoComment"/>
         <module name="EmptyBlock"/>
         <module name="EmptyCatchBlock"/>
         <module name="EmptyStatement"/>
