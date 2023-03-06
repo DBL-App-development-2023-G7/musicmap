@@ -15,4 +15,5 @@ public class ConcertMemory extends FeedObject {
     public String getVideo() {
         return video;
     }
+
 }

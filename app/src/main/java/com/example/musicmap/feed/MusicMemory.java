@@ -15,4 +15,5 @@ public class MusicMemory extends FeedObject {
     public String getPhoto() {
         return photo;
     }
+    
 }
