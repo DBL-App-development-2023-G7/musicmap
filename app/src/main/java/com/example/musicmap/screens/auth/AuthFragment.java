@@ -8,9 +8,17 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public abstract class AuthFragment extends Fragment {
 
-    protected FirebaseAuth auth;
+    private FirebaseAuth auth;
 
-    protected AuthActivity activity;
+    private AuthActivity activity;
+
+    public FirebaseAuth getAuth() {
+        return auth;
+    }
+
+    public AuthActivity getAuthActivity() {
+        return activity;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
