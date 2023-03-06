@@ -10,7 +10,6 @@
     </module>
     <module name="RegexpSingleline"/>
     <module name="TreeWalker">
-        <module name="JavadocMethod"/>
         <module name="Indentation"/>
         <module name="EmptyBlock"/>
         <module name="EmptyCatchBlock"/>
