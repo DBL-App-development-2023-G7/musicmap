@@ -9,10 +9,11 @@ import java.util.Date;
  */
 public class MusicMemory extends FeedObject {
 
-    private String photo;
+    private final String photo;
 
-    public MusicMemory(Date timePosted, GeoPoint location) {
+    public MusicMemory(Date timePosted, GeoPoint location, String photo) {
         super(timePosted, location);
+        this.photo = photo;
     }
 
     public String getPhoto() {

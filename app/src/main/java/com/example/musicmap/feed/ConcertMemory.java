@@ -9,10 +9,11 @@ import java.util.Date;
  */
 public class ConcertMemory extends FeedObject {
 
-    private String video;
+    private final String video;
 
-    public ConcertMemory(Date timePosted, GeoPoint location) {
+    public ConcertMemory(Date timePosted, GeoPoint location, String video) {
         super(timePosted, location);
+        this.video = video;
     }
 
     public String getVideo() {
