@@ -7,8 +7,9 @@ public class ArtistData extends UserData {
 
     private boolean verified;
 
-    public ArtistData() {
-        // Required for setting the data using the toObject() method
+    @SuppressWarnings("unused")
+    ArtistData() {
+        // Used for Firebase POJO deserialization (toObject)
     }
 
     public ArtistData(UserData userData, boolean verified) {

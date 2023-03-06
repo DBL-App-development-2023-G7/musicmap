@@ -16,7 +16,9 @@ public class UserData {
 
     private boolean artist;
 
-    public UserData() {
+    UserData() {
+        // Used for Firebase POJO deserialization (toObject)
+    }
 
     public UserData(String username, String firstName, String lastName, String email, Date birthdate) {
         this(username, firstName, lastName, email, birthdate, false);
