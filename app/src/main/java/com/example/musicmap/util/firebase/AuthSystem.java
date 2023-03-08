@@ -143,7 +143,7 @@ public class AuthSystem {
     }
 
     /**
-     * This method deletes the connected user and its data from the Firestore database.
+     * This method deletes the connected user and their data from the Firestore database.
      *
      * @return the result of this task
      */
@@ -157,21 +157,20 @@ public class AuthSystem {
             return tcs.getTask();
         }
 
-        return firebaseUser.delete()
-                .continueWithTask(task -> {
-                    if (task.isSuccessful()) {
-                        return removeUserFromFirestore(firebaseUser.getUid());
-                    } else {
-                        Exception exception = task.getException();
-                        if (exception != null) {
-                            tcs.setException(exception);
-                        } else {
-                            tcs.setException(new Exception("An unknown error has occurred while "
-                                    + "trying to delete the user."));
-                        }
-                        return tcs.getTask();
-                    }
-                });
+        return removeUserFromFirestore(firebaseUser.getUid()).continueWithTask(task -> {
+            if (task.isSuccessful()) {
+                return firebaseUser.delete();
+            } else {
+                Exception exception = task.getException();
+                if (exception != null) {
+                    tcs.setException(exception);
+                } else {
+                    tcs.setException(new Exception("An unknown error has occurred while "
+                            + "trying to delete the user."));
+                }
+                return tcs.getTask();
+            }
+        });
     }
 
 }
