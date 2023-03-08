@@ -38,14 +38,16 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
 
         if (firebaseUser != null) {
             firebaseUser.reload().continueWithTask(task -> {
-                if (firebaseUser.isEmailVerified()) {
-                    emailVerified.setText(getString(R.string.email_verified));
-                } else {
-                    emailVerified.setText(R.string.email_not_verified);
-                }
-                uuidText.setText(firebaseUser.getUid());
-                emailText.setText(firebaseUser.getEmail());
-                usernameText.setText(firebaseUser.getDisplayName());
+                runOnUiThread(() -> {
+                    if (firebaseUser.isEmailVerified()) {
+                        emailVerified.setText(getString(R.string.email_verified));
+                    } else {
+                        emailVerified.setText(R.string.email_not_verified);
+                    }
+                    uuidText.setText(firebaseUser.getUid());
+                    emailText.setText(firebaseUser.getEmail());
+                    usernameText.setText(firebaseUser.getDisplayName());
+                });
                 return null;
             });
         }
