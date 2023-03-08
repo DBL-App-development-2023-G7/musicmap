@@ -1,47 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/android_list_view_tutorial_with_example"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:orientation="horizontal"
+    android:padding="7dp">
+
+    <ImageView
+        android:id="@+id/listview_image"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/ic_launcher_background"
+        android:contentDescription="@string/app_name"
+        android:padding="10dp" />
 
     <LinearLayout
-        android:visibility="gone"
-        android:id="@+id/empty_feed_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:src="@drawable/ic_launcher_background" />
+        android:orientation="vertical"
+        android:padding="7dp">
 
         <TextView
-            style="@style/TextAppearance.AppCompat.Body1"
+            android:id="@+id/listview_item_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Empty feed"
-            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:paddingTop="10dp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tvEmptyGlobalFeed"
-            style="@style/TextAppearance.AppCompat.Body1"
+            android:id="@+id/listview_item_short_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="Empty feed"
-            android:textColor="@color/black" />
-
+            android:paddingTop="5dp"
+            android:textSize="12sp" />
     </LinearLayout>
-
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:layout_centerInParent="true"
-        android:visibility="visible" />
-</RelativeLayout>
+</LinearLayout>
