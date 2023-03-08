@@ -41,6 +41,7 @@ public class AuthSystem {
      * This method adds the user and its attributes to the Firebase Firestore database.
      *
      * @param user the user to add to the Firestore database
+     * @return the task
      */
     public static Task<Void> addUserToFirestore(@NonNull User user) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();

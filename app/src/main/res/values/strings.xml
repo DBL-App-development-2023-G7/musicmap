@@ -13,4 +13,7 @@
     <string name="register_artist">Register as Artist</string>
     <string name="back">Back</string>
     <string name="birthdate">Birthdate</string>
+    <string name="navbarPost">Post</string>
+    <string name="navbarFeed">Feed</string>
+    <string name="navbarMap">Map</string>
 </resources>
