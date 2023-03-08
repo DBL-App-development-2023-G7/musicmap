@@ -26,21 +26,8 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
         setContentView(R.layout.activity_home);
 
         auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
 
-        TextView uuidText = findViewById(R.id.uuid_textView);
-        TextView emailText = findViewById(R.id.email_textView);
-        TextView usernameText = findViewById(R.id.username_textView);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        if (user != null) {
-            uuidText.setText(user.getUid());
-            emailText.setText(user.getEmail());
-            usernameText.setText(user.getDisplayName());
-        }
-
-        Button logoutButton = findViewById(R.id.logout_button);
-        logoutButton.setOnClickListener(view -> logout());
 
         bottomNavigationView.setOnItemSelectedListener((NavigationBarView.OnItemSelectedListener) item -> {
             // using ifs instead of switch as resource IDs will be non-final by default in
