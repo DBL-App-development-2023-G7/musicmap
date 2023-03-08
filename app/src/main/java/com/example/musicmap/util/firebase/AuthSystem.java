@@ -87,8 +87,8 @@ public class AuthSystem {
                     tcs.setResult(new User(userData, uid));
                 }
             } else {
-                tcs.setException(new FirebaseFirestoreException("An error has occurred while trying to retrieve " +
-                        "and apply the user's data from firebase.", FirebaseFirestoreException.Code.UNKNOWN));
+                tcs.setException(new FirebaseFirestoreException("An error has occurred while trying to retrieve "
+                        + "and apply the user's data from firebase.", FirebaseFirestoreException.Code.UNKNOWN));
             }
 
             return tcs.getTask();
