@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class HomeActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
 
     private FirebaseAuth auth;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +29,7 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
         auth = FirebaseAuth.getInstance();
         auth.addAuthStateListener(this);
 
-        FirebaseUser user = auth.getCurrentUser();
+        user = auth.getCurrentUser();
 
         TextView emailVerified = findViewById(R.id.emailVerified_textView);
         TextView uuidText = findViewById(R.id.uuid_textView);
@@ -37,11 +38,14 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         if (user != null) {
-            if (user.isEmailVerified()) {
-                emailVerified.setText(getString(R.string.email_verified));
-            } else {
-                emailVerified.setText(R.string.email_not_verified);
-            }
+            user.reload().continueWithTask(task -> {
+                if (user.isEmailVerified()) {
+                    emailVerified.setText(getString(R.string.email_verified));
+                } else {
+                    emailVerified.setText(R.string.email_not_verified);
+                }
+                return null;
+            });
             uuidText.setText(user.getUid());
             emailText.setText(user.getEmail());
             usernameText.setText(user.getDisplayName());
@@ -75,7 +79,7 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
     @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
         auth = firebaseAuth;
-        FirebaseUser user = auth.getCurrentUser();
+        user = auth.getCurrentUser();
 
         if (user == null) {
             Intent authIntent = new Intent(this, AuthActivity.class);
