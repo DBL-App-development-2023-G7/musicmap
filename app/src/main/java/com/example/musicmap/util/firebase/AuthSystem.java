@@ -11,9 +11,13 @@ import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.internal.api.FirebaseNoSignedInUserException;
+import com.google.rpc.Code;
 
 public class AuthSystem {
 
@@ -52,7 +56,7 @@ public class AuthSystem {
             }
 
             TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
-            tcs.setException(new NullPointerException("The firebaseUser is null."));
+            tcs.setException(new FirebaseNoSignedInUserException("The firebaseUser is null."));
             return tcs.getTask();
         });
     }
@@ -77,7 +81,8 @@ public class AuthSystem {
                 if (exception != null) {
                     tcs.setException(exception);
                 } else {
-                    tcs.setException(new Exception("Firestore Exception"));
+                    tcs.setException(new FirebaseFirestoreException("There is no user connected!",
+                            FirebaseFirestoreException.Code.UNKNOWN));
                 }
                 return tcs.getTask();
             }
@@ -89,7 +94,8 @@ public class AuthSystem {
                 if (exception != null) {
                     tcs.setException(exception);
                 } else {
-                    tcs.setException(new Exception("Firestore Document does not exist!"));
+                    tcs.setException(new FirebaseFirestoreException("Firestore Document does not "
+                            + "exist!", FirebaseFirestoreException.Code.NOT_FOUND));
                 }
                 return tcs.getTask();
             }
@@ -104,8 +110,9 @@ public class AuthSystem {
                     tcs.setResult(new User(userData, uid));
                 }
             } else {
-                tcs.setException(new Exception("An error has occurred while trying to retrieve "
-                        + "and apply the user's data from firebase."));
+                tcs.setException(new FirebaseFirestoreException("An error has occurred while "
+                        + "trying to retrieve and apply the user's data from firebase.",
+                        FirebaseFirestoreException.Code.UNKNOWN));
             }
 
             return tcs.getTask();
@@ -123,7 +130,7 @@ public class AuthSystem {
 
         if (firebaseUser == null) {
             TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
-            tcs.setException(new Exception("There is no user connected!"));
+            tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
             return tcs.getTask();
         }
 
@@ -153,7 +160,7 @@ public class AuthSystem {
 
         TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
         if (firebaseUser == null) {
-            tcs.setException(new Exception("There is no user connected!"));
+            tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
             return tcs.getTask();
         }
 
@@ -165,8 +172,8 @@ public class AuthSystem {
                 if (exception != null) {
                     tcs.setException(exception);
                 } else {
-                    tcs.setException(new Exception("An unknown error has occurred while "
-                            + "trying to delete the user."));
+                    tcs.setException(new FirebaseAuthException("unknown", "An unknown error has " +
+                            "occurred while trying to delete the user."));
                 }
                 return tcs.getTask();
             }

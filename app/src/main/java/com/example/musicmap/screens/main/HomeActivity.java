@@ -19,7 +19,6 @@ import com.google.firebase.auth.FirebaseUser;
 public class HomeActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
 
     private FirebaseAuth auth;
-    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +28,7 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
         auth = FirebaseAuth.getInstance();
         auth.addAuthStateListener(this);
 
-        user = auth.getCurrentUser();
+        FirebaseUser firebaseUser = auth.getCurrentUser();
 
         TextView emailVerified = findViewById(R.id.emailVerified_textView);
         TextView uuidText = findViewById(R.id.uuid_textView);
@@ -37,18 +36,18 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
         TextView usernameText = findViewById(R.id.username_textView);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        if (user != null) {
-            user.reload().continueWithTask(task -> {
-                if (user.isEmailVerified()) {
+        if (firebaseUser != null) {
+            firebaseUser.reload().continueWithTask(task -> {
+                if (firebaseUser.isEmailVerified()) {
                     emailVerified.setText(getString(R.string.email_verified));
                 } else {
                     emailVerified.setText(R.string.email_not_verified);
                 }
+                uuidText.setText(firebaseUser.getUid());
+                emailText.setText(firebaseUser.getEmail());
+                usernameText.setText(firebaseUser.getDisplayName());
                 return null;
             });
-            uuidText.setText(user.getUid());
-            emailText.setText(user.getEmail());
-            usernameText.setText(user.getDisplayName());
         }
 
         Button logoutButton = findViewById(R.id.logout_button);
@@ -79,9 +78,9 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
     @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
         auth = firebaseAuth;
-        user = auth.getCurrentUser();
+        FirebaseUser firebaseUser = auth.getCurrentUser();
 
-        if (user == null) {
+        if (firebaseUser == null) {
             Intent authIntent = new Intent(this, AuthActivity.class);
             authIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(authIntent);
