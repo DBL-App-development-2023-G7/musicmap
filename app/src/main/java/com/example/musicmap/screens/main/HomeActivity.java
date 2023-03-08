@@ -94,6 +94,7 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
         auth.signOut();
     }
 
+    // TODO refactor, should be elsewhere
     public void deleteAccount() {
         AuthSystem.deleteUser();
     }

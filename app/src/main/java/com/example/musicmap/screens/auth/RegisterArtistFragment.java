@@ -22,8 +22,8 @@ public class RegisterArtistFragment extends RegisterFragment {
     }
 
     @Override
-    protected UserData getTempUser() {
-        return new ArtistData(super.getTempUser(), false);
+    protected UserData createUserData() {
+        return new ArtistData(super.createUserData(), false);
     }
 
 }

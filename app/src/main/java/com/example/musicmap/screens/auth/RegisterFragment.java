@@ -209,7 +209,7 @@ public class RegisterFragment extends AuthFragment {
         }
     }
 
-    protected void updateFormValues() {
+    private void updateFormValues() {
         username = usernameInput.getText().toString();
         firstName = firstNameInput.getText().toString();
         lastName = lastNameInput.getText().toString();
@@ -219,6 +219,11 @@ public class RegisterFragment extends AuthFragment {
         birthdate = new Date();
     }
 
+    /**
+     * Validates all {@link #updateFormValues() previously retrieved} form input values.
+     *
+     * @return whether the form input is valid.
+     */
     protected boolean validate() {
         return checkUsername(username)
                 & checkFirstName(firstName) & checkLastName(lastName)
@@ -227,10 +232,20 @@ public class RegisterFragment extends AuthFragment {
                 & checkBirthdate(birthdate);
     }
 
-    protected UserData getTempUser() {
+    /**
+     * Creates a {@link UserData} instance using the {@link #updateFormValues() previously retrieved}
+     * input values of the form.
+     *
+     * @return the created {@link UserData} instance.
+     */
+    protected UserData createUserData() {
         return new UserData(username, firstName, lastName, email, birthdate);
     }
 
+    /**
+     * Attempts to register the user, by first {@link #updateFormValues() retrieving} the input values,
+     * then {@link #validate() validating} them, then registering the {@link #createUserData() user}.
+     */
     protected void register() {
         updateFormValues();
 
@@ -240,14 +255,14 @@ public class RegisterFragment extends AuthFragment {
             return;
         }
 
-        AuthSystem.register(getTempUser(), password)
+        AuthSystem.register(createUserData(), password)
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
                         String exceptionText;
                         if (task.getException() != null) {
-                            exceptionText = task.getException().toString();
+                            exceptionText = "An exception occurred: " + task.getException().toString();
                         } else {
-                            exceptionText = "Unknown exception";
+                            exceptionText = "An unknown exception occurred";
                         }
                         Toast.makeText(getActivity(), exceptionText, Toast.LENGTH_SHORT).show();
                     }
