@@ -17,7 +17,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException;
-import com.google.rpc.Code;
 
 public class AuthSystem {
 
@@ -172,8 +171,8 @@ public class AuthSystem {
                 if (exception != null) {
                     tcs.setException(exception);
                 } else {
-                    tcs.setException(new FirebaseAuthException("unknown", "An unknown error has " +
-                            "occurred while trying to delete the user."));
+                    tcs.setException(new FirebaseAuthException("unknown", "An unknown error has "
+                            + "occurred while trying to delete the user."));
                 }
                 return tcs.getTask();
             }
