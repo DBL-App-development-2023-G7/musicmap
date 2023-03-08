@@ -249,7 +249,6 @@ public class RegisterFragment extends AuthFragment {
                         } else {
                             exceptionText = "Unknown exception";
                         }
-
                         Toast.makeText(getActivity(), exceptionText, Toast.LENGTH_SHORT).show();
                     }
                 });

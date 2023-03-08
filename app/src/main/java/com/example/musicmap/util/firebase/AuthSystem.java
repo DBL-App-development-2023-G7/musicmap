@@ -11,7 +11,6 @@ import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,9 +31,9 @@ public class AuthSystem {
     }
 
     /**
-     * This method registers a user using the Firebase Auth system. This method also add the date
-     * that is not contained in the profile of the user to the Firestore Database and sends a
-     * verification email to the given user's email address.
+     * This method registers a user using the Firebase Auth system. This method also add the date that is not contained
+     * in the profile of the user to the Firestore Database and sends a verification email to the given user's email
+     * address.
      *
      * @param userData the user to be registered
      * @param password the password of the user to be registered
@@ -45,17 +44,16 @@ public class AuthSystem {
         String email = userData.getEmail();
 
         Task<AuthResult> registerAccount = auth.createUserWithEmailAndPassword(email, password);
-        return registerAccount.continueWithTask(task -> {
-            FirebaseUser firebaseUser = task.getResult().getUser();
+        return registerAccount.onSuccessTask(result -> {
+            TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+            FirebaseUser firebaseUser = result.getUser();
 
             if (firebaseUser != null) {
                 Task<Void> sendEmail = firebaseUser.sendEmailVerification();
                 Task<Void> addUser = addUserToFirestore(new User(userData, firebaseUser.getUid()));
                 return Tasks.whenAll(sendEmail, addUser);
             }
-
-            TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
-            tcs.setException(new FirebaseNoSignedInUserException("The firebaseUser is null."));
+            tcs.setException(new IllegalStateException("The firebaseUser is null."));
             return tcs.getTask();
         });
     }
@@ -69,37 +67,17 @@ public class AuthSystem {
     public static Task<User> getUserFromUid(String uid) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
-        Task<DocumentSnapshot> getUserDataFirestore =
-                firestore.collection("Users").document(uid).get();
+        Task<DocumentSnapshot> getUserDataFirestore = firestore.collection("Users").document(uid).get();
 
-        return getUserDataFirestore.continueWithTask(task -> {
+        return getUserDataFirestore.onSuccessTask(doc -> {
             TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
 
-            if (!task.isSuccessful()) {
-                Exception exception = task.getException();
-                if (exception != null) {
-                    tcs.setException(exception);
-                } else {
-                    tcs.setException(new FirebaseFirestoreException("There is no user connected!",
-                            FirebaseFirestoreException.Code.UNKNOWN));
-                }
-                return tcs.getTask();
-            }
-
-            DocumentSnapshot doc = task.getResult();
+            UserData userData = doc.toObject(UserData.class);
 
             if (!doc.exists()) {
-                Exception exception = task.getException();
-                if (exception != null) {
-                    tcs.setException(exception);
-                } else {
-                    tcs.setException(new FirebaseFirestoreException("Firestore Document does not "
-                            + "exist!", FirebaseFirestoreException.Code.NOT_FOUND));
-                }
-                return tcs.getTask();
+                tcs.setException(new FirebaseFirestoreException("Document does not exist.",
+                        FirebaseFirestoreException.Code.NOT_FOUND));
             }
-
-            UserData userData = doc.toObject(UserData.class);
 
             if (userData != null) {
                 if (userData.isArtist()) {
@@ -109,9 +87,8 @@ public class AuthSystem {
                     tcs.setResult(new User(userData, uid));
                 }
             } else {
-                tcs.setException(new FirebaseFirestoreException("An error has occurred while "
-                        + "trying to retrieve and apply the user's data from firebase.",
-                        FirebaseFirestoreException.Code.UNKNOWN));
+                tcs.setException(new FirebaseFirestoreException("An error has occurred while trying to retrieve " +
+                        "and apply the user's data from firebase.", FirebaseFirestoreException.Code.UNKNOWN));
             }
 
             return tcs.getTask();
@@ -137,8 +114,8 @@ public class AuthSystem {
     }
 
     /**
-     * This method remove the data stored in the Firestore database of the user that has the
-     * given uid. This method is intentionally made private.
+     * This method remove the data stored in the Firestore database of the user that has the given uid. This method
+     * is intentionally made private.
      *
      * @param uid the uid of the user
      * @return the result of this task
@@ -163,20 +140,7 @@ public class AuthSystem {
             return tcs.getTask();
         }
 
-        return removeUserFromFirestore(firebaseUser.getUid()).continueWithTask(task -> {
-            if (task.isSuccessful()) {
-                return firebaseUser.delete();
-            } else {
-                Exception exception = task.getException();
-                if (exception != null) {
-                    tcs.setException(exception);
-                } else {
-                    tcs.setException(new FirebaseAuthException("unknown", "An unknown error has "
-                            + "occurred while trying to delete the user."));
-                }
-                return tcs.getTask();
-            }
-        });
+        return removeUserFromFirestore(firebaseUser.getUid()).onSuccessTask(task -> firebaseUser.delete());
     }
 
 }
