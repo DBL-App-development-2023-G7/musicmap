@@ -134,13 +134,14 @@ public class AuthSystem {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
-        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
         if (firebaseUser == null) {
+            TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
             tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
             return tcs.getTask();
         }
 
-        return removeUserFromFirestore(firebaseUser.getUid()).onSuccessTask(task -> firebaseUser.delete());
+        return removeUserFromFirestore(firebaseUser.getUid())
+                .onSuccessTask(task -> firebaseUser.delete());
     }
 
 }
