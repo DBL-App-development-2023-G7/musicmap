@@ -1,27 +1,30 @@
 package com.example.musicmap.user;
 
-import java.util.Date;
-import java.util.Map;
-
+/**
+ * The artist class.
+ */
 public class Artist extends User {
 
-    public Artist(User user) {
-        super(user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail(),
-                user.getBirthdate(), user.getUuid());
-
+    public Artist(ArtistData artistData, String uid) {
+        super(artistData, uid);
     }
 
-    public Artist(String username, String firstName, String lastName, String email,
-                  Date birthdate, String uuid) {
-        super(username, firstName, lastName, email, birthdate, uuid);
-
+    /**
+     * This method retrieves the data associated with this artist.
+     *
+     * @return the {@code ArtistData} of this artist
+     */
+    public ArtistData getArtistData() {
+        return (ArtistData) this.getData();
     }
 
-    @Override
-    public Map<String, Object> getFirestoreAttributes() {
-        Map<String, Object> attributes = super.getFirestoreAttributes();
-        attributes.put("artist", true);
-        return attributes;
+    /**
+     * This method checks if the artist is verified.
+     *
+     * @return true if the artist is verified
+     */
+    public boolean isVerified() {
+        return getArtistData().getVerified();
     }
 
 }

@@ -9,6 +9,7 @@
     <string name="phone">Phone</string>
     <string name="login">Login</string>
     <string name="logout">Log out</string>
+    <string name="delete_account">Delete Account</string>
     <string name="register">Register</string>
     <string name="register_artist">Register as Artist</string>
     <string name="back">Back</string>
@@ -16,4 +17,6 @@
     <string name="navbarPost">Post</string>
     <string name="navbarFeed">Feed</string>
     <string name="navbarMap">Map</string>
+    <string name="email_verified">Your email is verified!</string>
+    <string name="email_not_verified">Your email is not verified!</string>
 </resources>
