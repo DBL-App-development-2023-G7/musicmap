@@ -14,9 +14,11 @@
     <string name="register_artist">Register as Artist</string>
     <string name="back">Back</string>
     <string name="birthdate">Birthdate</string>
-    <string name="navbarPost">Post</string>
-    <string name="navbarFeed">Feed</string>
-    <string name="navbarMap">Map</string>
+    <string name="navbar_post">Post</string>
+    <string name="navbar_feed">Feed</string>
+    <string name="navbar_map">Map</string>
     <string name="email_verified">Your email is verified!</string>
     <string name="email_not_verified">Your email is not verified!</string>
+    <string name="appbar_search">Search</string>
+    <string name="appbar_profile">Profile</string>
 </resources>

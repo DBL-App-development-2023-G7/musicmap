@@ -16,38 +16,37 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/emailVerified_textView"
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold" />
+            app:elevation="0dp">
 
-        <TextView
-            android:id="@+id/uuid_textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/topAppBar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/primary_rounded"
+                android:elevation="4dp"
+                app:navigationIcon="@drawable/ic_launcher_background">
 
-        <TextView
-            android:id="@+id/email_textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+                <ImageView
+                    android:id="@+id/appbarProfile"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="end"
+                    android:contentDescription="@string/appbar_profile"
+                    app:srcCompat="@drawable/baseline_person_24" />
 
-        <TextView
-            android:id="@+id/username_textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/logout_button"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:text="@string/logout" />
-
-        <Button
-            android:id="@+id/deleteAccount_button"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:text="@string/delete_account" />
+                <ImageView
+                    android:id="@+id/appbarSearch"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="end"
+                    android:layout_margin="10dp"
+                    android:contentDescription="@string/appbar_search"
+                    app:srcCompat="@drawable/baseline_search_24" />
+            </com.google.android.material.appbar.MaterialToolbar>
+        </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment_view"
@@ -64,7 +63,7 @@
         android:layout_marginRight="35dp"
         android:layout_marginBottom="-10dp"
         android:minHeight="@dimen/navbar_min_height"
-        android:background="@drawable/bottom_nav"
+        android:background="@drawable/primary_rounded"
         android:elevation="5dp"
         app:itemIconTint="@drawable/bottom_nav_selection"
         app:labelVisibilityMode="unlabeled"
