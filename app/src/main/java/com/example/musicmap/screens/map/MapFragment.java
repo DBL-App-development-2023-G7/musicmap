@@ -46,7 +46,7 @@ public class MapFragment extends Fragment {
      *
      * @return the map view.
      */
-    public MapView getMapView() {
+    protected MapView getMapView() {
         return mapView;
     }
 
