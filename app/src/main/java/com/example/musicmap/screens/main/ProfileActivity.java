@@ -1,4 +1,4 @@
-package com.example.musicmap.screens;
+package com.example.musicmap.screens.main;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +24,7 @@ public class ProfileActivity extends AppCompatActivity implements FirebaseAuth.A
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
         TextView emailVerified = findViewById(R.id.emailVerified_textView);
