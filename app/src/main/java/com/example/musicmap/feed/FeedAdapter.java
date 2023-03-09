@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -28,6 +30,13 @@ public class FeedAdapter extends ArrayAdapter {
             row = inflater.inflate(R.layout.single_post_layout_feed, null, true);
         }
 
+        TextView titleText = row.findViewById(R.id.listview_item_title);
+        TextView shortText = row.findViewById(R.id.listview_item_short_description);
+        ImageView mainImage = row.findViewById(R.id.listview_image);
+
+        titleText.setText(feedItems[position].getTimePosted().toString());
+        shortText.setText(feedItems[position].getLocation().toString());
+        mainImage.setImageURI(feedItems[position].getPhoto());
         return  row;
     }
 }

@@ -14,7 +14,7 @@ public abstract class MainFragment extends Fragment {
     /**
      * The hosting activity of the fragment.
      */
-    private Activity activity;
+    private HomeActivity activity;
 
     /**
      * Returns the main activity object (host activity)
@@ -40,7 +40,7 @@ public abstract class MainFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        this.activity = getActivity();
+        this.activity = (HomeActivity) getActivity();
     }
 
 }
