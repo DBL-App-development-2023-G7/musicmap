@@ -38,7 +38,17 @@ public class MapFragment extends Fragment {
      *
      * @see #addOverlays() on how to add overlays to this map view.
      */
-    protected MapView mapView;
+    private MapView mapView;
+
+    /**
+     * Make sure to call in the lifecycle after {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}
+     * has been called.
+     *
+     * @return the map view.
+     */
+    public MapView getMapView() {
+        return mapView;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +68,8 @@ public class MapFragment extends Fragment {
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
         // Request needed permissions if applicable
-        // TODO message explaining the permissions, see https://developer.android.com/training/permissions/requesting#explain
+        // TODO message explaining the permissions,
+        //  see https://developer.android.com/training/permissions/requesting#explain
         //  check if permissions were granted, check if the app can function without these permission
         //  probably do permissions elsewhere
         if (activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
