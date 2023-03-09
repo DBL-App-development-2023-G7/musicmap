@@ -16,7 +16,8 @@
             android:exported="false" />
         <activity
             android:name=".screens.main.HomeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.MusicMap.NoActionBar" />
         <activity
             android:name=".screens.auth.AuthActivity"
             android:exported="true"
