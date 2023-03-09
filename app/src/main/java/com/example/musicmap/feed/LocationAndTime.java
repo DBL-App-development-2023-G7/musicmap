@@ -7,12 +7,12 @@ import java.util.Date;
 /**
  * The generalized class of feed objects.
  */
-public abstract class FeedObject {
+public abstract class LocationAndTime {
 
     private final Date timePosted;
     private final GeoPoint location;
 
-    public FeedObject(Date timePosted, GeoPoint location) {
+    public LocationAndTime(Date timePosted, GeoPoint location) {
         this.timePosted = timePosted;
         this.location = location;
     }

@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * The music memory class.
  */
-public class MusicMemory extends FeedObject {
+public class MusicMemory extends LocationAndTime {
 
     // TODO remaining details, e.g. song reference
     private final String photo;
@@ -20,5 +20,5 @@ public class MusicMemory extends FeedObject {
     public String getPhoto() {
         return photo;
     }
-    
+
 }
