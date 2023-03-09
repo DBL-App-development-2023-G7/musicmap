@@ -13,5 +13,11 @@
     <string name="register_artist">Register as Artist</string>
     <string name="back">Back</string>
     <string name="birthdate">Birthdate</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="artist_data_page">Artist Data Page</string>
+    <string name="map_label">Where is your music mostly streamed?</string>
+    <string name="top_streams_label">Top played songs:</string>
+    <string name="total_streams_label">Total streams:</string>
+    <string name="welcome_data_page">Welcome to your data page!</string>
+    <string name="ranking_artist">Your ranking as an artist:</string>
+
 </resources>

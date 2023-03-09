@@ -1,141 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".screens.artist.ArtistDataFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <ScrollView
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background">
+        android:background="@color/background"
+        tools:context=".screens.artist.ArtistDataFragment">
 
-        <LinearLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/artistDetailsLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/artistNameLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/kenia"
+                android:text="5 Times Rock"
+                android:textColor="@color/white"
+                android:textSize="60sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/titleLable"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter"
-                    android:text="Artist Data Page"
-                    android:textColor="@color/white"
-                    android:textSize="34sp"
-                    android:textStyle="bold"
-                    android:typeface="normal"
-                    app:layout_constraintStart_toStartOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/welcomeDataPageLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:fontFamily="@font/inter"
+                android:text="@string/welcome_data_page"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/artistNameLabel" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    android:id="@+id/ratingLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Rating : 3,7 / 5"
-                    android:textColor="@color/white"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/artistRating" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mapLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-                <RatingBar
-                    android:id="@+id/artistRating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="32dp"
-                    android:background="#173700B3"
-                    android:foregroundTint="@color/purple_500"
-                    android:indeterminate="false"
-                    android:numStars="5"
-                    android:progressTint="@color/purple_200"
-                    android:rating="3.7"
-                    android:secondaryProgressTint="@color/purple_200"
-                    android:stepSize="0.1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/mapLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/inter"
+                android:labelFor="@id/mapView"
+                android:text="@string/map_label"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/mapView"
+                android:layout_width="312dp"
+                android:layout_height="275dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mapLabel" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    android:id="@+id/mapLable"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/inter"
-                    android:text="Where is your music mostly played?"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topPlayedLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-                <com.google.android.gms.maps.MapView
-                    android:id="@+id/mapView"
-                    android:layout_width="312dp"
-                    android:layout_height="275dp"
-                    android:layout_marginTop="4dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/mapLable" />
+            <TextView
+                android:id="@+id/topPlayedSongLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp"
+                android:fontFamily="@font/inter"
+                android:text="@string/top_streams_label"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/totalStreamsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/totalStreamedLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp"
+                android:fontFamily="@font/inter"
+                android:text="@string/total_streams_label"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/topPlayedSongLable"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/inter"
-                    android:text="Top played song :"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/rankingLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/totalStreamedLable"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/inter"
-                    android:text="Total streams :"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/rankingLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/inter"
+                android:text="@string/ranking_artist"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        </LinearLayout>
-    </ScrollView>
+            <TextView
+                android:id="@+id/artistRanking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/kenia"
+                android:text="1st"
+                android:textColor="@color/white"
+                android:textSize="48sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rankingLabel" />
 
-</FrameLayout>
+            <TextView
+                android:id="@+id/artistRankingTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/inter"
+                android:text="/ 157 "
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold|italic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.08"
+                app:layout_constraintStart_toEndOf="@+id/artistRanking"
+                app:layout_constraintTop_toBottomOf="@+id/rankingLabel" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+</ScrollView>
