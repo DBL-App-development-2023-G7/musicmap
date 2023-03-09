@@ -9,23 +9,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.musicmap.R;
 import com.example.musicmap.screens.main.HomeActivity;
+import com.example.musicmap.user.Artist;
+import com.example.musicmap.user.User;
+import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.Map;
 
 public class AuthActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
 
     private static final int FRAGMENT_CONTAINER_ID = R.id.fragment_container_view;
 
-    private static final String TAG = "FirebaseAuth";
+    private static final String TAG = "AuthActivity";
 
     private FirebaseAuth auth;
-    private FirebaseUser user;
-    private FirebaseFirestore firestore;
+    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +33,8 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
 
         auth = FirebaseAuth.getInstance();
         auth.addAuthStateListener(this);
-        user = auth.getCurrentUser();
-        firestore = FirebaseFirestore.getInstance();
+
+        firebaseUser = auth.getCurrentUser();
 
         if (savedInstanceState == null) {
             FragmentUtil.initFragment(getSupportFragmentManager(), FRAGMENT_CONTAINER_ID,
@@ -47,11 +45,12 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
     @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
         auth = firebaseAuth;
-        user = auth.getCurrentUser();
+        firebaseUser = auth.getCurrentUser();
 
-        if (user != null) {
+        if (firebaseUser != null) {
             loadActivityBasedOnVerificationStatus();
         } else {
+
             FragmentUtil.replaceFragment(getSupportFragmentManager(), FRAGMENT_CONTAINER_ID,
                     LoginFragment.class);
         }
@@ -81,64 +80,28 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
         Intent homeIntent = new Intent(this, HomeActivity.class);
         homeIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(homeIntent);
+        Log.d(TAG, "Started Home Activity");
         finish();
     }
 
     public void loadActivityBasedOnVerificationStatus() {
-        firestore.collection("Users").document(user.getUid()).get()
-                .addOnCompleteListener(task -> {
-                    // TODO separate frontend (Activity) from Firebase interaction
-                    if (!task.isSuccessful()) {
-                        Log.d(TAG, "firestore:fail");
-                        return;
-                    }
-                    Log.d(TAG, "firestore:success");
-
-                    DocumentSnapshot doc = task.getResult();
-                    if (!doc.exists()) {
-                        Log.d(TAG, "findDoc:fail");
-                        return;
-                    }
-                    Log.d(TAG, "findDoc:success");
-
-                    Map<String, Object> data = doc.getData();
-                    if (data == null) {
-                        Log.d(TAG, "data:fail");
-                        return;
-                    }
-                    Log.d(TAG, "data:success");
-
-                    Object artistFirebaseBoolean = data.get("artist");
-                    if (!(artistFirebaseBoolean instanceof Boolean)) {
-                        Log.e(TAG, "userStructure:mismatch");
-                        return;
-                    }
-
-                    boolean isArtist = (boolean) artistFirebaseBoolean;
-
-                    if (isArtist) {
-                        Log.d(TAG, "User is an artist");
-
-                        Object verifiedFirebaseBoolean = data.get("verified");
-                        if (!(verifiedFirebaseBoolean instanceof Boolean)) {
-                            Log.e(TAG, "userStructure:mismatch");
-                            return;
-                        }
-
-                        boolean verified = (boolean) verifiedFirebaseBoolean;
-
-                        if (!verified) {
-                            Log.d(TAG, "Artist is not verified");
-                            Log.d(TAG, "Loading the verification fragment");
-                            loadVerificationFragment();
-                            return;
-                        }
-                        Log.d(TAG, "Artist is verified");
-                    } else {
-                        Log.d(TAG, "Loading the home activity");
-                        loadHomeActivity();
-                    }
-                });
+        AuthSystem.getUser().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                User user = task.getResult();
+                if (user.isArtist() && !((Artist) user).isVerified()) {
+                    loadVerificationFragment();
+                } else {
+                    loadHomeActivity();
+                }
+            } else {
+                Exception exception = task.getException();
+                if (exception != null) {
+                    Log.e(TAG, exception.toString());
+                } else {
+                    Log.e(TAG, "Unknown error!");
+                }
+            }
+        });
     }
 
     @Override
