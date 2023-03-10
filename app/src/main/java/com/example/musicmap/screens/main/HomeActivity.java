@@ -82,7 +82,6 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
 
         if (firebaseUser == null) {
             Intent authIntent = new Intent(this, AuthActivity.class);
-            authIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(authIntent);
             finish();
         }
