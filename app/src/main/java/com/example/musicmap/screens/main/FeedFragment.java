@@ -13,7 +13,6 @@ import com.example.musicmap.feed.MusicMemory;
 import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -24,8 +23,8 @@ public class FeedFragment extends MainFragment {
         View feedView = inflater.inflate(R.layout.fragment_feed, container, false);
         List<MusicMemory> feed = new ArrayList<>();
 
-        for (int i = 0; i < 5; i++) {
-            String imageURi = "http://upload.wikimedia.org/wikipedia/commons/8/86/Overview_of_Technische_Universiteit_Eindhoven.jpg"; // // CSOFF: LineLength
+        for (int i = 0; i < 10; i++) {
+            String imageURi = "https://www.agconnect.nl/sites/ag/files/2020-05/tu_eindhoven_photo_-_bart_van_overbeeke.jpg.png"; // // CSOFF: LineLength
             Uri uri = Uri.parse(imageURi);
             feed.add(new MusicMemory(new Date(), new GeoPoint(51.4486, 5.4907), uri));
         }
