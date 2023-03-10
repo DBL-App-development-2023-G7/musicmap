@@ -76,7 +76,7 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
                 VerificationFragment.class);
     }
 
-    public void loadHomeActivity() {
+    private void loadHomeActivity() {
         Intent homeIntent = new Intent(this, HomeActivity.class);
         homeIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(homeIntent);
