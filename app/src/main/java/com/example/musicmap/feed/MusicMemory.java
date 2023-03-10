@@ -10,9 +10,9 @@ import java.util.Date;
 public class MusicMemory extends LocationAndTime {
     @Override
     public String toString() {
-        return "MusicMemory{" +
-                "photo=" + photo +
-                '}';
+        return "MusicMemory{"
+                + "photo=" + photo
+                + '}';
     }
 
     // TODO remaining details, e.g. song reference

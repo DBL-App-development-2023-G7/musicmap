@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.musicmap.R;
@@ -27,7 +26,8 @@ public class FeedFragment extends MainFragment {
         MusicMemory[] feed = new MusicMemory[5];
 
         for (int i = 0; i < 5; i++) {
-            Uri uri = Uri.parse("http://upload.wikimedia.org/wikipedia/commons/8/86/Overview_of_Technische_Universiteit_Eindhoven.jpg");
+            String imageURi = "http://upload.wikimedia.org/wikipedia/commons/8/86/Overview_of_Technische_Universiteit_Eindhoven.jpg"; // // CSOFF: LineLength
+            Uri uri = Uri.parse(imageURi);
             feed[i] = new MusicMemory(new Date(), new GeoPoint(51.4486, 5.4907), uri);
         }
 
