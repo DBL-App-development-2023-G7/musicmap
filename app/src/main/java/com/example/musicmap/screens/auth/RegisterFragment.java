@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.musicmap.R;
+import com.example.musicmap.user.UserData;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.firebase.Queries;
 import com.example.musicmap.util.regex.ValidationUtil;
@@ -36,6 +37,16 @@ public class RegisterFragment extends AuthFragment {
     private EditText passwordInput;
     private EditText repeatPasswordInput;
     private EditText birthdateInput;
+    //endregion
+
+    //region declaration of the register form elements' values
+    private String username;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String password;
+    private String repeatPassword;
+    private Date birthdate;
     //endregion
 
     @Override
@@ -76,12 +87,8 @@ public class RegisterFragment extends AuthFragment {
     }
 
     private void selectDate() {
-        DatePickerDialog dialog = new BirthdatePickerDialog(activity, (datePicker, year, month,
-                                                                       day) -> {
-            month++;
-            String date = day + "/" + month + "/" + year;
-            birthdateInput.setText(date);
-        });
+        DatePickerDialog dialog = new BirthdatePickerDialog(this.getAuthActivity(),
+                BirthdatePickerDialog.applyDateToEditText(birthdateInput));
         dialog.show();
     }
 
@@ -202,8 +209,22 @@ public class RegisterFragment extends AuthFragment {
         }
     }
 
-    private boolean isInputValid(String username, String firstName, String lastName, String email,
-                                 String password, String repeatPassword, Date birthdate) {
+    private void updateFormValues() {
+        username = usernameInput.getText().toString();
+        firstName = firstNameInput.getText().toString();
+        lastName = lastNameInput.getText().toString();
+        email = emailInput.getText().toString();
+        password = passwordInput.getText().toString();
+        repeatPassword = repeatPasswordInput.getText().toString();
+        birthdate = new Date();
+    }
+
+    /**
+     * Validates all {@link #updateFormValues() previously retrieved} form input values.
+     *
+     * @return whether the form input is valid.
+     */
+    protected boolean validate() {
         return checkUsername(username)
                 & checkFirstName(firstName) & checkLastName(lastName)
                 & checkEmail(email)
@@ -211,39 +232,45 @@ public class RegisterFragment extends AuthFragment {
                 & checkBirthdate(birthdate);
     }
 
-    private void register() {
-        String username = usernameInput.getText().toString();
-        String firstName = firstNameInput.getText().toString();
-        String lastName = lastNameInput.getText().toString();
-        String email = emailInput.getText().toString();
-        String password = passwordInput.getText().toString();
-        String repeatPassword = repeatPasswordInput.getText().toString();
-        Date birthdate = new Date();
-        Log.d(TAG, "firstName " + firstName);
+    /**
+     * Creates a {@link UserData} instance using the {@link #updateFormValues() previously retrieved}
+     * input values of the form.
+     *
+     * @return the created {@link UserData} instance.
+     */
+    protected UserData createUserData() {
+        return new UserData(username, firstName, lastName, email, birthdate);
+    }
 
-        if (isInputValid(username, firstName, lastName, email, password, repeatPassword,
-                birthdate)) {
-            AuthSystem.register(email, password, username, firstName, lastName, birthdate)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            auth.signOut();
-                        } else {
-                            String exceptionText = "Unknown exception.";
-                            if (task.getException() != null) {
-                                exceptionText = task.getException().toString();
-                            }
-                            Toast.makeText(getActivity(), exceptionText,
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        } else {
-            Toast.makeText(getActivity(), "Some of the fields are incomplete or contain " +
-                    "invalid values.", Toast.LENGTH_LONG).show();
+    /**
+     * Attempts to register the user, by first {@link #updateFormValues() retrieving} the input values,
+     * then {@link #validate() validating} them, then registering the {@link #createUserData() user}.
+     */
+    protected void register() {
+        updateFormValues();
+
+        if (!validate()) {
+            Toast.makeText(getActivity(), "Some of the fields are incomplete or contain "
+                    + "invalid values.", Toast.LENGTH_LONG).show();
+            return;
         }
+
+        AuthSystem.register(createUserData(), password)
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        String exceptionText;
+                        if (task.getException() != null) {
+                            exceptionText = "An exception occurred: " + task.getException().toString();
+                        } else {
+                            exceptionText = "An unknown exception occurred";
+                        }
+                        Toast.makeText(getActivity(), exceptionText, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void back() {
-        activity.loadLoginFragment();
+        this.getAuthActivity().loadLoginFragment();
     }
 
 }

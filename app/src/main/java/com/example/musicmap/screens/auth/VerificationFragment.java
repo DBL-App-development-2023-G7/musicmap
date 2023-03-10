@@ -23,8 +23,8 @@ public class VerificationFragment extends AuthFragment {
     }
 
     private void signOut() {
-        activity.loadLoginFragment();
-        auth.signOut();
+        this.getAuthActivity().loadLoginFragment();
+        this.getAuth().signOut();
     }
 
 }

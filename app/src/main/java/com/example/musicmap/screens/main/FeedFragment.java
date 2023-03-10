@@ -1,29 +1,24 @@
-package com.example.musicmap.screens.auth;
+package com.example.musicmap.screens.main;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.musicmap.user.ArtistData;
-import com.example.musicmap.user.UserData;
+import com.example.musicmap.R;
 
-public class RegisterArtistFragment extends RegisterFragment {
+public class FeedFragment extends MainFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    protected UserData createUserData() {
-        return new ArtistData(super.createUserData(), false);
+        return inflater.inflate(R.layout.fragment_feed, container, false);
     }
 
 }
