@@ -11,32 +11,38 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.example.musicmap.R;
+import com.squareup.picasso.Picasso;
 
-public class FeedAdapter extends ArrayAdapter {
-    private MusicMemory[] feedItems;
-    private Activity activityContext;
+import java.util.List;
 
-    public FeedAdapter(@NonNull Activity activityContext, int resource, MusicMemory[] feedItems) {
-        super(activityContext, resource);
+public class FeedAdapter extends ArrayAdapter<MusicMemory> {
+    private final Activity activityContext;
+
+    public FeedAdapter(@NonNull Activity activityContext, int resource, @NonNull List<MusicMemory> feedItems) {
+        super(activityContext, resource, feedItems);
         this.activityContext = activityContext;
-        this.feedItems = feedItems;
     }
 
+    @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        LayoutInflater inflater = this.activityContext.getLayoutInflater();
         if (convertView == null) {
-            row = inflater.inflate(R.layout.single_post_layout_feed, null, true);
+            LayoutInflater inflater = LayoutInflater.from(activityContext);
+            row = inflater.inflate(R.layout.single_post_layout_feed, parent, false);
         }
 
         TextView titleText = row.findViewById(R.id.listview_item_title);
         TextView shortText = row.findViewById(R.id.listview_item_short_description);
         ImageView mainImage = row.findViewById(R.id.listview_image);
 
-        titleText.setText(feedItems[position].getTimePosted().toString());
-        shortText.setText(feedItems[position].getLocation().toString());
-        mainImage.setImageURI(feedItems[position].getPhoto());
-        return  row;
+        MusicMemory musicMemory = getItem(position);
+        if (musicMemory != null) {
+            titleText.setText(musicMemory.getTimePosted().toString());
+            shortText.setText(musicMemory.getLocation().toString());
+            Picasso.get().load(musicMemory.getPhoto()).into(mainImage);
+        }
+
+        return row;
     }
 }
