@@ -25,7 +25,9 @@ public class FeedFragment extends MainFragment {
 
         // TODO replace with actual feed elements
         for (int i = 0; i < 10; i++) {
-            String imageUri = "https://www.agconnect.nl/sites/ag/files/2020-05/tu_eindhoven_photo_-_bart_van_overbeeke.jpg.png"; // CSOFF: LineLength
+            // CSOFF: LineLength
+            String imageUri = "https://www.agconnect.nl/sites/ag/files/2020-05/tu_eindhoven_photo_-_bart_van_overbeeke.jpg.png";
+            // CSON: LineLength
             Uri uri = Uri.parse(imageUri);
             feed.add(new MusicMemory(new Date(), new GeoPoint(51.4486, 5.4907), uri));
         }
