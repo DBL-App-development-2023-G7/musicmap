@@ -46,10 +46,10 @@ public class ProfileActivity extends AppCompatActivity implements FirebaseAuth.A
         }
 
         Button logoutButton = findViewById(R.id.logout_button);
-        logoutButton.setOnClickListener(view -> logout());
+        logoutButton.setOnClickListener(view -> AuthSystem.logout());
 
         Button deleteAccountButton = findViewById(R.id.deleteAccount_button);
-        deleteAccountButton.setOnClickListener(view -> deleteAccount());
+        deleteAccountButton.setOnClickListener(view -> AuthSystem.deleteUser());
     }
 
     @Override
@@ -63,15 +63,6 @@ public class ProfileActivity extends AppCompatActivity implements FirebaseAuth.A
             startActivity(authIntent);
             finish();
         }
-    }
-
-    public void logout() {
-        auth.signOut();
-    }
-
-    // TODO refactor, should be elsewhere
-    public void deleteAccount() {
-        AuthSystem.deleteUser();
     }
 
     @Override
