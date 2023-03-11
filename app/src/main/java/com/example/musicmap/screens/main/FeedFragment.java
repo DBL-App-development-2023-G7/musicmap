@@ -23,6 +23,7 @@ public class FeedFragment extends MainFragment {
         View feedView = inflater.inflate(R.layout.fragment_feed, container, false);
         List<MusicMemory> feed = new ArrayList<>();
 
+        // TODO replace with actual feed elements
         for (int i = 0; i < 10; i++) {
             String imageUri = "https://www.agconnect.nl/sites/ag/files/2020-05/tu_eindhoven_photo_-_bart_van_overbeeke.jpg.png"; // CSOFF: LineLength
             Uri uri = Uri.parse(imageUri);
