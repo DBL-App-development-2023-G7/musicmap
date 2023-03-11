@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class FeedAdapter extends ArrayAdapter<MusicMemory> {
+
     private final Activity activityContext;
 
     public FeedAdapter(@NonNull Activity activityContext, int resource, @NonNull List<MusicMemory> feedItems) {
@@ -45,4 +46,5 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
 
         return row;
     }
+
 }

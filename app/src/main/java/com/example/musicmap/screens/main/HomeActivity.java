@@ -20,9 +20,8 @@ public class HomeActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         ImageView profileButton = findViewById(R.id.appbarProfile);
 
-        profileButton.setOnClickListener(view -> {
-            startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
-        });
+        profileButton.setOnClickListener(view ->
+                startActivity(new Intent(HomeActivity.this, ProfileActivity.class)));
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             // using ifs instead of switch as resource IDs will be non-final by default in
@@ -42,4 +41,5 @@ public class HomeActivity extends AppCompatActivity {
             return false;
         });
     }
+
 }

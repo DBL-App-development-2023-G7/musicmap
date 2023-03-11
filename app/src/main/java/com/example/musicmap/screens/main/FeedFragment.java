@@ -24,8 +24,8 @@ public class FeedFragment extends MainFragment {
         List<MusicMemory> feed = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
-            String imageURi = "https://www.agconnect.nl/sites/ag/files/2020-05/tu_eindhoven_photo_-_bart_van_overbeeke.jpg.png"; // // CSOFF: LineLength
-            Uri uri = Uri.parse(imageURi);
+            String imageUri = "https://www.agconnect.nl/sites/ag/files/2020-05/tu_eindhoven_photo_-_bart_van_overbeeke.jpg.png"; // CSOFF: LineLength
+            Uri uri = Uri.parse(imageUri);
             feed.add(new MusicMemory(new Date(), new GeoPoint(51.4486, 5.4907), uri));
         }
 
@@ -37,4 +37,5 @@ public class FeedFragment extends MainFragment {
 
         return feedView;
     }
+
 }

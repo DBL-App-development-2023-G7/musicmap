@@ -79,4 +79,5 @@ public class ProfileActivity extends AppCompatActivity implements FirebaseAuth.A
         super.onStop();
         auth.removeAuthStateListener(this);
     }
+
 }
