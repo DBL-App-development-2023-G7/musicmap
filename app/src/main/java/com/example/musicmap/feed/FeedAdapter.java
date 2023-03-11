@@ -16,6 +16,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+/**
+ * The adapter providing data for the feed.
+ */
 public class FeedAdapter extends ArrayAdapter<MusicMemory> {
 
     private final Activity activityContext;
