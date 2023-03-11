@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.musicmap.R;
 import com.squareup.picasso.Picasso;
@@ -26,7 +27,7 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView, ViewGroup parent) {
         View row = convertView;
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(activityContext);
