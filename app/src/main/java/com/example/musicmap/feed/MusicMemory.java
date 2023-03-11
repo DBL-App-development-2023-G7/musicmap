@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * The music memory class.
  */
-public class MusicMemory extends LocationAndTime {
+public class MusicMemory extends Post {
 
     // TODO remaining details, e.g. song reference
     private final Uri photo;
