@@ -37,6 +37,7 @@ public class FragmentUtil {
     public static void replaceFragment(@NonNull FragmentManager fragmentManager,
                                        @IdRes int containerID,
                                        @NonNull Class<? extends Fragment> fragmentClass) {
+        // TODO don't replace if that fragment in the container
         fragmentManager.beginTransaction().setReorderingAllowed(true).replace(containerID,
                 fragmentClass, null).commit();
     }
