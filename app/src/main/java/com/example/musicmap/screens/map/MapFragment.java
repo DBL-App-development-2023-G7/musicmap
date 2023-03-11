@@ -22,6 +22,8 @@ import com.example.musicmap.R;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.CustomZoomButtonsController;
+import org.osmdroid.views.CustomZoomButtonsDisplay;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.Overlay;
@@ -29,6 +31,8 @@ import org.osmdroid.views.overlay.OverlayManager;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 public class MapFragment extends Fragment {
+
+    private static final String MULTITOUCH_FEATURE = "android.hardware.touchscreen.multitouch";
 
     private static final int PERMISSION_ACCESS_FINE_LOCATION_REQUEST_CODE = 1;
     private static final int PERMISSION_ACCESS_COARSE_LOCATION_REQUEST_CODE = 2;
@@ -89,6 +93,25 @@ public class MapFragment extends Fragment {
 
         mapView = rootView.findViewById(R.id.map);
         mapView.setTileSource(TileSourceFactory.MAPNIK); // the default OSM tile source (data source)
+
+        mapView.getZoomController().getDisplay().setPositions(false,
+                CustomZoomButtonsDisplay.HorizontalPosition.RIGHT,
+                CustomZoomButtonsDisplay.VerticalPosition.CENTER);
+
+        if (getContext() == null || getContext().getPackageManager().hasSystemFeature(MULTITOUCH_FEATURE)) {
+            // If multitouch is present, enable zooming with multitouch
+            mapView.setMultiTouchControls(true);
+
+            // and display zoom buttons only when needed
+            mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT);
+
+            // buttons remain for 2.5s after scrolling, fading out takes 0.5s
+            mapView.getZoomController().setShowFadeOutDelays(2500, 500);
+        } else {
+            // If multitouch absent, always enable zoom buttons
+            mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.ALWAYS);
+        }
+
 
         // Add all overlays
         addOverlays();
