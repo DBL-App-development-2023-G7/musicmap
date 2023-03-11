@@ -62,10 +62,7 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Activity activity = getActivity();
-        if (activity == null) { // may be true if used within Context
-            throw new NullPointerException("MapFragment may only be used within an Activity, not a Context");
-        }
+        Activity activity = requireActivity();
 
         // Load and initialize configuration of osmdroid
         Context ctx = activity.getApplicationContext();
