@@ -2,6 +2,7 @@ package com.example.musicmap.screens.auth;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.musicmap.R;
 import com.example.musicmap.util.firebase.AuthSystem;
+import com.example.musicmap.util.regex.MMPatterns;
 import com.example.musicmap.util.regex.ValidationUtil;
 
 public class LoginFragment extends AuthFragment {
@@ -39,28 +41,18 @@ public class LoginFragment extends AuthFragment {
         return rootView;
     }
 
-    //TODO adapt verification system
-
-    private boolean checkEmail(String email) {
-        switch (ValidationUtil.isEmailValid(email)) {
+    private boolean checkIdentifier(String identifier) {
+        switch (ValidationUtil.isIdentifierValid(identifier)) {
             case EMPTY:
-                identifierInput.setError("Please enter a email address.");
+                identifierInput.setError("Please enter a username or an email.");
+                return false;
+            case FORMAT:
+                identifierInput.setError("Please enter a valid username or email.");
                 return false;
             case VALID:
                 return true;
             default:
-                return false;
-        }
-    }
-
-    private boolean checkUsername(String username) {
-        switch (ValidationUtil.isUsernameValid(username)) {
-            case EMPTY:
-                identifierInput.setError("Please enter a username.");
-                return false;
-            case VALID:
-                return true;
-            default:
+                identifierInput.setError("Unexpected input.");
                 return false;
         }
     }
@@ -76,16 +68,21 @@ public class LoginFragment extends AuthFragment {
             case VALID:
                 return true;
             default:
+                passwordInput.setError("Unexpected input.");
                 return false;
         }
+    }
+
+    protected boolean validate(String identifier, String password) {
+        return checkIdentifier(identifier) & checkPassword(password);
     }
 
     private void login() {
         String identifier = identifierInput.getText().toString();
         String password = passwordInput.getText().toString();
 
-        if (checkPassword(password)) {
-            if (checkEmail(identifier)) {
+        if (validate(identifier, password)) {
+            if (Patterns.EMAIL_ADDRESS.matcher(identifier).matches()) {
                 this.getAuth().signInWithEmailAndPassword(identifier, password).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "loginUser:success");
@@ -94,7 +91,7 @@ public class LoginFragment extends AuthFragment {
                         Toast.makeText(getActivity(), "Incorrect email/password.", Toast.LENGTH_SHORT).show();
                     }
                 });
-            } else if (checkUsername(identifier)) {
+            } else if (MMPatterns.USERNAME.matcher(identifier).matches()) {
                 AuthSystem.loginWithUsernameAndPassword(identifier, password).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "loginUser:success");
