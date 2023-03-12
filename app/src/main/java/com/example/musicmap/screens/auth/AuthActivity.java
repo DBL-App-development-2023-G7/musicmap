@@ -69,6 +69,7 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
 
     private void loadHomeActivity() {
         Intent homeIntent = new Intent(this, HomeActivity.class);
+        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(homeIntent);
         Log.d(TAG, "Started Home Activity");
         finish();
