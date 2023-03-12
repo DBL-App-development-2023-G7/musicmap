@@ -105,6 +105,18 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        auth.removeAuthStateListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        auth.addAuthStateListener(this);
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         auth.removeAuthStateListener(this);

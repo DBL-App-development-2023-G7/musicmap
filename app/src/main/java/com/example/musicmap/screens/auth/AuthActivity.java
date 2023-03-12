@@ -35,11 +35,6 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
         auth.addAuthStateListener(this);
 
         firebaseUser = auth.getCurrentUser();
-
-        if (savedInstanceState == null) {
-            FragmentUtil.initFragment(getSupportFragmentManager(), FRAGMENT_CONTAINER_ID,
-                    LoginFragment.class);
-        }
     }
 
     @Override
@@ -49,10 +44,6 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
 
         if (firebaseUser != null) {
             loadActivityBasedOnVerificationStatus();
-        } else {
-
-            FragmentUtil.replaceFragment(getSupportFragmentManager(), FRAGMENT_CONTAINER_ID,
-                    LoginFragment.class);
         }
     }
 
@@ -102,6 +93,20 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
             }
         });
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        auth.removeAuthStateListener(this);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        auth.addAuthStateListener(this);
+    }
+
 
     @Override
     public void onStop() {

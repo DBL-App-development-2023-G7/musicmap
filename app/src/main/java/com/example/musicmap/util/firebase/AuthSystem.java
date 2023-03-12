@@ -58,6 +58,10 @@ public class AuthSystem {
         });
     }
 
+//    public static Task<Void> login(String identifier, String password) {
+//
+//    }
+
     /**
      * This method retrieves the user that has the given uid and their data.
      *

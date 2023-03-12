@@ -101,7 +101,7 @@ public class RegisterFragment extends AuthFragment {
                 usernameInput.setError("Please enter a valid username.");
                 return false;
             case VALID:
-                Queries.getUsersWithUsername(firestore, username).addOnCompleteListener(task -> {
+                Queries.getUsersWithUsername(username).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "usernameQuery:success");
 
