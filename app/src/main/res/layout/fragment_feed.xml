@@ -12,6 +12,6 @@
         android:dividerHeight="0dp"
         android:scrollbars="none"
         android:clipToPadding="false"
-        android:layout_marginTop="75dp"
-        android:layout_marginBottom="40dp"/>
+        android:layout_marginTop="@dimen/toolbar_margin"
+        android:layout_marginBottom="@dimen/navbar_margin"/>
 </RelativeLayout>

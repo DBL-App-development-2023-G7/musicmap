@@ -58,6 +58,7 @@
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <!--TODO: check if we can make fragmentContainerView between navbar and toolbar -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_view"
         android:layout_width="match_parent"
