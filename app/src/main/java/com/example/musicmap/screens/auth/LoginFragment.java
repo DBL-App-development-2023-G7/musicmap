@@ -10,21 +10,21 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.musicmap.R;
+import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.regex.ValidationUtil;
 
 public class LoginFragment extends AuthFragment {
 
     private static final String TAG = "FirebaseLogin";
 
-    private EditText emailInput;
+    private EditText identifierInput;
     private EditText passwordInput;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
-        emailInput = rootView.findViewById(R.id.email_editText);
+        identifierInput = rootView.findViewById(R.id.identifier_editText);
         passwordInput = rootView.findViewById(R.id.password_editText);
 
         Button loginButton = rootView.findViewById(R.id.login_button);
@@ -42,15 +42,31 @@ public class LoginFragment extends AuthFragment {
     private boolean checkEmail(String email) {
         switch (ValidationUtil.isEmailValid(email)) {
             case EMPTY:
-                emailInput.setError("Please enter a email address.");
+                identifierInput.setError("Please enter a email address.");
                 return false;
             case FORMAT:
-                emailInput.setError("Please enter a valid email address.");
+                identifierInput.setError("Please enter a valid email address.");
                 return false;
             case VALID:
                 return true;
             default:
-                emailInput.setError("Unexpected input.");
+                identifierInput.setError("Unexpected input.");
+                return false;
+        }
+    }
+
+    private boolean checkUsername(String username) {
+        switch (ValidationUtil.isUsernameValid(username)) {
+            case EMPTY:
+                identifierInput.setError("Please enter a username.");
+                return false;
+            case FORMAT:
+                identifierInput.setError("Please enter a valid username.");
+                return false;
+            case VALID:
+                return true;
+            default:
+                identifierInput.setError("Unexpected input.");
                 return false;
         }
     }
@@ -66,30 +82,34 @@ public class LoginFragment extends AuthFragment {
             case VALID:
                 return true;
             default:
-                passwordInput.setError("Unexpected input.");
                 return false;
         }
     }
 
-    private boolean isInputValid(String email, String password) {
-        return checkEmail(email) & checkPassword(password);
-    }
-
     private void login() {
-        String email = emailInput.getText().toString();
+        String identifier = identifierInput.getText().toString();
         String password = passwordInput.getText().toString();
 
-        if (isInputValid(email, password)) {
-            this.getAuth().signInWithEmailAndPassword(email, password).addOnCompleteListener(this.getAuthActivity(),
-                    task -> {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "loginUser:success");
-                        } else {
-                            Log.d(TAG, "loginUser:fail", task.getException());
-                            Toast.makeText(getActivity(), "Incorrect email/password.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
+        if (checkPassword(password)) {
+            if (checkEmail(identifier)) {
+                this.getAuth().signInWithEmailAndPassword(identifier, password).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "loginUser:success");
+                    } else {
+                        Log.d(TAG, "loginUser:fail", task.getException());
+                        Toast.makeText(getActivity(), "Incorrect email/password.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else if (checkUsername(identifier)) {
+                AuthSystem.loginWithUsernameAndPassword(identifier, password).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "loginUser:success");
+                    } else {
+                        Log.d(TAG, "loginUser:fail", task.getException());
+                        Toast.makeText(getActivity(), "Incorrect username/password.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }
     }
 
