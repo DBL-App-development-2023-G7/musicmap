@@ -1,5 +1,6 @@
 package com.example.musicmap.screens.main;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -32,11 +33,10 @@ public class FeedFragment extends MainFragment {
             feed.add(new MusicMemory(new Date(), new GeoPoint(51.4486, 5.4907), uri));
         }
 
-        if (getActivity() != null) {
-            FeedAdapter feedAdapter = new FeedAdapter(getActivity(), R.layout.single_post_layout_feed, feed);
-            ListView feedListView = feedView.findViewById(R.id.feed_list);
-            feedListView.setAdapter(feedAdapter);
-        }
+        Activity activity = requireActivity();
+        FeedAdapter feedAdapter = new FeedAdapter(activity, R.layout.single_post_layout_feed, feed);
+        ListView feedListView = feedView.findViewById(R.id.feed_list);
+        feedListView.setAdapter(feedAdapter);
 
         return feedView;
     }
