@@ -39,18 +39,16 @@ public class LoginFragment extends AuthFragment {
         return rootView;
     }
 
+    //TODO adapt verification system
+
     private boolean checkEmail(String email) {
         switch (ValidationUtil.isEmailValid(email)) {
             case EMPTY:
                 identifierInput.setError("Please enter a email address.");
                 return false;
-            case FORMAT:
-                identifierInput.setError("Please enter a valid email address.");
-                return false;
             case VALID:
                 return true;
             default:
-                identifierInput.setError("Unexpected input.");
                 return false;
         }
     }
@@ -60,13 +58,9 @@ public class LoginFragment extends AuthFragment {
             case EMPTY:
                 identifierInput.setError("Please enter a username.");
                 return false;
-            case FORMAT:
-                identifierInput.setError("Please enter a valid username.");
-                return false;
             case VALID:
                 return true;
             default:
-                identifierInput.setError("Unexpected input.");
                 return false;
         }
     }
