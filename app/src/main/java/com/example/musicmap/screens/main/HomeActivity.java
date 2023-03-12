@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.musicmap.R;
 import com.example.musicmap.screens.auth.AuthActivity;
+import com.example.musicmap.screens.map.MapFragment;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -68,6 +69,13 @@ public class HomeActivity extends AppCompatActivity implements FirebaseAuth.Auth
             if (item.getItemId() == R.id.navbarPost) {
                 FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.fragment_view,
                         PostFragment.class);
+                return true;
+            }
+
+            if (item.getItemId() == R.id.navbarMap) {
+                // TODO replace with implementation of MusicMapFragment once made
+                FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.fragment_view,
+                        MapFragment.class);
                 return true;
             }
 
