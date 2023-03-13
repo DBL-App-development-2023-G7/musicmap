@@ -47,3 +47,5 @@ dependencies {
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
 }
+
+apply from: 'checkstyle.gradle'
