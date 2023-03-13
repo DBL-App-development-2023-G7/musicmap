@@ -19,6 +19,9 @@
     <string name="navbarMap">Map</string>
     <string name="email_verified">Your email is verified!</string>
     <string name="email_not_verified">Your email is not verified!</string>
+    <string name="appbar_search">Search</string>
+    <string name="appbar_profile">Profile</string>
+    <string name="appbar_icon">icon</string>
     <string name="artist_data_page">Artist Data Page</string>
     <string name="map_label">Where is your music mostly streamed?</string>
     <string name="top_streams_label">Top played songs:</string>

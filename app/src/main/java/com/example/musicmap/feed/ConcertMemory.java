@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * The concert memory class.
  */
-public class ConcertMemory extends FeedObject {
+public class ConcertMemory extends Post {
 
     // TODO remaining details, e.g. name of concert
     private final String video;
