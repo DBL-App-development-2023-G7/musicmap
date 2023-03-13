@@ -178,4 +178,10 @@ public class AuthSystem {
                 .onSuccessTask(task -> firebaseUser.delete());
     }
 
+    public static void logout() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        auth.signOut();
+    }
+
 }
