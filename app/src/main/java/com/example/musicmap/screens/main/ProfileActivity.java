@@ -11,10 +11,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.musicmap.R;
 import com.example.musicmap.screens.auth.AuthActivity;
 import com.example.musicmap.util.firebase.AuthSystem;
+import com.example.musicmap.util.ui.MMActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class ProfileActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
+public class ProfileActivity extends MMActivity {
 
     private FirebaseAuth auth;
 
@@ -50,25 +51,6 @@ public class ProfileActivity extends AppCompatActivity implements FirebaseAuth.A
 
         Button deleteAccountButton = findViewById(R.id.deleteAccount_button);
         deleteAccountButton.setOnClickListener(view -> AuthSystem.deleteUser());
-    }
-
-    @Override
-    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-        auth = firebaseAuth;
-        FirebaseUser firebaseUser = auth.getCurrentUser();
-
-        if (firebaseUser == null) {
-            Intent authIntent = new Intent(this, AuthActivity.class);
-            authIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            startActivity(authIntent);
-            finish();
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        auth.removeAuthStateListener(this);
     }
 
 }

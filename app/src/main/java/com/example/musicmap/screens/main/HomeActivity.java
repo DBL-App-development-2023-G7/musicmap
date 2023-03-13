@@ -4,14 +4,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.musicmap.R;
+import com.example.musicmap.screens.auth.AuthActivity;
 import com.example.musicmap.screens.map.MapFragment;
+import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.ui.FragmentUtil;
+import com.example.musicmap.util.ui.MMActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends MMActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,45 +55,4 @@ public class HomeActivity extends AppCompatActivity {
             return false;
         });
     }
-
-    @Override
-    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-        auth = firebaseAuth;
-        FirebaseUser firebaseUser = auth.getCurrentUser();
-
-        if (firebaseUser == null) {
-            Intent authIntent = new Intent(this, AuthActivity.class);
-            authIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(authIntent);
-            finish();
-        }
-    }
-
-    public void logout() {
-        auth.signOut();
-    }
-
-    // TODO refactor, should be elsewhere
-    public void deleteAccount() {
-        AuthSystem.deleteUser();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        auth.removeAuthStateListener(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        auth.addAuthStateListener(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        auth.removeAuthStateListener(this);
-    }
-
 }
