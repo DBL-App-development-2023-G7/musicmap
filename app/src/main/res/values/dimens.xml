@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="navbar_icon">38dp</dimen>
+    <dimen name="navbar_min_height">70dp</dimen>
+    <dimen name="toolbar_margin">75dp</dimen>
+    <dimen name="navbar_margin">40dp</dimen>
+</resources>

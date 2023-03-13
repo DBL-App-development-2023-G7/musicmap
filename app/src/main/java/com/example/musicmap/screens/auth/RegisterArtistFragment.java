@@ -1,10 +1,12 @@
 package com.example.musicmap.screens.auth;
 
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.musicmap.user.ArtistData;
+import com.example.musicmap.user.UserData;
 
 public class RegisterArtistFragment extends RegisterFragment {
 
@@ -17,6 +19,11 @@ public class RegisterArtistFragment extends RegisterFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    protected UserData createUserData() {
+        return new ArtistData(super.createUserData(), false);
     }
 
 }
