@@ -1,8 +1,12 @@
 package com.example.musicmap.screens.main;
 
 import android.content.Intent;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +18,7 @@ import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.ui.MMActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 public class ProfileActivity extends MMActivity {
 
@@ -26,6 +31,11 @@ public class ProfileActivity extends MMActivity {
 
         auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
+
+        ImageView profilePicture = findViewById(R.id.profile_imageView);
+        profilePicture.setOnClickListener(view -> {
+
+        });
 
         TextView emailVerified = findViewById(R.id.emailVerified_textView);
         TextView uuidText = findViewById(R.id.uuid_textView);
@@ -42,6 +52,13 @@ public class ProfileActivity extends MMActivity {
                 uuidText.setText(firebaseUser.getUid());
                 emailText.setText(firebaseUser.getEmail());
                 usernameText.setText(firebaseUser.getDisplayName());
+                return null;
+            });
+            AuthSystem.getUser().onSuccessTask(user -> {
+                if (!user.getData().getProfilePicture().equals("")) {
+                    Uri uri = Uri.parse("https://www.agconnect.nl/sites/ag/files/2020-05/tu_eindhoven_photo_-_bart_van_overbeeke.jpg.png");
+                    Picasso.get().load(uri).into(profilePicture);
+                }
                 return null;
             });
         }

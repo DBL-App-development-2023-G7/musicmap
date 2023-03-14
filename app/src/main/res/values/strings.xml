@@ -23,4 +23,5 @@
     <string name="appbar_search">Search</string>
     <string name="appbar_profile">Profile</string>
     <string name="appbar_icon">icon</string>
+    <string name="profile_picture">Profile picture</string>
 </resources>
