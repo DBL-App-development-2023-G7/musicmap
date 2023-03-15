@@ -58,6 +58,13 @@ public class AuthSystem {
         });
     }
 
+    /**
+     * This method logins a user using its username and password.
+     *
+     * @param username the username of the user
+     * @param password the password of the user
+     * @return the result of the task
+     */
     public static Task<AuthResult> loginWithUsernameAndPassword(String username, String password) {
 
         return Queries.getUsersWithUsername(username).onSuccessTask(docs -> {
@@ -180,7 +187,6 @@ public class AuthSystem {
 
     public static void logout() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
-
         auth.signOut();
     }
 

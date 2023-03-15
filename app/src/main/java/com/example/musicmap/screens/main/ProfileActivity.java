@@ -1,19 +1,12 @@
 package com.example.musicmap.screens.main;
 
-import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.musicmap.R;
-import com.example.musicmap.screens.auth.AuthActivity;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.ui.MMActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -55,8 +48,8 @@ public class ProfileActivity extends MMActivity {
                 return null;
             });
             AuthSystem.getUser().onSuccessTask(user -> {
-                if (!user.getData().getProfilePicture().equals("")) {
-                    Uri uri = Uri.parse("https://www.agconnect.nl/sites/ag/files/2020-05/tu_eindhoven_photo_-_bart_van_overbeeke.jpg.png");
+                if (user.getData().hasProfilePicture()) {
+                    Uri uri = user.getData().getProfilePictureUri();
                     Picasso.get().load(uri).into(profilePicture);
                 }
                 return null;
