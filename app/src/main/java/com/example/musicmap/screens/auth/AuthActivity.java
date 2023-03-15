@@ -16,6 +16,8 @@ import com.example.musicmap.util.ui.FragmentUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Objects;
+
 public class AuthActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
 
     private static final int FRAGMENT_CONTAINER_ID = R.id.fragment_container_view;
@@ -40,6 +42,7 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
             FragmentUtil.initFragment(getSupportFragmentManager(), FRAGMENT_CONTAINER_ID,
                     LoginFragment.class);
         }
+        Objects.requireNonNull(getSupportActionBar()).hide();
     }
 
     @Override
