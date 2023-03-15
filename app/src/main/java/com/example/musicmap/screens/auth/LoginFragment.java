@@ -11,6 +11,9 @@ import android.widget.Toast;
 
 import com.example.musicmap.R;
 import com.example.musicmap.util.regex.ValidationUtil;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.util.Objects;
 
 public class LoginFragment extends AuthFragment {
 
@@ -83,11 +86,10 @@ public class LoginFragment extends AuthFragment {
             this.getAuth().signInWithEmailAndPassword(email, password).addOnCompleteListener(this.getAuthActivity(),
                     task -> {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "loginUser:success");
+                            Snackbar.make(this.requireView(), "Successfully logged in", Snackbar.LENGTH_SHORT).show();
                         } else {
                             Log.d(TAG, "loginUser:fail", task.getException());
-                            Toast.makeText(getActivity(), "Incorrect email/password.",
-                                    Toast.LENGTH_SHORT).show();
+                            Snackbar.make(this.requireView(), "Could not log in", Snackbar.LENGTH_SHORT).show();
                         }
                     });
         }
