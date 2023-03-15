@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"  />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,24 +18,22 @@
         android:theme="@style/Theme.MusicMap"
         tools:targetApi="31">
         <activity
-            android:name=".HomeActivity"
+            android:name=".screens.main.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.main.HomeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MusicMap.NoActionBar" />
+        <activity
+            android:name=".screens.auth.AuthActivity"
             android:exported="true"
-            android:label="@string/title_activity_home"
-            android:theme="@style/Theme.MusicMap.NoActionBar">
+            android:label="MusicMap">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".AuthActivity"
-            android:exported="true">
-
-        </activity>
-        <activity
-            android:name=".UserLoginActivity"
-            android:exported="true" />
     </application>
 
 </manifest>

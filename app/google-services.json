@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "261812989121",
+    "project_id": "musicmap-336e4",
+    "storage_bucket": "musicmap-336e4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:261812989121:android:54e9cc3c43be7bcf7cf840",
+        "android_client_info": {
+          "package_name": "com.example.musicmap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "261812989121-j3b170hi0aglbdnka6b08enod742mngq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCyGKMIoQqCd4j__yTr3ch19xdDm3y68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "261812989121-j3b170hi0aglbdnka6b08enod742mngq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

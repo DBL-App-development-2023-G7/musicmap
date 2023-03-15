@@ -14,12 +14,10 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.MusicMap.NoActionBar">
+    <style name="Theme.MusicMap.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#6C1A93</item>
+        <item name="colorOnPrimary">@color/white</item>
         <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
-
-    <style name="Theme.MusicMap.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.MusicMap.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
