@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
@@ -19,8 +20,8 @@ public class Message {
 
     private enum Type {
         Default(null, null, null, null),
-        Success(Color.parseColor("#388E3C"), R.drawable.baseline_check_24, Color.WHITE, "SUCCESS"),
-        Failure(Color.parseColor("#D50000"), R.drawable.baseline_cancel_24, Color.WHITE, "ERROR");
+        Success(Color.parseColor("#2c5140"), R.drawable.baseline_check_24, Color.WHITE, "SUCCESS"),
+        Failure(Color.parseColor("#8B0000"), R.drawable.baseline_cancel_24, Color.WHITE, "ERROR");
 
         private final Integer color;
         private final Integer iconResId;
@@ -86,6 +87,12 @@ public class Message {
             messageLayout.setBackgroundColor(builder.backgroundColor);
         }
 
+        TextView text = messageLayout.findViewById(com.google.android.material.R.id.snackbar_text);
+
+        if (builder.textColor != null) {
+            text.setTextColor(builder.textColor);
+        }
+
         if (builder.icon == null) {
             builder.icon = builder.type.getIcon(builder.view.getContext());
         }
@@ -102,42 +109,12 @@ public class Message {
         private Type type = Type.Default;
         private int duration = Snackbar.LENGTH_SHORT;
         private CharSequence text = null;
+        private Integer textColor = null;
         private CharSequence actionText = "";
         private View.OnClickListener actionClickListener = null;
         private Drawable icon = null;
+        private int iconResId = 0;
         private Integer backgroundColor = null;
-
-        public View getView() {
-            return view;
-        }
-
-        public Type getType() {
-            return type;
-        }
-
-        public int getDuration() {
-            return duration;
-        }
-
-        public CharSequence getText() {
-            return text;
-        }
-
-        public CharSequence getActionText() {
-            return actionText;
-        }
-
-        public View.OnClickListener getActionClickListener() {
-            return actionClickListener;
-        }
-
-        public Drawable getIcon() {
-            return icon;
-        }
-
-        public Integer getBackgroundColor() {
-            return backgroundColor;
-        }
 
         private Builder() {}
 
@@ -155,6 +132,11 @@ public class Message {
             return this;
         }
 
+        public Builder setTextColor(@ColorInt int color) {
+            this.textColor = color;
+            return this;
+        }
+
         public Builder setActionText(CharSequence text) {
             this.actionText = text;
             return this;
@@ -167,6 +149,11 @@ public class Message {
 
         public Builder setDuration(@BaseTransientBottomBar.Duration int duration) {
             this.duration = duration;
+            return this;
+        }
+
+        public Builder setIcon(@DrawableRes int resId) {
+            this.iconResId = resId;
             return this;
         }
 
@@ -196,7 +183,11 @@ public class Message {
 
         private Snackbar make() {
             if (view == null) {
-                throw new IllegalStateException("You must set an Activity or a View before making a snack");
+                throw new IllegalStateException("You must set an Activity or a View before making a message");
+            }
+
+            if (iconResId != 0) {
+                icon = ContextCompat.getDrawable(view.getContext(), iconResId);
             }
 
             return new Message(this).make();

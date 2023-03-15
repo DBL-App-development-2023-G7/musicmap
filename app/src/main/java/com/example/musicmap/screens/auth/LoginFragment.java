@@ -7,10 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.example.musicmap.R;
 import com.example.musicmap.util.regex.ValidationUtil;
+import com.example.musicmap.util.ui.Message;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
@@ -21,12 +23,14 @@ public class LoginFragment extends AuthFragment {
 
     private EditText emailInput;
     private EditText passwordInput;
+    private ViewGroup viewGroup;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
+        viewGroup = container;
         emailInput = rootView.findViewById(R.id.email_editText);
         passwordInput = rootView.findViewById(R.id.password_editText);
 
@@ -85,11 +89,14 @@ public class LoginFragment extends AuthFragment {
         if (isInputValid(email, password)) {
             this.getAuth().signInWithEmailAndPassword(email, password).addOnCompleteListener(this.getAuthActivity(),
                     task -> {
-                        if (task.isSuccessful()) {
-                            Snackbar.make(this.requireView(), "Successfully logged in", Snackbar.LENGTH_SHORT).show();
-                        } else {
+                        if (!task.isSuccessful()) {
                             Log.d(TAG, "loginUser:fail", task.getException());
-                            Snackbar.make(this.requireView(), "Could not log in", Snackbar.LENGTH_SHORT).show();
+                            Message.builder()
+                                    .setView(viewGroup)
+                                    .setText("Could not log in")
+                                    .setDuration(Snackbar.LENGTH_INDEFINITE)
+                                    .failure()
+                                    .show();
                         }
                     });
         }
