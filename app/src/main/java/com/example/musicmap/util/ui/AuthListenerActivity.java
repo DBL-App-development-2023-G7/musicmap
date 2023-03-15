@@ -8,6 +8,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.musicmap.screens.auth.AuthActivity;
+import com.example.musicmap.screens.verification.VerificationActivity;
+import com.example.musicmap.user.Artist;
+import com.example.musicmap.user.User;
+import com.example.musicmap.util.firebase.AuthSystem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -27,11 +31,38 @@ public class AuthListenerActivity extends AppCompatActivity implements FirebaseA
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
         if (firebaseUser == null) {
-            Intent authIntent = new Intent(this, AuthActivity.class);
-            authIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(authIntent);
-            finish();
+            loadAuthActivity();
+        } else {
+            AuthSystem.getUser().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    User user = task.getResult();
+                    if (user.isArtist() && !((Artist) user).isVerified()) {
+                        loadVerificationActivity();
+                    }
+                } else {
+//                    Exception exception = task.getException();
+//                    if (exception != null) {
+//                        Log.e(TAG, exception.toString());
+//                    } else {
+//                        Log.e(TAG, "Unknown error!");
+//                    }
+                }
+            });
         }
+    }
+
+    public void loadVerificationActivity() {
+        Intent verificationIntent = new Intent(this, VerificationActivity.class);
+        verificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(verificationIntent);
+        finish();
+    }
+
+    private void loadAuthActivity() {
+        Intent authIntent = new Intent(this, AuthActivity.class);
+        authIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(authIntent);
+        finish();
     }
 
     @Override

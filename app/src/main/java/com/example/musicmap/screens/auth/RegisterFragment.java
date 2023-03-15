@@ -16,7 +16,6 @@ import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.firebase.Queries;
 import com.example.musicmap.util.regex.ValidationUtil;
 import com.example.musicmap.util.ui.BirthdatePickerDialog;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,7 +26,6 @@ public class RegisterFragment extends AuthFragment {
 
     private static final String TAG = "FirebaseRegister";
 
-    private FirebaseFirestore firestore;
 
     //region declaration of the register form elements
     private EditText usernameInput;
@@ -48,12 +46,6 @@ public class RegisterFragment extends AuthFragment {
     private String repeatPassword;
     private Date birthdate;
     //endregion
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        firestore = FirebaseFirestore.getInstance();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -258,7 +250,7 @@ public class RegisterFragment extends AuthFragment {
         AuthSystem.register(createUserData(), password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        this.getAuthActivity().loadActivityBasedOnVerificationStatus();
+                        this.getAuthActivity().loadHomeActivity();
                     } else {
                         String exceptionText;
                         if (task.getException() != null) {

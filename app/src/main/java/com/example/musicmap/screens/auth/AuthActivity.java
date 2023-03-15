@@ -26,52 +26,36 @@ public class AuthActivity extends AppCompatActivity {
         setContentView(R.layout.activity_auth);
     }
 
+    /**
+     * Loads the login fragment. It replaces the current fragment that is inside the FRAGMENT_CONTAINER.
+     */
     public void loadLoginFragment() {
         FragmentUtil.replaceFragment(getSupportFragmentManager(), FRAGMENT_CONTAINER_ID,
                 LoginFragment.class);
     }
 
+    /**
+     * Loads the register fragment. It replaces the current fragment that is inside the FRAGMENT_CONTAINER.
+     */
     public void loadRegisterFragment() {
         FragmentUtil.replaceFragment(getSupportFragmentManager(), FRAGMENT_CONTAINER_ID,
                 RegisterFragment.class);
     }
 
+    /**
+     * Loads the register artist fragment. It replaces the current fragment that is inside the FRAGMENT_CONTAINER.
+     */
     public void loadRegisterArtistFragment() {
         FragmentUtil.replaceFragment(getSupportFragmentManager(), FRAGMENT_CONTAINER_ID,
                 RegisterArtistFragment.class);
     }
 
-    private void loadVerificationFragment() {
-        FragmentUtil.replaceFragment(getSupportFragmentManager(), FRAGMENT_CONTAINER_ID,
-                VerificationFragment.class);
-    }
-
-    private void loadHomeActivity() {
+    public void loadHomeActivity() {
         Intent homeIntent = new Intent(this, HomeActivity.class);
         homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(homeIntent);
         Log.d(TAG, "Started Home Activity");
         finish();
-    }
-
-    public void loadActivityBasedOnVerificationStatus() {
-        AuthSystem.getUser().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                User user = task.getResult();
-                if (user.isArtist() && !((Artist) user).isVerified()) {
-                    loadVerificationFragment();
-                } else {
-                    loadHomeActivity();
-                }
-            } else {
-                Exception exception = task.getException();
-                if (exception != null) {
-                    Log.e(TAG, exception.toString());
-                } else {
-                    Log.e(TAG, "Unknown error!");
-                }
-            }
-        });
     }
 
 }
