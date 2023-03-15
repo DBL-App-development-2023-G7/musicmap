@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.musicmap.R;
@@ -13,38 +12,18 @@ import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.User;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.ui.FragmentUtil;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-public class AuthActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
+public class AuthActivity extends AppCompatActivity {
 
     private static final int FRAGMENT_CONTAINER_ID = R.id.fragment_container_view;
 
     private static final String TAG = "AuthActivity";
-
-    private FirebaseAuth auth;
-    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_auth);
-
-        auth = FirebaseAuth.getInstance();
-        auth.addAuthStateListener(this);
-
-        firebaseUser = auth.getCurrentUser();
-    }
-
-    @Override
-    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-        auth = firebaseAuth;
-        firebaseUser = auth.getCurrentUser();
-
-        if (firebaseUser != null) {
-            loadActivityBasedOnVerificationStatus();
-        }
     }
 
     public void loadLoginFragment() {
@@ -93,26 +72,6 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
                 }
             }
         });
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        auth.removeAuthStateListener(this);
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        auth.addAuthStateListener(this);
-    }
-
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        auth.removeAuthStateListener(this);
     }
 
 }

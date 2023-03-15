@@ -86,6 +86,7 @@ public class LoginFragment extends AuthFragment {
                 this.getAuth().signInWithEmailAndPassword(identifier, password).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "loginUser:success");
+                        this.getAuthActivity().loadActivityBasedOnVerificationStatus();
                     } else {
                         Log.d(TAG, "loginUser:fail", task.getException());
                         Toast.makeText(getActivity(), "Incorrect email/password.", Toast.LENGTH_SHORT).show();
@@ -95,6 +96,7 @@ public class LoginFragment extends AuthFragment {
                 AuthSystem.loginWithUsernameAndPassword(identifier, password).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "loginUser:success");
+                        this.getAuthActivity().loadActivityBasedOnVerificationStatus();
                     } else {
                         Log.d(TAG, "loginUser:fail", task.getException());
                         Toast.makeText(getActivity(), "Incorrect username/password.", Toast.LENGTH_SHORT).show();

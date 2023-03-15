@@ -257,7 +257,9 @@ public class RegisterFragment extends AuthFragment {
 
         AuthSystem.register(createUserData(), password)
                 .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
+                    if (task.isSuccessful()) {
+                        this.getAuthActivity().loadActivityBasedOnVerificationStatus();
+                    } else {
                         String exceptionText;
                         if (task.getException() != null) {
                             exceptionText = "An exception occurred: " + task.getException().toString();
