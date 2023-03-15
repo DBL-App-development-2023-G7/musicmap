@@ -52,7 +52,7 @@ public abstract class Permission {
 
     protected abstract String[] getAndroidPermissions();
 
-    protected void onActivityResult(Map<String, Boolean> permissions) {
+    private void onActivityResult(Map<String, Boolean> permissions) {
         onChangeListeners.forEach(Runnable::run);
     }
 
@@ -64,7 +64,7 @@ public abstract class Permission {
      *
      * @return the permission grant map.
      */
-    protected Map<String, Boolean> getPermissionGrantMap() {
+    protected final Map<String, Boolean> getPermissionGrantMap() {
         // Gets the context
         Context context = MusicMap.getInstance().getApplicationContext();
 
@@ -83,20 +83,33 @@ public abstract class Permission {
     /**
      * Requests this permission.
      *
-     * Feel free to use even if the permission has already been granted.
+     * Feel free to use even if the permission has already been granted:
+     * the user will only receive the request once.
+     *
+     * @see #forceRequest()
      */
     public void request() {
-        Log.i("MM-Permission", "Requested " + getClass().getSimpleName());
-
         // Check if permissions were requested before
         if (!sharedPreferences.getBoolean(SHARED_PREFERENCES_KEY, false)) {
-            this.launcher.launch(getAndroidPermissions());
-
-            // Store the request in the SharedPreferences
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(SHARED_PREFERENCES_KEY, true);
-            editor.apply();
+            forceRequest();
         }
+    }
+
+    /**
+     * Requests this permissions. This will not check if the permission was requested before.
+     *
+     * Use this over {@link #request()} in case the action causing the request
+     * is directly linked to the permission, e.g. a button 'take picture' is directly linked to camera permissions.
+     */
+    public void forceRequest() {
+        Log.i("MM-Permission", "Requested " + getClass().getSimpleName());
+
+        this.launcher.launch(getAndroidPermissions());
+
+        // Store the request in the SharedPreferences
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(SHARED_PREFERENCES_KEY, true);
+        editor.apply();
     }
 
     /**
