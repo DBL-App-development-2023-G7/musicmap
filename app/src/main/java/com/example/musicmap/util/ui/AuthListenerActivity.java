@@ -11,7 +11,7 @@ import com.example.musicmap.screens.auth.AuthActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MMActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
+public class AuthListenerActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
 
     private FirebaseAuth auth;
 

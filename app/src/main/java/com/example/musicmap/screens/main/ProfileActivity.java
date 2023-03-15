@@ -8,12 +8,12 @@ import android.widget.TextView;
 
 import com.example.musicmap.R;
 import com.example.musicmap.util.firebase.AuthSystem;
-import com.example.musicmap.util.ui.MMActivity;
+import com.example.musicmap.util.ui.AuthListenerActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
-public class ProfileActivity extends MMActivity {
+public class ProfileActivity extends AuthListenerActivity {
 
     private FirebaseAuth auth;
 
