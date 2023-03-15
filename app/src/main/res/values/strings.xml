@@ -24,4 +24,7 @@
     <string name="appbar_profile">Profile</string>
     <string name="appbar_icon">icon</string>
     <string name="profile_picture">Profile picture</string>
+    <string name="awaiting_verification">Account awaiting verification.</string>
+    <string name="awaiting_verification_text">Since you registered as an artist we first need to make sure that your request is authentic.</string>
+    <string name="log_in_alt_account">Log in with another account</string>
 </resources>

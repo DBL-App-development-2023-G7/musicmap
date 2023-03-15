@@ -20,7 +20,7 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Account awaiting verification."
+            android:text="@string/awaiting_verification"
             android:textAlignment="viewStart"
             android:textSize="48sp"
             android:textStyle="bold" />
@@ -29,7 +29,7 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Since you registered as an artist we first need to make sure that your request is authentic."
+            android:text="@string/awaiting_verification_text"
             android:textAlignment="viewStart"
             android:textSize="20sp" />
 
@@ -37,6 +37,6 @@
             android:id="@+id/signout_verification_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Log in with another account" />
+            android:text="@string/log_in_alt_account" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
