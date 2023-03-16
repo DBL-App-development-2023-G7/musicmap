@@ -1,4 +1,4 @@
-package com.example.musicmap.util;
+package com.example.musicmap.util.permissions;
 
 import android.Manifest;
 import android.content.Context;
@@ -120,97 +120,6 @@ public abstract class Permission {
      */
     public void onChange(Runnable runnable) {
         onChangeListeners.add(runnable);
-    }
-
-    /**
-     * Location permissions. Includes {@code COARSE_LOCATION} and {@code FINE_LOCATION}.
-     */
-    public static class Location extends Permission {
-        private static final String FINE = Manifest.permission.ACCESS_FINE_LOCATION;
-        private static final String COARSE = Manifest.permission.ACCESS_COARSE_LOCATION;
-
-        public Location(ActivityResultCaller activityResultCaller) {
-            super(activityResultCaller);
-        }
-
-        @Override
-        public String[] getAndroidPermissions() {
-            return new String[] {COARSE, FINE};
-        }
-
-        public boolean isFineGranted() {
-            return Boolean.TRUE.equals(getPermissionGrantMap().get(FINE));
-        }
-
-        public boolean isCoarseGranted() {
-            return isFineGranted() || Boolean.TRUE.equals(getPermissionGrantMap().get(COARSE));
-        }
-
-        public boolean isNoneGranted() {
-            return !isCoarseGranted();
-        }
-    }
-
-    /**
-     * Camera permissions.
-     */
-    public static class Camera extends Permission {
-        private static final String CAMERA = Manifest.permission.CAMERA;
-
-        public Camera(ActivityResultCaller activityResultCaller) {
-            super(activityResultCaller);
-        }
-
-        @Override
-        public String[] getAndroidPermissions() {
-            return new String[] {CAMERA};
-        }
-
-        public boolean isGranted() {
-            return Boolean.TRUE.equals(getPermissionGrantMap().get(CAMERA));
-        }
-    }
-
-    /**
-     * Media permissions, includes images and video.
-     */
-    public static class Media extends Permission {
-        public Media(ActivityResultCaller activityResultCaller) {
-            super(activityResultCaller);
-        }
-
-        @Override
-        public String[] getAndroidPermissions() {
-            if (Build.VERSION.SDK_INT >= 33) {
-                return new String[] {Manifest.permission.READ_MEDIA_VIDEO, Manifest.permission.READ_MEDIA_IMAGES};
-            } else {
-                return new String[] {Manifest.permission.READ_EXTERNAL_STORAGE};
-            }
-        }
-
-        public boolean isReadImagesGranted() {
-            if (Build.VERSION.SDK_INT >= 33) {
-                return Boolean.TRUE.equals(getPermissionGrantMap().get(Manifest.permission.READ_MEDIA_IMAGES));
-            } else {
-                return Boolean.TRUE.equals(getPermissionGrantMap().get(Manifest.permission.READ_EXTERNAL_STORAGE));
-            }
-        }
-
-        public boolean isReadVideoGranted() {
-            if (Build.VERSION.SDK_INT >= 33) {
-                return Boolean.TRUE.equals(getPermissionGrantMap().get(Manifest.permission.READ_MEDIA_VIDEO));
-            } else {
-                return Boolean.TRUE.equals(getPermissionGrantMap().get(Manifest.permission.READ_EXTERNAL_STORAGE));
-            }
-        }
-
-        public boolean isReadAllGranted() {
-            if (Build.VERSION.SDK_INT >= 33) {
-                return isReadImagesGranted() && isReadVideoGranted();
-            } else {
-                return Boolean.TRUE.equals(getPermissionGrantMap().get(Manifest.permission.READ_EXTERNAL_STORAGE));
-            }
-        }
     }
 
 }

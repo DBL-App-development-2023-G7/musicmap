@@ -16,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.musicmap.R;
-import com.example.musicmap.util.Permission;
+import com.example.musicmap.util.permissions.LocationPermission;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -33,7 +33,7 @@ public class MapFragment extends Fragment {
 
     private static final String MULTITOUCH_FEATURE = "android.hardware.touchscreen.multitouch";
 
-    private final Permission.Location locationPermission = new Permission.Location(this);
+    private final LocationPermission locationPermission = new LocationPermission(this);
 
     /**
      * The MapView used by this fragment.
