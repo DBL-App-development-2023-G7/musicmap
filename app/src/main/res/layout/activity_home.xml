@@ -87,4 +87,3 @@
         app:menu="@menu/bottom_nav" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
-
