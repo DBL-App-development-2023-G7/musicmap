@@ -76,8 +76,13 @@ public class Message {
         Snackbar message = Snackbar.make(builder.view, builder.text, builder.duration);
 
         if (builder.actionClickListener != null || builder.actionText != null) {
-            if (builder.actionClickListener == null)
+            if (builder.actionClickListener == null) {
                 builder.actionClickListener = v -> {};
+            }
+
+            if (builder.actionTextColor != null) {
+                message.setActionTextColor(builder.actionTextColor);
+            }
 
             message.setAction(builder.actionText, builder.actionClickListener);
         }
@@ -120,6 +125,7 @@ public class Message {
         private int duration = Snackbar.LENGTH_SHORT;
         private CharSequence text = null;
         private Integer textColor = null;
+        private Integer actionTextColor = null;
         private CharSequence actionText = "";
         private View.OnClickListener actionClickListener = null;
         private Drawable icon = null;
@@ -153,6 +159,11 @@ public class Message {
 
         public Builder setActionText(CharSequence text) {
             this.actionText = text;
+            return this;
+        }
+
+        public Builder setActionTextColor(@ColorInt int color) {
+            this.actionTextColor = color;
             return this;
         }
 

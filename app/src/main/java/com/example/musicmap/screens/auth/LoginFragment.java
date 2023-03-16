@@ -91,6 +91,7 @@ public class LoginFragment extends AuthFragment {
                                     .setView(viewGroup)
                                     .setText("Could not log in")
                                     .setDuration(Message.LONG_DURATION)
+                                    .setActionText("Ok")
                                     .failure()
                                     .show();
                         }

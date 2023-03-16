@@ -16,6 +16,9 @@ import com.example.musicmap.util.ui.FragmentUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 public class AuthActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
 
     private static final int FRAGMENT_CONTAINER_ID = R.id.fragment_container_view;
@@ -103,6 +106,18 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
             }
         });
     }
+
+    private boolean isInternetAvailable() {
+        try {
+            InetAddress address = InetAddress.getByName("www.google.com");
+            return !address.toString().equals("");
+        } catch (UnknownHostException e) {
+            Log.e(TAG, "Could not find the host due to " + e.getMessage());
+        }
+
+        return false;
+    }
+
 
     @Override
     public void onStop() {
