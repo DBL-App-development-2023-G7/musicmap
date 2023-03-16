@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
@@ -17,6 +18,10 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 public class Message {
+
+    public static final Integer SHORT_DURATION = Snackbar.LENGTH_SHORT;
+    public static final Integer LONG_DURATION = Snackbar.LENGTH_LONG;
+    public static final Integer INDEFINITE_DURATION = Snackbar.LENGTH_INDEFINITE;
 
     private enum Type {
         Default(null, null, null, null),
@@ -97,6 +102,11 @@ public class Message {
             builder.icon = builder.type.getIcon(builder.view.getContext());
         }
 
+        // show message over keyboard
+        InputMethodManager inputMethodManager = (InputMethodManager) builder.getView().getContext()
+                .getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(builder.getView().getWindowToken(), 0);
+
         return message;
     }
 
@@ -120,6 +130,10 @@ public class Message {
 
         public Builder setActivity(Activity activity) {
             return setView(((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0));
+        }
+
+        public View getView() {
+            return this.view;
         }
 
         public Builder setView(View view) {

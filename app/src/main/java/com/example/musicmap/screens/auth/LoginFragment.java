@@ -7,15 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.example.musicmap.R;
 import com.example.musicmap.util.regex.ValidationUtil;
 import com.example.musicmap.util.ui.Message;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.util.Objects;
 
 public class LoginFragment extends AuthFragment {
 
@@ -94,7 +90,7 @@ public class LoginFragment extends AuthFragment {
                             Message.builder()
                                     .setView(viewGroup)
                                     .setText("Could not log in")
-                                    .setDuration(Snackbar.LENGTH_INDEFINITE)
+                                    .setDuration(Message.LONG_DURATION)
                                     .failure()
                                     .show();
                         }
