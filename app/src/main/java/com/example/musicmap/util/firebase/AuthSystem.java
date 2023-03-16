@@ -113,12 +113,12 @@ public class AuthSystem {
         return getUserDataFirestore.onSuccessTask(doc -> {
             TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
 
-            UserData userData = doc.toObject(UserData.class);
-
             if (!doc.exists()) {
                 tcs.setException(new FirebaseFirestoreException("Document does not exist.",
                         FirebaseFirestoreException.Code.NOT_FOUND));
             }
+
+            UserData userData = doc.toObject(UserData.class);
 
             if (userData != null) {
                 if (userData.isArtist()) {

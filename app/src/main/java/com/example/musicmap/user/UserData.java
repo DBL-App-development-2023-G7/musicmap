@@ -15,7 +15,6 @@ public class UserData {
     private String email;
     private Date birthdate;
     private String profilePicture;
-
     private boolean artist;
 
     UserData() {

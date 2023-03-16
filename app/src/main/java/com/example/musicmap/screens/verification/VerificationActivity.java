@@ -1,20 +1,36 @@
 package com.example.musicmap.screens.verification;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
-import com.example.musicmap.R;
-import com.example.musicmap.util.firebase.AuthSystem;
-import com.example.musicmap.util.ui.AuthListenerActivity;
-import com.google.firebase.FirebaseError;
-import com.google.firebase.auth.FirebaseAuth;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class VerificationActivity extends AuthListenerActivity {
+import com.example.musicmap.R;
+import com.example.musicmap.screens.main.HomeActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+public class VerificationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        final DocumentReference docRef = firestore.collection("Users").document(auth.getCurrentUser().getUid());
+        docRef.addSnapshotListener((value, error) -> {
+            boolean verified = (Boolean) value.getData().get("verified");
+            if (verified) {
+                Intent homeIntent = new Intent(this, HomeActivity.class);
+                homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(homeIntent);
+                finish();
+            }
+        });
 
         Button signOutVerificationButton = findViewById(R.id.signout_verification_button);
         signOutVerificationButton.setOnClickListener(view -> signOut());

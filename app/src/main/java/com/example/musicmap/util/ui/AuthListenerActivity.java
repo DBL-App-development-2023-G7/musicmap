@@ -2,6 +2,7 @@ package com.example.musicmap.util.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,12 +41,12 @@ public class AuthListenerActivity extends AppCompatActivity implements FirebaseA
                         loadVerificationActivity();
                     }
                 } else {
-//                    Exception exception = task.getException();
-//                    if (exception != null) {
-//                        Log.e(TAG, exception.toString());
-//                    } else {
-//                        Log.e(TAG, "Unknown error!");
-//                    }
+                    Exception exception = task.getException();
+                    if (exception != null) {
+                        Toast.makeText(this, exception.toString(), Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(this, "Unknown error!", Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         }
