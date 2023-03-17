@@ -44,15 +44,15 @@ public class LoginFragment extends AuthFragment {
     private boolean checkEmail(String email) {
         switch (ValidationUtil.isEmailValid(email)) {
             case EMPTY:
-                emailInput.setError("Please enter a email address.");
+                emailInput.setError(getString(R.string.input_error_enter_email));
                 return false;
             case FORMAT:
-                emailInput.setError("Please enter a valid email address.");
+                emailInput.setError(getString(R.string.input_error_valid_email));
                 return false;
             case VALID:
                 return true;
             default:
-                emailInput.setError("Unexpected input.");
+                emailInput.setError(getString(R.string.input_error_unexpected));
                 return false;
         }
     }
@@ -60,10 +60,10 @@ public class LoginFragment extends AuthFragment {
     private boolean checkPassword(String password) {
         switch (ValidationUtil.isPasswordValid(password)) {
             case EMPTY:
-                passwordInput.setError("Please enter a password.");
+                passwordInput.setError(getString(R.string.input_error_enter_password));
                 return false;
             case FORMAT:
-                passwordInput.setError("Please enter a valid password.");
+                passwordInput.setError(getString(R.string.input_error_valid_password));
                 return false;
             case VALID:
                 return true;
@@ -86,7 +86,8 @@ public class LoginFragment extends AuthFragment {
                     task -> {
                         if (!task.isSuccessful()) {
                             Log.d(TAG, "loginUser:fail", task.getException());
-                            Message.showFailureMessage(viewGroup, "Could not log in");
+                            Message.showFailureMessage(viewGroup,
+                                    getString(R.string.auth_error_incorrect_email_password));
                         }
                     });
         }

@@ -104,7 +104,8 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
                 Exception exception = task.getException();
                 if (exception != null) {
                     Log.e(TAG, exception.toString());
-                    Message.showFailureMessage(this, "Something went wrong");
+                    Message.showFailureMessage(this,
+                            getString(R.string.auth_error_something_wrong));
                 }
             }
         });
@@ -124,7 +125,7 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
             public void run() {
                 if (!isInternetAvailable()) {
                     Message.showFailureMessage(AuthActivity.this,
-                            "Could not detect an internet connection");
+                            getString(R.string.error_no_internet));
                 }
 
                 handler.postDelayed(this, delay);

@@ -95,10 +95,10 @@ public class RegisterFragment extends AuthFragment {
     private boolean checkUsername(String username) {
         switch (ValidationUtil.isUsernameValid(username)) {
             case EMPTY:
-                usernameInput.setError("Please enter a username.");
+                usernameInput.setError(getString(R.string.input_error_enter_username));
                 return false;
             case FORMAT:
-                usernameInput.setError("Please enter a valid username.");
+                usernameInput.setError(getString(R.string.input_error_valid_username));
                 return false;
             case VALID:
                 Queries.getUsersWithUsername(firestore, username).addOnCompleteListener(task -> {
@@ -106,7 +106,7 @@ public class RegisterFragment extends AuthFragment {
                         Log.d(TAG, "usernameQuery:success");
 
                         if (!task.getResult().isEmpty()) {
-                            usernameInput.setError("Username already exists!");
+                            usernameInput.setError(getString(R.string.input_error_username_exists));
                         }
                     } else {
                         Log.d(TAG, "usernameQuery:fail");
@@ -114,7 +114,7 @@ public class RegisterFragment extends AuthFragment {
                 });
                 return true;
             default:
-                usernameInput.setError("Unexpected input.");
+                usernameInput.setError(getString(R.string.input_error_unexpected));
                 return false;
         }
     }
@@ -122,12 +122,12 @@ public class RegisterFragment extends AuthFragment {
     private boolean checkFirstName(String firstName) {
         switch (ValidationUtil.isMandatoryFieldValid(firstName)) {
             case EMPTY:
-                firstNameInput.setError("Please enter a First Name.");
+                firstNameInput.setError(getString(R.string.input_error_enter_first_name));
                 return false;
             case VALID:
                 return true;
             default:
-                firstNameInput.setError("Unexpected input.");
+                firstNameInput.setError(getString(R.string.input_error_unexpected));
                 return false;
         }
     }
@@ -135,12 +135,12 @@ public class RegisterFragment extends AuthFragment {
     private boolean checkLastName(String lastName) {
         switch (ValidationUtil.isMandatoryFieldValid(lastName)) {
             case EMPTY:
-                lastNameInput.setError("Please enter a Last Name.");
+                lastNameInput.setError(getString(R.string.input_error_enter_last_name));
                 return false;
             case VALID:
                 return true;
             default:
-                lastNameInput.setError("Unexpected input.");
+                lastNameInput.setError(getString(R.string.input_error_unexpected));
                 return false;
         }
     }
@@ -148,15 +148,15 @@ public class RegisterFragment extends AuthFragment {
     private boolean checkEmail(String email) {
         switch (ValidationUtil.isEmailValid(email)) {
             case EMPTY:
-                emailInput.setError("Please enter a email address.");
+                emailInput.setError(getString(R.string.input_error_enter_email));
                 return false;
             case FORMAT:
-                emailInput.setError("Please enter a valid email address.");
+                emailInput.setError(getString(R.string.input_error_valid_email));
                 return false;
             case VALID:
                 return true;
             default:
-                emailInput.setError("Unexpected input.");
+                emailInput.setError(getString(R.string.input_error_unexpected));
                 return false;
         }
     }
@@ -164,22 +164,22 @@ public class RegisterFragment extends AuthFragment {
     private boolean checkPassword(String password) {
         switch (ValidationUtil.isPasswordValid(password)) {
             case EMPTY:
-                passwordInput.setError("Please enter a password.");
+                passwordInput.setError(getString(R.string.input_error_enter_password));
                 return false;
             case FORMAT:
-                passwordInput.setError("Please enter a valid password.");
+                passwordInput.setError(getString(R.string.input_error_valid_password));
                 return false;
             case VALID:
                 return true;
             default:
-                passwordInput.setError("Unexpected input.");
+                passwordInput.setError(getString(R.string.input_error_unexpected));
                 return false;
         }
     }
 
     private boolean checkRepeatPassword(String repeatPassword, String password) {
         if (!repeatPassword.equals(password)) {
-            repeatPasswordInput.setError("Passwords do not match!");
+            repeatPasswordInput.setError(getString(R.string.input_error_passwords_not_matching));
             return false;
         }
         repeatPasswordInput.setError(null);
@@ -192,7 +192,7 @@ public class RegisterFragment extends AuthFragment {
                 new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
         if (birthdateText.equals("")) {
-            birthdateInput.setError("Please pick a date.");
+            birthdateInput.setError(getString(R.string.input_error_pick_date));
             return false;
         }
         try {
@@ -202,7 +202,7 @@ public class RegisterFragment extends AuthFragment {
                 birthdateInput.setError(null);
                 return true;
             }
-            throw new ParseException("The date was parsed but the date is null.", -1);
+            throw new ParseException(getString(R.string.input_exception_date_null), -1);
         } catch (ParseException e) {
             Log.e(TAG, "Could not parse birthdate.");
             return false;
@@ -251,7 +251,7 @@ public class RegisterFragment extends AuthFragment {
 
         if (!validate()) {
             Message.showFailureMessage(getActivity(),
-                    "Some of the fields are incomplete or contain invalid values");
+                    getString(R.string.auth_error_invalid_values));
             return;
         }
 
@@ -261,7 +261,7 @@ public class RegisterFragment extends AuthFragment {
 
                         if (task.getException() != null) {
                             Message.showFailureMessage(getActivity(),
-                                    "Could not register, please try again later");
+                                    getString(R.string.auth_error_failed_registration));
                             Log.e(TAG, task.getException().toString());
                         }
                     }
