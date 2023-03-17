@@ -18,7 +18,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 /**
- * Message class to show customisable Snackbars, with some common built-in ones
+ * Message class to show customisable Snackbars, with some common built-in ones.
  */
 public final class Message {
 
@@ -26,13 +26,11 @@ public final class Message {
     public static final Integer LONG_DURATION = Snackbar.LENGTH_LONG;
     public static final Integer INDEFINITE_DURATION = Snackbar.LENGTH_INDEFINITE;
 
-
     /**
+     * Shows failure message with view.
      *
-     * Shows failure message with view
-     *
-     * @param view  the view
-     * @param message  the message
+     * @param view    the view
+     * @param message the message
      */
     public static void showFailureMessage(ViewGroup view, String message) {
         builder().setView(view)
@@ -45,10 +43,9 @@ public final class Message {
     }
 
     /**
+     * Show failure message with activity.
      *
-     * Show failure message with activity
-     *
-     * @param activity  the activity
+     * @param activity the activity
      * @param message  the message
      */
     public static void showFailureMessage(Activity activity, String message) {
@@ -62,11 +59,10 @@ public final class Message {
     }
 
     /**
+     * Show success message with view.
      *
-     * Show success message with view
-     *
-     * @param view  the view
-     * @param message  the message
+     * @param view    the view
+     * @param message the message
      */
     public static void showSuccessMessage(ViewGroup view, String message) {
         builder().setView(view)
@@ -79,10 +75,9 @@ public final class Message {
     }
 
     /**
+     * Show success message with activity.
      *
-     * Show success message with activity
-     *
-     * @param activity  the activity
+     * @param activity the activity
      * @param message  the message
      */
     public static void showSuccessMessage(Activity activity, String message) {
@@ -113,10 +108,8 @@ public final class Message {
             this.text = text;
         }
 
-
         /**
-         *
-         * Gets the color
+         * Gets the color.
          *
          * @return the color
          */
@@ -125,10 +118,9 @@ public final class Message {
         }
 
         /**
+         * Gets the icon.
          *
-         * Gets the icon
-         *
-         * @param context  the context
+         * @param context the context
          * @return the icon
          */
         public Drawable getIcon(Context context) {
@@ -140,8 +132,7 @@ public final class Message {
         }
 
         /**
-         *
-         * Gets the standard text color
+         * Gets the standard text color.
          *
          * @return the standard text color
          */
@@ -150,8 +141,7 @@ public final class Message {
         }
 
         /**
-         *
-         * Gets the text
+         * Gets the text.
          *
          * @return the text
          */
@@ -162,20 +152,17 @@ public final class Message {
 
     private final Builder builder;
 
-
     /**
-     * Constructor for builder
+     * Constructor for builder.
      *
-     * @param builder  the builder
+     * @param builder the builder
      */
     private Message(Builder builder) {
         this.builder = builder;
     }
 
-
     /**
-     *
-     * Actually builds the Snackbar to show
+     * Actually builds the Snackbar to show.
      *
      * @return the Snackbar
      */
@@ -188,7 +175,8 @@ public final class Message {
 
         if (builder.actionClickListener != null || builder.actionText != null) {
             if (builder.actionClickListener == null) {
-                builder.actionClickListener = v -> {};
+                builder.actionClickListener = v -> {
+                };
             }
 
             if (builder.actionTextColor != null) {
@@ -227,7 +215,6 @@ public final class Message {
     }
 
     /**
-     *
      * Returns a Builder object
      *
      * @return Builder
@@ -238,7 +225,7 @@ public final class Message {
 
     // CSOFF: FinalClass
     public static class Builder {
-    // CSON: FinalClass
+        // CSON: FinalClass
         private View view = null;
         private Type type = Type.Default;
         private int duration = Snackbar.LENGTH_SHORT;
@@ -252,20 +239,19 @@ public final class Message {
         private Integer backgroundColor = null;
 
         /**
-         *
-         * Sets activity
+         * Sets activity.
          *
          * @return Builder
          */
-        private Builder() {}
+        private Builder() {
+        }
 
         public Builder setActivity(Activity activity) {
             return setView(((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0));
         }
 
         /**
-         *
-         * Gets the view
+         * Gets the view.
          *
          * @return the view
          */
@@ -274,10 +260,9 @@ public final class Message {
         }
 
         /**
+         * Sets the view.
          *
-         * Sets the view
-         *
-         * @param view  the view
+         * @param view the view
          * @return Builder
          */
         public Builder setView(View view) {
@@ -286,10 +271,9 @@ public final class Message {
         }
 
         /**
+         * Sets the text.
          *
-         * Sets the text
-         *
-         * @param text  the text
+         * @param text the text
          * @return Builder
          */
         public Builder setText(CharSequence text) {
@@ -299,8 +283,7 @@ public final class Message {
         }
 
         /**
-         *
-         * Sets the text color
+         * Sets the text color.
          *
          * @param color the text color
          * @return Builder
@@ -311,10 +294,9 @@ public final class Message {
         }
 
         /**
+         * Sets the action text.
          *
-         * Sets the action text
-         *
-         * @param text  the text
+         * @param text the text
          * @return Builder
          */
         public Builder setActionText(CharSequence text) {
@@ -323,10 +305,9 @@ public final class Message {
         }
 
         /**
+         * Sets the action text color.
          *
-         * Sets the action text color
-         *
-         * @param color  the color for actionText
+         * @param color the color for actionText
          * @return Builder
          */
         public Builder setActionTextColor(@ColorInt int color) {
@@ -335,10 +316,9 @@ public final class Message {
         }
 
         /**
+         * Sets the action click listener.
          *
-         * Sets the action click listener
-         *
-         * @param listener  the listener
+         * @param listener the listener
          * @return Builder
          */
         public Builder setActionClickListener(View.OnClickListener listener) {
@@ -347,8 +327,7 @@ public final class Message {
         }
 
         /**
-         *
-         * Sets the duration
+         * Sets the duration.
          *
          * @param duration duration of message
          * @return Builder
@@ -359,10 +338,9 @@ public final class Message {
         }
 
         /**
+         * Sets the icon.
          *
-         * Sets the icon
-         *
-         * @param resId  the id of icon
+         * @param resId the id of icon
          * @return Builder
          */
         public Builder setIcon(@DrawableRes int resId) {
@@ -371,10 +349,9 @@ public final class Message {
         }
 
         /**
+         * Sets the icon.
          *
-         * Sets the icon
-         *
-         * @param drawable  the drawable icon
+         * @param drawable the drawable icon
          * @return Builder
          */
         public Builder setIcon(Drawable drawable) {
@@ -383,10 +360,9 @@ public final class Message {
         }
 
         /**
+         * Sets the background color.
          *
-         * Sets the background color
-         *
-         * @param color  the background color
+         * @param color the background color
          * @return Builder
          */
         public Builder setBackgroundColor(@ColorInt int color) {
@@ -395,8 +371,7 @@ public final class Message {
         }
 
         /**
-         *
-         * Builds the Snackbar
+         * Builds the Snackbar.
          *
          * @return Snackbar
          */
@@ -405,8 +380,7 @@ public final class Message {
         }
 
         /**
-         *
-         * Makes success Snackbar
+         * Makes success Snackbar.
          *
          * @return Snackbar
          */
@@ -416,8 +390,7 @@ public final class Message {
         }
 
         /**
-         *
-         * Makes failure Snackbar
+         * Makes failure Snackbar.
          *
          * @return Snackbar
          */
@@ -427,8 +400,7 @@ public final class Message {
         }
 
         /**
-         *
-         * The method to make the Snackbar
+         * The method to make the Snackbar.
          *
          * @return Snackbar
          */
@@ -444,6 +416,7 @@ public final class Message {
             return new Message(this).make();
         }
     }
+
 }
 
 
