@@ -4,88 +4,130 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/create_music_memory_backgound"
+    android:background="@drawable/create_music_memory_backgound_copy"
     tools:context=".screens.main.PostFragment">
 
+    <!-- GUIDILENS TO PREVENTY THE FRAGMENT CONTENTS TO OVERLAP WITH THE NAVBARS-->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="67dp" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="74dp" />
+    <!--NOTE THERE MAY BE SOME WEIRD SCROLLING BEHAVIOUR ON SOME SPECIFIC SCREEN SIZES-->
+    <!--THIS MAY HAPPEN BECAUSE THE GUIDELINES DO NOT MATCH THE SIZE OF THE NAVBAR AND TOP BAR -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:fillViewport="true"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="-240dp">
+        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        tools:layout_editor_absoluteX="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_begin="74dp" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_end="76dp" />
-
             <Button
-                android:id="@+id/button9"
+                android:id="@+id/addImageButton"
+                style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="344dp"
                 android:layout_height="144dp"
-                android:layout_marginTop="32dp"
-                android:text="Button"
+                android:layout_marginTop="40dp"
+                android:text="Add Image"
+                android:textColor="@color/white"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/add_photo_icon"
+                app:iconGravity="textTop"
+                app:iconPadding="6dp"
+                app:iconTint="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.492"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/guideline8" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/gray_medium"
+                app:strokeWidth="2dp" />
 
             <Button
                 android:id="@+id/button11"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="40dp"
                 android:text="Button"
+                android:visibility="invisible"
                 app:layout_constraintDimensionRatio="2.388:1"
-                app:layout_constraintEnd_toEndOf="@+id/button9"
+                app:layout_constraintEnd_toEndOf="@+id/addImageButton"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/button9"
-                app:layout_constraintTop_toBottomOf="@+id/button9" />
+                app:layout_constraintStart_toStartOf="@+id/addImageButton"
+                app:layout_constraintTop_toBottomOf="@+id/addImageButton"
+                tools:visibility="invisible" />
 
-            <EditText
-                android:id="@+id/editText"
+            <Button
+                android:id="@+id/addSongButton"
+                style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:gravity="left|center_vertical"
+                android:text="Add Song"
+                android:textColor="@color/white"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/music_note_icon"
+                app:iconGravity="textStart"
+                app:iconPadding="6dp"
+                app:iconTint="@color/white"
                 app:layout_constraintDimensionRatio="w,1:5.7"
-                app:layout_constraintEnd_toEndOf="@+id/button9"
-                app:layout_constraintStart_toStartOf="@+id/button9"
-                app:layout_constraintTop_toBottomOf="@+id/button11"></EditText>
+                app:layout_constraintEnd_toEndOf="@+id/addImageButton"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/addImageButton"
+                app:layout_constraintTop_toBottomOf="@+id/button11"
+                app:strokeColor="@color/gray_medium"
+                app:strokeWidth="2dp" />
 
-            <TextView
+
+            <Button
                 android:id="@+id/textView4"
+                style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="40dp"
-                android:text="TextView"
+                android:gravity="left|center_vertical"
+                android:text="Get location"
+                android:textColor="@color/white"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/location_icon"
+                app:iconGravity="textStart"
+                app:iconPadding="6dp"
+                app:iconTint="@color/white"
                 app:layout_constraintDimensionRatio="5.71:1"
-                app:layout_constraintEnd_toEndOf="@+id/button9"
-                app:layout_constraintStart_toStartOf="@+id/button9"
-                app:layout_constraintTop_toBottomOf="@+id/editText" />
+                app:layout_constraintEnd_toEndOf="@+id/addImageButton"
+                app:layout_constraintStart_toStartOf="@+id/addImageButton"
+                app:layout_constraintTop_toBottomOf="@+id/addSongButton"
+                app:strokeColor="@color/gray_medium"
+                app:strokeWidth="2dp" />
 
             <Button
                 android:id="@+id/textView5"
+                style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="40dp"
+                android:text="Post"
+                android:textColor="@color/white"
+                app:cornerRadius="10dp"
                 app:layout_constraintDimensionRatio="5.71:1"
-                app:layout_constraintEnd_toEndOf="@+id/button9"
+                app:layout_constraintEnd_toEndOf="@+id/addImageButton"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/button9"
-                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+                app:layout_constraintStart_toStartOf="@+id/addImageButton"
+                app:layout_constraintTop_toBottomOf="@+id/textView4"
+                app:strokeColor="@color/purple_base"
+                app:strokeWidth="3dp" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

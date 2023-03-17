@@ -1,54 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:aapt="http://schemas.android.com/aapt"
-    android:width="360dp"
-    android:height="800dp"
-    android:viewportWidth="360"
-    android:viewportHeight="800"
-    >
-    <group>
-        <clip-path
-            android:pathData="M0 0H360V800H0V0Z"
-            />
-        <group
-            android:translateX="-1.378"
-            android:translateY="-1.655"
-            android:pivotX="180"
-            android:pivotY="400"
-            android:scaleX="8.771"
-            android:scaleY="4.76"
-            android:rotation="30.945"
-            >
-            <path
-                android:pathData="M0 0V800H360V0"
-                >
-                <aapt:attr name="android:fillColor">
-                    <gradient
-                        android:type="radial"
-                        android:centerX="180"
-                        android:centerY="400"
-                        android:gradientRadius="90"
-                        >
-                        <item
-                            android:color="#402950"
-                            android:offset="0.002"
-                            />
-                        <item
-                            android:color="#0F0F0F"
-                            android:offset="0.962"
-                            />
-                        <item
-                            android:color="#0F0F0F"
-                            android:offset="0.962"
-                            />
-                        <item
-                            android:color="#0F0F0F"
-                            android:offset="1"
-                            />
-                    </gradient>
-                </aapt:attr>
-            </path>
-        </group>
-    </group>
-</vector>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:layout_height="wrap_content">
+            <solid android:color="@color/grey_very_dark"/>
+        </shape>
+    </item>
+    <item>
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle" >
+            <gradient
+                android:type="radial"
+                android:gradientRadius="100%p"
+                android:centerX="0.3"
+                android:centerY="0"
+                android:startColor="@color/purple_strong"
+                android:endColor="@android:color/transparent"
+                />
+        </shape>
+    </item>
+    <item>
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle" >
+            <gradient
+                android:type="radial"
+                android:gradientRadius="100%p"
+                android:centerX="-0.2"
+                android:centerY="0.4"
+                android:startColor="@color/purple_strong"
+                android:endColor="@android:color/transparent"
+                />
+        </shape>
+    </item>
+</layer-list>
