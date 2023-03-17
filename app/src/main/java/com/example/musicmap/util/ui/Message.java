@@ -20,7 +20,7 @@ import com.google.android.material.snackbar.Snackbar;
 /**
  * Message class to show customisable Snackbars, with some common built-in ones
  */
-public class Message {
+public final class Message {
 
     public static final Integer SHORT_DURATION = Snackbar.LENGTH_SHORT;
     public static final Integer LONG_DURATION = Snackbar.LENGTH_LONG;
@@ -105,7 +105,8 @@ public class Message {
         private final Integer standardTextColor;
         private final CharSequence text;
 
-        Type(@ColorInt Integer color, @DrawableRes Integer iconResId, @ColorInt Integer standardTextColor, CharSequence text) {
+        Type(@ColorInt Integer color, @DrawableRes Integer iconResId,
+             @ColorInt Integer standardTextColor, CharSequence text) {
             this.color = color;
             this.iconResId = iconResId;
             this.standardTextColor = standardTextColor;
@@ -235,7 +236,9 @@ public class Message {
         return new Builder();
     }
 
+    // CSOFF: FinalClass
     public static class Builder {
+    // CSON: FinalClass
         private View view = null;
         private Type type = Type.Default;
         private int duration = Snackbar.LENGTH_SHORT;

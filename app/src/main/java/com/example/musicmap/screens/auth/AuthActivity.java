@@ -2,7 +2,6 @@ package com.example.musicmap.screens.auth;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -21,11 +20,6 @@ import com.example.musicmap.util.ui.FragmentUtil;
 import com.example.musicmap.util.ui.Message;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class AuthActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
 
