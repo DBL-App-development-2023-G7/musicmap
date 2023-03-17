@@ -13,11 +13,14 @@ import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.User;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.ui.FragmentUtil;
+import com.example.musicmap.util.ui.Message;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class AuthActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
 
@@ -33,6 +36,17 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_auth);
+
+        // check internet connection every 5 seconds
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (!isInternetAvailable()) {
+                    showFailureMessage("Could not detect an internet connection");
+                }
+            }
+        }, 5000);
 
         auth = FirebaseAuth.getInstance();
         auth.addAuthStateListener(this);
@@ -100,11 +114,22 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
                 Exception exception = task.getException();
                 if (exception != null) {
                     Log.e(TAG, exception.toString());
+                    showFailureMessage("Something went wrong");
                 } else {
                     Log.e(TAG, "Unknown error!");
                 }
             }
         });
+    }
+
+    private void showFailureMessage(String message) {
+        Message.builder()
+                .setActivity(this)
+                .setText(message)
+                .setDuration(Message.LONG_DURATION)
+                .setActionText("Ok")
+                .failure()
+                .show();
     }
 
     private boolean isInternetAvailable() {
