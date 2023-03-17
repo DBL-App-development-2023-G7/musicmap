@@ -215,7 +215,7 @@ public final class Message {
     }
 
     /**
-     * Returns a Builder object
+     * Returns a Builder object.
      *
      * @return Builder
      */

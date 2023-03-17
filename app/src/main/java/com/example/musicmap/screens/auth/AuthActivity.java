@@ -143,7 +143,6 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
         return activeNetwork != null && activeNetwork.isConnected();
     }
 
-
     @Override
     public void onStop() {
         super.onStop();
