@@ -238,14 +238,14 @@ public final class Message {
         private int iconResId = 0;
         private Integer backgroundColor = null;
 
+        private Builder() {
+        }
+
         /**
          * Sets activity.
          *
          * @return Builder
          */
-        private Builder() {
-        }
-
         public Builder setActivity(Activity activity) {
             return setView(((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0));
         }
