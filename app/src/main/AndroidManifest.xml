@@ -16,6 +16,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.MusicMap"
+        android:name="com.example.musicmap.MusicMap"
         tools:targetApi="31">
         <activity
             android:name=".screens.verification.VerificationActivity"
