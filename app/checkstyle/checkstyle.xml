@@ -46,5 +46,6 @@
             <property name="allowMultipleEmptyLines" value="false" />
             <property name="allowMultipleEmptyLinesInsideClassMembers" value="false" />
         </module>
+        <module name="JavadocStyle" />
     </module>
 </module>
