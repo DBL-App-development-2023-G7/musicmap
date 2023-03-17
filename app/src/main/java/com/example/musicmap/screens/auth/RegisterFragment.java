@@ -26,7 +26,6 @@ public class RegisterFragment extends AuthFragment {
 
     private static final String TAG = "FirebaseRegister";
 
-
     //region declaration of the register form elements
     private EditText usernameInput;
     private EditText firstNameInput;

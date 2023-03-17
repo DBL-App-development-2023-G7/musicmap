@@ -100,7 +100,7 @@ public class UserData {
     }
 
     /**
-     * This method checks if the user has a profile picture
+     * This method checks if the user has a profile picture.
      *
      * @return true if the user has a profile picture
      */

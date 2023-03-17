@@ -8,9 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.musicmap.R;
 import com.example.musicmap.screens.main.HomeActivity;
-import com.example.musicmap.user.Artist;
-import com.example.musicmap.user.User;
-import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.ui.FragmentUtil;
 
 public class AuthActivity extends AppCompatActivity {
