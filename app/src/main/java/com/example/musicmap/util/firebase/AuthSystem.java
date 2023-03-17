@@ -70,8 +70,6 @@ public class AuthSystem {
         return Queries.getUsersWithUsername(username).onSuccessTask(docs -> {
             TaskCompletionSource<AuthResult> tcs = new TaskCompletionSource<>();
 
-            //TODO change the exceptions texts and types
-
             if (docs.isEmpty()) {
                 tcs.setException(new FirebaseFirestoreException("Query did not return any docs.",
                         FirebaseFirestoreException.Code.NOT_FOUND));

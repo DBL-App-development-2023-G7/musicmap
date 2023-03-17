@@ -21,7 +21,9 @@ public class VerificationActivity extends AppCompatActivity {
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        final DocumentReference docRef = firestore.collection("Users").document(auth.getCurrentUser().getUid());
+
+        //TODO should be moved, changed and optimized <<IGNORE FOR NOW>>
+        DocumentReference docRef = firestore.collection("Users").document(auth.getCurrentUser().getUid());
         docRef.addSnapshotListener((value, error) -> {
             boolean verified = (Boolean) value.getData().get("verified");
             if (verified) {
