@@ -23,6 +23,46 @@ public class Message {
     public static final Integer LONG_DURATION = Snackbar.LENGTH_LONG;
     public static final Integer INDEFINITE_DURATION = Snackbar.LENGTH_INDEFINITE;
 
+    public static void showFailureMessage(ViewGroup view, String message) {
+        builder().setView(view)
+                .setText(message)
+                .setDuration(Message.LONG_DURATION)
+                .setActionText("Ok")
+                .setActionTextColor(Color.WHITE)
+                .failure()
+                .show();
+    }
+
+    public static void showFailureMessage(Activity activity, String message) {
+        builder().setActivity(activity)
+                .setText(message)
+                .setDuration(Message.LONG_DURATION)
+                .setActionText("Ok")
+                .setActionTextColor(Color.WHITE)
+                .failure()
+                .show();
+    }
+
+    public static void showSuccessMessage(ViewGroup view, String message) {
+        builder().setView(view)
+                .setText(message)
+                .setDuration(Message.LONG_DURATION)
+                .setActionText("Ok")
+                .setActionTextColor(Color.WHITE)
+                .success()
+                .show();
+    }
+
+    public static void showSuccessMessage(Activity activity, String message) {
+        builder().setActivity(activity)
+                .setText(message)
+                .setDuration(Message.LONG_DURATION)
+                .setActionText("Ok")
+                .setActionTextColor(Color.WHITE)
+                .success()
+                .show();
+    }
+
     private enum Type {
         Default(null, null, null, null),
         Success(Color.parseColor("#2c5140"), R.drawable.baseline_check_24, Color.WHITE, "SUCCESS"),

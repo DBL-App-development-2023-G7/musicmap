@@ -1,5 +1,6 @@
 package com.example.musicmap.screens.auth;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -92,6 +93,7 @@ public class LoginFragment extends AuthFragment {
                                     .setText("Could not log in")
                                     .setDuration(Message.LONG_DURATION)
                                     .setActionText("Ok")
+                                    .setActionTextColor(Color.WHITE)
                                     .failure()
                                     .show();
                         }

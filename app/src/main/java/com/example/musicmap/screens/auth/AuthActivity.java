@@ -1,6 +1,7 @@
 package com.example.musicmap.screens.auth;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -43,7 +44,8 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
             @Override
             public void run() {
                 if (!isInternetAvailable()) {
-                    showFailureMessage("Could not detect an internet connection");
+                    Message.showFailureMessage(AuthActivity.this,
+                            "Could not detect an internet connection");
                 }
             }
         }, 5000);
@@ -114,22 +116,12 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
                 Exception exception = task.getException();
                 if (exception != null) {
                     Log.e(TAG, exception.toString());
-                    showFailureMessage("Something went wrong");
+                    Message.showFailureMessage(this, "Something went wrong");
                 } else {
                     Log.e(TAG, "Unknown error!");
                 }
             }
         });
-    }
-
-    private void showFailureMessage(String message) {
-        Message.builder()
-                .setActivity(this)
-                .setText(message)
-                .setDuration(Message.LONG_DURATION)
-                .setActionText("Ok")
-                .failure()
-                .show();
     }
 
     private boolean isInternetAvailable() {
