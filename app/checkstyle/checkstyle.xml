@@ -41,5 +41,11 @@
         <module name="FinalClass"/>
         <module name="InterfaceIsType"/>
         <module name="VisibilityModifier"/>
+        <module name="EmptyLineSeparator">
+            <property name="allowNoEmptyLineBetweenFields" value="true" />
+            <property name="allowMultipleEmptyLines" value="false" />
+            <property name="allowMultipleEmptyLinesInsideClassMembers" value="false" />
+        </module>
+        <module name="JavadocStyle" />
     </module>
 </module>
