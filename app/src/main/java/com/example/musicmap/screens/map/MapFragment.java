@@ -1,9 +1,7 @@
 package com.example.musicmap.screens.map;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -18,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.musicmap.R;
+import com.example.musicmap.util.permissions.LocationPermission;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -34,8 +33,7 @@ public class MapFragment extends Fragment {
 
     private static final String MULTITOUCH_FEATURE = "android.hardware.touchscreen.multitouch";
 
-    private static final int PERMISSION_ACCESS_FINE_LOCATION_REQUEST_CODE = 1;
-    private static final int PERMISSION_ACCESS_COARSE_LOCATION_REQUEST_CODE = 2;
+    private final LocationPermission locationPermission = new LocationPermission(this);
 
     /**
      * The MapView used by this fragment.
@@ -68,29 +66,15 @@ public class MapFragment extends Fragment {
         Context ctx = activity.getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
-        // Request needed permissions if applicable
-        // TODO message explaining the permissions,
-        //  see https://developer.android.com/training/permissions/requesting#explain
-        //  check if permissions were granted, check if the app can function without these permission
-        //  probably do permissions elsewhere
-        if (activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Request coarse location access permission
-            activity.requestPermissions(new String[] {Manifest.permission.ACCESS_COARSE_LOCATION},
-                    PERMISSION_ACCESS_COARSE_LOCATION_REQUEST_CODE);
-        }
-        if (activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Request fine location access permission
-            activity.requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSION_ACCESS_FINE_LOCATION_REQUEST_CODE);
-        }
+        // Request needed permissions if needed
+        locationPermission.request();
 
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
         mapView = rootView.findViewById(R.id.map);
         mapView.setTileSource(TileSourceFactory.MAPNIK); // the default OSM tile source (data source)
 
+        // Set zoom buttons location
         mapView.getZoomController().getDisplay().setPositions(false,
                 CustomZoomButtonsDisplay.HorizontalPosition.RIGHT,
                 CustomZoomButtonsDisplay.VerticalPosition.CENTER);
@@ -108,7 +92,6 @@ public class MapFragment extends Fragment {
             // If multitouch absent, always enable zoom buttons
             mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.ALWAYS);
         }
-
 
         // Add all overlays
         addOverlays();
@@ -150,10 +133,18 @@ public class MapFragment extends Fragment {
      * using {@link #addOverlay(Overlay)}.
      */
     protected void addOverlays() {
+        if (!mapView.getOverlayManager().overlays().isEmpty()) {
+            throw new IllegalStateException("Attempted to add overlays twice");
+        }
+
         // Default overlay showing current location (only if needed)
         if (shouldDisplayCurrentLocation()) {
+            if (locationPermission.isNoneGranted()) {
+                return;
+            }
+
             CurrentLocationOverlay currentLocationOverlay = new CurrentLocationOverlay(mapView);
-            mapView.getOverlayManager().add(0, currentLocationOverlay);
+            addOverlay(currentLocationOverlay);
         }
     }
 

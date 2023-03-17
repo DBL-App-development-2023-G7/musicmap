@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.example.musicmap.R;
 
-
 public class PostFragment extends MainFragment {
 
     @Override
