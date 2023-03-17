@@ -16,6 +16,7 @@ import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.firebase.Queries;
 import com.example.musicmap.util.regex.ValidationUtil;
 import com.example.musicmap.util.ui.BirthdatePickerDialog;
+import com.example.musicmap.util.ui.Message;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
@@ -250,21 +251,20 @@ public class RegisterFragment extends AuthFragment {
         updateFormValues();
 
         if (!validate()) {
-            Toast.makeText(getActivity(), "Some of the fields are incomplete or contain "
-                    + "invalid values.", Toast.LENGTH_LONG).show();
+            Message.showFailureMessage(getActivity(),
+                    "Some of the fields are incomplete or contain invalid values");
             return;
         }
 
         AuthSystem.register(createUserData(), password)
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
-                        String exceptionText;
+
                         if (task.getException() != null) {
-                            exceptionText = "An exception occurred: " + task.getException().toString();
-                        } else {
-                            exceptionText = "An unknown exception occurred";
+                            Message.showFailureMessage(getActivity(),
+                                    "Could not register, please try again later");
+                            Log.e(TAG, task.getException().toString());
                         }
-                        Toast.makeText(getActivity(), exceptionText, Toast.LENGTH_SHORT).show();
                     }
                 });
     }

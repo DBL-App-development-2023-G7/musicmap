@@ -1,6 +1,5 @@
 package com.example.musicmap.screens.auth;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.widget.EditText;
 import com.example.musicmap.R;
 import com.example.musicmap.util.regex.ValidationUtil;
 import com.example.musicmap.util.ui.Message;
-import com.google.android.material.snackbar.Snackbar;
 
 public class LoginFragment extends AuthFragment {
 
@@ -88,14 +86,7 @@ public class LoginFragment extends AuthFragment {
                     task -> {
                         if (!task.isSuccessful()) {
                             Log.d(TAG, "loginUser:fail", task.getException());
-                            Message.builder()
-                                    .setView(viewGroup)
-                                    .setText("Could not log in")
-                                    .setDuration(Message.LONG_DURATION)
-                                    .setActionText("Ok")
-                                    .setActionTextColor(Color.WHITE)
-                                    .failure()
-                                    .show();
+                            Message.showFailureMessage(viewGroup, "Could not log in");
                         }
                     });
         }

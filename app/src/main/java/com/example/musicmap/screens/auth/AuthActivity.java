@@ -117,8 +117,6 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
                 if (exception != null) {
                     Log.e(TAG, exception.toString());
                     Message.showFailureMessage(this, "Something went wrong");
-                } else {
-                    Log.e(TAG, "Unknown error!");
                 }
             }
         });
