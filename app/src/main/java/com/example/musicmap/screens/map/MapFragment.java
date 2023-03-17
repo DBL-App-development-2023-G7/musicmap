@@ -93,7 +93,6 @@ public class MapFragment extends Fragment {
             mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.ALWAYS);
         }
 
-
         // Add all overlays
         addOverlays();
 
