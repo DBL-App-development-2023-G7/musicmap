@@ -281,7 +281,6 @@ public final class Message {
          */
         @Contract("_ -> this")
         public Builder setText(CharSequence text) {
-
             this.text = text;
             return this;
         }
