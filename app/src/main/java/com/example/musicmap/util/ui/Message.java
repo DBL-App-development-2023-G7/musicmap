@@ -94,9 +94,9 @@ public final class Message {
     }
 
     private enum Type {
-        Default(null, null, null, null),
-        Success(Color.parseColor("#2c5140"), R.drawable.baseline_check_24, Color.WHITE, "SUCCESS"),
-        Failure(Color.parseColor("#8B0000"), R.drawable.baseline_cancel_24, Color.WHITE, "ERROR");
+        DEFAULT(null, null, null, null),
+        SUCCESS(Color.parseColor("#2c5140"), R.drawable.baseline_check_24, Color.WHITE, "SUCCESS"),
+        FAILURE(Color.parseColor("#8B0000"), R.drawable.baseline_cancel_24, Color.WHITE, "ERROR");
 
         private final Integer color;
         private final Integer iconResId;
@@ -230,7 +230,7 @@ public final class Message {
     public static class Builder {
         // CSON: FinalClass
         private View view = null;
-        private Type type = Type.Default;
+        private Type type = Type.DEFAULT;
         private int duration = Snackbar.LENGTH_SHORT;
         private CharSequence text = null;
         private Integer textColor = null;
@@ -397,7 +397,7 @@ public final class Message {
          * @return Snackbar
          */
         public Snackbar success() {
-            type = Type.Success;
+            type = Type.SUCCESS;
             return make();
         }
 
@@ -407,7 +407,7 @@ public final class Message {
          * @return Snackbar
          */
         public Snackbar failure() {
-            type = Type.Failure;
+            type = Type.FAILURE;
             return make();
         }
 
