@@ -2,6 +2,7 @@ package com.example.musicmap.util.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -12,7 +13,9 @@ import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
+import com.example.musicmap.MusicMap;
 import com.example.musicmap.R;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -39,7 +42,7 @@ public final class Message {
         builder().setView(view)
                 .setText(message)
                 .setDuration(Message.LONG_DURATION)
-                .setActionText("Ok")
+                .setActionText(MusicMap.getAppResources().getString(R.string.message_default_action_text))
                 .setActionTextColor(Color.WHITE)
                 .failure()
                 .show();
@@ -55,7 +58,7 @@ public final class Message {
         builder().setActivity(activity)
                 .setText(message)
                 .setDuration(Message.LONG_DURATION)
-                .setActionText("Ok")
+                .setActionText(MusicMap.getAppResources().getString(R.string.message_default_action_text))
                 .setActionTextColor(Color.WHITE)
                 .failure()
                 .show();
@@ -71,7 +74,7 @@ public final class Message {
         builder().setView(view)
                 .setText(message)
                 .setDuration(Message.LONG_DURATION)
-                .setActionText("Ok")
+                .setActionText(MusicMap.getAppResources().getString(R.string.message_default_action_text))
                 .setActionTextColor(Color.WHITE)
                 .success()
                 .show();
@@ -87,7 +90,7 @@ public final class Message {
         builder().setActivity(activity)
                 .setText(message)
                 .setDuration(Message.LONG_DURATION)
-                .setActionText("Ok")
+                .setActionText(MusicMap.getAppResources().getString(R.string.message_default_action_text))
                 .setActionTextColor(Color.WHITE)
                 .success()
                 .show();
@@ -95,8 +98,8 @@ public final class Message {
 
     private enum Type {
         DEFAULT(null, null, null, null),
-        SUCCESS(Color.parseColor("#2c5140"), R.drawable.baseline_check_24, Color.WHITE, "SUCCESS"),
-        FAILURE(Color.parseColor("#8B0000"), R.drawable.baseline_cancel_24, Color.WHITE, "ERROR");
+        SUCCESS(ResourcesCompat.getColor(MusicMap.getAppResources(), R.color.message_success, null), R.drawable.baseline_check_24, Color.WHITE, MusicMap.getAppResources().getString(R.string.message_default_success_text)),
+        FAILURE(ResourcesCompat.getColor(MusicMap.getAppResources(), R.color.message_failure, null), R.drawable.baseline_cancel_24, Color.WHITE, MusicMap.getAppResources().getString(R.string.message_default_failure_text));
 
         private final Integer color;
         private final Integer iconResId;

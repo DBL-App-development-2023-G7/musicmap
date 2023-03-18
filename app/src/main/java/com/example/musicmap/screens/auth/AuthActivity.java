@@ -117,10 +117,8 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
     /**
      * Starts a periodic check (every 5 seconds) for an internet connection using a Handler.
      * If the connection is lost, shows a message indicating that the connection is lost.
-     *
-     * @throws SecurityException if the app does not have permission to access the network state
      */
-    private void checkInternetPeriodically() throws SecurityException {
+    private void checkInternetPeriodically() {
         Handler handler = new Handler();
         int delay = 5000; // 5 seconds
 

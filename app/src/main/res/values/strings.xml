@@ -46,4 +46,7 @@
     <string name="input_exception_date_null">The date was parsed but the date is null.</string>
     <string name="auth_error_invalid_values">Some of the fields are incomplete or contain invalid values.</string>
     <string name="auth_error_failed_registration">Could not register, please try again later!</string>
+    <string name="message_default_action_text">Ok</string>
+    <string name="message_default_success_text">SUCCESS</string>
+    <string name="message_default_failure_text">ERROR</string>
 </resources>
