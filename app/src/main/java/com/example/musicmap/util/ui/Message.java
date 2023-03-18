@@ -17,6 +17,8 @@ import com.example.musicmap.R;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.jetbrains.annotations.Contract;
+
 /**
  * Message class to show customisable Snackbars, with some common built-in ones.
  */
@@ -265,6 +267,7 @@ public final class Message {
          * @param view the view
          * @return Builder
          */
+        @Contract("_ -> this")
         public Builder setView(View view) {
             this.view = view;
             return this;
@@ -276,6 +279,7 @@ public final class Message {
          * @param text the text
          * @return Builder
          */
+        @Contract("_ -> this")
         public Builder setText(CharSequence text) {
 
             this.text = text;
@@ -288,6 +292,7 @@ public final class Message {
          * @param color the text color
          * @return Builder
          */
+        @Contract("_ -> this")
         public Builder setTextColor(@ColorInt int color) {
             this.textColor = color;
             return this;
@@ -299,6 +304,7 @@ public final class Message {
          * @param text the text
          * @return Builder
          */
+        @Contract("_ -> this")
         public Builder setActionText(CharSequence text) {
             this.actionText = text;
             return this;
@@ -310,6 +316,7 @@ public final class Message {
          * @param color the color for actionText
          * @return Builder
          */
+        @Contract("_ -> this")
         public Builder setActionTextColor(@ColorInt int color) {
             this.actionTextColor = color;
             return this;
@@ -321,6 +328,7 @@ public final class Message {
          * @param listener the listener
          * @return Builder
          */
+        @Contract("_ -> this")
         public Builder setActionClickListener(View.OnClickListener listener) {
             this.actionClickListener = listener;
             return this;
@@ -332,6 +340,7 @@ public final class Message {
          * @param duration duration of message
          * @return Builder
          */
+        @Contract("_ -> this")
         public Builder setDuration(@BaseTransientBottomBar.Duration int duration) {
             this.duration = duration;
             return this;
@@ -343,6 +352,7 @@ public final class Message {
          * @param resId the id of icon
          * @return Builder
          */
+        @Contract("_ -> this")
         public Builder setIcon(@DrawableRes int resId) {
             this.iconResId = resId;
             return this;
@@ -354,6 +364,7 @@ public final class Message {
          * @param drawable the drawable icon
          * @return Builder
          */
+        @Contract("_ -> this")
         public Builder setIcon(Drawable drawable) {
             this.icon = drawable;
             return this;
@@ -365,6 +376,7 @@ public final class Message {
          * @param color the background color
          * @return Builder
          */
+        @Contract("_ -> this")
         public Builder setBackgroundColor(@ColorInt int color) {
             this.backgroundColor = color;
             return this;
