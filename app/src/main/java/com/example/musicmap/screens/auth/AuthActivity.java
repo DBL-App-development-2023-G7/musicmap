@@ -123,12 +123,14 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
 
         handler.postDelayed(new Runnable() {
             public void run() {
-                if (!isInternetAvailable()) {
-                    Message.showFailureMessage(AuthActivity.this,
-                            getString(R.string.error_no_internet));
+                try {
+                    if (!isInternetAvailable()) {
+                        Message.showFailureMessage(AuthActivity.this,
+                                getString(R.string.error_no_internet));
+                    }
+                } finally {
+                    handler.postDelayed(this, delay);
                 }
-
-                handler.postDelayed(this, delay);
             }
         }, delay);
     }
