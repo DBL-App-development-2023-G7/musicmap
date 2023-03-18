@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Contract;
 /**
  * Message class to show customisable Snackbars, with some common built-in ones.
  */
+@SuppressWarnings("unused")
 public final class Message {
 
     public static final Integer SHORT_DURATION = Snackbar.LENGTH_SHORT;
