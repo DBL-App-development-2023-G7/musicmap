@@ -103,10 +103,13 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
             } else {
                 Exception exception = task.getException();
                 if (exception != null) {
-                    Log.e(TAG, exception.toString());
-                    Message.showFailureMessage(this,
-                            getString(R.string.auth_error_something_wrong));
+                    Log.e(TAG, "Exception occurred while updating auth user data", exception);
+                } else {
+                    Log.e(TAG, "Could not update auth user data");
                 }
+
+                Message.showFailureMessage(this,
+                        getString(R.string.auth_error_something_wrong));
             }
         });
     }
