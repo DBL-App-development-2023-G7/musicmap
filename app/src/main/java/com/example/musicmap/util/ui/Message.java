@@ -2,6 +2,7 @@ package com.example.musicmap.util.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -210,6 +211,16 @@ public final class Message {
 
         if (builder.icon == null) {
             builder.icon = builder.type.getIcon(builder.view.getContext());
+        }
+
+        if (builder.icon != null) {
+            Drawable transparentHelperDrawable = MessageUtils.makeTransparentDrawable(builder.view.getContext(),
+                    builder.icon.getIntrinsicWidth(),
+                    builder.icon.getIntrinsicHeight());
+
+            Configuration configuration = messageLayout.getResources().getConfiguration();
+            text.setCompoundDrawablesWithIntrinsicBounds(builder.icon, null, transparentHelperDrawable, null);
+            text.setCompoundDrawablePadding(text.getResources().getDimensionPixelOffset(R.dimen.message_default_icon_padding));
         }
 
         // show message over keyboard
