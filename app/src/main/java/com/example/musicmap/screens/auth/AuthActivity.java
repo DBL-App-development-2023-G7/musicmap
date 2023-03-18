@@ -118,8 +118,8 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
      * @throws SecurityException if the app does not have permission to access the network state
      */
     private void checkInternetPeriodically() throws SecurityException {
-        final Handler handler = new Handler();
-        final int delay = 5000; // 5 seconds
+        Handler handler = new Handler();
+        int delay = 5000; // 5 seconds
 
         handler.postDelayed(new Runnable() {
             public void run() {
