@@ -258,12 +258,13 @@ public class RegisterFragment extends AuthFragment {
         AuthSystem.register(createUserData(), password)
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
-
                         if (task.getException() != null) {
-                            Message.showFailureMessage(getActivity(),
-                                    getString(R.string.auth_error_failed_registration));
-                            Log.e(TAG, task.getException().toString());
+                            Log.e(TAG, "Exception occurred during registration", task.getException());
+                        } else {
+                            Log.e(TAG, "Could not register user");
                         }
+
+                        Message.showFailureMessage(getActivity(), getString(R.string.auth_error_failed_registration));
                     }
                 });
     }
