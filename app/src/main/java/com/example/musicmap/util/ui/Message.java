@@ -3,7 +3,6 @@ package com.example.musicmap.util.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -99,8 +98,16 @@ public final class Message {
 
     private enum Type {
         DEFAULT(null, null, null, null),
-        SUCCESS(ResourcesCompat.getColor(MusicMap.getAppResources(), R.color.message_success, null), R.drawable.baseline_check_24, Color.WHITE, MusicMap.getAppResources().getString(R.string.message_default_success_text)),
-        FAILURE(ResourcesCompat.getColor(MusicMap.getAppResources(), R.color.message_failure, null), R.drawable.baseline_cancel_24, Color.WHITE, MusicMap.getAppResources().getString(R.string.message_default_failure_text));
+        SUCCESS(ResourcesCompat.getColor(MusicMap.getAppResources(),
+                R.color.message_success, null),
+                R.drawable.baseline_check_24,
+                Color.WHITE,
+                MusicMap.getAppResources().getString(R.string.message_default_success_text)),
+        FAILURE(ResourcesCompat.getColor(MusicMap.getAppResources(),
+                R.color.message_failure, null),
+                R.drawable.baseline_cancel_24,
+                Color.WHITE,
+                MusicMap.getAppResources().getString(R.string.message_default_failure_text));
 
         private final Integer color;
         private final Integer iconResId;
@@ -214,13 +221,15 @@ public final class Message {
         }
 
         if (builder.icon != null) {
-            Drawable transparentHelperDrawable = MessageUtils.makeTransparentDrawable(builder.view.getContext(),
-                    builder.icon.getIntrinsicWidth(),
-                    builder.icon.getIntrinsicHeight());
+            Drawable transparentHelperDrawable =
+                    MessageUtils.makeTransparentDrawable(builder.view.getContext(),
+                            builder.icon.getIntrinsicWidth(), builder.icon.getIntrinsicHeight());
 
             Configuration configuration = messageLayout.getResources().getConfiguration();
-            text.setCompoundDrawablesWithIntrinsicBounds(builder.icon, null, transparentHelperDrawable, null);
-            text.setCompoundDrawablePadding(text.getResources().getDimensionPixelOffset(R.dimen.message_default_icon_padding));
+            text.setCompoundDrawablesWithIntrinsicBounds(builder.icon,
+                    null, transparentHelperDrawable, null);
+            text.setCompoundDrawablePadding(
+                    text.getResources().getDimensionPixelOffset(R.dimen.message_default_icon_padding));
         }
 
         // show message over keyboard

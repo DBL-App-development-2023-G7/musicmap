@@ -21,6 +21,6 @@ public class MessageUtils {
     static Drawable makeTransparentDrawable(Context context, int width, int height) {
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
         Bitmap bmp = Bitmap.createBitmap(width, height, conf);
-        return new BitmapDrawable(context.getResources(),bmp);
+        return new BitmapDrawable(context.getResources(), bmp);
     }
 }
