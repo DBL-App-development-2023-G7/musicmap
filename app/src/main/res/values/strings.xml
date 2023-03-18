@@ -31,7 +31,7 @@
     <string name="auth_error_something_wrong">Something went wrong.</string>
     <string name="error_no_internet">Could not detect an internet connection.</string>
     <string name="auth_error_incorrect_email_password">Incorrect email or password.</string>
-    <string name="input_error_enter_email">Please enter a email address.</string>
+    <string name="input_error_enter_email">Please enter an email address.</string>
     <string name="input_error_valid_email">Please enter a valid email address.</string>
     <string name="input_error_unexpected">Unexpected input.</string>
     <string name="input_error_enter_password">Please enter a password.</string>
