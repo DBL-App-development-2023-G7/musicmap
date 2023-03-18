@@ -68,7 +68,7 @@ public class LoginFragment extends AuthFragment {
             case VALID:
                 return true;
             default:
-                passwordInput.setError("Unexpected input.");
+                passwordInput.setError(getString(R.string.input_error_unexpected));
                 return false;
         }
     }
