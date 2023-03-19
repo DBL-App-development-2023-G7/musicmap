@@ -13,6 +13,7 @@ public class MessageUtils {
     /**
      * Creates a transparent drawable with the specified width and height using the
      * provided context.
+     *
      * @param context the context to use for creating the drawable
      * @param width the width of the drawable, in pixels
      * @param height the height of the drawable, in pixels
@@ -23,4 +24,5 @@ public class MessageUtils {
         Bitmap bmp = Bitmap.createBitmap(width, height, conf);
         return new BitmapDrawable(context.getResources(), bmp);
     }
+
 }

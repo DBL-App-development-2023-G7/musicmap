@@ -99,13 +99,11 @@ public final class Message {
 
     private enum Type {
         DEFAULT(null, null, null, null),
-        SUCCESS(ResourcesCompat.getColor(MusicMap.getAppResources(),
-                R.color.message_success, null),
+        SUCCESS(ResourcesCompat.getColor(MusicMap.getAppResources(), R.color.message_success, null),
                 R.drawable.baseline_check_24,
                 Color.WHITE,
                 MusicMap.getAppResources().getString(R.string.message_default_success_text)),
-        FAILURE(ResourcesCompat.getColor(MusicMap.getAppResources(),
-                R.color.message_failure, null),
+        FAILURE(ResourcesCompat.getColor(MusicMap.getAppResources(), R.color.message_failure, null),
                 R.drawable.baseline_cancel_24,
                 Color.WHITE,
                 MusicMap.getAppResources().getString(R.string.message_default_failure_text));
