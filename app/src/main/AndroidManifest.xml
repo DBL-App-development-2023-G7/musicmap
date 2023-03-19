@@ -28,7 +28,8 @@
         <activity
             android:name=".screens.auth.AuthActivity"
             android:exported="true"
-            android:label="MusicMap">
+            android:label="MusicMap"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
