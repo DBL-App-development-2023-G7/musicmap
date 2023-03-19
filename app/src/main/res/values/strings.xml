@@ -28,4 +28,6 @@
     <string name="appbar_search">Search</string>
     <string name="appbar_profile">Profile</string>
     <string name="appbar_icon">icon</string>
+    <string name="title_break">Music \nMap</string>
+    <string name="title">MusicMap</string>
 </resources>

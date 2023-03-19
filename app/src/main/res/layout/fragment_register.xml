@@ -184,7 +184,7 @@
                 android:layout_height="106dp"
                 android:layout_marginTop="40dp"
                 android:fontFamily="@font/kenia_regular"
-                android:text="MusicMap"
+                android:text="@string/title"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="80sp"

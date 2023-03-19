@@ -29,7 +29,8 @@
             android:name=".screens.auth.AuthActivity"
             android:exported="true"
             android:label="MusicMap"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:configChanges="orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
