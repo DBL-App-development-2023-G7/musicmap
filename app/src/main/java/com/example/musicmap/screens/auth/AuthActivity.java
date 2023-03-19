@@ -30,7 +30,7 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        System.out.println("Created activity.");
         setContentView(R.layout.activity_auth);
 
         auth = FirebaseAuth.getInstance();
