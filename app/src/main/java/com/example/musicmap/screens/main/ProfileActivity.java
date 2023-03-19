@@ -26,10 +26,6 @@ public class ProfileActivity extends AuthListenerActivity {
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
         ImageView profilePicture = findViewById(R.id.profile_imageView);
-        profilePicture.setOnClickListener(view -> {
-
-        });
-
         TextView emailVerified = findViewById(R.id.emailVerified_textView);
         TextView uuidText = findViewById(R.id.uuid_textView);
         TextView emailText = findViewById(R.id.email_textView);
