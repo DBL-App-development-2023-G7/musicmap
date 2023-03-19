@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.musicmap.R;
 import com.example.musicmap.util.regex.ValidationUtil;
+import com.example.musicmap.util.ui.Message;
 
 public class LoginFragment extends AuthFragment {
 
@@ -18,12 +18,14 @@ public class LoginFragment extends AuthFragment {
 
     private EditText emailInput;
     private EditText passwordInput;
+    private ViewGroup viewGroup;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
+        viewGroup = container;
         emailInput = rootView.findViewById(R.id.email_editText);
         passwordInput = rootView.findViewById(R.id.password_editText);
 
@@ -42,15 +44,15 @@ public class LoginFragment extends AuthFragment {
     private boolean checkEmail(String email) {
         switch (ValidationUtil.isEmailValid(email)) {
             case EMPTY:
-                emailInput.setError("Please enter a email address.");
+                emailInput.setError(getString(R.string.input_error_enter_email));
                 return false;
             case FORMAT:
-                emailInput.setError("Please enter a valid email address.");
+                emailInput.setError(getString(R.string.input_error_valid_email));
                 return false;
             case VALID:
                 return true;
             default:
-                emailInput.setError("Unexpected input.");
+                emailInput.setError(getString(R.string.input_error_unexpected));
                 return false;
         }
     }
@@ -58,15 +60,15 @@ public class LoginFragment extends AuthFragment {
     private boolean checkPassword(String password) {
         switch (ValidationUtil.isPasswordValid(password)) {
             case EMPTY:
-                passwordInput.setError("Please enter a password.");
+                passwordInput.setError(getString(R.string.input_error_enter_password));
                 return false;
             case FORMAT:
-                passwordInput.setError("Please enter a valid password.");
+                passwordInput.setError(getString(R.string.input_error_valid_password));
                 return false;
             case VALID:
                 return true;
             default:
-                passwordInput.setError("Unexpected input.");
+                passwordInput.setError(getString(R.string.input_error_unexpected));
                 return false;
         }
     }
@@ -82,12 +84,10 @@ public class LoginFragment extends AuthFragment {
         if (isInputValid(email, password)) {
             this.getAuth().signInWithEmailAndPassword(email, password).addOnCompleteListener(this.getAuthActivity(),
                     task -> {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "loginUser:success");
-                        } else {
+                        if (!task.isSuccessful()) {
                             Log.d(TAG, "loginUser:fail", task.getException());
-                            Toast.makeText(getActivity(), "Incorrect email/password.",
-                                    Toast.LENGTH_SHORT).show();
+                            Message.showFailureMessage(viewGroup,
+                                    getString(R.string.auth_error_incorrect_email_password));
                         }
                     });
         }

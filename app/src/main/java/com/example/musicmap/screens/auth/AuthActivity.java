@@ -1,7 +1,11 @@
 package com.example.musicmap.screens.auth;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -13,6 +17,7 @@ import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.User;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.ui.FragmentUtil;
+import com.example.musicmap.util.ui.Message;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -30,6 +35,8 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_auth);
+
+        checkInternetPeriodically();
 
         auth = FirebaseAuth.getInstance();
         auth.addAuthStateListener(this);
@@ -96,12 +103,48 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
             } else {
                 Exception exception = task.getException();
                 if (exception != null) {
-                    Log.e(TAG, exception.toString());
+                    Log.e(TAG, "Exception occurred while updating auth user data", exception);
                 } else {
-                    Log.e(TAG, "Unknown error!");
+                    Log.e(TAG, "Could not update auth user data");
                 }
+
+                Message.showFailureMessage(this,
+                        getString(R.string.auth_error_something_wrong));
             }
         });
+    }
+
+    /**
+     * Starts a periodic check (every 5 seconds) for an internet connection using a Handler.
+     * If the connection is lost, shows a message indicating that the connection is lost.
+     */
+    private void checkInternetPeriodically() {
+        Handler handler = new Handler();
+        int delay = 5000; // 5 seconds
+
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                try {
+                    if (!isInternetAvailable()) {
+                        Message.showFailureMessage(AuthActivity.this,
+                                getString(R.string.error_no_internet));
+                    }
+                } finally {
+                    handler.postDelayed(this, delay);
+                }
+            }
+        }, delay);
+    }
+
+    /**
+     * Returns a boolean indicating whether an active network connection is available.
+     *
+     * @return true if an active network connection is available, false otherwise
+     */
+    private boolean isInternetAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnected();
     }
 
     @Override
