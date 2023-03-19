@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -228,6 +229,7 @@ public final class Message {
             Configuration configuration = messageLayout.getResources().getConfiguration();
             text.setCompoundDrawablesWithIntrinsicBounds(builder.icon,
                     null, transparentHelperDrawable, null);
+            text.setGravity(Gravity.CENTER_VERTICAL);
             text.setCompoundDrawablePadding(
                     text.getResources().getDimensionPixelOffset(R.dimen.message_default_icon_padding));
         }
