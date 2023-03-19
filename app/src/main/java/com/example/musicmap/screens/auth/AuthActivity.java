@@ -116,4 +116,6 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
         auth.removeAuthStateListener(this);
     }
 
+
+
 }
