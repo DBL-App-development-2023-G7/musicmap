@@ -42,7 +42,10 @@ public class AuthActivity extends AppCompatActivity implements FirebaseAuth.Auth
             FragmentUtil.initFragment(getSupportFragmentManager(), FRAGMENT_CONTAINER_ID,
                     LoginFragment.class);
         }
-        Objects.requireNonNull(getSupportActionBar()).hide();
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
     }
 
     @Override
