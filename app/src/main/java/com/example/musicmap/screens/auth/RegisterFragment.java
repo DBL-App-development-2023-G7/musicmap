@@ -16,7 +16,6 @@ import com.example.musicmap.util.firebase.Queries;
 import com.example.musicmap.util.regex.ValidationUtil;
 import com.example.musicmap.util.ui.BirthdatePickerDialog;
 import com.example.musicmap.util.ui.Message;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
