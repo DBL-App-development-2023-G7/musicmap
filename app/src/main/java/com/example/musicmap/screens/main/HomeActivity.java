@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import com.example.musicmap.R;
 import com.example.musicmap.screens.map.MapFragment;
 import com.example.musicmap.util.ui.FragmentUtil;
-import com.example.musicmap.util.ui.AuthListenerActivity;
+import com.example.musicmap.AuthListenerActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AuthListenerActivity {

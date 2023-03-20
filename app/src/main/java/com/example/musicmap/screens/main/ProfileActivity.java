@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.example.musicmap.R;
 import com.example.musicmap.util.firebase.AuthSystem;
-import com.example.musicmap.util.ui.AuthListenerActivity;
+import com.example.musicmap.AuthListenerActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;

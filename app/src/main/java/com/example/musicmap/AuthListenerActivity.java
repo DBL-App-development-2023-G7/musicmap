@@ -1,4 +1,4 @@
-package com.example.musicmap.util.ui;
+package com.example.musicmap;
 
 import android.content.Intent;
 import android.os.Bundle;
