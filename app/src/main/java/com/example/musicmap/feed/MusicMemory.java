@@ -14,15 +14,15 @@ import java.util.Date;
 public class MusicMemory extends Post {
 
     // TODO remaining details, e.g. song reference
-    private final Uri photo;
+    private final String photo;
 
-    public MusicMemory(Date timePosted, GeoPoint location, Uri photo) {
-        super(timePosted, location);
+    public MusicMemory(String author, Date timePosted, GeoPoint location, String photo) {
+        super(author, timePosted, location);
         this.photo = photo;
     }
 
-    public Uri getPhoto() {
-        return photo;
+    public Uri getPhotoUri() {
+        return Uri.parse(photo);
     }
 
     @NonNull

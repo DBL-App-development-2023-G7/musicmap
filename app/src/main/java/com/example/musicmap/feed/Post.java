@@ -9,13 +9,18 @@ import java.util.Date;
  */
 public abstract class Post {
 
-    // TODO add poster (user who made post)
+    private final String author;
     private final Date timePosted;
     private final GeoPoint location;
 
-    public Post(Date timePosted, GeoPoint location) {
+    public Post(String author, Date timePosted, GeoPoint location) {
+        this.author = author;
         this.timePosted = timePosted;
         this.location = location;
+    }
+
+    public String getAuthor() {
+        return author;
     }
 
     public Date getTimePosted() {
