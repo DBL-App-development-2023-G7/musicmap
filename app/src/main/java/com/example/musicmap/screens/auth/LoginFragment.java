@@ -107,6 +107,8 @@ public class LoginFragment extends AuthFragment {
                     }
                 });
             }
+        } else {
+            Message.showFailureMessage(viewGroup, getString(R.string.auth_error_invalid_values));
         }
     }
 
