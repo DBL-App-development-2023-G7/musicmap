@@ -2,7 +2,6 @@ package com.example.musicmap;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +12,7 @@ import com.example.musicmap.screens.verification.VerificationActivity;
 import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.User;
 import com.example.musicmap.util.firebase.AuthSystem;
+import com.example.musicmap.util.ui.Message;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -43,9 +43,9 @@ public class AuthListenerActivity extends AppCompatActivity implements FirebaseA
                 } else {
                     Exception exception = task.getException();
                     if (exception != null) {
-                        Toast.makeText(this, exception.toString(), Toast.LENGTH_LONG).show();
+                        Message.showFailureMessage(this, exception.getMessage());
                     } else {
-                        Toast.makeText(this, "Unknown error!", Toast.LENGTH_LONG).show();
+                        Message.showFailureMessage(this, "Unknown error!");
                     }
                 }
             });
