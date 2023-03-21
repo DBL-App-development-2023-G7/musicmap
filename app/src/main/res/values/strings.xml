@@ -4,6 +4,7 @@
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="email">Email</string>
+    <string name="identifier">Username/Email</string>
     <string name="password">Password</string>
     <string name="repeat_password">Repeat Password</string>
     <string name="phone">Phone</string>
@@ -31,6 +32,7 @@
     <string name="auth_error_something_wrong">Something went wrong.</string>
     <string name="error_no_internet">Could not detect an internet connection.</string>
     <string name="auth_error_incorrect_email_password">Incorrect email or password.</string>
+    <string name="auth_error_incorrect_username_password">Incorrect username or password.</string>
     <string name="input_error_enter_email">Please enter an email address.</string>
     <string name="input_error_valid_email">Please enter a valid email address.</string>
     <string name="input_error_unexpected">Unexpected input.</string>
@@ -49,4 +51,8 @@
     <string name="message_default_action_text">Ok</string>
     <string name="message_default_success_text">SUCCESS</string>
     <string name="message_default_failure_text">ERROR</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="awaiting_verification">Account awaiting verification.</string>
+    <string name="awaiting_verification_text">Since you registered as an artist we first need to make sure that your request is authentic.</string>
+    <string name="log_in_alt_account">Log in with another account</string>
 </resources>

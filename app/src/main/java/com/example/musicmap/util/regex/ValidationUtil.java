@@ -27,6 +27,17 @@ public class ValidationUtil {
         return Result.VALID;
     }
 
+    public static Result isIdentifierValid(String identifier) {
+        if (identifier.isEmpty()) {
+            return Result.EMPTY;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(identifier).matches()
+                && !MMPatterns.USERNAME.matcher(identifier).matches()) {
+            return Result.FORMAT;
+        }
+        return  Result.VALID;
+    }
+
     public static Result isEmailValid(String email) {
         if (email.isEmpty()) {
             return Result.EMPTY;

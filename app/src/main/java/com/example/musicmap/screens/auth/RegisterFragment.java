@@ -16,7 +16,6 @@ import com.example.musicmap.util.firebase.Queries;
 import com.example.musicmap.util.regex.ValidationUtil;
 import com.example.musicmap.util.ui.BirthdatePickerDialog;
 import com.example.musicmap.util.ui.Message;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,8 +25,6 @@ import java.util.Locale;
 public class RegisterFragment extends AuthFragment {
 
     private static final String TAG = "FirebaseRegister";
-
-    private FirebaseFirestore firestore;
 
     //region declaration of the register form elements
     private EditText usernameInput;
@@ -48,12 +45,6 @@ public class RegisterFragment extends AuthFragment {
     private String repeatPassword;
     private Date birthdate;
     //endregion
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        firestore = FirebaseFirestore.getInstance();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,7 +92,7 @@ public class RegisterFragment extends AuthFragment {
                 usernameInput.setError(getString(R.string.input_error_valid_username));
                 return false;
             case VALID:
-                Queries.getUsersWithUsername(firestore, username).addOnCompleteListener(task -> {
+                Queries.getUsersWithUsername(username).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "usernameQuery:success");
 
@@ -257,7 +248,10 @@ public class RegisterFragment extends AuthFragment {
 
         AuthSystem.register(createUserData(), password)
                 .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
+                    if (task.isSuccessful()) {
+                        this.getAuthActivity().loadHomeActivity();
+                    } else {
+                        String exceptionText;
                         if (task.getException() != null) {
                             Log.e(TAG, "Exception occurred during registration", task.getException());
                         } else {
