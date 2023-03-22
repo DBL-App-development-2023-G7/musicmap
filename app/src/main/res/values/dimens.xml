@@ -6,4 +6,5 @@
     <dimen name="navbar_margin">40dp</dimen>
     <dimen name="camera_shutter_bottom_margin">64dp</dimen>
     <dimen name="camera_shutter_diameter">96dp</dimen>
+    <dimen name="message_default_icon_padding">16dp</dimen>
 </resources>

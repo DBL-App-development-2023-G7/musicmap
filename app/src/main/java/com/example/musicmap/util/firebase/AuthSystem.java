@@ -59,6 +59,45 @@ public class AuthSystem {
     }
 
     /**
+     * This method logins a user using its username and password.
+     *
+     * @param username the username of the user
+     * @param password the password of the user
+     * @return the result of the task
+     */
+    public static Task<AuthResult> loginWithUsernameAndPassword(String username, String password) {
+
+        return Queries.getUsersWithUsername(username).onSuccessTask(docs -> {
+            TaskCompletionSource<AuthResult> tcs = new TaskCompletionSource<>();
+
+            if (docs.isEmpty()) {
+                tcs.setException(new FirebaseFirestoreException("Query did not return any docs.",
+                        FirebaseFirestoreException.Code.NOT_FOUND));
+                return tcs.getTask();
+            }
+
+            DocumentSnapshot doc = docs.getDocuments().get(0);
+
+            if (doc.getData() == null || doc.getData().isEmpty()) {
+                tcs.setException(new FirebaseFirestoreException("Document does not exist or is empty.",
+                        FirebaseFirestoreException.Code.NOT_FOUND));
+                return tcs.getTask();
+            }
+
+            Object emailFirebaseField = doc.getData().get("email");
+            if (!(emailFirebaseField instanceof String)) {
+                tcs.setException(new IllegalArgumentException("The email field of the user is null or invalid."));
+                return tcs.getTask();
+            }
+
+            String email = (String) emailFirebaseField;
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+
+            return auth.signInWithEmailAndPassword(email, password);
+        });
+    }
+
+    /**
      * This method retrieves the user that has the given uid and their data.
      *
      * @param uid the given uid of the user
@@ -72,12 +111,12 @@ public class AuthSystem {
         return getUserDataFirestore.onSuccessTask(doc -> {
             TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
 
-            UserData userData = doc.toObject(UserData.class);
-
             if (!doc.exists()) {
                 tcs.setException(new FirebaseFirestoreException("Document does not exist.",
                         FirebaseFirestoreException.Code.NOT_FOUND));
             }
+
+            UserData userData = doc.toObject(UserData.class);
 
             if (userData != null) {
                 if (userData.isArtist()) {
@@ -146,7 +185,6 @@ public class AuthSystem {
 
     public static void logout() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
-
         auth.signOut();
     }
 

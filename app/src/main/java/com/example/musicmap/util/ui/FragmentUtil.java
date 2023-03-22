@@ -25,7 +25,6 @@ public class FragmentUtil {
                 fragmentClass, null).commit();
     }
 
-
     /**
      * This method replaces the current fragment inside the given container with the given
      * fragment class.

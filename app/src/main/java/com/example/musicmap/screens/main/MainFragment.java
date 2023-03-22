@@ -17,7 +17,8 @@ public abstract class MainFragment extends Fragment {
     private HomeActivity activity;
 
     /**
-     * Returns the main activity object (host activity)
+     * Returns the main activity object (host activity).
+     *
      * @return main activity object
      */
     public Activity getMainActivity() {

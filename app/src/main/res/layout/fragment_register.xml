@@ -19,7 +19,7 @@
                 android:id="@+id/username_editText"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:autofillHints="username"
+                android:autofillHints="newUsername"
                 android:ems="10"
                 android:hint="@string/username"
                 android:inputType="textPersonName" />
@@ -28,7 +28,7 @@
                 android:id="@+id/firstName_editText"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:autofillHints="name"
+                android:autofillHints="personGivenName"
                 android:ems="10"
                 android:hint="@string/first_name"
                 android:inputType="textPersonName" />
@@ -37,7 +37,7 @@
                 android:id="@+id/lastName_editText"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:autofillHints="name"
+                android:autofillHints="personFamilyName"
                 android:ems="10"
                 android:hint="@string/last_name"
                 android:inputType="textPersonName" />
@@ -55,7 +55,7 @@
                 android:id="@+id/passwordRegister_editText"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:autofillHints="password"
+                android:autofillHints="newPassword"
                 android:ems="10"
                 android:hint="@string/password"
                 android:inputType="textPassword" />
@@ -64,7 +64,7 @@
                 android:id="@+id/repeatPasswordRegister_editText"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:autofillHints="password"
+                android:autofillHints="newPassword"
                 android:ems="10"
                 android:hint="@string/repeat_password"
                 android:inputType="textPassword" />
@@ -73,7 +73,7 @@
                 android:id="@+id/birthdate_editText"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:autofillHints="password"
+                android:autofillHints="no"
                 android:ems="10"
                 android:hint="@string/birthdate"
                 android:inputType="none" />

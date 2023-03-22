@@ -10,7 +10,11 @@
     <color name="grey_very_dark">#FF0F0F0F</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="background">#262626</color>
     <color name="off_white">#F5F5FF</color>
     <color name="pinkish_white"></color>
     <color name="gray_medium">#FF444444</color>
+    <color name="primary">#6C1A93</color>
+    <color name="message_success">#2c5140</color>
+    <color name="message_failure">#8B0000</color>
 </resources>
