@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/create_music_memory_backgound_copy"
+    android:background="@drawable/create_music_memory_backgound"
     tools:context=".screens.main.PostFragment">
     <androidx.camera.view.PreviewView
         android:id="@+id/cameraPreviewView"
@@ -12,12 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <Button
+    <ImageButton
         android:id="@+id/cameraCaptureButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
-        android:text="Capture"
+        android:layout_width="@dimen/camera_shutter_diameter"
+        android:layout_height="@dimen/camera_shutter_diameter"
+        android:layout_marginBottom="@dimen/camera_shutter_bottom_margin"
+        android:background="@drawable/camera_activity_ic_shutter"
         app:layout_constraintBottom_toBottomOf="@+id/cameraPreviewView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

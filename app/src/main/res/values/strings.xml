@@ -22,4 +22,8 @@
     <string name="appbar_search">Search</string>
     <string name="appbar_profile">Profile</string>
     <string name="appbar_icon">icon</string>
+    <string name="post_fragment_add_image_button_text">Add image</string>
+    <string name="post_fragment_add_song_button_text">Add Song</string>
+    <string name="post_fragment_get_location_button_text">Get location</string>
+    <string name="camera_fragment_post_button_text">Post</string>
 </resources>

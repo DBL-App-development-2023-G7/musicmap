@@ -28,15 +28,17 @@ import java.io.IOException;
 
 public class PostFragment extends MainFragment {
 
-    ImageView capturedImagePreview; // Should this be private?
+    private ImageView capturedImagePreview; // Should this be private?
+    // a launcher that launches the camera activity and handles the result
     ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
         new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
-                Log.d("debug", "poop2");
+                Log.d("debug", "[poop] Camera Activity result recieved!");
                 Uri imageUri = result.getData().getData(); // peak code right here
                 try {
+                    // fetch the result bitmap and display it
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), imageUri);
                     capturedImagePreview.setImageBitmap(bitmap);
                     capturedImagePreview.setVisibility(View.VISIBLE);
@@ -58,6 +60,17 @@ public class PostFragment extends MainFragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_post, container, false);
 
+        getPermission();
+
+        capturedImagePreview = rootView.findViewById(R.id.previewCapturedImage);
+
+        Button addImageButton = rootView.findViewById(R.id.addImageButton); // should this also be defined?
+        addImageButton.setOnClickListener(view -> goToCameraFragment());
+
+        return rootView;
+    }
+
+    private void getPermission() {
         if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED
         ) {
@@ -67,21 +80,9 @@ public class PostFragment extends MainFragment {
                     100
             );
         }
-
-        capturedImagePreview = rootView.findViewById(R.id.previewCapturedImage);
-
-        Button addImageButton = rootView.findViewById(R.id.addImageButton); // should this also be defined?
-        addImageButton.setOnClickListener(view -> goToCameraFragment());
-        Log.d("debug", "shit");
-        return rootView;
-    }
-
-    private void startCameraActivity() {
-
     }
 
     private  void goToCameraFragment() {
-       Log.d("debug", "dick");
        Intent cameraIntent = new Intent(requireActivity(), CameraActivity.class);
        cameraActivityResultLauncher.launch(cameraIntent);
     }
