@@ -7,6 +7,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.musicmap.R;
+import com.example.musicmap.user.Session;
+import com.example.musicmap.user.User;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.AuthListenerActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,9 +40,12 @@ public class ProfileActivity extends AuthListenerActivity {
                 } else {
                     emailVerified.setText(R.string.email_not_verified);
                 }
-                uuidText.setText(firebaseUser.getUid());
-                emailText.setText(firebaseUser.getEmail());
-                usernameText.setText(firebaseUser.getDisplayName());
+
+                User currentUser = Session.getInstance().getCurrentUser();
+
+                uuidText.setText(currentUser.getUid());
+                emailText.setText(currentUser.getData().getEmail());
+                usernameText.setText(currentUser.getData().getUsername());
                 return null;
             });
             AuthSystem.getUser().onSuccessTask(user -> {
