@@ -1,4 +1,4 @@
-package com.example.musicmap.util;
+package com.example.musicmap.util.firebase;
 
 import android.util.Log;
 
