@@ -10,7 +10,6 @@ import com.example.musicmap.screens.main.HomeActivity;
 import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.util.firebase.AuthSystem;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class VerificationActivity extends SessionListenerActivity {
 
