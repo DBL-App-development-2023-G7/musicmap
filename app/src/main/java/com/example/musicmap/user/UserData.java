@@ -1,5 +1,7 @@
 package com.example.musicmap.user;
 
+import android.net.Uri;
+
 import java.util.Date;
 
 /**
@@ -13,7 +15,6 @@ public class UserData {
     private String email;
     private Date birthdate;
     private String profilePicture;
-
     private boolean artist;
 
     UserData() {
@@ -25,7 +26,7 @@ public class UserData {
     }
 
     protected UserData(String username, String firstName, String lastName, String email,
-                    Date birthdate, boolean artist) {
+                       Date birthdate, boolean artist) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -81,12 +82,30 @@ public class UserData {
     }
 
     /**
+     * This method retrieves the profile picture of the user.
+     *
+     * @return the profile picture of the user
+     */
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    /**
      * This method retrieves the profile picture uri of the user.
      *
      * @return the profile picture uri of the user
      */
-    public String getProfilePicture() {
-        return profilePicture;
+    public Uri getProfilePictureUri() {
+        return Uri.parse(profilePicture);
+    }
+
+    /**
+     * This method checks if the user has a profile picture.
+     *
+     * @return true if the user has a profile picture
+     */
+    public boolean hasProfilePicture() {
+        return !profilePicture.isEmpty();
     }
 
     public boolean isArtist() {

@@ -10,4 +10,6 @@
     <color name="background">#262626</color>
     <color name="off_white">#F5F5FF</color>
     <color name="primary">#6C1A93</color>
+    <color name="message_success">#2c5140</color>
+    <color name="message_failure">#8B0000</color>
 </resources>
