@@ -6,10 +6,12 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,8 +21,7 @@ import com.example.musicmap.R.id;
 import com.example.musicmap.feed.FeedAdapter;
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.screens.auth.AuthActivity;
-import com.example.musicmap.screens.main.MainFragment;
-import com.example.musicmap.user.UserData;
+import com.example.musicmap.util.firebase.AuthSystem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.GeoPoint;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ProfilePage extends MainFragment implements FirebaseAuth.AuthStateListener {
+public class ProfilePage extends Fragment implements FirebaseAuth.AuthStateListener {
 
     private FirebaseAuth auth;
 
@@ -41,18 +42,27 @@ public class ProfilePage extends MainFragment implements FirebaseAuth.AuthStateL
         auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
+        if (firebaseUser != null) {
+            firebaseUser.reload().continueWithTask(task -> {
+                TextView emailVerified = profileView.findViewById(id.emailVerified_text);
+                if (!firebaseUser.isEmailVerified()) {
+                    emailVerified.setText(getString(R.string.email_not_verified));
+                }
 
-        // set profile picture
-        ImageView profilePicture = profileView.findViewById(id.profilePictureImage);
-        Uri photoURL = firebaseUser.getPhotoUrl();
-        if(photoURL != null) {
-            Picasso.get().load(photoURL).into(profilePicture);
+                TextView userName = profileView.findViewById(R.id.profileUsername_textView);
+                userName.setText(firebaseUser.getDisplayName()); // TODO get username here
+
+                return null;
+            });
+            AuthSystem.getUser().onSuccessTask(user -> {
+                if (user.getData().hasProfilePicture()) {
+                    ImageView profilePicture = profileView.findViewById(id.profilePictureImage);
+                    Uri uri = user.getData().getProfilePictureUri();
+                    Picasso.get().load(uri).into(profilePicture);
+                }
+                return null;
+            });
         }
-
-
-        // set username
-        TextView userName = profileView.findViewById(R.id.profileUsername_textView);
-        userName.setText(firebaseUser.getDisplayName()); // TODO get username here
 
         // Recent Music Memories
         List<MusicMemory> musicMemories = new ArrayList<>();
@@ -70,6 +80,14 @@ public class ProfilePage extends MainFragment implements FirebaseAuth.AuthStateL
         FeedAdapter feedAdapter = new FeedAdapter(activity, R.layout.single_post_layout_feed, musicMemories);
         ListView profileListView = profileView.findViewById(R.id.mm_list);
         profileListView.setAdapter(feedAdapter);
+
+        // logout button
+        Button logoutButton = profileView.findViewById(R.id.logout_button);
+        logoutButton.setOnClickListener(view -> AuthSystem.logout());
+
+        // deleteAccount button
+        Button deleteAccountButton = profileView.findViewById(R.id.deleteAccount_button);
+        deleteAccountButton.setOnClickListener(view -> AuthSystem.deleteUser());
 
         return profileView;
     }
