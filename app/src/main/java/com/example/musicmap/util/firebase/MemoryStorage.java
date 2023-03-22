@@ -4,15 +4,16 @@ import android.util.Log;
 
 import com.example.musicmap.feed.ConcertMemory;
 import com.example.musicmap.feed.MusicMemory;
+import com.example.musicmap.feed.Post;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class MemoryStorage {
 
@@ -54,18 +55,7 @@ public class MemoryStorage {
 
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
-                        MusicMemory musicMemory = document.toObject(MusicMemory.class);
-
-                        if (musicMemory == null) {
-                            taskCompletionSource.setException(new NullPointerException(
-                                    "Music memory (" + authorUid + ", " + uid + ")"));
-
-                            return taskCompletionSource.getTask();
-                        }
-
-                        String authorId =
-                                Objects.requireNonNull(document.getReference().getParent().getParent()).getId();
-                        musicMemory.setAuthorUid(authorId);
+                        MusicMemory musicMemory = deserialize(document, MusicMemory.class);
 
                         taskCompletionSource.setResult(musicMemory);
                     } else {
@@ -88,21 +78,9 @@ public class MemoryStorage {
                         QuerySnapshot querySnapshot = task.getResult();
                         List<DocumentSnapshot> documents = querySnapshot.getDocuments();
 
-                        List<MusicMemory> musicMemories = new ArrayList<>();
-
-                        for (DocumentSnapshot document : documents) {
-                            MusicMemory musicMemory = document.toObject(MusicMemory.class);
-
-                            if (musicMemory == null) {
-                                continue;
-                            }
-
-                            String authorId =
-                                    Objects.requireNonNull(document.getReference().getParent().getParent()).getId();
-                            musicMemory.setAuthorUid(authorId);
-
-                            musicMemories.add(musicMemory);
-                        }
+                        List<MusicMemory> musicMemories = documents.stream()
+                                .map(document -> deserialize(document, MusicMemory.class))
+                                .collect(Collectors.toList());
 
                         taskCompletionSource.setResult(musicMemories);
                     } else {
@@ -110,6 +88,39 @@ public class MemoryStorage {
                     }
                     return taskCompletionSource.getTask();
                 });
+    }
+
+    /**
+     * Deserializes the given document into a post of the given class.
+     *
+     * @param document the document snapshot.
+     * @param postClass the class of the post, e.g. {@code MusicMemory.class} or {@code ConcertMemory.class}.
+     * @return the deserialized post, or {@code null}
+     * @param <P> the type of post, e.g. {@link MusicMemory}.
+     */
+    private static <P extends Post> P deserialize(DocumentSnapshot document, Class<P> postClass) {
+        if (document == null) {
+            throw new NullPointerException("document");
+        }
+        if (postClass == null) {
+            throw new NullPointerException("postClass");
+        }
+
+        P post = document.toObject(postClass);
+
+        if (post == null) {
+            throw new IllegalArgumentException("The DocumentSnapshot contained a null document");
+        }
+
+        DocumentReference authorDocumentReference = document.getReference().getParent().getParent();
+        if (authorDocumentReference == null) {
+            throw new IllegalStateException("The given document doesn't have an author");
+        }
+
+        String authorId = authorDocumentReference.getId();
+        post.setAuthorUid(authorId);
+
+        return post;
     }
 
 }
