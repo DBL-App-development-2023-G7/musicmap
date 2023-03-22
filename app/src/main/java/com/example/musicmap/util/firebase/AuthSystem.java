@@ -159,19 +159,11 @@ public class AuthSystem {
         return getUserData(uid).onSuccessTask(
                 userData -> {
                     TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
-
                     if (userData instanceof ArtistData) {
-                        if (userData.isArtist()) {
-                            tcs.setResult(new Artist((ArtistData) userData, uid));
-                        } else {
-                            tcs.setResult(new User(userData, uid));
-                        }
+                        tcs.setResult(new Artist((ArtistData) userData, uid));
                     } else {
-                        tcs.setException(new FirebaseFirestoreException("An error has occurred while trying to "
-                                + "retrieve and apply the user's data from firebase.",
-                                FirebaseFirestoreException.Code.UNKNOWN));
+                        tcs.setResult(new User(userData, uid));
                     }
-
                     return tcs.getTask();
                 }
         );

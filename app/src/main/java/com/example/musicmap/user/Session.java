@@ -13,17 +13,22 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class Session implements FirebaseAuth.AuthStateListener {
 
     private static final String TAG = "Session";
+    private static volatile Session instance;
+
+    private final List<SessionListener> listeners;
 
     private User currentUser;
-
-    private static volatile Session instance;
 
     private ListenerRegistration userListenerRegistration;
 
     private Session() {
+        listeners = new ArrayList<>();
         FirebaseAuth.getInstance().addAuthStateListener(this);
     }
 
@@ -49,7 +54,10 @@ public final class Session implements FirebaseAuth.AuthStateListener {
 
         if (firebaseUser == null) {
             currentUser = null;
-            userListenerRegistration.remove();
+            if (userListenerRegistration != null) {
+                userListenerRegistration.remove();
+            }
+            updateListeners();
         } else {
             if (userListenerRegistration == null) {
                 DocumentReference userDocRef = firestore.collection("Users").document(firebaseUser.getUid());
@@ -66,10 +74,27 @@ public final class Session implements FirebaseAuth.AuthStateListener {
 
         try {
             currentUser = AuthSystem.parseUserData(doc).toUser(doc.getId());
+            updateListeners();
         } catch (FirebaseFirestoreException firebaseFirestoreException) {
             if (firebaseFirestoreException.getMessage() != null) {
                 Log.e(TAG, firebaseFirestoreException.getMessage());
             }
         }
     }
+
+    public void addListener(@NonNull SessionListener sessionListener) {
+        listeners.add(sessionListener);
+    }
+
+    public void removeListener(@NonNull SessionListener sessionListener) {
+        listeners.remove(sessionListener);
+    }
+
+    private void updateListeners() {
+        for (SessionListener listener : listeners) {
+            listener.onSessionStateChanged();
+        }
+    }
+
 }
+

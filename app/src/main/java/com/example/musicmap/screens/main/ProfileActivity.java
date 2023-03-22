@@ -7,17 +7,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.musicmap.R;
+import com.example.musicmap.SessionListenerActivity;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
 import com.example.musicmap.util.firebase.AuthSystem;
-import com.example.musicmap.AuthListenerActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
-public class ProfileActivity extends AuthListenerActivity {
+public class ProfileActivity extends SessionListenerActivity {
 
     private FirebaseAuth auth;
+
+    private TextView uuidText;
+    private TextView emailText;
+    private TextView usernameText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +33,9 @@ public class ProfileActivity extends AuthListenerActivity {
 
         ImageView profilePicture = findViewById(R.id.profile_imageView);
         TextView emailVerified = findViewById(R.id.emailVerified_textView);
-        TextView uuidText = findViewById(R.id.uuid_textView);
-        TextView emailText = findViewById(R.id.email_textView);
-        TextView usernameText = findViewById(R.id.username_textView);
+        uuidText = findViewById(R.id.uuid_textView);
+        emailText = findViewById(R.id.email_textView);
+        usernameText = findViewById(R.id.username_textView);
 
         if (firebaseUser != null) {
             firebaseUser.reload().continueWithTask(task -> {
@@ -64,4 +68,16 @@ public class ProfileActivity extends AuthListenerActivity {
         deleteAccountButton.setOnClickListener(view -> AuthSystem.deleteUser());
     }
 
+    @Override
+    public void onSessionStateChanged() {
+        super.onSessionStateChanged();
+
+        User currentUser = Session.getInstance().getCurrentUser();
+
+        if (currentUser != null) {
+            uuidText.setText(currentUser.getUid());
+            emailText.setText(currentUser.getData().getEmail());
+            usernameText.setText(currentUser.getData().getUsername());
+        }
+    }
 }
