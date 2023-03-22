@@ -36,10 +36,10 @@ public class ConcertMemory extends Post {
     @NonNull
     @Override
     public String toString() {
-        return "ConcertMemory{" +
-                "name='" + name + '\'' +
-                ", video='" + video + '\'' +
-                '}';
+        return "ConcertMemory{"
+                + "name='" + name + '\''
+                + ", video='" + video + '\''
+                + '}';
     }
 
 }

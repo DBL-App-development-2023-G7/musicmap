@@ -4,7 +4,6 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
-import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.GeoPoint;
 
 import java.util.Date;
@@ -37,10 +36,10 @@ public class MusicMemory extends Post {
     @NonNull
     @Override
     public String toString() {
-        return "MusicMemory{" +
-                "photo='" + photo + '\'' +
-                ", song='" + song + '\'' +
-                '}';
+        return "MusicMemory{"
+                + "photo='" + photo + '\''
+                + ", song='" + song + '\''
+                + '}';
     }
 
 }
