@@ -11,6 +11,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 
 public final class Session implements FirebaseAuth.AuthStateListener {
 
@@ -19,7 +20,8 @@ public final class Session implements FirebaseAuth.AuthStateListener {
     private User currentUser;
 
     private static volatile Session instance;
-    private DocumentReference userDataReference;
+
+    private ListenerRegistration userListenerRegistration;
 
     private Session() {
         FirebaseAuth.getInstance().addAuthStateListener(this);
@@ -47,11 +49,11 @@ public final class Session implements FirebaseAuth.AuthStateListener {
 
         if (firebaseUser == null) {
             currentUser = null;
-            userDataReference.delete();
+            userListenerRegistration.remove();
         } else {
-            if (userDataReference == null) {
-                userDataReference = firestore.collection("Users").document(firebaseUser.getUid());
-                userDataReference.addSnapshotListener(this::refreshUserData);
+            if (userListenerRegistration == null) {
+                DocumentReference userDocRef = firestore.collection("Users").document(firebaseUser.getUid());
+                userListenerRegistration = userDocRef.addSnapshotListener(this::refreshUserData);
             }
         }
     }
@@ -64,8 +66,10 @@ public final class Session implements FirebaseAuth.AuthStateListener {
 
         try {
             currentUser = AuthSystem.parseUserData(doc).toUser(doc.getId());
-        } catch (FirebaseFirestoreException ignore) {
-
+        } catch (FirebaseFirestoreException firebaseFirestoreException) {
+            if (firebaseFirestoreException.getMessage() != null) {
+                Log.e(TAG, firebaseFirestoreException.getMessage());
+            }
         }
     }
 }
