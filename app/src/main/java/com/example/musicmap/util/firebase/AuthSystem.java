@@ -1,7 +1,10 @@
 package com.example.musicmap.util.firebase;
 
+import android.content.Intent;
+
 import androidx.annotation.NonNull;
 
+import com.example.musicmap.screens.main.HomeActivity;
 import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.ArtistData;
 import com.example.musicmap.user.User;
@@ -12,6 +15,7 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -98,40 +102,83 @@ public class AuthSystem {
     }
 
     /**
+     * This method tries to parse the given document as a UserData or ArtistData class.
+     *
+     * @param doc the given document from the firebase database
+     * @return the doc formatted as a UserData class
+     * @throws FirebaseFirestoreException if the given document does not exist
+     * @throws NullPointerException       if the given document does not have any data
+     */
+    public static UserData parseUserData(DocumentSnapshot doc) throws FirebaseFirestoreException, NullPointerException {
+        if (!doc.exists()) {
+            throw new FirebaseFirestoreException("Document does not exist.",
+                    FirebaseFirestoreException.Code.NOT_FOUND);
+        }
+
+        UserData userData = doc.toObject(UserData.class);
+
+        if (userData == null) {
+            throw new NullPointerException("Document does not contain any data.");
+        }
+
+        if (userData.isArtist()) {
+            return doc.toObject(ArtistData.class);
+        }
+
+        return userData;
+    }
+
+    /**
+     * Gets the user data of the user that has the given {@code uid}.
+     *
+     * @param uid the given uid of the user
+     * @return the result of the task
+     */
+    public static Task<UserData> getUserData(String uid) {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+        Task<DocumentSnapshot> getUserDataFirestore = firestore.collection("Users").document(uid).get();
+
+        return getUserDataFirestore.onSuccessTask(doc -> {
+            TaskCompletionSource<UserData> tcs = new TaskCompletionSource<>();
+
+            try {
+                tcs.setResult(parseUserData(doc));
+            } catch (Exception exception) {
+                tcs.setException(exception);
+            }
+
+            return tcs.getTask();
+        });
+    }
+
+    /**
      * This method retrieves the user that has the given uid and their data.
      *
      * @param uid the given uid of the user
      * @return the result of this task
      */
     public static Task<User> getUserFromUid(String uid) {
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
-        Task<DocumentSnapshot> getUserDataFirestore = firestore.collection("Users").document(uid).get();
+        return getUserData(uid).onSuccessTask(
+                userData -> {
+                    TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
 
-        return getUserDataFirestore.onSuccessTask(doc -> {
-            TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
+                    if (userData instanceof ArtistData) {
+                        if (userData.isArtist()) {
+                            tcs.setResult(new Artist((ArtistData) userData, uid));
+                        } else {
+                            tcs.setResult(new User(userData, uid));
+                        }
+                    } else {
+                        tcs.setException(new FirebaseFirestoreException("An error has occurred while trying to "
+                                + "retrieve and apply the user's data from firebase.",
+                                FirebaseFirestoreException.Code.UNKNOWN));
+                    }
 
-            if (!doc.exists()) {
-                tcs.setException(new FirebaseFirestoreException("Document does not exist.",
-                        FirebaseFirestoreException.Code.NOT_FOUND));
-            }
-
-            UserData userData = doc.toObject(UserData.class);
-
-            if (userData != null) {
-                if (userData.isArtist()) {
-                    ArtistData artistData = doc.toObject(ArtistData.class);
-                    tcs.setResult(new Artist(artistData, uid));
-                } else {
-                    tcs.setResult(new User(userData, uid));
+                    return tcs.getTask();
                 }
-            } else {
-                tcs.setException(new FirebaseFirestoreException("An error has occurred while trying to retrieve "
-                        + "and apply the user's data from firebase.", FirebaseFirestoreException.Code.UNKNOWN));
-            }
-
-            return tcs.getTask();
-        });
+        );
     }
 
     /**
