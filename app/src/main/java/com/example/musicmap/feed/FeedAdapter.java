@@ -37,9 +37,11 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
             row = inflater.inflate(R.layout.single_post_layout_feed, parent, false);
         }
 
-        TextView titleText = row.findViewById(R.id.listview_item_title);
-        TextView shortText = row.findViewById(R.id.listview_item_short_description);
-        ImageView mainImage = row.findViewById(R.id.listview_image);
+        ImageView songImage = row.findViewById(R.id.song_art);
+        TextView titleText = row.findViewById(R.id.song_name);
+        TextView shortText = row.findViewById(R.id.song_details);
+        ImageView mainImage = row.findViewById(R.id.memory_image);
+        ImageView userImage = row.findViewById(R.id.user_profile_image);
 
         MusicMemory musicMemory = getItem(position);
         if (musicMemory != null) {
