@@ -65,7 +65,7 @@ public abstract class Post {
         this.authorUid = authorUid;
 
         // Start fetching User object (executor: run immediately)
-        AuthSystem.getUserFromUid(authorUid).addOnCompleteListener(Runnable::run, task -> {
+        AuthSystem.getUser(authorUid).addOnCompleteListener(Runnable::run, task -> {
             if (task.isSuccessful()) {
                 authorTask.setResult(task.getResult());
             } else {
