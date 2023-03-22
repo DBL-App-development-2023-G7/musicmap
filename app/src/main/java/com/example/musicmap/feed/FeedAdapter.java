@@ -46,7 +46,7 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
             // TODO more user-friendly display
             titleText.setText(musicMemory.getTimePosted().toString());
             shortText.setText(musicMemory.getLocation().toString());
-            Picasso.get().load(musicMemory.getPhotoUri()).into(mainImage);
+            Picasso.get().load(musicMemory.getPhoto()).into(mainImage);
         }
 
         return row;
