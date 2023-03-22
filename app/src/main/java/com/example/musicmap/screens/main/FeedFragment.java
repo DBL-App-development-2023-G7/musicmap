@@ -1,7 +1,6 @@
 package com.example.musicmap.screens.main;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +28,8 @@ public class FeedFragment extends MainFragment {
             // CSOFF: LineLength
             String imageUri = "https://www.agconnect.nl/sites/ag/files/2020-05/tu_eindhoven_photo_-_bart_van_overbeeke.jpg.png";
             // CSON: LineLength
-            Uri uri = Uri.parse(imageUri);
-            feed.add(new MusicMemory(new Date(), new GeoPoint(51.4486, 5.4907), uri));
+            String song = "3B7udSGy2PfgoCniMSb523";
+            feed.add(new MusicMemory("You", new Date(), new GeoPoint(51.4486, 5.4907), imageUri, song));
         }
 
         Activity activity = requireActivity();
