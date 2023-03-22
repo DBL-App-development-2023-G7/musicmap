@@ -1,6 +1,5 @@
 package com.example.musicmap.screens.main;
 
-
 import android.os.Bundle;
 
 import com.example.musicmap.R;

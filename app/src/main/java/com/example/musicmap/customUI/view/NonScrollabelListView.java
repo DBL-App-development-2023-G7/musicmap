@@ -25,5 +25,5 @@ public class NonScrollabelListView extends ListView {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec_custom);
         ViewGroup.LayoutParams params = getLayoutParams();
         params.height = getMeasuredHeight();
-        }
+    }
 }
