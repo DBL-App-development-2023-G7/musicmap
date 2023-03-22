@@ -154,7 +154,7 @@ public class AuthSystem {
      * @param uid the given uid of the user
      * @return the result of this task
      */
-    public static Task<User> getUserFromUid(String uid) {
+    public static Task<User> getUser(String uid) {
 
         return getUserData(uid).onSuccessTask(
                 userData -> {
@@ -167,24 +167,6 @@ public class AuthSystem {
                     return tcs.getTask();
                 }
         );
-    }
-
-    /**
-     * This method retrieves the connected user and their data.
-     *
-     * @return the result of this task
-     */
-    public static Task<User> getUser() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = auth.getCurrentUser();
-
-        if (firebaseUser == null) {
-            TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
-            tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
-            return tcs.getTask();
-        }
-
-        return getUserFromUid(firebaseUser.getUid());
     }
 
     /**
