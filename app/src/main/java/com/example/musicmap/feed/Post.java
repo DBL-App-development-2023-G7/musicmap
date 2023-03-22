@@ -4,6 +4,7 @@ import com.example.musicmap.user.User;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -13,6 +14,9 @@ import java.util.Date;
  * A post that can be displayed on the feed or map.
  */
 public abstract class Post {
+
+    @DocumentId
+    private String uid;
 
     private String authorUid;
     private Date timePosted;
@@ -27,6 +31,10 @@ public abstract class Post {
         setAuthorUid(authorUid);
         this.timePosted = timePosted;
         this.location = location;
+    }
+
+    public String getUid() {
+        return uid;
     }
 
     @Exclude
