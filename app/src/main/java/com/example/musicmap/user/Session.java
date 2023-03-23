@@ -14,8 +14,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The Session Singleton class.
@@ -27,7 +27,7 @@ public final class Session implements FirebaseAuth.AuthStateListener {
     private static final String TAG = "Session";
     private static volatile Session instance;
 
-    private final List<Listener> listeners;
+    private final Set<Listener> listeners;
 
     @Nullable
     private User currentUser;
@@ -36,7 +36,7 @@ public final class Session implements FirebaseAuth.AuthStateListener {
     private ListenerRegistration userListenerRegistration;
 
     private Session() {
-        listeners = new ArrayList<>();
+        listeners = new HashSet<>();
         FirebaseAuth.getInstance().addAuthStateListener(this);
     }
 
@@ -112,18 +112,18 @@ public final class Session implements FirebaseAuth.AuthStateListener {
     }
 
     /**
-     * Adds the given {@code sessionListener} to the list of listener to be notified by the Session class.
+     * Adds the given {@code sessionListener} to the set of listener to be notified by the Session class.
      *
-     * @param listener the listener object you want to add to the list
+     * @param listener the listener object you want to add to the set
      */
     public void addListener(@NonNull Listener listener) {
         listeners.add(listener);
     }
 
     /**
-     * Removes the given {@code sessionListener} from the list of listener to be notified by the Session class.
+     * Removes the given {@code sessionListener} from the set of listener to be notified by the Session class.
      *
-     * @param listener the listener object you want to remove from the list
+     * @param listener the listener object you want to remove from the set
      */
     public void removeListener(@NonNull Listener listener) {
         listeners.remove(listener);
