@@ -16,6 +16,9 @@ import com.google.firebase.firestore.ListenerRegistration;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The Session Singleton class. This class holds information regarding the current connected user.
+ */
 public final class Session implements FirebaseAuth.AuthStateListener {
 
     private static final String TAG = "Session";
@@ -32,6 +35,11 @@ public final class Session implements FirebaseAuth.AuthStateListener {
         FirebaseAuth.getInstance().addAuthStateListener(this);
     }
 
+    /**
+     * The method retrieves the instance of the Session.
+     *
+     * @return the singleton instance of the Session class
+     */
     public static Session getInstance() {
         if (instance == null) {
             synchronized (Session.class) {
@@ -43,6 +51,11 @@ public final class Session implements FirebaseAuth.AuthStateListener {
         return instance;
     }
 
+    /**
+     * This method retrieves the current connected user. It will return null if no user is connected.
+     *
+     * @return the current connected user
+     */
     public User getCurrentUser() {
         return currentUser;
     }
@@ -82,14 +95,29 @@ public final class Session implements FirebaseAuth.AuthStateListener {
         }
     }
 
+    /**
+     * Listener called when there is a change in the authentication state or in the user's data. Use
+     * {@link #addListener(SessionListener)} and {@link #removeListener(SessionListener)} to register or
+     * unregister listeners.
+     */
     public interface SessionListener {
         void onSessionStateChanged();
     }
 
+    /**
+     * Adds the given {@code sessionListener} to the list of listener to be notified by the Session class.
+     *
+     * @param sessionListener the listener object you want to add to the list
+     */
     public void addListener(@NonNull SessionListener sessionListener) {
         listeners.add(sessionListener);
     }
 
+    /**
+     * Removes the given {@code sessionListener} from the list of listener to be notified by the Session class.
+     *
+     * @param sessionListener the listener object you want to remove from the list
+     */
     public void removeListener(@NonNull SessionListener sessionListener) {
         listeners.remove(sessionListener);
     }
