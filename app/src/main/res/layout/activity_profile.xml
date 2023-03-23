@@ -28,15 +28,27 @@
             android:elevation="4dp">
 
             <ImageView
+                android:id="@+id/appbarBack"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="start"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="@string/appbar_profile"
+                app:srcCompat="?attr/homeAsUpIndicator"
+                app:tint="@color/white"/>
+
+            <ImageView
                 android:id="@+id/appbarIcon"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_gravity="start"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginEnd="10dp"
                 android:contentDescription="@string/appbar_icon"
                 app:srcCompat="@mipmap/music_map_background" />
 
         </com.google.android.material.appbar.MaterialToolbar>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.fragment.app.FragmentContainerView
