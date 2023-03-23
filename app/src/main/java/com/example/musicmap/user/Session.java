@@ -24,7 +24,7 @@ public final class Session implements FirebaseAuth.AuthStateListener {
     private static final String TAG = "Session";
     private static volatile Session instance;
 
-    private final List<SessionListener> listeners;
+    private final List<Listener> listeners;
 
     private User currentUser;
 
@@ -97,33 +97,33 @@ public final class Session implements FirebaseAuth.AuthStateListener {
 
     /**
      * Listener called when there is a change in the authentication state or in the user's data. Use
-     * {@link #addListener(SessionListener)} and {@link #removeListener(SessionListener)} to register or
+     * {@link #addListener(Listener)} and {@link #removeListener(Listener)} to register or
      * unregister listeners.
      */
-    public interface SessionListener {
+    public interface Listener {
         void onSessionStateChanged();
     }
 
     /**
      * Adds the given {@code sessionListener} to the list of listener to be notified by the Session class.
      *
-     * @param sessionListener the listener object you want to add to the list
+     * @param listener the listener object you want to add to the list
      */
-    public void addListener(@NonNull SessionListener sessionListener) {
-        listeners.add(sessionListener);
+    public void addListener(@NonNull Listener listener) {
+        listeners.add(listener);
     }
 
     /**
      * Removes the given {@code sessionListener} from the list of listener to be notified by the Session class.
      *
-     * @param sessionListener the listener object you want to remove from the list
+     * @param listener the listener object you want to remove from the list
      */
-    public void removeListener(@NonNull SessionListener sessionListener) {
-        listeners.remove(sessionListener);
+    public void removeListener(@NonNull Listener listener) {
+        listeners.remove(listener);
     }
 
     private void updateListeners() {
-        for (SessionListener listener : listeners) {
+        for (Listener listener : listeners) {
             try {
                 listener.onSessionStateChanged();
             } catch (Exception e) {

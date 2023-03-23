@@ -12,7 +12,7 @@ import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
 
-public class SessionListenerActivity extends AppCompatActivity implements Session.SessionListener {
+public class SessionListenerActivity extends AppCompatActivity implements Session.Listener {
 
     private Session session;
 
