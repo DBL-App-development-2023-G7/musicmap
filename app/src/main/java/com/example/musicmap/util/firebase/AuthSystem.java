@@ -158,11 +158,7 @@ public class AuthSystem {
         return getUserData(uid).onSuccessTask(
                 userData -> {
                     TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
-                    if (userData instanceof ArtistData) {
-                        tcs.setResult(new Artist((ArtistData) userData, uid));
-                    } else {
-                        tcs.setResult(new User(userData, uid));
-                    }
+                    tcs.setResult(userData.toUser(uid));
                     return tcs.getTask();
                 }
         );

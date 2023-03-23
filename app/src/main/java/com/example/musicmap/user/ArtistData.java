@@ -27,4 +27,9 @@ public class ArtistData extends UserData {
         return verified;
     }
 
+    @Override
+    public Artist toUser(String uid) {
+        return new Artist(this, uid);
+    }
+
 }
