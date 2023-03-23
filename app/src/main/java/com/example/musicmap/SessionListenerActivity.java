@@ -10,10 +10,9 @@ import com.example.musicmap.screens.auth.AuthActivity;
 import com.example.musicmap.screens.verification.VerificationActivity;
 import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.Session;
-import com.example.musicmap.user.SessionListener;
 import com.example.musicmap.user.User;
 
-public class SessionListenerActivity extends AppCompatActivity implements SessionListener {
+public class SessionListenerActivity extends AppCompatActivity implements Session.SessionListener {
 
     private Session session;
 

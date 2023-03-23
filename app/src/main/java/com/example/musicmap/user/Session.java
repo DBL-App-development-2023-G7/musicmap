@@ -82,6 +82,10 @@ public final class Session implements FirebaseAuth.AuthStateListener {
         }
     }
 
+    public interface SessionListener {
+        void onSessionStateChanged();
+    }
+
     public void addListener(@NonNull SessionListener sessionListener) {
         listeners.add(sessionListener);
     }
