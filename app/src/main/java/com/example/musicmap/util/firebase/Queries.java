@@ -15,18 +15,38 @@ import java.util.stream.Collectors;
 
 public class Queries {
 
+    /**
+     * Fetches all the user(s) by username.
+     *
+     * @param username the username of the user
+     * @return the user
+     */
     public static Task<QuerySnapshot> getUsersWithUsername(String username) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         Query query = firestore.collection("Users").whereEqualTo("username", username);
         return query.get();
     }
 
+    /**
+     * Fetches the user by email.
+     *
+     * @param email the email of the user
+     * @return the user
+     */
     public static Task<QuerySnapshot> getUserWithEmail(String email) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         Query query = firestore.collection("Users").whereEqualTo("email", email);
         return query.get();
     }
 
+    /**
+     * Fetches the music memory for an author by id.
+     * Use only for the current user.
+     *
+     * @param authorUid the id of the author
+     * @param uid the id of the music-memory
+     * @return music-memory
+     */
     public static Task<MusicMemory> getMusicMemory(String authorUid, String uid) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         return firestore.collection("Users").document(authorUid)
@@ -48,6 +68,13 @@ public class Queries {
                 });
     }
 
+    /**
+     * Fetches all the music memories for an author.
+     * Use only for the current user.
+     *
+     * @param authorUid the id of the author
+     * @return all music-memories for the author
+     */
     public static Task<List<MusicMemory>> getMusicMemories(String authorUid) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         return firestore.collection("Users").document(authorUid)
@@ -70,7 +97,13 @@ public class Queries {
                 });
     }
 
+    /**
+     * Fetches all the music memories (used for the feed).
+     *
+     * @return feed
+     */
     public static Task<List<MusicMemory>> getAllMusicMemories() {
+        // TODO: update the implementation based on how we decide to limit the feed
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
         return firestore.collectionGroup("MusicMemories").get().continueWithTask(task -> {

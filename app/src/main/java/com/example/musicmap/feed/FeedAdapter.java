@@ -49,7 +49,7 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
         if (musicMemory != null) {
             // TODO: more user-friendly display
             songName.setText(musicMemory.getSong());
-            songDetails.setText(musicMemory.getLocation().toString());
+            songDetails.setText(String.format("%s %s", musicMemory.getAuthorUid(), musicMemory.getLocation()));
             Picasso.get().load(musicMemory.getPhoto()).into(memoryImage);
         }
 

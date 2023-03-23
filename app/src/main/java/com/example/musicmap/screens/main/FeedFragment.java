@@ -87,6 +87,8 @@ public class FeedFragment extends MainFragment {
                     getFeed(feedAdapter.getCount() + singleFetchCount, new OnFeedDataLoadedListener() {
                         @Override
                         public void onFeedDataLoaded(List<MusicMemory> feed) {
+                            // get feed from the last fetched music memory
+                            // TODO: check if we can move this to the firebase query somehow
                             feed = feed.subList(feedAdapter.getCount(), feed.size());
                             if (feed.size() == 0) {
                                 return;

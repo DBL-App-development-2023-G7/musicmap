@@ -31,8 +31,8 @@
 
             <ImageView
                 android:id="@+id/user_profile_image"
-                android:layout_width="5dp"
-                android:layout_height="5dp"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
                 android:src="@drawable/ic_launcher_background"
                 android:contentDescription="@string/feed_user_profile_image" />
 
@@ -44,11 +44,10 @@
 
                 <ImageView
                     android:id="@+id/song_art"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
+                    android:layout_width="1dp"
+                    android:layout_height="1dp"
                     android:src="@mipmap/music_map"
-                    android:contentDescription="@string/feed_song_art"
-                    android:padding="10dp" />
+                    android:contentDescription="@string/feed_song_art" />
 
                 <TextView
                     android:id="@+id/song_name"
