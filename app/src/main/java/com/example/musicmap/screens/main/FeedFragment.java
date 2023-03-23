@@ -78,7 +78,8 @@ public class FeedFragment extends MainFragment {
             public void onScrollStateChanged(AbsListView absListView, int i) {}
 
             @Override
-            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount,
+                                 int totalItemCount) {
                 if (totalItemCount == 0 || feedAdapter.getCount() == feedSize || fetchCount > feedSize) {
                     return;
                 }
