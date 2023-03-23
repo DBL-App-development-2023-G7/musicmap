@@ -30,6 +30,8 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
 
     @NonNull
     @Override
+    @SuppressWarnings("unused")
+    // suppressing unused since not all details are set for a music memory yet
     public View getView(int position, @Nullable View convertView, ViewGroup parent) {
         View row = convertView;
         if (convertView == null) {
@@ -46,7 +48,7 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
         MusicMemory musicMemory = getItem(position);
         if (musicMemory != null) {
             // TODO: more user-friendly display
-            songName.setText(musicMemory.getTimePosted().toString());
+            songName.setText(musicMemory.getSong());
             songDetails.setText(musicMemory.getLocation().toString());
             Picasso.get().load(musicMemory.getPhoto()).into(memoryImage);
         }
