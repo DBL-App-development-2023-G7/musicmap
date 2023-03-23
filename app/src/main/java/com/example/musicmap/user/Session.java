@@ -3,6 +3,7 @@ package com.example.musicmap.user;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,8 +27,10 @@ public final class Session implements FirebaseAuth.AuthStateListener {
 
     private final List<Listener> listeners;
 
+    @Nullable
     private User currentUser;
 
+    @Nullable
     private ListenerRegistration userListenerRegistration;
 
     private Session() {
@@ -56,6 +59,7 @@ public final class Session implements FirebaseAuth.AuthStateListener {
      *
      * @return the current connected user
      */
+    @Nullable
     public User getCurrentUser() {
         return currentUser;
     }
