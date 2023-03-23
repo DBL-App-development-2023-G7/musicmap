@@ -134,10 +134,6 @@ public class MapFragment extends Fragment {
 
         // Default overlay showing current location (only if needed)
         if (shouldDisplayCurrentLocation()) {
-            if (locationPermission.isNoneGranted()) {
-                return;
-            }
-
             CurrentLocationOverlay currentLocationOverlay = new CurrentLocationOverlay(mapView);
             addOverlay(currentLocationOverlay);
         }
