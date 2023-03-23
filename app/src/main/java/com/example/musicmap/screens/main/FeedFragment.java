@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
 
 import com.example.musicmap.R;
@@ -21,10 +22,17 @@ public class FeedFragment extends MainFragment {
 
     private ViewGroup viewGroup;
     private static final String TAG = "FeedFragment";
+    private int singleFetchCount;
+    private int fetchCount;
+    private int feedSize;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.viewGroup = container;
+        this.singleFetchCount = 4;
+        this.fetchCount = 1;
+        this.feedSize = 100;
+
         View feedView = inflater.inflate(R.layout.fragment_feed, container, false);
 
         Activity activity = requireActivity();
@@ -32,7 +40,9 @@ public class FeedFragment extends MainFragment {
         ListView feedListView = feedView.findViewById(R.id.feed_list);
         feedListView.setAdapter(feedAdapter);
 
-        getFeed(10, new OnFeedDataLoadedListener() {
+        feedListView.setOnScrollListener(onScrollListener(feedAdapter));
+
+        getFeed(singleFetchCount, new OnFeedDataLoadedListener() {
             @Override
             public void onFeedDataLoaded(List<MusicMemory> feed) {
                 feedAdapter.addAll(feed);
@@ -60,6 +70,38 @@ public class FeedFragment extends MainFragment {
                 listener.onFeedDataLoadFailed();
             }
         });
+    }
+
+    private AbsListView.OnScrollListener onScrollListener(FeedAdapter feedAdapter) {
+        return new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {}
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (totalItemCount == 0 || feedAdapter.getCount() == feedSize || fetchCount > feedSize) {
+                    return;
+                }
+
+                if (firstVisibleItem + visibleItemCount == totalItemCount) {
+                    getFeed(feedAdapter.getCount() + singleFetchCount, new OnFeedDataLoadedListener() {
+                        @Override
+                        public void onFeedDataLoaded(List<MusicMemory> feed) {
+                            feed = feed.subList(feedAdapter.getCount(), feed.size());
+                            if (feed.size() == 0) {
+                                return;
+                            }
+
+                            feedAdapter.addAll(feed);
+                            feedAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onFeedDataLoadFailed() {}
+                    });
+                }
+            }
+        };
     }
 
 }
