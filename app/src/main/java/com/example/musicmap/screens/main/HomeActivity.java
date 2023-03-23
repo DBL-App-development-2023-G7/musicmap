@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import com.example.musicmap.R;
 import com.example.musicmap.screens.map.MapFragment;
+import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.example.musicmap.SessionListenerActivity;
