@@ -1,7 +1,5 @@
 package com.example.musicmap.util.firebase;
 
-import android.util.Log;
-
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.feed.Post;
 import com.google.android.gms.tasks.Task;

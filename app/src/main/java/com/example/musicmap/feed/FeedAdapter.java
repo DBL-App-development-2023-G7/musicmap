@@ -38,17 +38,17 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
         }
 
         ImageView songImage = row.findViewById(R.id.song_art);
-        TextView titleText = row.findViewById(R.id.song_name);
-        TextView shortText = row.findViewById(R.id.song_details);
-        ImageView mainImage = row.findViewById(R.id.memory_image);
+        TextView songName = row.findViewById(R.id.song_name);
+        TextView songDetails = row.findViewById(R.id.song_details);
+        ImageView memoryImage = row.findViewById(R.id.memory_image);
         ImageView userImage = row.findViewById(R.id.user_profile_image);
 
         MusicMemory musicMemory = getItem(position);
-        if (musicMemory != null) {
-            // TODO more user-friendly display
-            titleText.setText(musicMemory.getTimePosted().toString());
-            shortText.setText(musicMemory.getLocation().toString());
-            Picasso.get().load(musicMemory.getPhoto()).into(mainImage);
+        if (musicMemory != null && musicMemory.getPhoto() != null) {
+            // TODO: more user-friendly display
+            songName.setText(musicMemory.getTimePosted().toString());
+            songDetails.setText(musicMemory.getLocation().toString());
+            Picasso.get().load(musicMemory.getPhoto()).into(memoryImage);
         }
 
         return row;
