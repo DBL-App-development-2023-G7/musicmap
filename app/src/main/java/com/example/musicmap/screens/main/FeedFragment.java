@@ -13,14 +13,9 @@ import com.example.musicmap.feed.FeedAdapter;
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.util.firebase.Queries;
 import com.example.musicmap.util.ui.Message;
-import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class FeedFragment extends MainFragment {
 
@@ -60,8 +55,8 @@ public class FeedFragment extends MainFragment {
                         subList(0, Math.min(completedTask.getResult().size(), size));
                 listener.onFeedDataLoaded(feed);
             } else {
-                Log.e(TAG, completedTask.getException() == null ? "Unclear error" :
-                        completedTask.getException().getMessage());
+                Log.e(TAG, completedTask.getException() == null ? "Unclear error"
+                        : completedTask.getException().getMessage());
                 listener.onFeedDataLoadFailed();
             }
         });
@@ -71,5 +66,6 @@ public class FeedFragment extends MainFragment {
 
 interface OnFeedDataLoadedListener {
     void onFeedDataLoaded(List<MusicMemory> feed);
+
     void onFeedDataLoadFailed();
 }
