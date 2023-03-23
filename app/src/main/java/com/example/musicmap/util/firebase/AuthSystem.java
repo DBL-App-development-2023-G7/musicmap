@@ -155,7 +155,6 @@ public class AuthSystem {
      * @return the result of this task
      */
     public static Task<User> getUser(String uid) {
-
         return getUserData(uid).onSuccessTask(
                 userData -> {
                     TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
