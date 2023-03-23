@@ -1,13 +1,8 @@
 package com.example.musicmap.screens.profile;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +11,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import com.example.musicmap.R;
 import com.example.musicmap.R.id;
 import com.example.musicmap.feed.FeedAdapter;
 import com.example.musicmap.feed.MusicMemory;
-import com.example.musicmap.screens.auth.AuthActivity;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,15 +27,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ProfilePageFragment extends Fragment implements FirebaseAuth.AuthStateListener {
-
-    private FirebaseAuth auth;
+public class ProfilePageFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View profileView = inflater.inflate(R.layout.fragment_profile_page, container, false);
 
-        auth = FirebaseAuth.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
         if (firebaseUser != null) {
@@ -88,25 +82,6 @@ public class ProfilePageFragment extends Fragment implements FirebaseAuth.AuthSt
         deleteAccountButton.setOnClickListener(view -> AuthSystem.deleteUser());
 
         return profileView;
-    }
-
-    @Override
-    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-        auth = firebaseAuth;
-        FirebaseUser firebaseUser = auth.getCurrentUser();
-
-        if (firebaseUser == null) {
-            Intent authIntent = new Intent(this.requireActivity(), AuthActivity.class);
-            authIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            startActivity(authIntent);
-            this.requireActivity().finish();
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        auth.removeAuthStateListener(this);
     }
 
 }
