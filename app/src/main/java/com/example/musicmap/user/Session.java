@@ -14,7 +14,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,7 +30,6 @@ public final class Session implements FirebaseAuth.AuthStateListener {
 
     private final Set<Listener> listeners;
 
-    @Nullable
     private User currentUser;
     private boolean userConnected;
 
@@ -65,7 +63,6 @@ public final class Session implements FirebaseAuth.AuthStateListener {
      *
      * @return the current connected user, or {@code null} if no user is connected.
      */
-    @Nullable
     public User getCurrentUser() {
         return currentUser;
     }
