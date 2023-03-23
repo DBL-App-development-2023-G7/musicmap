@@ -3,7 +3,6 @@ package com.example.musicmap.user;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.google.firebase.auth.FirebaseAuth;
@@ -14,12 +13,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * The Session Singleton class.
- *
+ * <p>
  * This class holds information regarding the current connected user.
  */
 public final class Session implements FirebaseAuth.AuthStateListener {
@@ -31,13 +33,15 @@ public final class Session implements FirebaseAuth.AuthStateListener {
 
     @Nullable
     private User currentUser;
+    private boolean userConnected;
 
-    @Nullable
     private ListenerRegistration userListenerRegistration;
 
     private Session() {
         listeners = new HashSet<>();
-        FirebaseAuth.getInstance().addAuthStateListener(this);
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth.addAuthStateListener(this);
+        userConnected = firebaseAuth.getCurrentUser() != null;
     }
 
     /**
@@ -66,18 +70,29 @@ public final class Session implements FirebaseAuth.AuthStateListener {
         return currentUser;
     }
 
+    public boolean isUserConnected() {
+        return userConnected;
+    }
+
+    @EnsuresNonNullIf(expression = {"this.currentUser", "this.getCurrentUser()"}, result = true)
+    public boolean isUserLoaded() {
+        return currentUser != null && isUserConnected();
+    }
+
     @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
         if (firebaseUser == null) {
+            userConnected = false;
             currentUser = null;
             if (userListenerRegistration != null) {
                 userListenerRegistration.remove();
             }
             updateListeners();
         } else {
+            userConnected = true;
             if (userListenerRegistration == null) {
                 DocumentReference userDocRef = firestore.collection("Users").document(firebaseUser.getUid());
                 userListenerRegistration = userDocRef.addSnapshotListener(this::refreshUserData);
@@ -103,7 +118,7 @@ public final class Session implements FirebaseAuth.AuthStateListener {
 
     /**
      * Listener called when there is a change in the authentication state or in the user's data.
-     *
+     * <p>
      * Use {@link #addListener(Listener)} and {@link #removeListener(Listener)} to register or
      * unregister listeners.
      */
@@ -118,6 +133,7 @@ public final class Session implements FirebaseAuth.AuthStateListener {
      */
     public void addListener(@NonNull Listener listener) {
         listeners.add(listener);
+        listener.onSessionStateChanged();
     }
 
     /**

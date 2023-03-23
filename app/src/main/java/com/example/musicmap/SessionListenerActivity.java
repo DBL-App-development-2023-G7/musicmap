@@ -25,12 +25,15 @@ public class SessionListenerActivity extends AppCompatActivity implements Sessio
 
     @Override
     public void onSessionStateChanged() {
-        User currentUser = session.getCurrentUser();
 
-        if (currentUser == null) {
+        if (!session.isUserConnected()) {
             loadAuthActivity();
-        } else if (currentUser.isArtist() && !((Artist) currentUser).isVerified()) {
-            loadVerificationActivity();
+        }
+        if (session.isUserLoaded()) {
+            User currentUser = session.getCurrentUser();
+            if (currentUser.isArtist() && !((Artist) currentUser).isVerified()) {
+                loadVerificationActivity();
+            }
         }
     }
 
