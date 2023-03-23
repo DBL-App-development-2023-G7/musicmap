@@ -13,23 +13,32 @@ import java.util.Date;
  */
 public class MusicMemory extends Post {
 
-    // TODO remaining details, e.g. song reference
-    private final Uri photo;
+    private String photo;
+    private String song;
 
-    public MusicMemory(Date timePosted, GeoPoint location, Uri photo) {
-        super(timePosted, location);
+    @SuppressWarnings("unused")
+    private MusicMemory() { }
+
+    public MusicMemory(String authorUid, Date timePosted, GeoPoint location, String photo, String song) {
+        super(authorUid, timePosted, location);
         this.photo = photo;
+        this.song = song;
     }
 
     public Uri getPhoto() {
-        return photo;
+        return Uri.parse(photo);
+    }
+
+    public String getSong() {
+        return song;
     }
 
     @NonNull
     @Override
     public String toString() {
         return "MusicMemory{"
-                + "photo=" + photo
+                + "photo='" + photo + '\''
+                + ", song='" + song + '\''
                 + '}';
     }
 
