@@ -1,4 +1,4 @@
-package com.example.musicmap.customUI.view;
+package com.example.musicmap.util.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
