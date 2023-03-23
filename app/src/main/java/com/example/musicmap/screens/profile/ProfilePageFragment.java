@@ -54,13 +54,12 @@ public class ProfilePageFragment extends Fragment implements FirebaseAuth.AuthSt
 
                 return null;
             });
-            AuthSystem.getUser().onSuccessTask(user -> {
+            AuthSystem.getUser().addOnSuccessListener(user -> {
                 if (user.getData().hasProfilePicture()) {
                     ImageView profilePicture = profileView.findViewById(id.profilePictureImage);
                     Uri uri = user.getData().getProfilePictureUri();
                     Picasso.get().load(uri).into(profilePicture);
                 }
-                return null;
             });
         }
 
