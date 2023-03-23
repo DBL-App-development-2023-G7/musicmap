@@ -109,4 +109,5 @@ public class ProfilePageFragment extends Fragment implements FirebaseAuth.AuthSt
         super.onStop();
         auth.removeAuthStateListener(this);
     }
+
 }
