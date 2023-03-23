@@ -2,7 +2,6 @@ package com.example.musicmap.util.firebase;
 
 import androidx.annotation.NonNull;
 
-import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.ArtistData;
 import com.example.musicmap.user.User;
 import com.example.musicmap.user.UserData;
