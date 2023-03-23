@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ProfilePage extends Fragment implements FirebaseAuth.AuthStateListener {
+public class ProfilePageFragment extends Fragment implements FirebaseAuth.AuthStateListener {
 
     private FirebaseAuth auth;
 

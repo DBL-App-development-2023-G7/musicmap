@@ -60,7 +60,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/profileFragment"
-        android:name="com.example.musicmap.screens.profile.ProfilePage"
+        android:name="com.example.musicmap.screens.profile.ProfilePageFragment"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
