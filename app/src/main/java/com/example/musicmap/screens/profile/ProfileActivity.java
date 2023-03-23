@@ -1,11 +1,11 @@
-package com.example.musicmap.screens.main;
+package com.example.musicmap.screens.profile;
 
 import android.os.Bundle;
 
-import com.example.musicmap.AuthListenerActivity;
 import com.example.musicmap.R;
+import com.example.musicmap.SessionListenerActivity;
 
-public class ProfileActivity extends AuthListenerActivity {
+public class ProfileActivity extends SessionListenerActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

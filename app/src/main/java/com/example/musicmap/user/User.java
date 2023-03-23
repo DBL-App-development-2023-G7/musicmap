@@ -1,14 +1,17 @@
 package com.example.musicmap.user;
 
+import androidx.annotation.NonNull;
+
 /**
  * The user class.
  */
 public class User {
 
-    private UserData data;
+    @NonNull
+    private final UserData data;
     private final String uid;
 
-    public User(UserData data, String uid) {
+    public User(@NonNull UserData data, @NonNull String uid) {
         this.data = data;
         this.uid = uid;
     }
@@ -27,6 +30,7 @@ public class User {
      *
      * @return the {@code UserData} of this user
      */
+    @NonNull
     public UserData getData() {
         return data;
     }

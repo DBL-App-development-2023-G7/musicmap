@@ -6,16 +6,20 @@ import android.widget.ImageView;
 
 import com.example.musicmap.R;
 import com.example.musicmap.screens.map.MapFragment;
+import com.example.musicmap.screens.profile.ProfileActivity;
+import com.example.musicmap.user.Session;
 import com.example.musicmap.util.ui.FragmentUtil;
-import com.example.musicmap.AuthListenerActivity;
+import com.example.musicmap.SessionListenerActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class HomeActivity extends AuthListenerActivity {
+public class HomeActivity extends SessionListenerActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        Session.getInstance();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         ImageView profileButton = findViewById(R.id.appbarProfile);
