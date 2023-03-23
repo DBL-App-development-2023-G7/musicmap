@@ -81,7 +81,7 @@ public final class Session implements FirebaseAuth.AuthStateListener {
 
     private void refreshUserData(DocumentSnapshot doc, FirebaseFirestoreException error) {
         if (error != null) {
-            Log.e(TAG, error.getMessage());
+            Log.e(TAG, "Exception occurred while refreshing user data", error);
             return;
         }
 
@@ -90,7 +90,7 @@ public final class Session implements FirebaseAuth.AuthStateListener {
             updateListeners();
         } catch (FirebaseFirestoreException firebaseFirestoreException) {
             if (firebaseFirestoreException.getMessage() != null) {
-                Log.e(TAG, firebaseFirestoreException.getMessage());
+                Log.e(TAG, "Exception occurred while parsing retrieved user data", firebaseFirestoreException);
             }
         }
     }
