@@ -10,13 +10,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Queries {
-
-    private static final String TAG = "Queries";
 
     public static Task<QuerySnapshot> getUsersWithUsername(String username) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -76,9 +73,23 @@ public class Queries {
     public static Task<List<MusicMemory>> getAllMusicMemories() {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
-        return firestore.collectionGroup("MusicMemories").get().continueWith(task ->
-                task.getResult().getDocuments().stream().map(document ->
-                        document.toObject(MusicMemory.class)).collect(Collectors.toList()));
+        return firestore.collectionGroup("MusicMemories").get().continueWithTask(task -> {
+            TaskCompletionSource<List<MusicMemory>> taskCompletionSource = new TaskCompletionSource<>();
+
+            if (task.isSuccessful()) {
+                QuerySnapshot querySnapshot = task.getResult();
+                List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+
+                List<MusicMemory> musicMemories = documents.stream()
+                        .map(document -> deserialize(document, MusicMemory.class))
+                        .collect(Collectors.toList());
+
+                taskCompletionSource.setResult(musicMemories);
+            } else {
+                taskCompletionSource.setException(task.getException());
+            }
+            return taskCompletionSource.getTask();
+        });
     }
 
     /**

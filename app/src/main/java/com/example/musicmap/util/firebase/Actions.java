@@ -4,16 +4,8 @@ import android.util.Log;
 
 import com.example.musicmap.feed.ConcertMemory;
 import com.example.musicmap.feed.MusicMemory;
-import com.example.musicmap.feed.Post;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskCompletionSource;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Actions {
 

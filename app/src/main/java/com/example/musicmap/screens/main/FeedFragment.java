@@ -32,15 +32,16 @@ public class FeedFragment extends MainFragment {
         this.viewGroup = container;
         View feedView = inflater.inflate(R.layout.fragment_feed, container, false);
 
+        Activity activity = requireActivity();
+        FeedAdapter feedAdapter = new FeedAdapter(activity, R.layout.single_post_layout_feed, new ArrayList<>());
+        ListView feedListView = feedView.findViewById(R.id.feed_list);
+        feedListView.setAdapter(feedAdapter);
+
         getFeed(10, new OnFeedDataLoadedListener() {
             @Override
             public void onFeedDataLoaded(List<MusicMemory> feed) {
-                System.out.println(feed.size() + " found");
-
-                Activity activity = requireActivity();
-                FeedAdapter feedAdapter = new FeedAdapter(activity, R.layout.single_post_layout_feed, feed);
-                ListView feedListView = feedView.findViewById(R.id.feed_list);
-                feedListView.setAdapter(feedAdapter);
+                feedAdapter.addAll(feed);
+                feedAdapter.notifyDataSetChanged();
             }
 
             @Override
