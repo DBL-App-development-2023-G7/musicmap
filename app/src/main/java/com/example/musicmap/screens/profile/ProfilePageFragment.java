@@ -68,8 +68,9 @@ public class ProfilePageFragment extends Fragment {
             firebaseUser.reload().addOnCompleteListener(task -> {
                 if (!firebaseUser.isEmailVerified()) {
                     emailVerifiedTextView.setText(getString(R.string.email_not_verified));
+                } else {
+                    emailVerifiedTextView.setText(getString(R.string.email_verified));
                 }
-                usernameTextView.setText(firebaseUser.getDisplayName());
             });
 
             if (currentUser != null) {
@@ -87,7 +88,8 @@ public class ProfilePageFragment extends Fragment {
         // TODO replace with actual music memories of the user
         for (int i = 0; i < 3; i++) {
             // CSOFF: LineLength
-            String imageUri = "https://www.agconnect.nl/sites/ag/files/2020-05/tu_eindhoven_photo_-_bart_van_overbeeke.jpg.png";
+            String imageUri = "https://www.agconnect.nl/sites/ag/files/2020-05/tu_eindhoven_photo_"
+                    + "-_bart_van_overbeeke.jpg.png";
             // CSON: LineLength
             musicMemories.add(new MusicMemory("You", new Date(), new GeoPoint(51.4486, 5.4907),
                     imageUri, "abc"));
