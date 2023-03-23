@@ -44,7 +44,7 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
         ImageView userImage = row.findViewById(R.id.user_profile_image);
 
         MusicMemory musicMemory = getItem(position);
-        if (musicMemory != null && musicMemory.getPhoto() != null) {
+        if (musicMemory != null) {
             // TODO: more user-friendly display
             songName.setText(musicMemory.getTimePosted().toString());
             songDetails.setText(musicMemory.getLocation().toString());
