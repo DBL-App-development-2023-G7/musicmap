@@ -97,10 +97,10 @@ public class ProfilePageFragment extends Fragment implements FirebaseAuth.AuthSt
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
         if (firebaseUser == null) {
-            Intent authIntent = new Intent(this.getActivity(), AuthActivity.class);
+            Intent authIntent = new Intent(this.requireActivity(), AuthActivity.class);
             authIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(authIntent);
-            this.getActivity().finish();
+            this.requireActivity().finish();
         }
     }
 
