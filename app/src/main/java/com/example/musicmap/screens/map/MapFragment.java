@@ -2,10 +2,6 @@ package com.example.musicmap.screens.map;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -16,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.musicmap.R;
+import com.example.musicmap.util.map.CurrentLocationOverlay;
 import com.example.musicmap.util.permissions.LocationPermission;
 
 import org.osmdroid.config.Configuration;
@@ -24,10 +21,8 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.CustomZoomButtonsDisplay;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayManager;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 public class MapFragment extends Fragment {
 
@@ -156,27 +151,6 @@ public class MapFragment extends Fragment {
     protected void addOverlay(Overlay overlay) {
         OverlayManager overlayManager = mapView.getOverlayManager();
         overlayManager.add(overlayManager.size(), overlay);
-    }
-
-    /**
-     * A map overlay showing your current location, but without bearing.
-     */
-    public static class CurrentLocationOverlay extends MyLocationNewOverlay {
-        public CurrentLocationOverlay(MapView mapView) {
-            super(mapView);
-
-            // Overwrite default person icon
-            Resources resources = mapView.getContext().getResources();
-            setPersonIcon(BitmapFactory.decodeResource(resources, R.drawable.map_marker));
-            setPersonAnchor(0.5f, 1f); // bottom middle
-        }
-
-        @Override
-        protected void drawMyLocation(Canvas canvas, Projection pj, Location lastFix) {
-            lastFix.removeBearing();
-
-            super.drawMyLocation(canvas, pj, lastFix);
-        }
     }
 
 }
