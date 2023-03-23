@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The Session Singleton class. This class holds information regarding the current connected user.
+ * The Session Singleton class.
+ *
+ * This class holds information regarding the current connected user.
  */
 public final class Session implements FirebaseAuth.AuthStateListener {
 
@@ -39,7 +41,7 @@ public final class Session implements FirebaseAuth.AuthStateListener {
     }
 
     /**
-     * The method retrieves the instance of the Session.
+     * Retrieves the instance of the Session.
      *
      * @return the singleton instance of the Session class
      */
@@ -55,9 +57,9 @@ public final class Session implements FirebaseAuth.AuthStateListener {
     }
 
     /**
-     * This method retrieves the current connected user. It will return null if no user is connected.
+     * Retrieves the current connected user.
      *
-     * @return the current connected user
+     * @return the current connected user, or {@code null} if no user is connected.
      */
     @Nullable
     public User getCurrentUser() {
@@ -100,8 +102,9 @@ public final class Session implements FirebaseAuth.AuthStateListener {
     }
 
     /**
-     * Listener called when there is a change in the authentication state or in the user's data. Use
-     * {@link #addListener(Listener)} and {@link #removeListener(Listener)} to register or
+     * Listener called when there is a change in the authentication state or in the user's data.
+     *
+     * Use {@link #addListener(Listener)} and {@link #removeListener(Listener)} to register or
      * unregister listeners.
      */
     public interface Listener {
