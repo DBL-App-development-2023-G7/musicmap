@@ -55,4 +55,8 @@
     <string name="awaiting_verification">Account awaiting verification.</string>
     <string name="awaiting_verification_text">Since you registered as an artist we first need to make sure that your request is authentic.</string>
     <string name="log_in_alt_account">Log in with another account</string>
+    <string name="feed_error_loading">Could not load feed</string>
+    <string name="feed_user_profile_image">user_profile_image</string>
+    <string name="feed_memory_image">memory_image</string>
+    <string name="feed_song_art">song_art</string>
 </resources>

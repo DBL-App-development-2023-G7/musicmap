@@ -41,7 +41,7 @@ public class FeedFragment extends MainFragment {
 
             @Override
             public void onFeedDataLoadFailed() {
-                Message.showFailureMessage(viewGroup, "Could not load feed");
+                Message.showFailureMessage(viewGroup, getString(R.string.feed_error_loading));
             }
         });
 
@@ -64,6 +64,9 @@ public class FeedFragment extends MainFragment {
 
 }
 
+/**
+ * Interface to listen to feed fetching task and set feed or exception accordingly.
+ */
 interface OnFeedDataLoadedListener {
     void onFeedDataLoaded(List<MusicMemory> feed);
 
