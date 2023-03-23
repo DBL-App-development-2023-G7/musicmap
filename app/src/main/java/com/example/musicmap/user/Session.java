@@ -124,7 +124,11 @@ public final class Session implements FirebaseAuth.AuthStateListener {
 
     private void updateListeners() {
         for (SessionListener listener : listeners) {
-            listener.onSessionStateChanged();
+            try {
+                listener.onSessionStateChanged();
+            } catch (Exception e) {
+                Log.e(TAG, listener.getClass().getName() + " threw exception during listener call", e);
+            }
         }
     }
 
