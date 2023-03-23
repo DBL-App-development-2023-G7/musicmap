@@ -25,9 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.GeoPoint;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class ProfilePageFragment extends Fragment {
 
