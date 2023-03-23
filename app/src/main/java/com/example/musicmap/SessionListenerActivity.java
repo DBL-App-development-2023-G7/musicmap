@@ -25,7 +25,6 @@ public class SessionListenerActivity extends AppCompatActivity implements Sessio
 
     @Override
     public void onSessionStateChanged() {
-
         if (!session.isUserConnected()) {
             loadAuthActivity();
         }
