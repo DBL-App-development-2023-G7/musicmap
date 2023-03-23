@@ -1,5 +1,7 @@
 package com.example.musicmap.screens.main;
 
+import static com.spotify.sdk.android.auth.AuthorizationClient.createLoginActivityIntent;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -22,6 +24,12 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.example.musicmap.R;
+import com.spotify.android.appremote.api.SpotifyAppRemote;
+
+import com.example.musicmap.util.spotify.SpotifyTools;
+import com.spotify.protocol.types.PlayerState;
+import com.spotify.protocol.types.Track;
+
 
 import java.io.IOException;
 
@@ -29,7 +37,13 @@ import java.io.IOException;
 public class PostFragment extends MainFragment {
 
     private ImageView capturedImagePreview; // Should this be private?
+    Button addSongButton;
+    Button addImageButton;
     // a launcher that launches the camera activity and handles the result
+    private SpotifyTools spotifyHelper;
+
+
+    private SpotifyAppRemote mSpotifyAppRemote;
     ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
         new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -59,15 +73,24 @@ public class PostFragment extends MainFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_post, container, false);
-
         getPermission();
+
+        spotifyHelper = SpotifyTools.getInstance();
+        spotifyHelper.connectToSpotify(requireActivity());
 
         capturedImagePreview = rootView.findViewById(R.id.previewCapturedImage);
 
-        Button addImageButton = rootView.findViewById(R.id.addImageButton); // should this also be defined?
+        addImageButton = rootView.findViewById(R.id.addImageButton); // should this also be defined?
         addImageButton.setOnClickListener(view -> goToCameraFragment());
 
+        addSongButton = rootView.findViewById(R.id.addSongButton);
+        addSongButton.setOnClickListener(view -> showCurrentSong());
         return rootView;
+    }
+
+    private void showCurrentSong(){
+        spotifyHelper.checkConnention();
+        addSongButton.setText(spotifyHelper.getLastSong().name);
     }
 
     private void getPermission() {
