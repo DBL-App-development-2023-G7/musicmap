@@ -35,6 +35,7 @@ public class ProfilePageFragment extends Fragment {
     private TextView usernameTextView;
     private ImageView profilePicture;
     private ListView profileListView;
+    private FeedAdapter feedAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +53,10 @@ public class ProfilePageFragment extends Fragment {
         // deleteAccount button
         Button deleteAccountButton = profileView.findViewById(R.id.deleteAccount_button);
         deleteAccountButton.setOnClickListener(view -> AuthSystem.deleteUser());
+
+        Activity activity = requireActivity();
+        feedAdapter = new FeedAdapter(activity, R.layout.single_post_layout_feed);
+        profileListView.setAdapter(feedAdapter);
 
         displayData();
 
@@ -82,22 +87,17 @@ public class ProfilePageFragment extends Fragment {
             }
         }
 
-        // Recent Music Memories
-        List<MusicMemory> musicMemories = new ArrayList<>();
-
         // TODO replace with actual music memories of the user
         for (int i = 0; i < 3; i++) {
             // CSOFF: LineLength
             String imageUri = "https://www.agconnect.nl/sites/ag/files/2020-05/tu_eindhoven_photo_"
                     + "-_bart_van_overbeeke.jpg.png";
             // CSON: LineLength
-            musicMemories.add(new MusicMemory("You", new Date(), new GeoPoint(51.4486, 5.4907),
-                    imageUri, "abc"));
-        }
 
-        Activity activity = requireActivity();
-        FeedAdapter feedAdapter = new FeedAdapter(activity, R.layout.single_post_layout_feed, musicMemories);
-        profileListView.setAdapter(feedAdapter);
+            MusicMemory musicMemory = new MusicMemory("You", new Date(), new GeoPoint(51.4486, 5.4907),
+                    imageUri, "abc");
+            feedAdapter.add(musicMemory);
+        }
     }
 
 }
