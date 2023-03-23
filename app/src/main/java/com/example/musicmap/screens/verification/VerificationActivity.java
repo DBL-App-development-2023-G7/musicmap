@@ -9,6 +9,7 @@ import com.example.musicmap.SessionListenerActivity;
 import com.example.musicmap.screens.main.HomeActivity;
 import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.Session;
+import com.example.musicmap.user.User;
 import com.example.musicmap.util.firebase.AuthSystem;
 
 public class VerificationActivity extends SessionListenerActivity {
@@ -24,7 +25,12 @@ public class VerificationActivity extends SessionListenerActivity {
 
     @Override
     public void onSessionStateChanged() {
-        Artist currentArtist = (Artist) Session.getInstance().getCurrentUser();
+        User currentUser = Session.getInstance().getCurrentUser();
+        if (!(currentUser instanceof Artist)) {
+            throw new IllegalStateException("In VerificationActivity while current user is not an artist");
+        }
+
+        Artist currentArtist = (Artist) currentUser;
 
         if (currentArtist.isVerified()) {
             Intent homeIntent = new Intent(this, HomeActivity.class);
