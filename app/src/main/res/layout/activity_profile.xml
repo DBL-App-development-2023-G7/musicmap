@@ -4,57 +4,61 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.main.ProfileActivity">
+    tools:context=".screens.profile.ProfileActivity">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-10dp"
+        android:background="@color/background"
+        app:elevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/profile_imageView"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
-            android:contentDescription="@string/profile_picture"
-            app:srcCompat="@mipmap/ic_launcher" />
-
-        <TextView
-            android:id="@+id/emailVerified_textView"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textStyle="bold" />
+            android:layout_height="80dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="-10dp"
+            android:layout_marginRight="0dp"
+            android:background="@drawable/primary_rounded"
+            android:elevation="4dp">
 
-        <TextView
-            android:id="@+id/uuid_textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/appbarBack"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="start"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="@string/appbar_profile"
+                app:srcCompat="?attr/homeAsUpIndicator"
+                app:tint="@color/white"/>
 
-        <TextView
-            android:id="@+id/email_textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/appbarIcon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="@string/appbar_icon"
+                app:srcCompat="@mipmap/music_map_background" />
 
-        <TextView
-            android:id="@+id/username_textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        </com.google.android.material.appbar.MaterialToolbar>
 
-        <Button
-            android:id="@+id/logout_button"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:text="@string/logout" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-        <Button
-            android:id="@+id/deleteAccount_button"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:text="@string/delete_account" />
-    </LinearLayout>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/profileFragment"
+        android:name="com.example.musicmap.screens.profile.ProfilePageFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+        tools:layout="@layout/fragment_profile_page" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

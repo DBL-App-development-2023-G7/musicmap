@@ -28,6 +28,11 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
         this.activityContext = activityContext;
     }
 
+    public FeedAdapter(@NonNull Activity activityContext, int resource) {
+        super(activityContext, resource);
+        this.activityContext = activityContext;
+    }
+
     @NonNull
     @Override
     @SuppressWarnings("unused")

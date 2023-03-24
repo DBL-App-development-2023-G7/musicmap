@@ -48,7 +48,7 @@
     <string name="input_exception_date_null">The date was parsed but the date is null.</string>
     <string name="auth_error_invalid_values">Some of the fields are incomplete or contain invalid values.</string>
     <string name="auth_error_failed_registration">Could not register, please try again later!</string>
-    <string name="message_default_action_text">Ok</string>
+    <string name="message_default_action_text">OK</string>
     <string name="message_default_success_text">SUCCESS</string>
     <string name="message_default_failure_text">ERROR</string>
     <string name="profile_picture">Profile picture</string>
@@ -59,4 +59,5 @@
     <string name="feed_user_profile_image">user_profile_image</string>
     <string name="feed_memory_image">memory_image</string>
     <string name="feed_song_art">song_art</string>
+    <string name="profile_page_mm">Recent Music Memories:</string>
 </resources>
