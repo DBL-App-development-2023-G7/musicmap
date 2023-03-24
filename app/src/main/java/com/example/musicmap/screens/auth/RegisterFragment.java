@@ -235,7 +235,6 @@ public class RegisterFragment extends AuthFragment {
                     if (task.isSuccessful()) {
                         this.getAuthActivity().loadHomeActivity();
                     } else {
-                        String exceptionText;
                         if (task.getException() != null) {
                             Log.e(TAG, "Exception occurred during registration", task.getException());
                         } else {
