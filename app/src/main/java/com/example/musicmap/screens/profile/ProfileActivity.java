@@ -6,8 +6,7 @@ import android.widget.ImageView;
 
 import com.example.musicmap.R;
 import com.example.musicmap.SessionListenerActivity;
-import com.example.musicmap.screens.main.HomeActivity;
-import com.example.musicmap.util.ui.FragmentUtil;
+import com.example.musicmap.screens.settings.SettingsActivity;
 
 public class ProfileActivity extends SessionListenerActivity {
 

@@ -1,4 +1,4 @@
-package com.example.musicmap.screens.profile;
+package com.example.musicmap.screens.settings;
 
 import android.content.Intent;
 import android.os.Bundle;

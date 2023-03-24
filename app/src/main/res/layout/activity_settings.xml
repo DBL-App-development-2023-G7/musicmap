@@ -52,7 +52,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentSettings"
-        android:name="com.example.musicmap.screens.profile.SettingsFragment"
+        android:name="com.example.musicmap.screens.settings.SettingsFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
