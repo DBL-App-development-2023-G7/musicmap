@@ -23,8 +23,18 @@ public class FeedFragment extends MainFragment {
     private static final String TAG = "FeedFragment";
 
     private ViewGroup viewGroup;
+
+    /**
+     * How many music memories to fetch at once.
+     */
     private int singleFetchSize;
+
+    // TODO javadocs
     private int fetchCount;
+    /**
+     *
+     * The maximum size of the feed.
+     */
     private int feedSize;
 
     @Override
