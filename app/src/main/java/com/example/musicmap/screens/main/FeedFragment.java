@@ -20,8 +20,9 @@ import java.util.List;
 
 public class FeedFragment extends MainFragment {
 
-    private ViewGroup viewGroup;
     private static final String TAG = "FeedFragment";
+
+    private ViewGroup viewGroup;
     private int singleFetchSize;
     private int fetchCount;
     private int feedSize;

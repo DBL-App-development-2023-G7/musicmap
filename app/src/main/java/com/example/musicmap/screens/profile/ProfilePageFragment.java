@@ -30,11 +30,12 @@ import java.util.List;
 
 public class ProfilePageFragment extends Fragment {
 
+    private static final String TAG = "ProfilePageFragment";
+
     private TextView emailVerifiedTextView;
     private TextView usernameTextView;
     private ImageView profilePicture;
     private FeedAdapter feedAdapter;
-    private static final String TAG = "ProfilePageFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

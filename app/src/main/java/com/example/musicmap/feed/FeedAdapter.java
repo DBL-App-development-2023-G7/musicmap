@@ -35,8 +35,7 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
 
     @NonNull
     @Override
-    @SuppressWarnings("unused")
-    // suppressing unused since not all details are set for a music memory yet
+    @SuppressWarnings("unused") // suppressing unused since not all details are set for a music memory yet
     public View getView(int position, @Nullable View convertView, ViewGroup parent) {
         View row = convertView;
         if (convertView == null) {
