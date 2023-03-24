@@ -1,0 +1,22 @@
+<resources>
+    <string name="auth_error_something_wrong">Something went wrong.</string>
+    <string name="error_no_internet">Could not detect an internet connection.</string>
+    <string name="auth_error_incorrect_email_password">Incorrect email or password.</string>
+    <string name="auth_error_incorrect_username_password">Incorrect username or password.</string>
+    <string name="input_error_enter_email">Please enter an email address.</string>
+    <string name="input_error_valid_email">Please enter a valid email address.</string>
+    <string name="input_error_unexpected">Unexpected input.</string>
+    <string name="input_error_enter_password">Please enter a password.</string>
+    <string name="input_error_valid_password">Please enter a valid password.</string>
+    <string name="input_error_enter_username">Please enter a username.</string>
+    <string name="input_error_valid_username">Please enter a valid username.</string>
+    <string name="input_error_username_exists">Username already exists!</string>
+    <string name="input_error_enter_first_name">Please enter a First name.</string>
+    <string name="input_error_enter_last_name">Please enter a Last name.</string>
+    <string name="input_error_passwords_not_matching">Passwords do not match!</string>
+    <string name="input_error_pick_date">Please pick a date.</string>
+    <string name="input_exception_date_null">The date was parsed but the date is null.</string>
+    <string name="auth_error_invalid_values">Some of the fields are incomplete or contain invalid values.</string>
+    <string name="auth_error_failed_registration">Could not register, please try again later!</string>
+    <string name="feed_error_loading">Could not load feed</string>
+</resources>
