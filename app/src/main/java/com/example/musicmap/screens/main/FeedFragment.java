@@ -84,6 +84,7 @@ public class FeedFragment extends MainFragment {
                     return;
                 }
 
+                // user reaches last item of the current feed
                 if (firstVisibleItem + visibleItemCount == totalItemCount) {
                     getFeed(feedAdapter.getCount() + singleFetchCount, new OnFeedDataLoadedListener() {
                         @Override

@@ -47,7 +47,7 @@ public class Queries {
      * @param uid the id of the music-memory
      * @return music-memory
      */
-    public static Task<MusicMemory> getMusicMemory(String authorUid, String uid) {
+    public static Task<MusicMemory> getMusicMemoryByAuthorIdAndId(String authorUid, String uid) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         return firestore.collection("Users").document(authorUid)
                 .collection("MusicMemories").document(uid).get().continueWithTask(task -> {
@@ -75,7 +75,7 @@ public class Queries {
      * @param authorUid the id of the author
      * @return all music-memories for the author
      */
-    public static Task<List<MusicMemory>> getMusicMemories(String authorUid) {
+    public static Task<List<MusicMemory>> getMusicMemoriesByAuthorId(String authorUid) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         return firestore.collection("Users").document(authorUid)
                 .collection("MusicMemories").get().continueWithTask(task -> {
