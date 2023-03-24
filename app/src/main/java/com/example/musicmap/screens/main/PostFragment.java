@@ -1,13 +1,12 @@
 package com.example.musicmap.screens.main;
 
-import static com.spotify.sdk.android.auth.AuthorizationClient.createLoginActivityIntent;
-
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.provider.MediaStore;
@@ -26,21 +25,22 @@ import androidx.core.content.ContextCompat;
 import com.example.musicmap.R;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 
-import com.example.musicmap.util.spotify.SpotifyTools;
-import com.spotify.protocol.types.PlayerState;
+import com.example.musicmap.util.spotify.SpotifyAppSession;
 import com.spotify.protocol.types.Track;
 
 
 import java.io.IOException;
+import java.io.InputStream;
 
 
 public class PostFragment extends MainFragment {
 
     private ImageView capturedImagePreview; // Should this be private?
-    Button addSongButton;
-    Button addImageButton;
+    private ImageView songImageView;
+    private Button addSongButton;
+    private Button addImageButton;
     // a launcher that launches the camera activity and handles the result
-    private SpotifyTools spotifyHelper;
+    private SpotifyAppSession spotifyHelper;
 
 
     private SpotifyAppRemote mSpotifyAppRemote;
@@ -63,10 +63,17 @@ public class PostFragment extends MainFragment {
         }
     );
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        spotifyHelper = new SpotifyAppSession(requireActivity());
     }
 
     @Override
@@ -75,9 +82,6 @@ public class PostFragment extends MainFragment {
         View rootView = inflater.inflate(R.layout.fragment_post, container, false);
         getPermission();
 
-        spotifyHelper = SpotifyTools.getInstance();
-        spotifyHelper.connectToSpotify(requireActivity());
-
         capturedImagePreview = rootView.findViewById(R.id.previewCapturedImage);
 
         addImageButton = rootView.findViewById(R.id.addImageButton); // should this also be defined?
@@ -85,12 +89,19 @@ public class PostFragment extends MainFragment {
 
         addSongButton = rootView.findViewById(R.id.addSongButton);
         addSongButton.setOnClickListener(view -> showCurrentSong());
+
+        songImageView = rootView.findViewById(R.id.songPreviewImage);
         return rootView;
     }
 
     private void showCurrentSong(){
-        spotifyHelper.checkConnention();
-        addSongButton.setText(spotifyHelper.getLastSong().name);
+        spotifyHelper.checkConnection();
+        Track lastTrack = spotifyHelper.getLastSong();
+        spotifyHelper.debugTrack(lastTrack);
+        addSongButton.setText(lastTrack.name);
+
+        songImageView.setVisibility(View.VISIBLE);
+        spotifyHelper.loadSongImageIntoView(lastTrack, songImageView);
     }
 
     private void getPermission() {
@@ -111,4 +122,35 @@ public class PostFragment extends MainFragment {
     }
 
 
+    private class DownloadImage extends AsyncTask<String, Void, Bitmap> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Create a progressdialog
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... URL) {
+
+            String imageURL = URL[0];
+
+            Bitmap bitmap = null;
+            try {
+                // Download Image from URL
+                InputStream input = new java.net.URL(imageURL).openStream();
+                // Decode Bitmap
+                bitmap = BitmapFactory.decodeStream(input);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            // Do whatever you want to do with the bitmap
+            songImageView.setVisibility(View.VISIBLE);
+            songImageView.setImageBitmap(result);
+        }
+    }
 }
