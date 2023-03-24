@@ -51,6 +51,7 @@ public final class Session implements FirebaseAuth.AuthStateListener {
         if (instance == null) {
             synchronized (Session.class) {
                 if (instance == null) {
+                    Log.i(TAG, "Generating a session instance.");
                     instance = new Session();
                 }
             }
@@ -78,6 +79,7 @@ public final class Session implements FirebaseAuth.AuthStateListener {
 
     @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+        Log.i(TAG, "Session has been notified about the auth state change.");
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
@@ -86,6 +88,7 @@ public final class Session implements FirebaseAuth.AuthStateListener {
             currentUser = null;
             if (userListenerRegistration != null) {
                 userListenerRegistration.remove();
+                userListenerRegistration = null;
             }
             updateListeners();
         } else {
@@ -98,6 +101,7 @@ public final class Session implements FirebaseAuth.AuthStateListener {
     }
 
     private void refreshUserData(DocumentSnapshot doc, FirebaseFirestoreException error) {
+        Log.i(TAG, "Trying to refresh user's data");
         if (error != null) {
             Log.e(TAG, "Exception occurred while refreshing user data", error);
             return;
@@ -105,6 +109,7 @@ public final class Session implements FirebaseAuth.AuthStateListener {
 
         try {
             currentUser = AuthSystem.parseUserData(doc).toUser(doc.getId());
+            Log.i(TAG, "User's data was refreshed.");
             updateListeners();
         } catch (FirebaseFirestoreException firebaseFirestoreException) {
             if (firebaseFirestoreException.getMessage() != null) {
@@ -143,6 +148,7 @@ public final class Session implements FirebaseAuth.AuthStateListener {
     }
 
     private void updateListeners() {
+        Log.i(TAG, "Updating all session listeners.");
         for (Listener listener : listeners) {
             try {
                 listener.onSessionStateChanged();

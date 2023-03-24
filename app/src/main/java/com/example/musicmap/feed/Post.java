@@ -56,8 +56,9 @@ public abstract class Post {
      * Don't use when the author is already initialized!
      *
      * @param authorUid the author UID.
+     * @throws IllegalStateException if the authorUid is already set.
      */
-    public void setAuthorUid(String authorUid) {
+    public void setAuthorUid(String authorUid) throws IllegalStateException {
         if (this.authorUid != null) {
             throw new IllegalStateException("authorUid is already set");
         }
