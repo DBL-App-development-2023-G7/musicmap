@@ -152,22 +152,6 @@ public class RegisterFragment extends AuthFragment {
         }
     }
 
-    private boolean checkPassword(String password) {
-        switch (ValidationUtil.isPasswordValid(password)) {
-            case EMPTY:
-                passwordInput.setError(getString(R.string.input_error_enter_password));
-                return false;
-            case FORMAT:
-                passwordInput.setError(getString(R.string.input_error_valid_password));
-                return false;
-            case VALID:
-                return true;
-            default:
-                passwordInput.setError(getString(R.string.input_error_unexpected));
-                return false;
-        }
-    }
-
     private boolean checkRepeatPassword(String repeatPassword, String password) {
         if (!repeatPassword.equals(password)) {
             repeatPasswordInput.setError(getString(R.string.input_error_passwords_not_matching));
@@ -219,7 +203,7 @@ public class RegisterFragment extends AuthFragment {
         return checkUsername(username)
                 & checkFirstName(firstName) & checkLastName(lastName)
                 & checkEmail(email)
-                & checkPassword(password) & checkRepeatPassword(repeatPassword, password)
+                & checkPassword(passwordInput, password) & checkRepeatPassword(repeatPassword, password)
                 & checkBirthdate(birthdate);
     }
 
@@ -251,7 +235,6 @@ public class RegisterFragment extends AuthFragment {
                     if (task.isSuccessful()) {
                         this.getAuthActivity().loadHomeActivity();
                     } else {
-                        String exceptionText;
                         if (task.getException() != null) {
                             Log.e(TAG, "Exception occurred during registration", task.getException());
                         } else {
