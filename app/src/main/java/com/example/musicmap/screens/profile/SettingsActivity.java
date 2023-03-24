@@ -6,23 +6,15 @@ import android.widget.ImageView;
 
 import com.example.musicmap.R;
 import com.example.musicmap.SessionListenerActivity;
-import com.example.musicmap.screens.main.HomeActivity;
-import com.example.musicmap.util.ui.FragmentUtil;
 
-public class ProfileActivity extends SessionListenerActivity {
+public class SettingsActivity extends SessionListenerActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_settings);
 
         ImageView backButton = findViewById(R.id.appbarBack);
         backButton.setOnClickListener(view -> super.onBackPressed());
-
-        ImageView settingsButton = findViewById(R.id.appbarSettings);
-        settingsButton.setOnClickListener(view -> {
-            startActivity(new Intent(this, SettingsActivity.class));
-        });
     }
-
 }
