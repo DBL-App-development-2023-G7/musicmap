@@ -33,7 +33,6 @@ public class ProfilePageFragment extends Fragment {
     private TextView emailVerifiedTextView;
     private TextView usernameTextView;
     private ImageView profilePicture;
-    private ListView profileListView;
     private FeedAdapter feedAdapter;
     private static final String TAG = "ProfilePageFragment";
 
@@ -44,7 +43,7 @@ public class ProfilePageFragment extends Fragment {
         emailVerifiedTextView = profileView.findViewById(id.emailVerified_text);
         usernameTextView = profileView.findViewById(R.id.profileUsername_textView);
         profilePicture = profileView.findViewById(id.profilePictureImage);
-        profileListView = profileView.findViewById(R.id.mm_list);
+        ListView profileListView = profileView.findViewById(R.id.mm_list);
 
         // logout button
         Button logoutButton = profileView.findViewById(R.id.logout_button);
