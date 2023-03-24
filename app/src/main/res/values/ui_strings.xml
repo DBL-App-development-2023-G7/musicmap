@@ -1,0 +1,29 @@
+<resources>
+    <!--navbar strings start-->
+    <string name="navbar_post">Post</string>
+    <string name="navbar_feed">Feed</string>
+    <string name="navbar_map">Map</string>
+    <!--navbar strings end-->
+
+    <!--buttons strings start-->
+    <string name="back">Back</string>
+    <!--buttons strings end-->
+
+    <!--appbar strings start-->
+    <string name="appbar_search">Search</string>
+    <string name="appbar_profile">Profile</string>
+    <string name="appbar_icon">Icon</string>
+    <!--appbar strings end-->
+
+    <!--message strings start-->
+    <string name="message_default_action_text">OK</string>
+    <string name="message_default_success_text">SUCCESS</string>
+    <string name="message_default_failure_text">ERROR</string>
+    <!--message strings end-->
+
+    <!--feed strings start-->
+    <string name="feed_user_profile_image">Profile image of user</string>
+    <string name="feed_memory_image">Image of music memory</string>
+    <string name="feed_song_art">Image of song</string>
+    <!--feed strings end-->
+</resources>

@@ -59,24 +59,8 @@ public class LoginFragment extends AuthFragment {
         }
     }
 
-    private boolean checkPassword(String password) {
-        switch (ValidationUtil.isPasswordValid(password)) {
-            case EMPTY:
-                passwordInput.setError(getString(R.string.input_error_enter_password));
-                return false;
-            case FORMAT:
-                passwordInput.setError(getString(R.string.input_error_valid_password));
-                return false;
-            case VALID:
-                return true;
-            default:
-                passwordInput.setError(getString(R.string.input_error_unexpected));
-                return false;
-        }
-    }
-
     protected boolean validate(String identifier, String password) {
-        return checkIdentifier(identifier) & checkPassword(password);
+        return checkIdentifier(identifier) & checkPassword(passwordInput, password);
     }
 
     private void login() {
