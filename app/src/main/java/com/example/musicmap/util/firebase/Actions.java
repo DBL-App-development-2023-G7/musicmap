@@ -25,7 +25,7 @@ public class Actions {
                     if (task.isSuccessful()) {
                         Log.i(TAG, "Successfully created music memory with ID " + task.getResult().getId());
                     } else {
-                        Log.e(TAG, "Could not create music memory");
+                        Log.e(TAG, "Could not create music memory", task.getException());
                     }
                 });
     }
@@ -44,7 +44,7 @@ public class Actions {
                     if (task.isSuccessful()) {
                         Log.i(TAG, "Successfully created concert memory with ID " + task.getResult().getId());
                     } else {
-                        Log.e(TAG, "Could not create concert memory");
+                        Log.e(TAG, "Could not create concert memory", task.getException());
                     }
                 });
     }

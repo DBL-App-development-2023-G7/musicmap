@@ -92,8 +92,8 @@ public class ProfilePageFragment extends Fragment {
                     feedAdapter.addAll(feed);
                     feedAdapter.notifyDataSetChanged();
                 } else {
-                    Log.e(TAG, completedTask.getException() == null ? "Unclear error"
-                            : completedTask.getException().getMessage());
+                    Log.e(TAG, "Exception occurred while getting music memories from author",
+                            completedTask.getException());
                 }
             });
         }
