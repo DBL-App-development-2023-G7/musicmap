@@ -9,7 +9,8 @@
     <string name="input_error_enter_password">Please enter a password.</string>
     <string name="input_error_valid_password">Please enter a valid password.</string>
     <string name="input_error_enter_username">Please enter a username.</string>
-    <string name="input_error_valid_username">Please enter a valid username.</string>
+    <string name="input_error_valid_username">A valid username is between 3 and 25 characters,
+        and contains only alphabets, numbers, and underscores.</string>
     <string name="input_error_username_exists">Username already exists!</string>
     <string name="input_error_enter_first_name">Please enter a First name.</string>
     <string name="input_error_enter_last_name">Please enter a Last name.</string>
