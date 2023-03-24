@@ -21,6 +21,7 @@ public class Queries {
      * @param username the username of the user
      * @return the user
      */
+    // TODO make this method and below return User instances
     public static Task<QuerySnapshot> getUsersWithUsername(String username) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         Query query = firestore.collection("Users").whereEqualTo("username", username);
