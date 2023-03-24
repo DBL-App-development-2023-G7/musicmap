@@ -22,14 +22,14 @@ public class FeedFragment extends MainFragment {
 
     private ViewGroup viewGroup;
     private static final String TAG = "FeedFragment";
-    private int singleFetchCount;
+    private int singleFetchSize;
     private int fetchCount;
     private int feedSize;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.viewGroup = container;
-        this.singleFetchCount = 4;
+        this.singleFetchSize = 4;
         this.fetchCount = 1;
         this.feedSize = 100;
 
@@ -42,7 +42,7 @@ public class FeedFragment extends MainFragment {
 
         feedListView.setOnScrollListener(onScrollListener(feedAdapter));
 
-        getFeed(singleFetchCount, new OnFeedDataLoadedListener() {
+        getFeed(singleFetchSize, new OnFeedDataLoadedListener() {
             @Override
             public void onFeedDataLoaded(List<MusicMemory> feed) {
                 feedAdapter.addAll(feed);
@@ -80,13 +80,14 @@ public class FeedFragment extends MainFragment {
             @Override
             public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount,
                                  int totalItemCount) {
+                // TODO: finalise which conditions to stop fetching the feed (apart from trivial ones)
                 if (totalItemCount == 0 || feedAdapter.getCount() == feedSize || fetchCount > feedSize) {
                     return;
                 }
 
                 // user reaches last item of the current feed
                 if (firstVisibleItem + visibleItemCount == totalItemCount) {
-                    getFeed(feedAdapter.getCount() + singleFetchCount, new OnFeedDataLoadedListener() {
+                    getFeed(feedAdapter.getCount() + singleFetchSize, new OnFeedDataLoadedListener() {
                         @Override
                         public void onFeedDataLoaded(List<MusicMemory> feed) {
                             // get feed from the last fetched music memory
