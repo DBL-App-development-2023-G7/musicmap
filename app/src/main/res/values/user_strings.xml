@@ -1,0 +1,28 @@
+<resources>
+    <string name="username">Username</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email</string>
+    <string name="birthdate">Birthdate</string>
+
+    <!--profile strings start-->
+    <string name="profile_picture">Profile picture</string>
+    <string name="profile_page_mm">Recent Music Memories:</string>
+    <!--profile strings start-->
+
+    <!--auth strings start-->
+    <string name="identifier">Username/Email</string>
+    <string name="password">Password</string>
+    <string name="repeat_password">Repeat Password</string>
+    <string name="login">Login</string>
+    <string name="log_in_alt_account">Log in with another account</string>
+    <string name="logout">Log out</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="register">Register</string>
+    <string name="register_artist">Register as Artist</string>
+    <string name="email_verified">Your email is verified!</string>
+    <string name="email_not_verified">Your email is not verified!</string>
+    <string name="awaiting_verification">Account awaiting verification.</string>
+    <string name="awaiting_verification_text">Since you registered as an artist we first need to make sure that your request is authentic.</string>
+    <!--auth strings end-->
+</resources>
