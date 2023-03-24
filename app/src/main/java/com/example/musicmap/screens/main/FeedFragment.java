@@ -76,8 +76,7 @@ public class FeedFragment extends MainFragment {
                         subList(0, Math.min(completedTask.getResult().size(), size));
                 listener.onFeedDataLoaded(feed);
             } else {
-                Log.e(TAG, completedTask.getException() == null ? "Unclear error"
-                        : completedTask.getException().getMessage());
+                Log.e(TAG, "Exception occurred while getting feed music memories", completedTask.getException());
                 listener.onFeedDataLoadFailed();
             }
         });
