@@ -1,7 +1,10 @@
 package com.example.musicmap;
 
 import android.app.Application;
+import android.content.Intent;
 import android.content.res.Resources;
+
+import com.example.musicmap.services.InternetCheckService;
 
 /**
  * The main Application.
@@ -34,6 +37,9 @@ public class MusicMap extends Application {
         super.onCreate();
         instance = this;
         resources = getResources();
-    }
 
+        // Start internet check
+        Intent intent = new Intent(this, InternetCheckService.class);
+        startService(intent);
+    }
 }
