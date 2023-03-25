@@ -49,6 +49,37 @@ public abstract class PostOverlay extends IconOverlay {
     private static final float TOP_MARGIN_RATIO = 0.045f;
 
     private final MapView mapView;
+    private final Drawable markerIcon;
+
+    /**
+     * Creates a post overlay for the given map and post.
+     *
+     * The marker will contain a default image, use {@link #setImage(RequestCreator)}
+     * to change the displayed image.
+     *
+     * @param mapView the map.
+     * @param post the post.
+     */
+    protected PostOverlay(MapView mapView, Post post) {
+        this.mapView = mapView;
+
+        Drawable drawable = ContextCompat.getDrawable(mapView.getContext(), R.drawable.map_post);
+        if (drawable == null) {
+            throw new IllegalStateException("Drawable map_post could not be found");
+        }
+
+        markerIcon = drawable;
+
+        // Get the GeoPoint from the right library
+        GeoPoint geoPoint = post.getLocation();
+        IGeoPoint iGeoPoint = new org.osmdroid.util.GeoPoint(geoPoint.getLatitude(), geoPoint.getLongitude());
+
+        set(iGeoPoint, markerIcon);
+
+        // Set anchor position to bottom center
+        this.mAnchorV = ANCHOR_BOTTOM;
+        this.mAnchorU = ANCHOR_CENTER;
+    }
 
     /**
      * Create a post overlay for the given map and post, using the given {@link RequestCreator}
@@ -59,29 +90,9 @@ public abstract class PostOverlay extends IconOverlay {
      * @param requestCreator the image request for the image to be displayed on the map.
      */
     protected PostOverlay(MapView mapView, Post post, RequestCreator requestCreator) {
-        this.mapView = mapView;
+        this(mapView, post);
 
-        Drawable drawable = ContextCompat.getDrawable(mapView.getContext(), R.drawable.map_post);
-        if (drawable == null) {
-            throw new IllegalStateException("Drawable map_post could not be found");
-        }
-
-        // Get the GeoPoint from the right library
-        GeoPoint geoPoint = post.getLocation();
-        IGeoPoint iGeoPoint = new org.osmdroid.util.GeoPoint(geoPoint.getLatitude(), geoPoint.getLongitude());
-
-        set(iGeoPoint, drawable);
-
-        // Set anchor position to bottom center
-        this.mAnchorV = ANCHOR_BOTTOM;
-        this.mAnchorU = ANCHOR_CENTER;
-
-        // Transform into circle & resize image
-        requestCreator
-                .resize((int) (drawable.getIntrinsicWidth() * RATIO), (int) (drawable.getIntrinsicHeight() * RATIO))
-                .centerCrop()
-                .transform(new CircleTransform())
-                .into(new ImageTarget());
+        setImage(requestCreator);
     }
 
     /**
@@ -93,6 +104,20 @@ public abstract class PostOverlay extends IconOverlay {
      */
     protected PostOverlay(MapView mapView, Post post, Uri imageUri) {
         this(mapView, post, Picasso.get().load(imageUri));
+    }
+
+    /**
+     * Sets the image displayed in this marker to the given image.
+     *
+     * @param requestCreator the image request for the image to be displayed.
+     */
+    protected void setImage(RequestCreator requestCreator) {
+        // Transform into circle & resize image
+        requestCreator
+                .resize((int) (markerIcon.getIntrinsicWidth() * RATIO), (int) (markerIcon.getIntrinsicHeight() * RATIO))
+                .centerCrop()
+                .transform(new CircleTransform())
+                .into(new ImageTarget());
     }
 
     @Override
