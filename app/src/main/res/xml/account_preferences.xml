@@ -1,6 +1,30 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
-<PreferenceCategory
-    app:title="Profile"
-    app:iconSpaceReserved="false">
-</PreferenceCategory>
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="Profile">
+        <Preference
+            app:iconSpaceReserved="false"
+            app:summary="x"
+            app:title="Email" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:summary="x"
+            app:title="@string/first_name" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:summary="x"
+            app:title="@string/last_name" />
+    </PreferenceCategory>
+
+
+    <PreferenceCategory app:title="Other"
+        app:iconSpaceReserved="false">
+        <Preference
+            app:icon="@drawable/logout_icon"
+            app:title="@string/logout" />
+
+        <Preference
+            app:icon="@drawable/delete_icon"
+            app:title="@string/delete_account" />
+    </PreferenceCategory>
 </PreferenceScreen>
