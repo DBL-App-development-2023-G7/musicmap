@@ -18,9 +18,9 @@ import com.example.musicmap.R;
  */
 public class InternetCheckService extends Service {
     private static final String TAG = "InternetCheckService";
+    private static final int INTERVAL = 5000; // 5 seconds interval
     private Handler handler;
     private Runnable runnable;
-    private static final int INTERVAL = 5000; // 5 seconds interval
     private boolean isRunning = false;
 
     /**
