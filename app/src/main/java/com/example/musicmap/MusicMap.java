@@ -42,4 +42,5 @@ public class MusicMap extends Application {
         Intent intent = new Intent(this, InternetCheckService.class);
         startService(intent);
     }
+
 }

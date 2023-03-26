@@ -17,8 +17,10 @@ import com.example.musicmap.R;
  * If internet connection is not available, it displays a Toast message.
  */
 public class InternetCheckService extends Service {
+
     private static final String TAG = "InternetCheckService";
     private static final int INTERVAL = 5000; // 5 seconds interval
+
     private Handler handler;
     private Runnable runnable;
     private boolean isRunning = false;
