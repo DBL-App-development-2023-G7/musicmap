@@ -80,6 +80,9 @@ public class MapFragment extends Fragment {
         mapView = rootView.findViewById(R.id.map);
         mapView.setTileSource(TileSourceFactory.MAPNIK); // the default OSM tile source (data source)
 
+        // Set minimum zoom level, disallows for having multiple earth maps shown at once
+        mapView.setMinZoomLevel(4.0);
+
         // Set zoom buttons location
         mapView.getZoomController().getDisplay().setPositions(false,
                 CustomZoomButtonsDisplay.HorizontalPosition.RIGHT,
