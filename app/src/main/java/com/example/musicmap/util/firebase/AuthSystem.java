@@ -3,7 +3,6 @@ package com.example.musicmap.util.firebase;
 import androidx.annotation.NonNull;
 
 import com.example.musicmap.user.ArtistData;
-import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
 import com.example.musicmap.user.UserData;
 import com.google.android.gms.tasks.Task;
@@ -193,6 +192,7 @@ public class AuthSystem {
             tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
             return tcs.getTask();
         }
+
         if (firebaseUser.getEmail() == null) {
             tcs.setException(new IllegalStateException("The current user does not have an email address."));
             return tcs.getTask();
