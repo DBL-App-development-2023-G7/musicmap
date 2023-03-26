@@ -20,10 +20,15 @@ android {
 
     buildTypes {
         release {
+            packagingOptions {
+                exclude "META-INF/*.kotlin_module"
+            }
+            matchingFallbacks = ['release', 'debug']
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -32,15 +37,31 @@ android {
     configurations.implementation { // added this because cameraX libarary uses kotlin 1.8
         // while we
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
     }
+
+    packagingOptions {
+        exclude("META-INF/DEPENDENCIES")
+        exclude("META-INF/LICENSE")
+        exclude("META-INF/LICENSE.txt")
+        exclude("META-INF/license.txt")
+        exclude("META-INF/NOTICE")
+        exclude("META-INF/NOTICE.txt")
+        exclude("META-INF/notice.txt")
+        exclude("META-INF/ASL2.0")
+        exclude("META-INF/*.kotlin_module")
+    }
+
 }
 
 
 dependencies {
+
     implementation files('../libs/spotify-app-remote-release-0.7.2.aar')
     implementation "com.spotify.android:auth:2.0.1"
+    implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.0.0'
 
-    implementation "com.google.code.gson:gson:2.8.5"
+    implementation 'com.google.code.gson:gson:2.10.1'
 
     def cameraxVersion = "1.3.0-alpha04"
     implementation "androidx.camera:camera-core:${cameraxVersion}"

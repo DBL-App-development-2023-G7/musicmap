@@ -16,22 +16,21 @@ import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.PlayerState;
 import com.spotify.protocol.types.Track;
-import com.squareup.picasso.Picasso;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-public class SpotifyAppSession implements LifecycleEventObserver{
-    private static final String CLIENT_ID = "56ab7fed83514a7a96a7b735737280d8";
-    private static final String REDIRECT_URI = "musicmap://spotify-auth";
+public class SpotifySession implements LifecycleEventObserver{
     private SpotifyAppRemote spotifyRemoteConnection;
     private Track lastSong;
     private Activity boundActivity;
 
-    public SpotifyAppSession(Activity activity) {
+
+    public SpotifySession(Activity activity) {
         this.boundActivity = activity;
         Lifecycle activityLifecycle = ((LifecycleOwner) boundActivity).getLifecycle();
         activityLifecycle.addObserver(this);
+    }
+
+    public void setToken(){
+
     }
 
     public boolean isConnected() {
@@ -51,8 +50,8 @@ public class SpotifyAppSession implements LifecycleEventObserver{
      */
     private void connectToSpotify() {
         ConnectionParams appAuthorizationParams =
-                new ConnectionParams.Builder(CLIENT_ID)
-                        .setRedirectUri(REDIRECT_URI)
+                new ConnectionParams.Builder(SpotifyData.getClientId())
+                        .setRedirectUri(SpotifyData.getRedirectUri())
                         .showAuthView(true)
                         .build();
         SpotifyAppRemote.connect(boundActivity, appAuthorizationParams, new Connector.ConnectionListener() {
@@ -99,25 +98,15 @@ public class SpotifyAppSession implements LifecycleEventObserver{
 
 
     public void loadSongImageIntoView(Track song, ImageView view) {
-        String imageUriString = song.imageUri.raw;
-        // imageUri is of the form spotify:image:dhgskjglskagdsahgdjksakgj
-        Log.d("debug", String.format("[poop] URI %s", imageUriString));
-
-        // extract the last part
-        Pattern pattern = Pattern.compile("spotify:image:(.+)");
-        Matcher matcher = pattern.matcher(imageUriString);
-        if (!matcher.matches()) {
-            throw new IllegalStateException("Received Spotify Image URI does not match excepted pattern");
-        }
-
-        String id = matcher.group(1);
-
-        Log.d("debug", String.format("[poop] id %s", id));
-
-        // append the image id to the download url
-        String final_url = "https://i.scdn.co/image/" + id;
-
-        Picasso.get().load(final_url).into(view);
+        spotifyRemoteConnection
+                .getImagesApi()
+                .getImage(song.imageUri)
+                .setResultCallback(
+                         bitmap -> {
+                             Log.d("debug",String.format("Thread %d",Thread.currentThread().getId()));
+                             view.setImageBitmap(bitmap);
+                         }
+                );
     }
 
     /**

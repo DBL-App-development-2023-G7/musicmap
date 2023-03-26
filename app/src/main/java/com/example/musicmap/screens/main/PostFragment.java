@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,14 +22,42 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.example.musicmap.R;
+import com.example.musicmap.util.spotify.SpotifyData;
+import com.example.musicmap.util.spotify.SpotifyUtils;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 
-import com.example.musicmap.util.spotify.SpotifyAppSession;
-import com.spotify.protocol.types.Track;
+import com.example.musicmap.util.spotify.SpotifySession;
+import com.spotify.sdk.android.auth.AuthorizationClient;
+import com.spotify.sdk.android.auth.AuthorizationRequest;
+import com.spotify.sdk.android.auth.AuthorizationResponse;
+import com.squareup.picasso.Picasso;
 
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import se.michaelthelin.spotify.SpotifyApi;
+import se.michaelthelin.spotify.enums.ModelObjectType;
+import se.michaelthelin.spotify.model_objects.specification.Image;
+import se.michaelthelin.spotify.model_objects.specification.Paging;
+import se.michaelthelin.spotify.model_objects.specification.PagingCursorbased;
+import se.michaelthelin.spotify.model_objects.specification.PlayHistory;
+import se.michaelthelin.spotify.model_objects.specification.Track;
+import se.michaelthelin.spotify.model_objects.specification.TrackSimplified;
+import se.michaelthelin.spotify.requests.data.search.simplified.SearchTracksRequest;
 
 
 public class PostFragment extends MainFragment {
@@ -40,7 +67,7 @@ public class PostFragment extends MainFragment {
     private Button addSongButton;
     private Button addImageButton;
     // a launcher that launches the camera activity and handles the result
-    private SpotifyAppSession spotifyHelper;
+    private SpotifySession spotifyHelper;
 
 
     private SpotifyAppRemote mSpotifyAppRemote;
@@ -63,17 +90,18 @@ public class PostFragment extends MainFragment {
         }
     );
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("debug", "[poop] Fragment start");
 
     }
-
+    SpotifySession s;
     @Override
     public void onStart() {
         super.onStart();
-        spotifyHelper = new SpotifyAppSession(requireActivity());
+        s =  new SpotifySession(requireActivity());
+//        spotifyHelper = new SpotifySession(requireActivity());
     }
 
     @Override
@@ -93,15 +121,51 @@ public class PostFragment extends MainFragment {
         songImageView = rootView.findViewById(R.id.songPreviewImage);
         return rootView;
     }
+    private void showCurrentSong()  {
 
-    private void showCurrentSong(){
-        spotifyHelper.checkConnection();
-        Track lastTrack = spotifyHelper.getLastSong();
-        spotifyHelper.debugTrack(lastTrack);
-        addSongButton.setText(lastTrack.name);
+        SpotifyUtils.getGetRecentHistoryRequest().executeAsync()
+                .thenAcceptAsync(pageHistory -> {
+                    Log.d("debug","history retrieved!");
+                    List<PlayHistory> playHistories = Arrays.stream(pageHistory.getItems())
+                            .filter(playHistory ->
+                                    playHistory.getTrack().getType() == ModelObjectType.TRACK // assumes getTrack is not null
+                            ).collect(Collectors.toList());
 
-        songImageView.setVisibility(View.VISIBLE);
-        spotifyHelper.loadSongImageIntoView(lastTrack, songImageView);
+                    if(playHistories.size() == 0){
+                        // no play history wtf
+                        Log.d("debug", "[poop] No recent tracks!");
+                        return; // should I return or use else
+                    }
+
+                    TrackSimplified mostRecentTrack = playHistories.get(0).getTrack();
+                    Log.d("debug", String.format("Track : %s", mostRecentTrack.getName()));
+                    addSongButton.setText(mostRecentTrack.getName());
+                    // WARNING! if you forogot to specify the executor to requireActivity().getMainExecutor()
+                    // all of the code below will not execute
+                    songImageView.setVisibility(View.VISIBLE);
+                    Log.d("debug", "[poop] Hi!");
+                    SpotifyUtils.loadImageFromSimplifiedTrack(
+                            mostRecentTrack,
+                            songImageView,
+                            requireActivity().getMainExecutor()
+                    );
+                }, requireActivity().getMainExecutor());
+    }
+
+    private void searchTracks(){
+        Log.d("debug", String.format("[poop], token: %s", SpotifyData.getToken()));
+        Log.d("debug",String.format("Thread %d",Thread.currentThread().getId()));
+
+        SpotifyUtils.getSearchTrackRequest("The Beatles").executeAsync().thenAcceptAsync(trackPaging -> {
+            Log.d("debug",String.format("Thread %d",Thread.currentThread().getId()));
+            Log.d("debug","[poop] Loaded");
+            Track firstTrack = trackPaging.getItems()[0];
+            songImageView.setVisibility(View.VISIBLE);
+            Image trackAlbumImage = firstTrack.getAlbum().getImages()[0];
+            String trackAlbumImageUrl = trackAlbumImage.getUrl();
+            new Picasso.Builder(requireActivity()).build().load(trackAlbumImageUrl).into(songImageView);
+            Log.d("debug","[poop] Loaded");
+        }, requireActivity().getMainExecutor());
     }
 
     private void getPermission() {
@@ -121,36 +185,4 @@ public class PostFragment extends MainFragment {
        cameraActivityResultLauncher.launch(cameraIntent);
     }
 
-
-    private class DownloadImage extends AsyncTask<String, Void, Bitmap> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // Create a progressdialog
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... URL) {
-
-            String imageURL = URL[0];
-
-            Bitmap bitmap = null;
-            try {
-                // Download Image from URL
-                InputStream input = new java.net.URL(imageURL).openStream();
-                // Decode Bitmap
-                bitmap = BitmapFactory.decodeStream(input);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            // Do whatever you want to do with the bitmap
-            songImageView.setVisibility(View.VISIBLE);
-            songImageView.setImageBitmap(result);
-        }
-    }
 }
