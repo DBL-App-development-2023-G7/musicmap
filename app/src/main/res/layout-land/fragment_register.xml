@@ -107,15 +107,12 @@
                     android:id="@+id/back_button"
                     android:layout_width="190dp"
                     android:layout_height="49dp"
-                    android:layout_marginStart="244dp"
+                    android:layout_marginStart="252dp"
+                    android:layout_marginBottom="24dp"
                     android:fontFamily="@font/inter_regular"
                     android:text="@string/back"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/back_button"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/repeatPasswordRegister_editText"
-                    app:layout_constraintTop_toTopOf="@+id/registerRegister_button"
-                    app:layout_constraintVertical_bias="1.0" />
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <EditText
                     android:id="@+id/firstName_editText"
