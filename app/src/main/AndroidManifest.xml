@@ -28,6 +28,7 @@
         <activity
             android:name=".screens.main.HomeActivity"
             android:exported="true"
+            android:theme="@style/Theme.MusicMap.NoActionBar"
             android:label="MusicMap"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
