@@ -30,7 +30,6 @@
             android:exported="true"
             android:label="MusicMap"
             android:windowSoftInputMode="adjustPan">
-            android:theme="@style/Theme.MusicMap.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

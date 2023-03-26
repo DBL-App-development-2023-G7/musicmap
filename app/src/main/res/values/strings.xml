@@ -1,33 +1,5 @@
 <resources>
-    <string name="app_name">MusicMap</string>
-    <string name="username">Username</string>
-    <string name="first_name">First Name</string>
-    <string name="last_name">Last Name</string>
-    <string name="email">Email</string>
-    <string name="password">Password</string>
-    <string name="repeat_password">Repeat Password</string>
-    <string name="phone">Phone</string>
-    <string name="login">Login</string>
-    <string name="logout">Log out</string>
-    <string name="delete_account">Delete Account</string>
-    <string name="register">Register</string>
-    <string name="register_artist">Register as Artist</string>
-    <string name="back">Back</string>
-    <string name="birthdate">Birthdate</string>
-    <string name="artist_data_page">Artist Data Page</string>
-    <string name="map_label">Where is your music mostly streamed?</string>
-    <string name="top_streams_label">Top played songs:</string>
-    <string name="total_streams_label">Total streams:</string>
-    <string name="welcome_data_page">Welcome to your data page!</string>
-    <string name="ranking_artist">Your ranking as an artist:</string>
-    <string name="navbar_post">Post</string>
-    <string name="navbar_feed">Feed</string>
-    <string name="navbar_map">Map</string>
-    <string name="email_verified">Your email is verified!</string>
-    <string name="email_not_verified">Your email is not verified!</string>
-    <string name="appbar_search">Search</string>
-    <string name="appbar_profile">Profile</string>
-    <string name="appbar_icon">icon</string>
+    <string name="app_name" translatable="false">MusicMap</string>
     <string name="title_break">Music \nMap</string>
     <string name="title">MusicMap</string>
 </resources>

@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,7 +27,7 @@ public class AuthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         System.out.println("Created activity.");
         setContentView(R.layout.activity_auth);
-
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         checkInternetPeriodically();
 
         if (savedInstanceState == null) {

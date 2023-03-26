@@ -28,10 +28,11 @@
                 tools:layout_editor_absoluteX="-16dp">
 
                 <EditText
-                    android:id="@+id/email_editText"
+                    android:id="@+id/identifier_editText"
                     android:layout_width="285dp"
                     android:layout_height="69dp"
-                    android:layout_marginTop="36dp"
+                    android:layout_marginTop="32dp"
+                    android:autofillHints="emailAddress"
                     android:backgroundTint="@color/white"
                     android:ems="10"
                     android:fontFamily="@font/inter_regular"
@@ -41,14 +42,14 @@
                     android:textColorHint="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:autofillHints="emailAddress"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
                     android:id="@+id/password_editText"
                     android:layout_width="285dp"
                     android:layout_height="69dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="32dp"
+                    android:autofillHints="password"
                     android:backgroundTint="@color/white"
                     android:ems="10"
                     android:fontFamily="@font/inter_regular"
@@ -58,17 +59,17 @@
                     android:textColorHint="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/email_editText"
-                    android:autofillHints="password"/>
+                    app:layout_constraintTop_toBottomOf="@+id/identifier_editText" />
 
                 <Button
                     android:id="@+id/login_button"
                     android:layout_width="250dp"
                     android:layout_height="49dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/inter_regular"
                     android:text="@string/login"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.503"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/password_editText" />
 
