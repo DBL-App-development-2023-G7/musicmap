@@ -27,19 +27,18 @@ public class DeleteAccountDialogFragment extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
 
         View view = inflater.inflate(R.layout.delete_accout_dialog, null);
-        passwordInput = view.findViewById(R.id.password_dialog);
+        passwordInput = view.findViewById(R.id.password_dialog_editText);
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(view)
                 // Add title to the dialog
-                .setTitle("Are you sure you want to delete your account?")
+                .setTitle(R.string.delete_account_dialog_title)
                 // Add description message to the dialog
-                .setMessage("If you delete your account all of your data will be lost and you won't be able to "
-                        + "get it back. Please enter your password to confirm that you want to delete your account.")
+                .setMessage(R.string.delete_account_dialog_message)
                 // Add action buttons
-                .setPositiveButton("Delete Account", (dialog, id) -> deleteAccount())
-                .setNegativeButton("Cancel", (dialog, id) -> dialog.cancel());
+                .setPositiveButton(R.string.delete_account, (dialog, id) -> deleteAccount())
+                .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.cancel());
 
         return builder.create();
     }
@@ -48,8 +47,9 @@ public class DeleteAccountDialogFragment extends DialogFragment {
         String password = String.valueOf(passwordInput.getText());
 
         if (checkPassword(password)) {
-            AuthSystem.deleteUser(password).addOnFailureListener(task -> {
-                passwordInput.setError("PLA");
+            AuthSystem.deleteUser(password).addOnFailureListener(exception -> {
+                String message = exception.getMessage();
+                passwordInput.setError(message);
             });
         }
     }

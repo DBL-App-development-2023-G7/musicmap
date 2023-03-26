@@ -27,4 +27,10 @@
     <string name="feed_memory_image">Image of music memory</string>
     <string name="feed_song_art">Image of song</string>
     <!--feed strings end-->
+
+    <string name="delete_account_dialog_title">Are you sure you want to delete your account?</string>
+    <string name="delete_account_dialog_message">If you delete your account all of your data will be lost and you won\'t
+        be able to get it back. Please enter your password to confirm that you want to delete your account.</string>
+    <string name="delete_account">Delete account</string>
+    <string name="cancel">Cancel</string>
 </resources>
