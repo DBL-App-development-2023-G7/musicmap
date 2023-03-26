@@ -20,7 +20,11 @@ public class ProfileActivity extends SessionListenerActivity {
 
         ImageView settingsButton = findViewById(R.id.appbarSettings);
         settingsButton.setOnClickListener(view -> {
+<<<<<<< HEAD
             startActivity(new Intent(this, SettingsActivity.class));
+=======
+            //TODO add go to settings method
+>>>>>>> master
         });
     }
 
