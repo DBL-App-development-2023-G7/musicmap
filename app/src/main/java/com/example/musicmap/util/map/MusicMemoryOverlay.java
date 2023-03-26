@@ -7,7 +7,7 @@ import org.osmdroid.views.MapView;
 /**
  * A {@link PostOverlay} for music memories.
  */
-public class MusicMemoryOverlay extends PostOverlay {
+public class MusicMemoryOverlay extends PostOverlay<MusicMemory> {
 
     public MusicMemoryOverlay(MapView mapView, MusicMemory musicMemory) {
         // TODO change to song photo?

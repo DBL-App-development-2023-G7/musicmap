@@ -29,7 +29,7 @@ import org.osmdroid.views.overlay.IconOverlay;
  *
  * @see MusicMemoryOverlay
  */
-public abstract class PostOverlay extends IconOverlay {
+public abstract class PostOverlay<P extends Post> extends IconOverlay {
 
     private static final String TAG = "PostOverlay";
 
@@ -50,6 +50,7 @@ public abstract class PostOverlay extends IconOverlay {
 
     private final MapView mapView;
     private final Drawable markerIcon;
+    private final P post;
 
     /**
      * Creates a post overlay for the given map and post.
@@ -60,8 +61,9 @@ public abstract class PostOverlay extends IconOverlay {
      * @param mapView the map.
      * @param post the post.
      */
-    protected PostOverlay(MapView mapView, Post post) {
+    protected PostOverlay(MapView mapView, P post) {
         this.mapView = mapView;
+        this.post = post;
 
         Drawable drawable = ContextCompat.getDrawable(mapView.getContext(), R.drawable.map_post);
         if (drawable == null) {
@@ -89,7 +91,7 @@ public abstract class PostOverlay extends IconOverlay {
      * @param post the post.
      * @param requestCreator the image request for the image to be displayed on the map.
      */
-    protected PostOverlay(MapView mapView, Post post, RequestCreator requestCreator) {
+    protected PostOverlay(MapView mapView, P post, RequestCreator requestCreator) {
         this(mapView, post);
 
         setImage(requestCreator);
@@ -102,7 +104,7 @@ public abstract class PostOverlay extends IconOverlay {
      * @param post the post.
      * @param imageUri the URI of the image to display on the map.
      */
-    protected PostOverlay(MapView mapView, Post post, Uri imageUri) {
+    protected PostOverlay(MapView mapView, P post, Uri imageUri) {
         this(mapView, post, Picasso.get().load(imageUri));
     }
 
@@ -124,6 +126,15 @@ public abstract class PostOverlay extends IconOverlay {
     public boolean onSingleTapConfirmed(MotionEvent e, MapView mapView) {
         // TODO open post screen
         return true;
+    }
+
+    /**
+     * Gets the post this {@link PostOverlay} was instantiated with.
+     *
+     * @return the post.
+     */
+    protected P getPost() {
+        return post;
     }
 
     /**
