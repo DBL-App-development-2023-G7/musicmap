@@ -33,6 +33,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginTop="28dp"
+                    android:autofillHints="newUsername"
                     android:backgroundTint="@color/white"
                     android:ems="10"
                     android:fontFamily="@font/inter_regular"
@@ -40,17 +41,17 @@
                     android:inputType="textPersonName"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/firstName_editText"
                     app:layout_constraintHorizontal_bias="0.503"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:autofillHints="newUsername" />
+                    app:layout_constraintStart_toStartOf="@+id/firstName_editText"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
                     android:id="@+id/firstName_editText"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
+                    android:autofillHints="personGivenName"
                     android:backgroundTint="@color/white"
                     android:ems="10"
                     android:fontFamily="@font/inter_regular"
@@ -58,17 +59,17 @@
                     android:inputType="textPersonName"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/lastName_editText"
                     app:layout_constraintHorizontal_bias="0.512"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/username_editText"
-                    android:autofillHints="personGivenName" />
+                    app:layout_constraintStart_toStartOf="@+id/lastName_editText"
+                    app:layout_constraintTop_toBottomOf="@+id/username_editText" />
 
                 <EditText
                     android:id="@+id/lastName_editText"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
+                    android:autofillHints="personFamilyName"
                     android:backgroundTint="@color/white"
                     android:ems="10"
                     android:fontFamily="@font/inter_regular"
@@ -76,17 +77,17 @@
                     android:inputType="textEmailAddress"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/emailRegister_editText"
                     app:layout_constraintHorizontal_bias="0.507"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/firstName_editText"
-                    android:autofillHints="personFamilyName" />
+                    app:layout_constraintStart_toStartOf="@+id/emailRegister_editText"
+                    app:layout_constraintTop_toBottomOf="@+id/firstName_editText" />
 
                 <EditText
                     android:id="@+id/emailRegister_editText"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
+                    android:autofillHints="emailAddress"
                     android:backgroundTint="@color/white"
                     android:ems="10"
                     android:fontFamily="@font/inter_regular"
@@ -94,16 +95,16 @@
                     android:inputType="textEmailAddress"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/lastName_editText"
-                    android:autofillHints="emailAddress" />
+                    app:layout_constraintEnd_toEndOf="@+id/passwordRegister_editText"
+                    app:layout_constraintStart_toStartOf="@+id/passwordRegister_editText"
+                    app:layout_constraintTop_toBottomOf="@+id/lastName_editText" />
 
                 <EditText
                     android:id="@+id/passwordRegister_editText"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
+                    android:autofillHints="newPassword"
                     android:backgroundTint="@color/white"
                     android:ems="10"
                     android:fontFamily="@font/inter_regular"
@@ -111,17 +112,17 @@
                     android:inputType="textPassword"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/repeatPasswordRegister_editText"
                     app:layout_constraintHorizontal_bias="0.507"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/emailRegister_editText"
-                    android:autofillHints="newPassword" />
+                    app:layout_constraintStart_toStartOf="@+id/repeatPasswordRegister_editText"
+                    app:layout_constraintTop_toBottomOf="@+id/emailRegister_editText" />
 
                 <EditText
                     android:id="@+id/repeatPasswordRegister_editText"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
+                    android:autofillHints="newPassword"
                     android:backgroundTint="@color/white"
                     android:ems="10"
                     android:fontFamily="@font/inter_regular"
@@ -129,17 +130,17 @@
                     android:inputType="textPassword"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/birthdate_editText"
                     app:layout_constraintHorizontal_bias="0.502"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/passwordRegister_editText"
-                    android:autofillHints="newPassword" />
+                    app:layout_constraintStart_toStartOf="@+id/birthdate_editText"
+                    app:layout_constraintTop_toBottomOf="@+id/passwordRegister_editText" />
 
                 <EditText
                     android:id="@+id/birthdate_editText"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
+                    android:autofillHints="no"
                     android:backgroundTint="@color/white"
                     android:ems="10"
                     android:fontFamily="@font/inter_regular"
@@ -147,11 +148,10 @@
                     android:inputType="none"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/registerRegister_button"
                     app:layout_constraintHorizontal_bias="0.507"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/repeatPasswordRegister_editText"
-                    android:autofillHints="no" />
+                    app:layout_constraintStart_toStartOf="@+id/registerRegister_button"
+                    app:layout_constraintTop_toBottomOf="@+id/repeatPasswordRegister_editText" />
 
                 <Button
                     android:id="@+id/registerRegister_button"
@@ -161,8 +161,8 @@
                     android:fontFamily="@font/inter_regular"
                     android:text="@string/register"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/back_button"
+                    app:layout_constraintStart_toStartOf="@+id/back_button"
                     app:layout_constraintTop_toBottomOf="@+id/birthdate_editText" />
 
                 <Button
