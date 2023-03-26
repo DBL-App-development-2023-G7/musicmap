@@ -3,12 +3,15 @@ package com.example.musicmap.util.firebase;
 import androidx.annotation.NonNull;
 
 import com.example.musicmap.user.ArtistData;
+import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
 import com.example.musicmap.user.UserData;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -180,18 +183,24 @@ public class AuthSystem {
      *
      * @return the result of this task
      */
-    public static Task<Void> deleteUser() {
+    public static Task<Void> deleteUser(String password) {
+        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
         if (firebaseUser == null) {
-            TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
             tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
             return tcs.getTask();
         }
+        if (firebaseUser.getEmail() == null) {
+            tcs.setException(new IllegalStateException("The current user does not have an email address."));
+            return tcs.getTask();
+        }
 
-        return removeUserFromFirestore(firebaseUser.getUid())
-                .onSuccessTask(task -> firebaseUser.delete());
+        AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), password);
+        return firebaseUser.reauthenticate(credential).onSuccessTask(reauthTask ->
+                removeUserFromFirestore(firebaseUser.getUid()).onSuccessTask(task -> firebaseUser.delete()));
     }
 
     public static void logout() {

@@ -2,9 +2,7 @@ package com.example.musicmap.screens.settings;
 
 import android.os.Bundle;
 
-import androidx.core.content.ContextCompat;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 
