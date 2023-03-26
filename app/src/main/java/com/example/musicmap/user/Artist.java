@@ -1,11 +1,13 @@
 package com.example.musicmap.user;
 
+import androidx.annotation.NonNull;
+
 /**
  * The artist class.
  */
 public class Artist extends User {
 
-    public Artist(ArtistData artistData, String uid) {
+    public Artist(@NonNull ArtistData artistData, @NonNull String uid) {
         super(artistData, uid);
     }
 
@@ -14,6 +16,7 @@ public class Artist extends User {
      *
      * @return the {@code ArtistData} of this artist
      */
+    @NonNull
     public ArtistData getArtistData() {
         return (ArtistData) this.getData();
     }

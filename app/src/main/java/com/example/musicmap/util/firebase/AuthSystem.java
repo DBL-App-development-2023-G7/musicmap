@@ -2,7 +2,6 @@ package com.example.musicmap.util.firebase;
 
 import androidx.annotation.NonNull;
 
-import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.ArtistData;
 import com.example.musicmap.user.User;
 import com.example.musicmap.user.UserData;
@@ -59,36 +58,89 @@ public class AuthSystem {
     }
 
     /**
-     * This method retrieves the user that has the given uid and their data.
+     * This method logins a user using its username and password.
+     *
+     * @param username the username of the user
+     * @param password the password of the user
+     * @return the result of the task
+     */
+    public static Task<AuthResult> loginWithUsernameAndPassword(String username, String password) {
+
+        return Queries.getUsersWithUsername(username).onSuccessTask(docs -> {
+            TaskCompletionSource<AuthResult> tcs = new TaskCompletionSource<>();
+
+            if (docs.isEmpty()) {
+                tcs.setException(new FirebaseFirestoreException("Query did not return any docs.",
+                        FirebaseFirestoreException.Code.NOT_FOUND));
+                return tcs.getTask();
+            }
+
+            DocumentSnapshot doc = docs.getDocuments().get(0);
+
+            if (doc.getData() == null || doc.getData().isEmpty()) {
+                tcs.setException(new FirebaseFirestoreException("Document does not exist or is empty.",
+                        FirebaseFirestoreException.Code.NOT_FOUND));
+                return tcs.getTask();
+            }
+
+            Object emailFirebaseField = doc.getData().get("email");
+            if (!(emailFirebaseField instanceof String)) {
+                tcs.setException(new IllegalArgumentException("The email field of the user is null or invalid."));
+                return tcs.getTask();
+            }
+
+            String email = (String) emailFirebaseField;
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+
+            return auth.signInWithEmailAndPassword(email, password);
+        });
+    }
+
+    /**
+     * This method tries to parse the given document as a UserData or ArtistData class.
+     *
+     * @param doc the given document from the firebase database
+     * @return the doc formatted as a UserData class
+     * @throws FirebaseFirestoreException if the given document does not exist
+     * @throws NullPointerException       if the given document does not have any data
+     */
+    public static UserData parseUserData(DocumentSnapshot doc) throws FirebaseFirestoreException, NullPointerException {
+        if (!doc.exists()) {
+            throw new FirebaseFirestoreException("Document does not exist.",
+                    FirebaseFirestoreException.Code.NOT_FOUND);
+        }
+
+        UserData userData = doc.toObject(UserData.class);
+
+        if (userData == null) {
+            throw new NullPointerException("Document does not contain any data.");
+        }
+
+        if (userData.isArtist()) {
+            return doc.toObject(ArtistData.class);
+        }
+
+        return userData;
+    }
+
+    /**
+     * Gets the user data of the user that has the given {@code uid}.
      *
      * @param uid the given uid of the user
-     * @return the result of this task
+     * @return the result of the task
      */
-    public static Task<User> getUserFromUid(String uid) {
+    public static Task<UserData> getUserData(String uid) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
         Task<DocumentSnapshot> getUserDataFirestore = firestore.collection("Users").document(uid).get();
 
         return getUserDataFirestore.onSuccessTask(doc -> {
-            TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
+            TaskCompletionSource<UserData> tcs = new TaskCompletionSource<>();
 
-            UserData userData = doc.toObject(UserData.class);
-
-            if (!doc.exists()) {
-                tcs.setException(new FirebaseFirestoreException("Document does not exist.",
-                        FirebaseFirestoreException.Code.NOT_FOUND));
-            }
-
-            if (userData != null) {
-                if (userData.isArtist()) {
-                    ArtistData artistData = doc.toObject(ArtistData.class);
-                    tcs.setResult(new Artist(artistData, uid));
-                } else {
-                    tcs.setResult(new User(userData, uid));
-                }
-            } else {
-                tcs.setException(new FirebaseFirestoreException("An error has occurred while trying to retrieve "
-                        + "and apply the user's data from firebase.", FirebaseFirestoreException.Code.UNKNOWN));
+            try {
+                tcs.setResult(parseUserData(doc));
+            } catch (Exception exception) {
+                tcs.setException(exception);
             }
 
             return tcs.getTask();
@@ -96,21 +148,19 @@ public class AuthSystem {
     }
 
     /**
-     * This method retrieves the connected user and their data.
+     * This method retrieves the user that has the given uid and their data.
      *
+     * @param uid the given uid of the user
      * @return the result of this task
      */
-    public static Task<User> getUser() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = auth.getCurrentUser();
-
-        if (firebaseUser == null) {
-            TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
-            tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
-            return tcs.getTask();
-        }
-
-        return getUserFromUid(firebaseUser.getUid());
+    public static Task<User> getUser(String uid) {
+        return getUserData(uid).onSuccessTask(
+                userData -> {
+                    TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
+                    tcs.setResult(userData.toUser(uid));
+                    return tcs.getTask();
+                }
+        );
     }
 
     /**
@@ -146,7 +196,6 @@ public class AuthSystem {
 
     public static void logout() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
-
         auth.signOut();
     }
 
