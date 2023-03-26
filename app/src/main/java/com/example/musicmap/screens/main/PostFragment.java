@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat;
 import com.example.musicmap.R;
 import com.example.musicmap.util.spotify.SpotifyData;
 import com.example.musicmap.util.spotify.SpotifyUtils;
+import com.example.musicmap.util.ui.FragmentUtil;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -101,7 +102,6 @@ public class PostFragment extends MainFragment {
     public void onStart() {
         super.onStart();
         s =  new SpotifySession(requireActivity());
-//        spotifyHelper = new SpotifySession(requireActivity());
     }
 
     @Override
@@ -116,58 +116,23 @@ public class PostFragment extends MainFragment {
         addImageButton.setOnClickListener(view -> goToCameraFragment());
 
         addSongButton = rootView.findViewById(R.id.addSongButton);
-        addSongButton.setOnClickListener(view -> showCurrentSong());
+        addSongButton.setOnClickListener(view -> goToSearchFragment());
 
         songImageView = rootView.findViewById(R.id.songPreviewImage);
+
+        if (SearchFragment.resultTrack != null) {
+            songImageView.setVisibility(View.VISIBLE);
+            Picasso.get().load(SearchFragment.resultTrack.getAlbum().getImages()[0].getUrl()).into(songImageView);
+            addSongButton.setText(SearchFragment.resultTrack.getName());
+        }
         return rootView;
     }
-    private void showCurrentSong()  {
 
-        SpotifyUtils.getGetRecentHistoryRequest().executeAsync()
-                .thenAcceptAsync(pageHistory -> {
-                    Log.d("debug","history retrieved!");
-                    List<PlayHistory> playHistories = Arrays.stream(pageHistory.getItems())
-                            .filter(playHistory ->
-                                    playHistory.getTrack().getType() == ModelObjectType.TRACK // assumes getTrack is not null
-                            ).collect(Collectors.toList());
 
-                    if(playHistories.size() == 0){
-                        // no play history wtf
-                        Log.d("debug", "[poop] No recent tracks!");
-                        return; // should I return or use else
-                    }
-
-                    TrackSimplified mostRecentTrack = playHistories.get(0).getTrack();
-                    Log.d("debug", String.format("Track : %s", mostRecentTrack.getName()));
-                    addSongButton.setText(mostRecentTrack.getName());
-                    // WARNING! if you forogot to specify the executor to requireActivity().getMainExecutor()
-                    // all of the code below will not execute
-                    songImageView.setVisibility(View.VISIBLE);
-                    Log.d("debug", "[poop] Hi!");
-                    SpotifyUtils.loadImageFromSimplifiedTrack(
-                            mostRecentTrack,
-                            songImageView,
-                            requireActivity().getMainExecutor()
-                    );
-                }, requireActivity().getMainExecutor());
+    private void goToSearchFragment() {
+        FragmentUtil.replaceFragment(requireActivity().getSupportFragmentManager(), R.id.fragment_view,
+                SearchFragment.class);
     }
-
-    private void searchTracks(){
-        Log.d("debug", String.format("[poop], token: %s", SpotifyData.getToken()));
-        Log.d("debug",String.format("Thread %d",Thread.currentThread().getId()));
-
-        SpotifyUtils.getSearchTrackRequest("The Beatles").executeAsync().thenAcceptAsync(trackPaging -> {
-            Log.d("debug",String.format("Thread %d",Thread.currentThread().getId()));
-            Log.d("debug","[poop] Loaded");
-            Track firstTrack = trackPaging.getItems()[0];
-            songImageView.setVisibility(View.VISIBLE);
-            Image trackAlbumImage = firstTrack.getAlbum().getImages()[0];
-            String trackAlbumImageUrl = trackAlbumImage.getUrl();
-            new Picasso.Builder(requireActivity()).build().load(trackAlbumImageUrl).into(songImageView);
-            Log.d("debug","[poop] Loaded");
-        }, requireActivity().getMainExecutor());
-    }
-
     private void getPermission() {
         if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED
