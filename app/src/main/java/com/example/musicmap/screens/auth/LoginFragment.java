@@ -1,6 +1,5 @@
 package com.example.musicmap.screens.auth;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -9,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-
-import androidx.annotation.NonNull;
 
 import com.example.musicmap.R;
 import com.example.musicmap.util.firebase.AuthSystem;
@@ -105,11 +102,6 @@ public class LoginFragment extends AuthFragment {
 
     private void loadRegisterArtistFragment() {
         this.getAuthActivity().loadRegisterArtistFragment();
-    }
-
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
     }
 
 }
