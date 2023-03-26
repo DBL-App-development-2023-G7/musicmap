@@ -18,6 +18,13 @@ import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.PlayerState;
 import com.spotify.protocol.types.Track;
 
+/**
+ * This CLASS IS DEPRECATED
+ * THIS USES THE SPOTIFY SDK LIBRARY DIRECTLY AND NOT THE WEB API
+ * HOWEVER SINCE THE WEB API IS A SUPERSET OF THE SDK AND EASIER TO WORK WITH
+ * I AM RIGHT NOW WORKING WITH THE WEB API WHICH IS IN SPOTIFY UTILS
+ * I STILL KEEP THIS CLASS AROUND SINCE IT MAY BE USEFUL LATER
+ */
 public class SpotifySession implements LifecycleEventObserver{
     private SpotifyAppRemote spotifyRemoteConnection;
     private Track lastSong;
@@ -30,19 +37,8 @@ public class SpotifySession implements LifecycleEventObserver{
         activityLifecycle.addObserver(this);
     }
 
-    public void setToken(){
-
-    }
-
     public boolean isConnected() {
         return spotifyRemoteConnection.isConnected();
-    }
-    public void checkConnection(){
-        if(spotifyRemoteConnection == null) {
-            Log.d("debug", "[poop] No connection ;(");
-        } else {
-            Log.d("debug", "[poop] POGGERS THJERE IS ACOADFJSOQJK");
-        }
     }
 
     /**
@@ -93,11 +89,20 @@ public class SpotifySession implements LifecycleEventObserver{
                 );
     }
 
+    /**
+     * Returns the most recent spotify song
+     * @return the most recent song (could be null!)
+     */
     public Track getLastSong() {
         return lastSong;
     }
 
 
+    /**
+     * A util method to load an SOn image into a view
+     * @param song the song with the image
+     * @param view the view to load the image into
+     */
     public void loadSongImageIntoView(Track song, ImageView view) {
         spotifyRemoteConnection
                 .getImagesApi()
@@ -126,16 +131,6 @@ public class SpotifySession implements LifecycleEventObserver{
             Log.d("debug", "[poop] Post view destroyed!");
             SpotifyAppRemote.disconnect(spotifyRemoteConnection);
         }
-    }
-
-    public void debugTrack(Track track){
-        Log.d("debug",String.format("[poop] name: %s", track.name));
-        Log.d("debug",String.format("[poop] album: %s", track.album.name));
-        Log.d("debug",String.format("[poop] artist: %s", track.artist.name));
-        Log.d("debug",String.format("[poop] image uri: %s", track.imageUri.raw));
-        Log.d("debug",String.format("[poop] uri: %s", track.uri.toString()));
-        Log.d("debug",String.format("[poop] isPodcast: %b", track.isPodcast));
-        Log.d("debug",String.format("[poop] isEpisode: %b", track.isEpisode));
     }
 
 }

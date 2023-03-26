@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.provider.MediaStore;
@@ -22,56 +21,20 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.example.musicmap.R;
-import com.example.musicmap.util.spotify.SpotifyData;
-import com.example.musicmap.util.spotify.SpotifyUtils;
 import com.example.musicmap.util.ui.FragmentUtil;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
-import com.spotify.android.appremote.api.SpotifyAppRemote;
+
 
 import com.example.musicmap.util.spotify.SpotifySession;
-import com.spotify.sdk.android.auth.AuthorizationClient;
-import com.spotify.sdk.android.auth.AuthorizationRequest;
-import com.spotify.sdk.android.auth.AuthorizationResponse;
 import com.squareup.picasso.Picasso;
 
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-import se.michaelthelin.spotify.SpotifyApi;
-import se.michaelthelin.spotify.enums.ModelObjectType;
-import se.michaelthelin.spotify.model_objects.specification.Image;
-import se.michaelthelin.spotify.model_objects.specification.Paging;
-import se.michaelthelin.spotify.model_objects.specification.PagingCursorbased;
-import se.michaelthelin.spotify.model_objects.specification.PlayHistory;
-import se.michaelthelin.spotify.model_objects.specification.Track;
-import se.michaelthelin.spotify.model_objects.specification.TrackSimplified;
-import se.michaelthelin.spotify.requests.data.search.simplified.SearchTracksRequest;
-
 
 public class PostFragment extends MainFragment {
 
     private ImageView capturedImagePreview; // Should this be private?
-    private ImageView songImageView;
-    private Button addSongButton;
-    private Button addImageButton;
+
     // a launcher that launches the camera activity and handles the result
-    private SpotifySession spotifyHelper;
-
-
-    private SpotifyAppRemote mSpotifyAppRemote;
     ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
         new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -101,7 +64,6 @@ public class PostFragment extends MainFragment {
     @Override
     public void onStart() {
         super.onStart();
-        s =  new SpotifySession(requireActivity());
     }
 
     @Override
@@ -112,19 +74,21 @@ public class PostFragment extends MainFragment {
 
         capturedImagePreview = rootView.findViewById(R.id.previewCapturedImage);
 
-        addImageButton = rootView.findViewById(R.id.addImageButton); // should this also be defined?
-        addImageButton.setOnClickListener(view -> goToCameraFragment());
+        Button addImageButton = rootView.findViewById(R.id.addImageButton); // should this also be defined?
+        addImageButton.setOnClickListener(view -> goToCameraActivity());
 
-        addSongButton = rootView.findViewById(R.id.addSongButton);
+        Button addSongButton = rootView.findViewById(R.id.addSongButton);
         addSongButton.setOnClickListener(view -> goToSearchFragment());
 
-        songImageView = rootView.findViewById(R.id.songPreviewImage);
+        ImageView songImageView = rootView.findViewById(R.id.songPreviewImage);
 
+        // load the search result track if there is one
         if (SearchFragment.resultTrack != null) {
             songImageView.setVisibility(View.VISIBLE);
             Picasso.get().load(SearchFragment.resultTrack.getAlbum().getImages()[0].getUrl()).into(songImageView);
             addSongButton.setText(SearchFragment.resultTrack.getName());
         }
+
         return rootView;
     }
 
@@ -133,6 +97,12 @@ public class PostFragment extends MainFragment {
         FragmentUtil.replaceFragment(requireActivity().getSupportFragmentManager(), R.id.fragment_view,
                 SearchFragment.class);
     }
+
+    private  void goToCameraActivity() {
+       Intent cameraIntent = new Intent(requireActivity(), CameraActivity.class);
+       cameraActivityResultLauncher.launch(cameraIntent);
+    }
+    // should be replaced with permissions from util but I don't know how yet and I'm tired
     private void getPermission() {
         if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED
@@ -143,11 +113,6 @@ public class PostFragment extends MainFragment {
                     100
             );
         }
-    }
-
-    private  void goToCameraFragment() {
-       Intent cameraIntent = new Intent(requireActivity(), CameraActivity.class);
-       cameraActivityResultLauncher.launch(cameraIntent);
     }
 
 }

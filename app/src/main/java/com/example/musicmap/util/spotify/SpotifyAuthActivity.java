@@ -11,6 +11,12 @@ import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
 
+/**
+ * This every activity that wants to do things with spotify should extend this class
+ * This is becvause on start of this activity the spotify token is refreshed
+ * The problem is this extends auth acitivity which is not ideal
+ */
+// TODO FIND A BETTER WAY OF MANAGING SPOTIFY TOKENS
 public abstract class SpotifyAuthActivity extends AuthListenerActivity {
     private static final int REQUEST_CODE = 80082;
 
@@ -19,6 +25,7 @@ public abstract class SpotifyAuthActivity extends AuthListenerActivity {
         super.onCreate(savedInstanceState);
         registerForSpotify();
     }
+
     private void registerForSpotify() {
         AuthorizationRequest.Builder builder =
                 new AuthorizationRequest.Builder(
