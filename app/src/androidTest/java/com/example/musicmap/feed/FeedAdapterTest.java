@@ -53,5 +53,6 @@ public class FeedAdapterTest {
         assertEquals("song-1", feedAdapter.getItem(0).getSong());
         assertEquals("song-2", feedAdapter.getItem(1).getSong());
     }
+
 }
 

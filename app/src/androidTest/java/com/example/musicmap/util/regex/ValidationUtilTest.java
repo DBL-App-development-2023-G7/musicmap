@@ -121,4 +121,5 @@ public class ValidationUtilTest {
         ValidationUtil.Result result = ValidationUtil.isPasswordValid(string);
         assertEquals(result, ValidationUtil.Result.VALID);
     }
+
 }
