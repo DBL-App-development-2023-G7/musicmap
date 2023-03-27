@@ -1,12 +1,13 @@
 package com.example.musicmap.feed;
 
+import static org.junit.Assert.assertEquals;
+
 import android.net.Uri;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.google.firebase.firestore.GeoPoint;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,12 +27,12 @@ public class ConcertMemoryTest {
 
     @Test
     public void testGetName() {
-        Assert.assertEquals(this.concertMemory.getName(), "name");
+        assertEquals(this.concertMemory.getName(), "name");
     }
 
     @Test
     public void testGetSong() {
-        Assert.assertEquals(this.concertMemory.getVideo(), Uri.parse("video"));
+        assertEquals(this.concertMemory.getVideo(), Uri.parse("video"));
     }
 
 }
