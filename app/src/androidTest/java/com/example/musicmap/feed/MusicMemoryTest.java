@@ -4,7 +4,6 @@ import android.net.Uri;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.example.musicmap.feed.MusicMemory;
 import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Assert;

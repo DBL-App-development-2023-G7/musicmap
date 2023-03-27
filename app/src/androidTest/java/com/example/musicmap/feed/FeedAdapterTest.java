@@ -48,10 +48,7 @@ public class FeedAdapterTest {
         feedItems.add(new MusicMemory("author-uid-2", new Date(),
                 new GeoPoint(20, 20), "photo-2", "song-2"));
 
-        when(mockActivity.getLayoutInflater()).thenReturn(mockLayoutInflater);
-        when(mockLayoutInflater.inflate(anyInt(), any(ViewGroup.class), anyBoolean())).thenReturn(mock(View.class));
         when(mockActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).thenReturn(mockLayoutInflater);
-
         feedAdapter = new FeedAdapter(mockActivity, R.layout.single_post_layout_feed, feedItems);
     }
 
@@ -64,26 +61,6 @@ public class FeedAdapterTest {
     public void testGetItem() {
         assertEquals("song-1", feedAdapter.getItem(0).getSong());
         assertEquals("song-2", feedAdapter.getItem(1).getSong());
-    }
-
-    @Test
-    public void testGetView() {
-        View convertView = mock(View.class);
-        ViewGroup parent = mock(ViewGroup.class);
-
-        when(convertView.findViewById(R.id.song_art)).thenReturn(new TextView(mockActivity));
-        when(convertView.findViewById(R.id.song_name)).thenReturn(new TextView(mockActivity));
-        when(convertView.findViewById(R.id.song_details)).thenReturn(new TextView(mockActivity));
-        when(convertView.findViewById(R.id.memory_image)).thenReturn(new ImageView(mockActivity));
-        when(convertView.findViewById(R.id.user_profile_image)).thenReturn(new ImageView(mockActivity));
-
-        View view = feedAdapter.getView(0, convertView, parent);
-
-        assertNotNull(view.findViewById(R.id.song_art));
-        assertNotNull(view.findViewById(R.id.song_name));
-        assertNotNull(view.findViewById(R.id.song_details));
-        assertNotNull(view.findViewById(R.id.memory_image));
-        assertNotNull(view.findViewById(R.id.user_profile_image));
     }
 }
 

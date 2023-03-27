@@ -1,25 +1,32 @@
 package com.example.musicmap.user;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Date;
 
-public class ArtistDataTest extends TestCase {
+public class ArtistDataTest {
 
     private ArtistData artistData;
 
-    public void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() {
         UserData userData = new UserData("username", "User",
                 "Name", "user@email.com", new Date(), true);
         this.artistData = new ArtistData(userData, true);
 
     }
 
+    @Test
     public void testGetVerified() {
         assertTrue(this.artistData.getVerified());
     }
 
+    @Test
     public void testToUser() {
         User user = this.artistData.toUser("uid");
         assertNotNull(user);
