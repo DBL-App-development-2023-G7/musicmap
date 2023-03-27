@@ -43,9 +43,7 @@
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
                     app:layout_constraintBottom_toTopOf="@+id/passwordRegister_editText"
-                    app:layout_constraintEnd_toEndOf="@+id/passwordRegister_editText"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/passwordRegister_editText"
                     app:layout_constraintTop_toBottomOf="@+id/username_editText" />
 
                 <EditText
@@ -61,9 +59,7 @@
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
                     app:layout_constraintBottom_toTopOf="@+id/repeatPasswordRegister_editText"
-                    app:layout_constraintEnd_toEndOf="@+id/repeatPasswordRegister_editText"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/repeatPasswordRegister_editText"
                     app:layout_constraintTop_toBottomOf="@+id/emailRegister_editText" />
 
                 <EditText
@@ -107,8 +103,6 @@
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
                     app:layout_constraintBottom_toBottomOf="@+id/username_editText"
-                    app:layout_constraintEnd_toEndOf="@+id/lastName_editText"
-                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toEndOf="@+id/username_editText"
                     app:layout_constraintStart_toStartOf="@+id/lastName_editText" />
 
@@ -126,9 +120,7 @@
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
                     app:layout_constraintBottom_toTopOf="@+id/emailRegister_editText"
-                    app:layout_constraintEnd_toEndOf="@+id/emailRegister_editText"
-                    app:layout_constraintHorizontal_bias="0.995"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/emailRegister_editText"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_chainStyle="spread" />
 
@@ -177,8 +169,6 @@
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
                     app:layout_constraintBottom_toTopOf="@+id/birthdate_editText"
-                    app:layout_constraintEnd_toEndOf="@+id/birthdate_editText"
-                    app:layout_constraintHorizontal_bias="0.944"
                     app:layout_constraintStart_toEndOf="@+id/emailRegister_editText"
                     app:layout_constraintStart_toStartOf="@+id/birthdate_editText"
                     app:layout_constraintTop_toBottomOf="@+id/firstName_editText" />
