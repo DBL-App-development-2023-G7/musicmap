@@ -13,6 +13,7 @@ import com.example.musicmap.R;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
 import com.example.musicmap.util.firebase.AuthSystem;
+import com.example.musicmap.util.ui.ChangeEmailDialogFragment;
 import com.example.musicmap.util.ui.ChangePasswordDialogFragment;
 import com.example.musicmap.util.ui.DeleteAccountDialogFragment;
 
@@ -76,15 +77,22 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
             throw new IllegalStateException("Could not fine the security preferences category.");
         }
 
+        Preference preferenceChangeEmail = securityCategory.findPreference("changeEmail");
         Preference preferenceChangePassword = securityCategory.findPreference("changePassword");
 
-        if (preferenceChangePassword == null) {
+        if (preferenceChangeEmail == null || preferenceChangePassword == null) {
             throw new IllegalArgumentException("Could not find the children of the security category.");
         }
 
+        preferenceChangeEmail.setOnPreferenceClickListener(view -> {
+            ChangeEmailDialogFragment changeEmailDialogFragment = new ChangeEmailDialogFragment();
+            changeEmailDialogFragment.show(activity.getSupportFragmentManager(), "ChangeEmailDialog");
+            return false;
+        });
+
         preferenceChangePassword.setOnPreferenceClickListener(view -> {
             ChangePasswordDialogFragment changePasswordDialogFragment = new ChangePasswordDialogFragment();
-            changePasswordDialogFragment.show(activity.getSupportFragmentManager(), "ChangePasswordDialogue");
+            changePasswordDialogFragment.show(activity.getSupportFragmentManager(), "ChangePasswordDialog");
             return false;
         });
     }
@@ -110,7 +118,7 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
 
         preferenceDeleteAccount.setOnPreferenceClickListener(preference -> {
             DeleteAccountDialogFragment deleteAccountDialog = new DeleteAccountDialogFragment();
-            deleteAccountDialog.show(activity.getSupportFragmentManager(), "DeleteAccountDialogue");
+            deleteAccountDialog.show(activity.getSupportFragmentManager(), "DeleteAccountDialog");
             return false;
         });
     }

@@ -13,10 +13,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AuthSystem {
 
@@ -108,8 +112,7 @@ public class AuthSystem {
      */
     public static UserData parseUserData(DocumentSnapshot doc) throws FirebaseFirestoreException, NullPointerException {
         if (!doc.exists()) {
-            throw new FirebaseFirestoreException("Document does not exist.",
-                    FirebaseFirestoreException.Code.NOT_FOUND);
+            throw new FirebaseFirestoreException("Document does not exist.", FirebaseFirestoreException.Code.NOT_FOUND);
         }
 
         UserData userData = doc.toObject(UserData.class);
@@ -156,13 +159,11 @@ public class AuthSystem {
      * @return the result of this task
      */
     public static Task<User> getUser(String uid) {
-        return getUserData(uid).onSuccessTask(
-                userData -> {
-                    TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
-                    tcs.setResult(userData.toUser(uid));
-                    return tcs.getTask();
-                }
-        );
+        return getUserData(uid).onSuccessTask(userData -> {
+            TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
+            tcs.setResult(userData.toUser(uid));
+            return tcs.getTask();
+        });
     }
 
     /**
@@ -182,6 +183,7 @@ public class AuthSystem {
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
         if (firebaseUser == null) {
             tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
@@ -193,10 +195,19 @@ public class AuthSystem {
             return tcs.getTask();
         }
 
+        DocumentReference documentReference = firestore.collection("Users").document(firebaseUser.getUid());
+
         AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), password);
-        return firebaseUser.reauthenticate(credential).onSuccessTask(reauthTask ->
-                firebaseUser.updateEmail(newEmail)
-        );
+        return firebaseUser.reauthenticate(credential).onSuccessTask(reauthTask -> firebaseUser.updateEmail(newEmail)
+                .onSuccessTask(updateEmailTask -> firebaseUser.reload().onSuccessTask(reloadUserTask -> {
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("email", newEmail);
+
+                    Task<Void> sendEmail = firebaseUser.sendEmailVerification();
+                    Task<Void> updateEmail = documentReference.update(data);
+
+                    return Tasks.whenAll(sendEmail, updateEmail);
+                })));
     }
 
     public static Task<Void> updatePassword(String oldPassword, String newPassword) {
@@ -217,8 +228,7 @@ public class AuthSystem {
 
         AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), oldPassword);
         return firebaseUser.reauthenticate(credential).onSuccessTask(reauthTask ->
-                firebaseUser.updatePassword(newPassword)
-        );
+                firebaseUser.updatePassword(newPassword));
     }
 
     /**
