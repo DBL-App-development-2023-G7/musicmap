@@ -24,9 +24,7 @@ public class PostMapFragment extends MapFragment {
     @Override
     protected void addOverlays() {
         super.addOverlays();
-
         addOverlay(postsFolder);
-
         updatePosts();
     }
 
