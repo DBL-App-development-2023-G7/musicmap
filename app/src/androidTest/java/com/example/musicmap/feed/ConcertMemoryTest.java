@@ -22,7 +22,7 @@ public class ConcertMemoryTest {
     @Before
     public void setUp() {
         this.concertMemory = new ConcertMemory("author-uid", new Date(),
-                new GeoPoint(10, 10), "name", "video");
+                new GeoPoint(10, 10), "name", "https://youtube.com/video");
     }
 
     @Test
@@ -32,7 +32,7 @@ public class ConcertMemoryTest {
 
     @Test
     public void testGetSong() {
-        assertEquals(this.concertMemory.getVideo(), Uri.parse("video"));
+        assertEquals(this.concertMemory.getVideo(), Uri.parse("https://youtube.com/video"));
     }
 
 }

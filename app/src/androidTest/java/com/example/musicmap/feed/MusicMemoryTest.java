@@ -22,12 +22,12 @@ public class MusicMemoryTest {
     @Before
     public void setUp() {
         this.musicMemory = new MusicMemory("author-uid", new Date(),
-                new GeoPoint(10, 10), "photo", "song");
+                new GeoPoint(10, 10), "https://imgur.com/photo", "song");
     }
 
     @Test
     public void testGetPhoto() {
-        assertEquals(this.musicMemory.getPhoto(), Uri.parse("photo"));
+        assertEquals(this.musicMemory.getPhoto(), Uri.parse("https://imgur.com/photo"));
     }
 
     @Test
