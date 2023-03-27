@@ -6,7 +6,7 @@ import android.widget.ImageView;
 
 import com.example.musicmap.R;
 import com.example.musicmap.SessionListenerActivity;
-import com.example.musicmap.screens.map.MapFragment;
+import com.example.musicmap.screens.map.PostMapFragment;
 import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.util.ui.FragmentUtil;
@@ -49,9 +49,8 @@ public class HomeActivity extends SessionListenerActivity {
             }
 
             if (item.getItemId() == R.id.navbarMap) {
-                // TODO replace with implementation of MusicMapFragment once made
                 FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.fragment_view,
-                        MapFragment.class);
+                        PostMapFragment.class);
                 return true;
             }
 

@@ -2,10 +2,7 @@ package com.example.musicmap.screens.map;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.location.Location;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -15,25 +12,34 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.musicmap.MusicMap;
 import com.example.musicmap.R;
+import com.example.musicmap.util.map.CurrentLocationOverlay;
 import com.example.musicmap.util.permissions.LocationPermission;
 
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.CustomZoomButtonsDisplay;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayManager;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-public class MapFragment extends Fragment {
+public abstract class MapFragment extends Fragment {
 
     private static final String MULTITOUCH_FEATURE = "android.hardware.touchscreen.multitouch";
 
+    private static final String SHARED_PREFERENCE_ZOOM = "zoom";
+    private static final String SHARED_PREFERENCE_CENTER_LATITUDE = "center_latitude";
+    private static final String SHARED_PREFERENCE_CENTER_LONGITUDE = "center_longitude";
+
     private final LocationPermission locationPermission = new LocationPermission(this);
+
+    // SharedPreferences instance depends on the map
+    private final SharedPreferences sharedPreferences =
+            MusicMap.getInstance().getSharedPreferences(getClass().getName(), Context.MODE_PRIVATE);
 
     /**
      * The MapView used by this fragment.
@@ -74,6 +80,9 @@ public class MapFragment extends Fragment {
         mapView = rootView.findViewById(R.id.map);
         mapView.setTileSource(TileSourceFactory.MAPNIK); // the default OSM tile source (data source)
 
+        // Set minimum zoom level, disallows for having multiple earth maps shown at once
+        mapView.setMinZoomLevel(4.0);
+
         // Set zoom buttons location
         mapView.getZoomController().getDisplay().setPositions(false,
                 CustomZoomButtonsDisplay.HorizontalPosition.RIGHT,
@@ -96,11 +105,22 @@ public class MapFragment extends Fragment {
         // Add all overlays
         addOverlays();
 
-        // Set initial screen to a full view of the Netherlands
-        // TODO start with current location at first open,
-        //  and reset last controller's position
-        mapView.getController().setCenter(new GeoPoint(52.132303, 5.645042));
-        mapView.getController().setZoom(8.0);
+        if (sharedPreferences.contains("zoom")) {
+            // Restore stored zoom level & map center
+            mapView.getController().setZoom(Double.longBitsToDouble(
+                    sharedPreferences.getLong(SHARED_PREFERENCE_ZOOM, 0)));
+            // SharedPreferences cannot store double directly, use long instead
+
+            IGeoPoint center = new GeoPoint(
+                    Double.longBitsToDouble(sharedPreferences.getLong(SHARED_PREFERENCE_CENTER_LATITUDE, 0)),
+                    Double.longBitsToDouble(sharedPreferences.getLong(SHARED_PREFERENCE_CENTER_LONGITUDE, 0))
+            );
+            mapView.getController().setCenter(center);
+        } else {
+            // Set initial view to map of Netherlands
+            mapView.getController().setZoom(8.0);
+            mapView.getController().setCenter(new GeoPoint(52.132303, 5.645042));
+        }
 
         return rootView;
     }
@@ -115,6 +135,16 @@ public class MapFragment extends Fragment {
     public void onPause() {
         super.onPause();
         mapView.onPause();
+
+        // Store current zoom level & map center
+        IGeoPoint mapCenter = mapView.getMapCenter();
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        // SharedPreferences cannot store double directly, use long instead
+        editor.putLong(SHARED_PREFERENCE_ZOOM, Double.doubleToRawLongBits(mapView.getZoomLevelDouble()));
+        editor.putLong(SHARED_PREFERENCE_CENTER_LATITUDE, Double.doubleToRawLongBits(mapCenter.getLatitude()));
+        editor.putLong(SHARED_PREFERENCE_CENTER_LONGITUDE, Double.doubleToRawLongBits(mapCenter.getLongitude()));
+        editor.apply();
     }
 
     /**
@@ -139,10 +169,6 @@ public class MapFragment extends Fragment {
 
         // Default overlay showing current location (only if needed)
         if (shouldDisplayCurrentLocation()) {
-            if (locationPermission.isNoneGranted()) {
-                return;
-            }
-
             CurrentLocationOverlay currentLocationOverlay = new CurrentLocationOverlay(mapView);
             addOverlay(currentLocationOverlay);
         }
@@ -156,27 +182,6 @@ public class MapFragment extends Fragment {
     protected void addOverlay(Overlay overlay) {
         OverlayManager overlayManager = mapView.getOverlayManager();
         overlayManager.add(overlayManager.size(), overlay);
-    }
-
-    /**
-     * A map overlay showing your current location, but without bearing.
-     */
-    public static class CurrentLocationOverlay extends MyLocationNewOverlay {
-        public CurrentLocationOverlay(MapView mapView) {
-            super(mapView);
-
-            // Overwrite default person icon
-            Resources resources = mapView.getContext().getResources();
-            setPersonIcon(BitmapFactory.decodeResource(resources, R.drawable.map_marker));
-            setPersonAnchor(0.5f, 1f); // bottom middle
-        }
-
-        @Override
-        protected void drawMyLocation(Canvas canvas, Projection pj, Location lastFix) {
-            lastFix.removeBearing();
-
-            super.drawMyLocation(canvas, pj, lastFix);
-        }
     }
 
 }

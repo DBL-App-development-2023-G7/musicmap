@@ -67,7 +67,7 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragmentContainerView"
-                android:name="com.example.musicmap.screens.map.MapFragment"
+                android:name="com.example.musicmap.screens.map.ArtistDataMapFragment"
                 android:layout_width="312dp"
                 android:layout_height="275dp"
                 android:layout_marginTop="8dp"
