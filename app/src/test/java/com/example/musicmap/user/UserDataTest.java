@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import java.util.Date;
 
 public class UserDataTest extends TestCase {
+
     private UserData userData;
 
     @Override
@@ -52,4 +53,5 @@ public class UserDataTest extends TestCase {
         assertEquals(user.getData(), this.userData);
         assertEquals(user.getUid(), "uid");
     }
+
 }
