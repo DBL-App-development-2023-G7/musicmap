@@ -1,4 +1,4 @@
-package com.example.musicmap.util.feed;
+package com.example.musicmap.feed;
 
 import android.net.Uri;
 
