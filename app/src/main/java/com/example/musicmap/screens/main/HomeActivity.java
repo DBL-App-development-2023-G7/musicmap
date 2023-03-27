@@ -19,6 +19,12 @@ public class HomeActivity extends SessionListenerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        // default load feed
+        if (savedInstanceState == null) {
+            FragmentUtil.initFragment(getSupportFragmentManager(), R.id.fragment_view,
+                    FeedFragment.class);
+        }
+
         Session.getInstance();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);

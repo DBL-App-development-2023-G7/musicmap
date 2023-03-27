@@ -2,6 +2,8 @@ package com.example.musicmap.user;
 
 import android.net.Uri;
 
+import com.google.firebase.firestore.Exclude;
+
 import java.util.Date;
 
 /**
@@ -95,6 +97,7 @@ public class UserData {
      *
      * @return the profile picture uri of the user
      */
+    @Exclude
     public Uri getProfilePictureUri() {
         return Uri.parse(profilePicture);
     }
