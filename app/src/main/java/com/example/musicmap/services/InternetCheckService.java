@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -44,7 +46,12 @@ public class InternetCheckService extends Service {
 
                     if (!isInternetAvailable(context)) {
                         Log.w(TAG, "No internet connection found");
-                        showInternetConnectionUnavailableNotification();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            // TODO: refactor notification permission to work for Android 13+
+                            Toast.makeText(context, getString(R.string.error_no_internet), Toast.LENGTH_LONG).show();
+                        } else {
+                            showInternetConnectionUnavailableNotification();
+                        }
                     }
                 } finally {
                     handler.postDelayed(this, INTERVAL);
