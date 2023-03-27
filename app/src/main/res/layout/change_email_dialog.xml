@@ -6,8 +6,8 @@
     android:layout_gravity="center_horizontal">
 
     <EditText
-        android:id="@+id/oldPassword_dialog_editText"
-        android:inputType="textPassword"
+        android:id="@+id/email_dialog_editText"
+        android:inputType="textEmailAddress"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginTop="16dp"
@@ -15,11 +15,11 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="4dp"
         android:fontFamily="sans-serif"
-        android:hint="Old Password"
-        android:autofillHints="newPassword" />
+        android:hint="New Email"
+        android:autofillHints="newEmail" />
 
     <EditText
-        android:id="@+id/newPassword_dialog_editText"
+        android:id="@+id/password_dialog_editText"
         android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -28,6 +28,6 @@
         android:layout_marginBottom="24dp"
         android:autofillHints="newPassword"
         android:fontFamily="sans-serif"
-        android:hint="New Password" />
+        android:hint="@string/password" />
 
 </LinearLayout>

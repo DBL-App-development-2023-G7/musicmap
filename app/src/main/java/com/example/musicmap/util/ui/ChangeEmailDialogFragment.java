@@ -3,7 +3,6 @@ package com.example.musicmap.util.ui;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +16,10 @@ import com.example.musicmap.R;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.regex.ValidationUtil;
 
-public class ChangePasswordDialogFragment extends DialogFragment {
+public class ChangeEmailDialogFragment extends DialogFragment {
 
-    private EditText oldPasswordInput;
-    private EditText newPasswordInput;
+    private EditText newEmailInput;
+    private EditText passwordInput;
 
     @SuppressLint("InflateParams")
     @NonNull
@@ -29,77 +28,77 @@ public class ChangePasswordDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
 
-        View dialogView = inflater.inflate(R.layout.change_password_dialog, null);
-        oldPasswordInput = dialogView.findViewById(R.id.oldPassword_dialog_editText);
-        newPasswordInput = dialogView.findViewById(R.id.newPassword_dialog_editText);
+        View dialogView = inflater.inflate(R.layout.change_email_dialog, null);
+        newEmailInput = dialogView.findViewById(R.id.email_dialog_editText);
+        passwordInput = dialogView.findViewById(R.id.password_dialog_editText);
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         AlertDialog alertDialog = builder.setView(dialogView)
                 // Add title to the dialog
-                .setTitle("Change password")
+                .setTitle("Change email")
                 // Add description message to the dialog
-                .setMessage("Please enter your current password and a new one to change your password.")
+                .setMessage("Please enter your new email and current password.")
                 // Add action buttons
-                .setPositiveButton("Change password", null).setNegativeButton(R.string.cancel,
+                .setPositiveButton("Change email", null).setNegativeButton(R.string.cancel,
                         (dialog, id) -> this.dismiss()).create();
 
-        // Required so that the user can update their password
+        // Required so that the dialog won't close when an error occurs after pressing delete account
         alertDialog.setOnShowListener(dialog -> {
             Button button = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            button.setOnClickListener(view -> changePassword());
+            button.setOnClickListener(view -> changeEmail());
         });
 
         return alertDialog;
     }
 
-    private void changePassword() {
-        String oldPassword = oldPasswordInput.getText().toString();
-        String newPassword = newPasswordInput.getText().toString();
+    private void changeEmail() {
+        String newEmail = newEmailInput.getText().toString();
+        String password = passwordInput.getText().toString();
 
-        if (checkOldPassword(oldPassword) | checkNewPassword(newPassword)) {
-            AuthSystem.updatePassword(oldPassword, newPassword).addOnCompleteListener(task -> {
+        if (checkEmail(newEmail) | checkPassword(password)) {
+            AuthSystem.updateEmail(newEmail, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     this.dismiss();
                 } else {
                     Exception exception = task.getException();
                     if (exception != null) {
                         String message = exception.getMessage();
-                        oldPasswordInput.setError(message);
+                        newEmailInput.setError(message);
                     }
                 }
             });
         }
     }
 
-    private boolean checkOldPassword(String password) {
-        switch (ValidationUtil.isPasswordValid(password)) {
+    private boolean checkEmail(String email) {
+        switch (ValidationUtil.isEmailValid(email)) {
             case EMPTY:
-                oldPasswordInput.setError(getString(R.string.input_error_enter_password));
+                newEmailInput.setError(getString(R.string.input_error_enter_email));
                 return false;
             case FORMAT:
-                oldPasswordInput.setError(getString(R.string.input_error_valid_password));
+                newEmailInput.setError(getString(R.string.input_error_valid_email));
                 return false;
             case VALID:
                 return true;
             default:
-                oldPasswordInput.setError(getString(R.string.input_error_unexpected));
+                newEmailInput.setError(getString(R.string.input_error_unexpected));
                 return false;
         }
     }
 
-    private boolean checkNewPassword(String password) {
+    private boolean checkPassword(String password) {
         switch (ValidationUtil.isPasswordValid(password)) {
             case EMPTY:
-                newPasswordInput.setError(getString(R.string.input_error_enter_password));
+                passwordInput.setError(getString(R.string.input_error_enter_password));
                 return false;
             case FORMAT:
-                newPasswordInput.setError(getString(R.string.input_error_valid_password));
+                passwordInput.setError(getString(R.string.input_error_valid_password));
                 return false;
             case VALID:
                 return true;
             default:
-                newPasswordInput.setError(getString(R.string.input_error_unexpected));
+                passwordInput.setError(getString(R.string.input_error_unexpected));
                 return false;
         }
     }

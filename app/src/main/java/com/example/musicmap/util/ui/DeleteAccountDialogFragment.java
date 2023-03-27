@@ -39,7 +39,7 @@ public class DeleteAccountDialogFragment extends DialogFragment {
                 .setMessage(R.string.delete_account_dialog_message)
                 // Add action buttons
                 .setPositiveButton(R.string.delete_account, null).setNegativeButton(R.string.cancel,
-                        (dialog, id) -> dialog.dismiss()).create();
+                        (dialog, id) -> this.dismiss()).create();
 
         // Required so that the dialog won't close when an error occurs after pressing delete account
         alertDialog.setOnShowListener(dialog -> {
