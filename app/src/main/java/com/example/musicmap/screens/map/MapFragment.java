@@ -27,7 +27,7 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayManager;
 
-public class MapFragment extends Fragment {
+public abstract class MapFragment extends Fragment {
 
     private static final String MULTITOUCH_FEATURE = "android.hardware.touchscreen.multitouch";
 

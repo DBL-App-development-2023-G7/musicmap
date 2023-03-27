@@ -1,4 +1,4 @@
-package com.example.musicmap.util.map;
+package com.example.musicmap.util.ui;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
