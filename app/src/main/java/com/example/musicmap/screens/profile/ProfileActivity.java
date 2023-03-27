@@ -15,6 +15,11 @@ public class ProfileActivity extends SessionListenerActivity {
 
         ImageView backButton = findViewById(R.id.appbarBack);
         backButton.setOnClickListener(view -> super.onBackPressed());
+
+        ImageView settingsButton = findViewById(R.id.appbarSettings);
+        settingsButton.setOnClickListener(view -> {
+            //TODO add go to settings method
+        });
     }
 
 }

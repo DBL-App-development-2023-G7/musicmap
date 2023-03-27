@@ -13,6 +13,7 @@
     <string name="appbar_search">Search</string>
     <string name="appbar_profile">Profile</string>
     <string name="appbar_icon">Icon</string>
+    <string name="settings">Settings</string>
     <!--appbar strings end-->
 
     <!--message strings start-->

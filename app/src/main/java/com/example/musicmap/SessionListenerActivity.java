@@ -38,14 +38,14 @@ public class SessionListenerActivity extends AppCompatActivity implements Sessio
 
     private void loadVerificationActivity() {
         Intent verificationIntent = new Intent(this, VerificationActivity.class);
-        verificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        verificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(verificationIntent);
         finish();
     }
 
     private void loadAuthActivity() {
         Intent authIntent = new Intent(this, AuthActivity.class);
-        authIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        authIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(authIntent);
         finish();
     }

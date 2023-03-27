@@ -5,7 +5,6 @@
     android:id="@+id/d"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
     tools:context=".screens.profile.ProfilePageFragment">
 
     <LinearLayout
@@ -38,7 +37,6 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:fontFamily="@font/kenia"
-                android:textColor="@color/white"
                 android:textSize="34sp"
                 app:layout_constraintBottom_toBottomOf="@+id/profilePictureImage"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -52,7 +50,6 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:fontFamily="@font/inter"
-                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -87,7 +84,6 @@
                         android:fontFamily="@font/inter"
                         android:labelFor="@id/mm_list"
                         android:text="@string/profile_page_mm"
-                        android:textColor="@color/white"
                         android:textSize="24sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
