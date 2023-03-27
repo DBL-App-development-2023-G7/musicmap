@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.musicmap.R;
+import com.example.musicmap.feed.MusicMemory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,15 +20,17 @@ public class MusicMemoryFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private String song;
+    private String authorUID;
+    private String photoURI;
+
+    public static final String TAG = "MusicMemoryFragment";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private final MusicMemory musicMemory;
 
-    public MusicMemoryFragment() {
-        // Required empty public constructor
+    public MusicMemoryFragment(MusicMemory mm) {
+        this.musicMemory = mm;
     }
 
     /**
@@ -39,11 +42,13 @@ public class MusicMemoryFragment extends Fragment {
      * @return A new instance of fragment MusicMemoryFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MusicMemoryFragment newInstance(String param1, String param2) {
-        MusicMemoryFragment fragment = new MusicMemoryFragment();
+    public static MusicMemoryFragment newInstance(MusicMemory mm) {
+        MusicMemoryFragment fragment = new MusicMemoryFragment(mm);
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString("song", mm.getSong());
+        args.putString("photoURL", mm.getPhoto().toString());
+        args.putString("authorUID", mm.getAuthorUid());
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,8 +57,9 @@ public class MusicMemoryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            this.song = getArguments().getString("song");
+            this.photoURI = getArguments().getString("photoURL");
+            this.authorUID = getArguments().getString("authorUID");
         }
     }
 
