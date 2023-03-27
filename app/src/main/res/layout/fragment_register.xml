@@ -24,7 +24,7 @@
                 android:id="@+id/constraintLayout"
                 android:layout_width="match_parent"
                 android:layout_height="560dp"
-                android:background="@drawable/round_rect"
+                android:background="@drawable/auth_screens_round_rectangle"
                 app:layout_constraintBottom_toBottomOf="parent"
                 tools:layout_editor_absoluteX="0dp">
 
