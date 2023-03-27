@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.example.musicmap.R;
+import com.example.musicmap.screens.auth.LoginFragment;
 import com.example.musicmap.screens.map.MapFragment;
 import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.user.Session;
@@ -18,6 +19,12 @@ public class HomeActivity extends SessionListenerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        // default load feed
+        if (savedInstanceState == null) {
+            FragmentUtil.initFragment(getSupportFragmentManager(), R.id.fragment_view,
+                    FeedFragment.class);
+        }
 
         Session.getInstance();
 
