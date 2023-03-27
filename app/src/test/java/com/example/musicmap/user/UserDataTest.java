@@ -15,7 +15,7 @@ public class UserDataTest {
     private UserData userData;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         this.userData = new UserData("username", "User",
                 "Name", "user@email.com", new Date(), true);
     }
