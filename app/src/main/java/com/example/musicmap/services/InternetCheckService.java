@@ -8,9 +8,12 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.example.musicmap.R;
+import com.example.musicmap.util.Constants;
 
 /**
  * A service that runs in the background to check internet connection every fixed interval (5 seconds).
@@ -41,7 +44,7 @@ public class InternetCheckService extends Service {
 
                     if (!isInternetAvailable(context)) {
                         Log.w(TAG, "No internet connection found");
-                        Toast.makeText(context, getString(R.string.error_no_internet), Toast.LENGTH_LONG).show();
+                        showInternetConnectionUnavailableNotification();
                     }
                 } finally {
                     handler.postDelayed(this, INTERVAL);
@@ -91,6 +94,24 @@ public class InternetCheckService extends Service {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnected();
+    }
+
+    /**
+     * Shows a notification for no internet connection error.
+     * It creates a notification using the notification channel for internet check service.
+     */
+    private void showInternetConnectionUnavailableNotification() {
+        NotificationCompat.Builder builder = new NotificationCompat
+                .Builder(this, Constants.INTERNET_CHECK_NOTIFICATION_CHANNEL)
+                .setSmallIcon(R.drawable.baseline_cancel_24)
+                .setContentTitle(getString(R.string.error_no_internet_title))
+                .setContentText(getString(R.string.error_no_internet))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(Constants.INTERNET_CHECK_NOTIFICATION_ID, builder.build());
     }
 
 }
