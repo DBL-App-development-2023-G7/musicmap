@@ -51,7 +51,7 @@ public class DeleteAccountDialogFragment extends DialogFragment {
     }
 
     private void deleteAccount() {
-        String password = String.valueOf(passwordInput.getText());
+        String password = passwordInput.getText().toString();
 
         if (checkPassword(password)) {
             AuthSystem.deleteUser(password).addOnFailureListener(exception -> {

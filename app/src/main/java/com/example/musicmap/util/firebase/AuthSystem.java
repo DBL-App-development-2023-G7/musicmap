@@ -177,6 +177,50 @@ public class AuthSystem {
         return firestore.collection("Users").document(uid).delete();
     }
 
+    public static Task<Void> updateEmail(String newEmail, String password) {
+        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = auth.getCurrentUser();
+
+        if (firebaseUser == null) {
+            tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
+            return tcs.getTask();
+        }
+
+        if (firebaseUser.getEmail() == null) {
+            tcs.setException(new IllegalStateException("The current user does not have an email address."));
+            return tcs.getTask();
+        }
+
+        AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), password);
+        return firebaseUser.reauthenticate(credential).onSuccessTask(reauthTask ->
+                firebaseUser.updateEmail(newEmail)
+        );
+    }
+
+    public static Task<Void> updatePassword(String oldPassword, String newPassword) {
+        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = auth.getCurrentUser();
+
+        if (firebaseUser == null) {
+            tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
+            return tcs.getTask();
+        }
+
+        if (firebaseUser.getEmail() == null) {
+            tcs.setException(new IllegalStateException("The current user does not have an email address."));
+            return tcs.getTask();
+        }
+
+        AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), oldPassword);
+        return firebaseUser.reauthenticate(credential).onSuccessTask(reauthTask ->
+                firebaseUser.updatePassword(newPassword)
+        );
+    }
+
     /**
      * This method deletes the connected user and their data from the Firestore database.
      *

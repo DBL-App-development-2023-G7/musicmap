@@ -1,42 +1,66 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:title="Profile"
-        app:key="profile">
+        app:key="profile"
+        app:title="Profile">
         <Preference
-            app:iconSpaceReserved="false"
+            app:icon="@drawable/person_icon"
+            app:key="username"
             app:title="@string/username"
-            app:key="username" />
+            app:selectable="false"/>
         <Preference
-            app:iconSpaceReserved="false"
+            app:icon="@drawable/email_icon"
+            app:key="email"
             app:title="@string/email"
-            app:key="email" />
+            app:selectable="false"/>
         <Preference
-            app:iconSpaceReserved="false"
+            app:icon="@drawable/text_icon"
+            app:key="firstName"
             app:title="@string/first_name"
-            app:key="firstName"/>
+            app:selectable="false"/>
         <Preference
-            app:iconSpaceReserved="false"
+            app:icon="@drawable/text_icon"
+            app:key="lastName"
             app:title="@string/last_name"
-            app:key="lastName"/>
+            app:selectable="false"/>
         <Preference
-            app:iconSpaceReserved="false"
+            app:icon="@drawable/calendar_icon"
+            app:key="birthdate"
             app:title="@string/birthdate"
-            app:key="birthdate"/>
+            app:selectable="false"/>
+        <Preference
+            app:icon="@drawable/person_icon"
+            app:key="picture"
+            app:title="Change profile picture" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:key="security"
+        app:title="Security">
+        <Preference
+            app:icon="@drawable/email_icon"
+            app:key="changeEmail"
+            app:title="Change email" />
+        <Preference
+            app:icon="@drawable/lock_icon"
+            app:key="changePassword"
+            app:title="Change password" />
     </PreferenceCategory>
 
 
-    <PreferenceCategory app:title="Other"
+    <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:key="other">
+        app:key="other"
+        app:title="Other">
         <Preference
             app:icon="@drawable/logout_icon"
-            app:title="@string/logout"
-            app:key="logout"/>
+            app:key="logout"
+            app:title="@string/logout" />
 
         <Preference
             app:icon="@drawable/delete_icon"
-            app:title="@string/delete_account"
-            app:key="deleteAccount"/>
+            app:key="deleteAccount"
+            app:title="@string/delete_account" />
     </PreferenceCategory>
 </PreferenceScreen>
