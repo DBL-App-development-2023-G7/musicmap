@@ -33,7 +33,9 @@
         <activity
             android:name=".screens.main.HomeActivity"
             android:exported="true"
-            android:theme="@style/Theme.MusicMap.NoActionBar">
+            android:theme="@style/Theme.MusicMap.NoActionBar"
+            android:label="MusicMap"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,6 +44,7 @@
         </activity>
         <activity
             android:name=".screens.auth.AuthActivity"
+            android:theme="@style/Theme.MusicMap.Auth"
             android:exported="false"
             android:label="MusicMap" />
     </application>
