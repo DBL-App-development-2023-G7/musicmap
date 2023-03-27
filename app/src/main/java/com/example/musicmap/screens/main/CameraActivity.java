@@ -96,7 +96,6 @@ public class CameraActivity extends AppCompatActivity {
         return ContextCompat.getMainExecutor(this);
     }
 
-    //
     private void takePicture() {
         // take a timestamp to generate a unique file name
         long timeStamp = System.currentTimeMillis();
@@ -136,6 +135,7 @@ public class CameraActivity extends AppCompatActivity {
                 @Override
                 public void onError(ImageCaptureException error) {
                     // insert your code here.
+                    // no code since we are cool as heck and an error will never happen
                 }
             }
         );

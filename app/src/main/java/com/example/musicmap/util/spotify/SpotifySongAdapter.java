@@ -43,12 +43,12 @@ public class SpotifySongAdapter extends ArrayAdapter<Track> {
 
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(activityContext);
-            row = inflater.inflate(R.layout.single_post_layout_feed, parent, false);
+            row = inflater.inflate(R.layout.spotify_search_song_layout, parent, false);
         }
 
-        TextView titleText = row.findViewById(R.id.listview_item_title);
-        TextView shortText = row.findViewById(R.id.listview_item_short_description);
-        ImageView mainImage = row.findViewById(R.id.listview_image);
+        TextView titleText = row.findViewById(R.id.search_result_song_title_view);
+        TextView shortText = row.findViewById(R.id.search_result_song_artist_view);
+        ImageView mainImage = row.findViewById(R.id.search_result_song_image_view);
 
         Track spotifyTrack = getItem(position);
         if (spotifyTrack  != null) {

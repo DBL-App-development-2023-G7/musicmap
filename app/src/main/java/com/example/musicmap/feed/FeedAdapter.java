@@ -28,8 +28,14 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
         this.activityContext = activityContext;
     }
 
+    public FeedAdapter(@NonNull Activity activityContext, int resource) {
+        super(activityContext, resource);
+        this.activityContext = activityContext;
+    }
+
     @NonNull
     @Override
+    @SuppressWarnings("unused") // suppressing unused since not all details are set for a music memory yet
     public View getView(int position, @Nullable View convertView, ViewGroup parent) {
         View row = convertView;
         if (convertView == null) {
@@ -37,16 +43,18 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
             row = inflater.inflate(R.layout.single_post_layout_feed, parent, false);
         }
 
-        TextView titleText = row.findViewById(R.id.listview_item_title);
-        TextView shortText = row.findViewById(R.id.listview_item_short_description);
-        ImageView mainImage = row.findViewById(R.id.listview_image);
+        ImageView songImage = row.findViewById(R.id.song_art);
+        TextView songName = row.findViewById(R.id.song_name);
+        TextView songDetails = row.findViewById(R.id.song_details);
+        ImageView memoryImage = row.findViewById(R.id.memory_image);
+        ImageView userImage = row.findViewById(R.id.user_profile_image);
 
         MusicMemory musicMemory = getItem(position);
         if (musicMemory != null) {
-            // TODO more user-friendly display
-            titleText.setText(musicMemory.getTimePosted().toString());
-            shortText.setText(musicMemory.getLocation().toString());
-            Picasso.get().load(musicMemory.getPhoto()).into(mainImage);
+            // TODO: more user-friendly display
+            songName.setText(musicMemory.getSong());
+            songDetails.setText(String.format("%s %s", musicMemory.getAuthorUid(), musicMemory.getLocation()));
+            Picasso.get().load(musicMemory.getPhoto()).into(memoryImage);
         }
 
         return row;

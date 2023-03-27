@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.Track;
 import se.michaelthelin.spotify.model_objects.specification.TrackSimplified;
@@ -33,6 +34,11 @@ public class SpotifyUtils {
      * @return the request object
      */
     public static GetTrackRequest getGetTrackRequest(String trackId) {
+        SpotifyApi api = SpotifyData.getApi();
+        if(api == null) {
+            throw new NullPointerException("No spotify API1");
+        }
+
         return SpotifyData.getApi().getTrack(trackId).build();
     }
 

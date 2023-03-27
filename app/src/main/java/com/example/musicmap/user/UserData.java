@@ -112,4 +112,8 @@ public class UserData {
         return artist;
     }
 
+    public User toUser(String uid) {
+        return new User(this, uid);
+    }
+
 }

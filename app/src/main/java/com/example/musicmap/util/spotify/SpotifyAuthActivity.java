@@ -6,7 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.example.musicmap.AuthListenerActivity;
+import com.example.musicmap.SessionListenerActivity;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
@@ -17,7 +17,7 @@ import com.spotify.sdk.android.auth.AuthorizationResponse;
  * The problem is this extends auth acitivity which is not ideal
  */
 // TODO FIND A BETTER WAY OF MANAGING SPOTIFY TOKENS
-public abstract class SpotifyAuthActivity extends AuthListenerActivity {
+public abstract class SpotifyAuthActivity extends SessionListenerActivity {
     private static final int REQUEST_CODE = 80082;
 
     @Override
