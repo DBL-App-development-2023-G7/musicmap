@@ -140,7 +140,7 @@ public abstract class PostOverlay<P extends Post> extends IconOverlay {
     /**
      * A {@link Target} that will put the received image in the marker on the map.
      */
-    public class ImageTarget implements Target {
+    private class ImageTarget implements Target {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             Drawable iconDrawable = ContextCompat.getDrawable(mapView.getContext(), R.drawable.map_post);
