@@ -19,12 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MusicMap"
         android:name="com.example.musicmap.MusicMap"
-        tools:targetApi="31"
-        android:hardwareAccelerated="true"
-        android:largeHeap="true"
-        android:usesCleartextTraffic="true"
-        tools:ignore="GoogleAppIndexingWarning">
-
+        tools:targetApi="31">
         <activity
             android:name=".screens.verification.VerificationActivity"
             android:exported="false" />
@@ -39,8 +34,10 @@
         <activity
             android:name=".screens.main.HomeActivity"
             android:exported="true"
+            android:launchMode="standard"
             android:theme="@style/Theme.MusicMap.NoActionBar"
-            android:launchMode="standard">
+            android:label="MusicMap"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -52,17 +49,17 @@
                     android:scheme="musicmap"/>
             </intent-filter>
 
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".screens.auth.AuthActivity"
-            android:exported="false"
-            android:label="MusicMap" />
-
+    <activity
+        android:name=".screens.auth.AuthActivity"
+        android:theme="@style/Theme.MusicMap.Auth"
+        android:exported="false"
+        android:label="MusicMap" />
     </application>
-
 </manifest>

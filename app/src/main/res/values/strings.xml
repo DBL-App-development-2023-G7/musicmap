@@ -1,4 +1,6 @@
 <resources>
 
     <string name="app_name" translatable="false">MusicMap</string>
+    <string name="title_break">Music \nMap</string>
+    <string name="title">MusicMap</string>
 </resources>

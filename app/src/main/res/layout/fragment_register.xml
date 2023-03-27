@@ -1,96 +1,199 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".screens.auth.RegisterFragment">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/purple_500"
+        android:fillViewport="true"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-32dp">
 
-        <LinearLayout
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <EditText
-                android:id="@+id/username_editText"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:autofillHints="newUsername"
-                android:ems="10"
-                android:hint="@string/username"
-                android:inputType="textPersonName" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
+                android:layout_width="match_parent"
+                android:layout_height="560dp"
+                android:background="@drawable/auth_screens_round_rectangle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:layout_editor_absoluteX="0dp">
 
-            <EditText
-                android:id="@+id/firstName_editText"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:autofillHints="personGivenName"
-                android:ems="10"
-                android:hint="@string/first_name"
-                android:inputType="textPersonName" />
+                <EditText
+                    android:id="@+id/username_editText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="28dp"
+                    android:autofillHints="newUsername"
+                    android:backgroundTint="@color/white"
+                    android:ems="10"
+                    android:fontFamily="@font/inter_regular"
+                    android:hint="@string/username"
+                    android:inputType="textPersonName"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    app:layout_constraintEnd_toEndOf="@+id/firstName_editText"
+                    app:layout_constraintHorizontal_bias="0.503"
+                    app:layout_constraintStart_toStartOf="@+id/firstName_editText"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
-                android:id="@+id/lastName_editText"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:autofillHints="personFamilyName"
-                android:ems="10"
-                android:hint="@string/last_name"
-                android:inputType="textPersonName" />
+                <EditText
+                    android:id="@+id/firstName_editText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:autofillHints="personGivenName"
+                    android:backgroundTint="@color/white"
+                    android:ems="10"
+                    android:fontFamily="@font/inter_regular"
+                    android:hint="@string/first_name"
+                    android:inputType="textPersonName"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    app:layout_constraintEnd_toEndOf="@+id/lastName_editText"
+                    app:layout_constraintHorizontal_bias="0.512"
+                    app:layout_constraintStart_toStartOf="@+id/lastName_editText"
+                    app:layout_constraintTop_toBottomOf="@+id/username_editText" />
 
-            <EditText
-                android:id="@+id/emailRegister_editText"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:autofillHints="emailAddress"
-                android:ems="10"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress" />
+                <EditText
+                    android:id="@+id/lastName_editText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:autofillHints="personFamilyName"
+                    android:backgroundTint="@color/white"
+                    android:ems="10"
+                    android:fontFamily="@font/inter_regular"
+                    android:hint="@string/last_name"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    app:layout_constraintEnd_toEndOf="@+id/emailRegister_editText"
+                    app:layout_constraintHorizontal_bias="0.507"
+                    app:layout_constraintStart_toStartOf="@+id/emailRegister_editText"
+                    app:layout_constraintTop_toBottomOf="@+id/firstName_editText" />
 
-            <EditText
-                android:id="@+id/passwordRegister_editText"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:autofillHints="newPassword"
-                android:ems="10"
-                android:hint="@string/password"
-                android:inputType="textPassword" />
+                <EditText
+                    android:id="@+id/emailRegister_editText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:autofillHints="emailAddress"
+                    android:backgroundTint="@color/white"
+                    android:ems="10"
+                    android:fontFamily="@font/inter_regular"
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    app:layout_constraintEnd_toEndOf="@+id/passwordRegister_editText"
+                    app:layout_constraintStart_toStartOf="@+id/passwordRegister_editText"
+                    app:layout_constraintTop_toBottomOf="@+id/lastName_editText" />
 
-            <EditText
-                android:id="@+id/repeatPasswordRegister_editText"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:autofillHints="newPassword"
-                android:ems="10"
-                android:hint="@string/repeat_password"
-                android:inputType="textPassword" />
+                <EditText
+                    android:id="@+id/passwordRegister_editText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:autofillHints="newPassword"
+                    android:backgroundTint="@color/white"
+                    android:ems="10"
+                    android:fontFamily="@font/inter_regular"
+                    android:hint="@string/password"
+                    android:inputType="textPassword"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    app:layout_constraintEnd_toEndOf="@+id/repeatPasswordRegister_editText"
+                    app:layout_constraintHorizontal_bias="0.507"
+                    app:layout_constraintStart_toStartOf="@+id/repeatPasswordRegister_editText"
+                    app:layout_constraintTop_toBottomOf="@+id/emailRegister_editText" />
 
-            <EditText
-                android:id="@+id/birthdate_editText"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:autofillHints="no"
-                android:ems="10"
-                android:hint="@string/birthdate"
-                android:inputType="none" />
+                <EditText
+                    android:id="@+id/repeatPasswordRegister_editText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:autofillHints="newPassword"
+                    android:backgroundTint="@color/white"
+                    android:ems="10"
+                    android:fontFamily="@font/inter_regular"
+                    android:hint="@string/repeat_password"
+                    android:inputType="textPassword"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    app:layout_constraintEnd_toEndOf="@+id/birthdate_editText"
+                    app:layout_constraintHorizontal_bias="0.502"
+                    app:layout_constraintStart_toStartOf="@+id/birthdate_editText"
+                    app:layout_constraintTop_toBottomOf="@+id/passwordRegister_editText" />
 
-            <Button
-                android:id="@+id/registerRegister_button"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:text="@string/register" />
+                <EditText
+                    android:id="@+id/birthdate_editText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:autofillHints="no"
+                    android:backgroundTint="@color/white"
+                    android:ems="10"
+                    android:fontFamily="@font/inter_regular"
+                    android:hint="@string/birthdate"
+                    android:inputType="none"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    app:layout_constraintEnd_toEndOf="@+id/registerRegister_button"
+                    app:layout_constraintHorizontal_bias="0.507"
+                    app:layout_constraintStart_toStartOf="@+id/registerRegister_button"
+                    app:layout_constraintTop_toBottomOf="@+id/repeatPasswordRegister_editText" />
 
-            <Button
-                android:id="@+id/back_button"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:text="@string/back" />
+                <Button
+                    android:id="@+id/registerRegister_button"
+                    android:layout_width="190dp"
+                    android:layout_height="49dp"
+                    android:layout_marginBottom="76dp"
+                    android:fontFamily="@font/inter_regular"
+                    android:text="@string/register"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/back_button"
+                    app:layout_constraintStart_toStartOf="@+id/back_button"
+                    app:layout_constraintTop_toBottomOf="@+id/birthdate_editText" />
 
-        </LinearLayout>
+                <Button
+                    android:id="@+id/back_button"
+                    android:layout_width="190dp"
+                    android:layout_height="49dp"
+                    android:fontFamily="@font/inter_regular"
+                    android:text="@string/back"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/registerRegister_button" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="322dp"
+                android:layout_height="106dp"
+                android:layout_marginTop="40dp"
+                android:fontFamily="@font/kenia_regular"
+                android:text="@string/title"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="80sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

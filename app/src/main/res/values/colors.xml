@@ -17,4 +17,5 @@
     <color name="primary">#6C1A93</color>
     <color name="message_success">#2c5140</color>
     <color name="message_failure">#8B0000</color>
+    <color name="dark_grey">#262626</color>
 </resources>
