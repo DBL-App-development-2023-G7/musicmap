@@ -3,6 +3,7 @@ package com.example.musicmap.util.ui;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,7 @@ public class ChangePasswordDialogFragment extends DialogFragment {
                 .setMessage("Please enter your current password and a new one to change your password.")
                 // Add action buttons
                 .setPositiveButton("Change password", null).setNegativeButton(R.string.cancel,
-                        (dialog, id) -> dialog.dismiss()).create();
+                        (dialog, id) -> this.dismiss()).create();
 
         // Required so that the user can update their password
         alertDialog.setOnShowListener(dialog -> {
@@ -57,7 +58,13 @@ public class ChangePasswordDialogFragment extends DialogFragment {
         String newPassword = newPasswordInput.getText().toString();
 
         if (checkOldPassword(oldPassword) | checkNewPassword(newPassword)) {
-            AuthSystem.updatePassword(oldPassword, newPassword);
+            AuthSystem.updatePassword(oldPassword, newPassword).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    this.dismiss();
+                } else {
+                    oldPasswordInput.setError(task.getException().getMessage());
+                }
+            });
         }
     }
 
