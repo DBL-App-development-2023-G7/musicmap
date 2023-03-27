@@ -62,7 +62,11 @@ public class ChangePasswordDialogFragment extends DialogFragment {
                 if (task.isSuccessful()) {
                     this.dismiss();
                 } else {
-                    oldPasswordInput.setError(task.getException().getMessage());
+                    Exception exception = task.getException();
+                    if (exception != null) {
+                        String message = exception.getMessage();
+                        oldPasswordInput.setError(message);
+                    }
                 }
             });
         }
