@@ -1,8 +1,15 @@
 package com.example.musicmap.screens.settings;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.format.DateFormat;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
@@ -50,9 +57,11 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
         Preference preferenceFirstName = profileCategory.findPreference("firstName");
         Preference preferenceLastName = profileCategory.findPreference("lastName");
         Preference preferenceBirthdate = profileCategory.findPreference("birthdate");
+        Preference preferenceChangeProfilePicture = profileCategory.findPreference("picture");
 
         if (preferenceUsername == null || preferenceEmail == null || preferenceFirstName == null
-                || preferenceLastName == null || preferenceBirthdate == null) {
+                || preferenceLastName == null || preferenceBirthdate == null
+                || preferenceChangeProfilePicture == null) {
             throw new IllegalArgumentException("Could not find the children of the profile category.");
         }
 
@@ -67,8 +76,26 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
             //TODO this has to be moved
             java.text.DateFormat dateFormat = DateFormat.getDateFormat(getContext());
             preferenceBirthdate.setSummary(dateFormat.format(currentUser.getData().getBirthdate()));
+
+            preferenceChangeProfilePicture.setOnPreferenceClickListener(view -> {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                someActivityResultLauncher.launch(intent);
+                return false;
+            });
         }
     }
+
+    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent data = result.getData();
+                    }
+                }
+            });
 
     private void setupSecurityPreferences() throws IllegalStateException {
         PreferenceCategory securityCategory = preferenceScreen.findPreference("security");
