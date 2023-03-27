@@ -54,7 +54,8 @@ public class MusicMap extends Application {
     private void createInternetCheckNotificationChannel() {
         CharSequence name = "Internet Check";
         int importance = NotificationManager.IMPORTANCE_HIGH;
-        NotificationChannel channel = new NotificationChannel(Constants.INTERNET_CHECK_NOTIFICATION_CHANNEL, name, importance);
+        NotificationChannel channel = new NotificationChannel(Constants.INTERNET_CHECK_NOTIFICATION_CHANNEL,
+                name, importance);
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
     }
