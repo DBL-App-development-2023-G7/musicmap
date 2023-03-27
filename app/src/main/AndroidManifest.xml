@@ -39,6 +39,7 @@
         </activity>
         <activity
             android:name=".screens.auth.AuthActivity"
+            android:theme="@style/Theme.MusicMap.Auth"
             android:exported="false"
             android:label="MusicMap" />
     </application>
