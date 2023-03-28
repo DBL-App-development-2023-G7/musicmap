@@ -1,5 +1,7 @@
 package com.example.musicmap.util.firebase;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 
 import com.example.musicmap.user.ArtistData;
@@ -18,6 +20,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -178,6 +183,34 @@ public class AuthSystem {
         return firestore.collection("Users").document(uid).delete();
     }
 
+    public static Task<Void> updateProfilePicture(Uri photoUri) {
+        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = auth.getCurrentUser();
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        if (firebaseUser == null) {
+            tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
+            return tcs.getTask();
+        }
+
+        StorageReference storageRef = storage.getReference("users/" + firebaseUser.getUid());
+        StorageReference photoRef = storageRef.child("profilePicture/" + photoUri.getLastPathSegment());
+
+        UploadTask uploadTask = photoRef.putFile(photoUri);
+
+        return uploadTask.onSuccessTask(taskSnapshot ->
+                photoRef.getDownloadUrl().onSuccessTask(uri -> {
+                    DocumentReference documentReference = firestore.collection("Users").document(firebaseUser.getUid());
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("profilePicture", uri);
+
+                    return documentReference.update(data);
+                }));
+    }
+
     public static Task<Void> updateEmail(String newEmail, String password) {
         TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
 
@@ -195,11 +228,10 @@ public class AuthSystem {
             return tcs.getTask();
         }
 
-        DocumentReference documentReference = firestore.collection("Users").document(firebaseUser.getUid());
-
         AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), password);
         return firebaseUser.reauthenticate(credential).onSuccessTask(reauthTask -> firebaseUser.updateEmail(newEmail)
                 .onSuccessTask(updateEmailTask -> firebaseUser.reload().onSuccessTask(reloadUserTask -> {
+                    DocumentReference documentReference = firestore.collection("Users").document(firebaseUser.getUid());
                     Map<String, Object> data = new HashMap<>();
                     data.put("email", newEmail);
 

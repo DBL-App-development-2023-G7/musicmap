@@ -2,12 +2,11 @@ package com.example.musicmap.screens.settings;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -79,21 +78,23 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
 
             preferenceChangeProfilePicture.setOnPreferenceClickListener(view -> {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
                 someActivityResultLauncher.launch(intent);
                 return false;
             });
         }
     }
 
-    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        // There are no request codes
-                        Intent data = result.getData();
+    private final ActivityResultLauncher<Intent> someActivityResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    if (data == null) {
+                        return;
                     }
+
+                    Uri photoUri = data.getData();
+                    AuthSystem.updateProfilePicture(photoUri);
                 }
             });
 
