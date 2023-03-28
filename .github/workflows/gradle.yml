@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 7
 
     steps:
       - uses: actions/checkout@v3
@@ -31,13 +31,12 @@ jobs:
   androidTest:
     needs: build
     runs-on: macos-latest
-    timeout-minutes: 10
+    timeout-minutes: 13
 
     strategy:
       matrix:
         api-level: [ 29 ]
         arch: [ x86_64 ]
-        first-boot-delay: [ 1000 ]
 
     steps:
       - name: Checkout
@@ -56,19 +55,17 @@ jobs:
             ~/.android/avd/*
             ~/.android/adb*
           key: avd-${{ matrix.api-level }}
-      - name: create AVD and generate snapshot for caching
+      - name: Create AVD snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
           force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
+          emulator-options: -no-window -noaudio -no-boot-anim -camera-back none
           script: echo "AVD snapshot for caching finished"
       - name: Run Android tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
-          arch: x86_64
           disable-animations: true
           script: ./gradlew connectedCheck
