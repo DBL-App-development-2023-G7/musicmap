@@ -22,7 +22,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -172,7 +171,7 @@ public class AuthSystem {
     }
 
     /**
-     * This method remove the data stored in the Firestore database of the user that has the given uid. This method
+     * This method removes the data stored in the Firestore database of the user that has the given uid. This method
      * is intentionally made private.
      *
      * @param uid the uid of the user
@@ -183,6 +182,12 @@ public class AuthSystem {
         return firestore.collection("Users").document(uid).delete();
     }
 
+    /**
+     * This method uploads the given photo as the profile picture of the currently connected user.
+     *
+     * @param photoUri the local uri of the photo that needs to be uploaded
+     * @return the result of the task
+     */
     public static Task<Void> updateProfilePicture(Uri photoUri) {
         TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
 
@@ -197,20 +202,35 @@ public class AuthSystem {
         }
 
         StorageReference storageRef = storage.getReference("users/" + firebaseUser.getUid());
-        StorageReference photoRef = storageRef.child("profilePicture/" + photoUri.getLastPathSegment());
+        StorageReference folderRef = storageRef.child("/profilePicture");
+        StorageReference photoRef = folderRef.child(photoUri.getLastPathSegment());
 
-        UploadTask uploadTask = photoRef.putFile(photoUri);
+        return folderRef.listAll().onSuccessTask(results -> {
+            //Delete older photos
+            for (StorageReference item : results.getItems()) {
+                item.delete();
+            }
 
-        return uploadTask.onSuccessTask(taskSnapshot ->
-                photoRef.getDownloadUrl().onSuccessTask(uri -> {
-                    DocumentReference documentReference = firestore.collection("Users").document(firebaseUser.getUid());
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("profilePicture", uri);
+            return photoRef.putFile(photoUri).onSuccessTask(taskSnapshot -> photoRef.getDownloadUrl()
+                    .onSuccessTask(uri -> {
+                        DocumentReference documentReference =
+                                firestore.collection("Users").document(firebaseUser.getUid());
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("profilePicture", uri);
 
-                    return documentReference.update(data);
-                }));
+                        return documentReference.update(data);
+                    }));
+        });
     }
 
+    /**
+     * This method updates the email of the currently connected user and if successful it will send a new
+     * verification email.
+     *
+     * @param newEmail the new email
+     * @param password the password of the connected user
+     * @return the result of the task
+     */
     public static Task<Void> updateEmail(String newEmail, String password) {
         TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
 
@@ -229,19 +249,29 @@ public class AuthSystem {
         }
 
         AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), password);
-        return firebaseUser.reauthenticate(credential).onSuccessTask(reauthTask -> firebaseUser.updateEmail(newEmail)
-                .onSuccessTask(updateEmailTask -> firebaseUser.reload().onSuccessTask(reloadUserTask -> {
-                    DocumentReference documentReference = firestore.collection("Users").document(firebaseUser.getUid());
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("email", newEmail);
+        return firebaseUser.reauthenticate(credential).onSuccessTask(reauthTask ->
+                firebaseUser.updateEmail(newEmail).onSuccessTask(updateEmailTask ->
+                        firebaseUser.reload().onSuccessTask(reloadUserTask -> {
+                            DocumentReference documentReference =
+                                    firestore.collection("Users").document(firebaseUser.getUid());
+                            Map<String, Object> data = new HashMap<>();
+                            data.put("email", newEmail);
 
-                    Task<Void> sendEmail = firebaseUser.sendEmailVerification();
-                    Task<Void> updateEmail = documentReference.update(data);
+                            Task<Void> sendEmail = firebaseUser.sendEmailVerification();
+                            Task<Void> updateEmail = documentReference.update(data);
 
-                    return Tasks.whenAll(sendEmail, updateEmail);
-                })));
+                            return Tasks.whenAll(sendEmail, updateEmail);
+                        })));
     }
 
+    /**
+     * This method updated the password of the currently connected user. It replaces the old password with the one
+     * provided in the parameter {@code oldPassword}.
+     *
+     * @param oldPassword the current password of the connected user
+     * @param newPassword the new password
+     * @return the result of the task
+     */
     public static Task<Void> updatePassword(String oldPassword, String newPassword) {
         TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
 
@@ -259,8 +289,8 @@ public class AuthSystem {
         }
 
         AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), oldPassword);
-        return firebaseUser.reauthenticate(credential).onSuccessTask(reauthTask ->
-                firebaseUser.updatePassword(newPassword));
+        return firebaseUser.reauthenticate(credential)
+                .onSuccessTask(reauthTask -> firebaseUser.updatePassword(newPassword));
     }
 
     /**
@@ -289,6 +319,9 @@ public class AuthSystem {
                 removeUserFromFirestore(firebaseUser.getUid()).onSuccessTask(task -> firebaseUser.delete()));
     }
 
+    /**
+     * This method logs out the user.
+     */
     public static void logout() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.signOut();

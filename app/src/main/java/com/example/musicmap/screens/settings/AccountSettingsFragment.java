@@ -21,6 +21,7 @@ import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.ui.ChangeEmailDialogFragment;
 import com.example.musicmap.util.ui.ChangePasswordDialogFragment;
 import com.example.musicmap.util.ui.DeleteAccountDialogFragment;
+import com.example.musicmap.util.ui.Message;
 
 import java.text.DateFormat;
 
@@ -44,6 +45,22 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
         setupSecurityPreferences();
         setupOtherPreferences();
     }
+
+    //TODO idk where but move this somewhere
+    private final ActivityResultLauncher<Intent> uploadPictureActivityResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    if (data == null) {
+                        return;
+                    }
+
+                    Uri photoUri = data.getData();
+                    AuthSystem.updateProfilePicture(photoUri).addOnFailureListener(exception ->
+                            Message.showFailureMessage(activity, exception.getMessage())
+                    );
+                }
+            });
 
     private void setupProfilePreferences() throws IllegalStateException {
         PreferenceCategory profileCategory = preferenceScreen.findPreference("profile");
@@ -84,19 +101,6 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
             });
         }
     }
-
-    private final ActivityResultLauncher<Intent> uploadPictureActivityResultLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    Intent data = result.getData();
-                    if (data == null) {
-                        return;
-                    }
-
-                    Uri photoUri = data.getData();
-                    AuthSystem.updateProfilePicture(photoUri);
-                }
-            });
 
     private void setupSecurityPreferences() throws IllegalStateException {
         PreferenceCategory securityCategory = preferenceScreen.findPreference("security");
