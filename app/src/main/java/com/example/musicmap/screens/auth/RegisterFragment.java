@@ -2,6 +2,7 @@ package com.example.musicmap.screens.auth;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +19,7 @@ import com.example.musicmap.util.ui.BirthdatePickerDialog;
 import com.example.musicmap.util.ui.Message;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 public class RegisterFragment extends AuthFragment {
 
@@ -163,8 +162,7 @@ public class RegisterFragment extends AuthFragment {
 
     private boolean checkBirthdate(Date birthdate) {
         String birthdateText = birthdateInput.getText().toString();
-        SimpleDateFormat dateFormat =
-                new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        java.text.DateFormat dateFormat = DateFormat.getDateFormat(getContext());
 
         if (birthdateText.equals("")) {
             birthdateInput.setError(getString(R.string.input_error_pick_date));

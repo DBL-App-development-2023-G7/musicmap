@@ -72,20 +72,19 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
             preferenceFirstName.setSummary(currentUser.getData().getFirstName());
             preferenceLastName.setSummary(currentUser.getData().getLastName());
 
-            //TODO this has to be moved
             java.text.DateFormat dateFormat = DateFormat.getDateFormat(getContext());
             preferenceBirthdate.setSummary(dateFormat.format(currentUser.getData().getBirthdate()));
 
             preferenceChangeProfilePicture.setOnPreferenceClickListener(view -> {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-                someActivityResultLauncher.launch(intent);
+                uploadPictureActivityResultLauncher.launch(intent);
                 return false;
             });
         }
     }
 
-    private final ActivityResultLauncher<Intent> someActivityResultLauncher =
+    private final ActivityResultLauncher<Intent> uploadPictureActivityResultLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
