@@ -15,6 +15,11 @@ import com.example.musicmap.util.firebase.AuthSystem;
 public class VerificationActivity extends SessionAndInternetListenerActivity {
 
     @Override
+    protected void updateLayout(boolean internetAvailable) {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);

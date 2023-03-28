@@ -5,12 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.musicmap.screens.NoInternetActivity;
 import com.example.musicmap.screens.auth.AuthActivity;
 import com.example.musicmap.screens.verification.VerificationActivity;
 import com.example.musicmap.user.Artist;
@@ -18,7 +16,7 @@ import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
 import com.example.musicmap.util.Constants;
 
-public class SessionAndInternetListenerActivity extends AppCompatActivity implements Session.Listener {
+public abstract class SessionAndInternetListenerActivity extends AppCompatActivity implements Session.Listener {
 
     private Session session;
 
@@ -26,14 +24,14 @@ public class SessionAndInternetListenerActivity extends AppCompatActivity implem
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Constants.INTERNET_BROADCAST_ACTION)) {
-                boolean isInternetAvailable = intent.getBooleanExtra(Constants.INTERNET_BROADCAST_BUNDLE_KEY, true);
-                if (!isInternetAvailable) {
-                    startActivity(new Intent(SessionAndInternetListenerActivity.this, NoInternetActivity.class));
-                    finish();
-                }
+                boolean internetAvailable = intent.getBooleanExtra(Constants.INTERNET_BROADCAST_BUNDLE_KEY, true);
+                updateLayout(internetAvailable);
             }
         }
     };
+
+    protected abstract void updateLayout(boolean internetAvailable);
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,7 +91,7 @@ public class SessionAndInternetListenerActivity extends AppCompatActivity implem
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        session.removeListener(this);
         unregisterReceiver(internetCheckReceiver);
     }
-
 }

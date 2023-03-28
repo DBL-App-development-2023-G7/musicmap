@@ -9,6 +9,11 @@ import com.example.musicmap.SessionAndInternetListenerActivity;
 public class ProfileActivity extends SessionAndInternetListenerActivity {
 
     @Override
+    protected void updateLayout(boolean internetAvailable) {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);

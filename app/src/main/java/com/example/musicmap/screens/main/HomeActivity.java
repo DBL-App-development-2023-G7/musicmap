@@ -2,7 +2,11 @@ package com.example.musicmap.screens.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import androidx.fragment.app.Fragment;
 
 import com.example.musicmap.R;
 import com.example.musicmap.SessionAndInternetListenerActivity;
@@ -13,6 +17,30 @@ import com.example.musicmap.util.ui.FragmentUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends SessionAndInternetListenerActivity {
+
+    private Class<? extends Fragment> lastFragmentClass = FeedFragment.class;
+    private int currentLayout = R.layout.activity_home;
+
+    @Override
+    protected void updateLayout(boolean internetAvailable) {
+        if (!internetAvailable) {
+            setContentView(R.layout.layout_no_internet);
+            currentLayout = R.layout.layout_no_internet;
+            return;
+        }
+
+        if (currentLayout == R.layout.activity_home) {
+            return;
+        }
+
+        if (currentLayout == R.layout.layout_no_internet) {
+            setContentView(R.layout.activity_home);
+            currentLayout = R.layout.activity_home;
+            FragmentUtil.initFragment(getSupportFragmentManager(), R.id.fragment_view,
+                    lastFragmentClass);
+            setupActivity();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +53,10 @@ public class HomeActivity extends SessionAndInternetListenerActivity {
                     FeedFragment.class);
         }
 
+        setupActivity();
+    }
+
+    private void setupActivity() {
         Session.getInstance();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -39,22 +71,26 @@ public class HomeActivity extends SessionAndInternetListenerActivity {
             if (item.getItemId() == R.id.navbarFeed) {
                 FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.fragment_view,
                         FeedFragment.class);
+                lastFragmentClass = FeedFragment.class;
                 return true;
             }
 
             if (item.getItemId() == R.id.navbarPost) {
                 FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.fragment_view,
                         PostFragment.class);
+                lastFragmentClass = PostFragment.class;
                 return true;
             }
 
             if (item.getItemId() == R.id.navbarMap) {
                 FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.fragment_view,
                         PostMapFragment.class);
+                lastFragmentClass = PostMapFragment.class;
                 return true;
             }
 
             return false;
         });
     }
+
 }
