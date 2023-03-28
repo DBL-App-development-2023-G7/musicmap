@@ -6,8 +6,13 @@ package com.example.musicmap.util;
 public final class Constants {
 
     /**
-     * Notification channel ID for internet check notifications.
+     * Broadcast action name for internet check.
      */
     public static final String INTERNET_BROADCAST_ACTION = "internet_check";
+
+    /**
+     * Internet broadcast intent bundle key.
+     */
+    public static final String INTERNET_BROADCAST_BUNDLE_KEY = "available";
 
 }

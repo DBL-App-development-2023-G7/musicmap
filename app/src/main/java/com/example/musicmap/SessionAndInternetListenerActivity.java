@@ -26,7 +26,7 @@ public class SessionAndInternetListenerActivity extends AppCompatActivity implem
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Constants.INTERNET_BROADCAST_ACTION)) {
-                boolean isInternetAvailable = intent.getBooleanExtra("internet", true);
+                boolean isInternetAvailable = intent.getBooleanExtra(Constants.INTERNET_BROADCAST_BUNDLE_KEY, true);
                 if (!isInternetAvailable) {
                     startActivity(new Intent(SessionAndInternetListenerActivity.this, NoInternetActivity.class));
                     finish();

@@ -47,9 +47,9 @@ public class InternetCheckService extends Service {
 
                     if (!isInternetAvailable(context)) {
                         Log.w(TAG, "No internet connection found");
-                        intent.putExtra("internet", false);
+                        intent.putExtra(Constants.INTERNET_BROADCAST_BUNDLE_KEY, false);
                     } else {
-                        intent.putExtra("internet", true);
+                        intent.putExtra(Constants.INTERNET_BROADCAST_BUNDLE_KEY, true);
                     }
 
                     sendBroadcast(intent);
