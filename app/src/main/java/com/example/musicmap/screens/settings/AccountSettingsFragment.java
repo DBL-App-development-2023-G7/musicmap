@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.format.DateFormat;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -22,6 +21,8 @@ import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.ui.ChangeEmailDialogFragment;
 import com.example.musicmap.util.ui.ChangePasswordDialogFragment;
 import com.example.musicmap.util.ui.DeleteAccountDialogFragment;
+
+import java.text.DateFormat;
 
 public class AccountSettingsFragment extends PreferenceFragmentCompat {
 
@@ -72,7 +73,7 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
             preferenceFirstName.setSummary(currentUser.getData().getFirstName());
             preferenceLastName.setSummary(currentUser.getData().getLastName());
 
-            java.text.DateFormat dateFormat = DateFormat.getDateFormat(getContext());
+            DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getContext());
             preferenceBirthdate.setSummary(dateFormat.format(currentUser.getData().getBirthdate()));
 
             preferenceChangeProfilePicture.setOnPreferenceClickListener(view -> {

@@ -3,11 +3,11 @@ package com.example.musicmap.util.ui;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.icu.util.Calendar;
-import android.text.format.DateFormat;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 
+import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -41,7 +41,7 @@ public class BirthdatePickerDialog extends DatePickerDialog {
             month++;
             Date date = Date.from(LocalDate.of(year, month, day).atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-            java.text.DateFormat dateFormat = DateFormat.getDateFormat(datePicker.getContext());
+            DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(datePicker.getContext());
             editText.setText(dateFormat.format(date));
         };
     }
