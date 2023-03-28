@@ -25,11 +25,6 @@ jobs:
         run: ./gradlew build
       - name: Run unit tests
         run: ./gradlew test
-      - name: Run Android tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          script: ./gradlew connectedCheck
       - name: Run Checkstyle
         run: ./gradlew checkstyle
 
@@ -60,7 +55,7 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ matrix.api-level }
+          key: avd-${{ matrix.api-level }}
       - name: create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
