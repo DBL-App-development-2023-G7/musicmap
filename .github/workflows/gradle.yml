@@ -18,7 +18,8 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           cache: gradle
-
+      - name: Set up environment
+        run: echo "JAVA_HOME=$(dirname $(dirname $(readlink $(which javac))))" >> $GITHUB_ENV
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
@@ -26,7 +27,7 @@ jobs:
       - name: Run unit tests
         run: ./gradlew test
       - name: Run Android tests
-        uses: reactivecircus/android-emulator-runner@v1
+        uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
           script: ./gradlew connectedCheck
