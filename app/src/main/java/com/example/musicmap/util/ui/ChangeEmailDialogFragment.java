@@ -36,11 +36,11 @@ public class ChangeEmailDialogFragment extends DialogFragment {
         // Pass null as the parent view because its going in the dialog layout
         AlertDialog alertDialog = builder.setView(dialogView)
                 // Add title to the dialog
-                .setTitle("Change email")
+                .setTitle(R.string.change_email)
                 // Add description message to the dialog
-                .setMessage("Please enter your new email and current password.")
+                .setMessage(R.string.email_dialog_description)
                 // Add action buttons
-                .setPositiveButton("Change email", null).setNegativeButton(R.string.cancel,
+                .setPositiveButton(R.string.change_email, null).setNegativeButton(R.string.cancel,
                         (dialog, id) -> this.dismiss()).create();
 
         // Required so that the dialog won't close when an error occurs after pressing delete account

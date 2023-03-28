@@ -36,11 +36,11 @@ public class ChangePasswordDialogFragment extends DialogFragment {
         // Pass null as the parent view because its going in the dialog layout
         AlertDialog alertDialog = builder.setView(dialogView)
                 // Add title to the dialog
-                .setTitle("Change password")
+                .setTitle(R.string.change_password)
                 // Add description message to the dialog
-                .setMessage("Please enter your current password and a new one to change your password.")
+                .setMessage(R.string.password_dialog_description)
                 // Add action buttons
-                .setPositiveButton("Change password", null).setNegativeButton(R.string.cancel,
+                .setPositiveButton(R.string.change_password, null).setNegativeButton(R.string.cancel,
                         (dialog, id) -> this.dismiss()).create();
 
         // Required so that the user can update their password

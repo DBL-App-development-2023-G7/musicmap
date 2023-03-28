@@ -2,7 +2,7 @@
     <PreferenceCategory
         app:iconSpaceReserved="false"
         app:key="profile"
-        app:title="Profile">
+        app:title="@string/profile">
         <Preference
             app:icon="@drawable/person_icon"
             app:key="username"
@@ -19,6 +19,7 @@
             app:title="@string/first_name"
             app:selectable="false"/>
         <Preference
+
             app:icon="@drawable/text_icon"
             app:key="lastName"
             app:title="@string/last_name"
@@ -31,28 +32,28 @@
         <Preference
             app:icon="@drawable/person_icon"
             app:key="picture"
-            app:title="Change profile picture" />
+            app:title="@string/change_profile_picture" />
     </PreferenceCategory>
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
         app:key="security"
-        app:title="Security">
+        app:title="@string/security">
         <Preference
             app:icon="@drawable/email_icon"
             app:key="changeEmail"
-            app:title="Change email" />
+            app:title="@string/change_email" />
         <Preference
             app:icon="@drawable/lock_icon"
             app:key="changePassword"
-            app:title="Change password" />
+            app:title="@string/change_password" />
     </PreferenceCategory>
 
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
         app:key="other"
-        app:title="Other">
+        app:title="@string/other">
         <Preference
             app:icon="@drawable/logout_icon"
             app:key="logout"

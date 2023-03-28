@@ -16,6 +16,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
         PreferenceScreen preferenceScreen = getPreferenceScreen();
         Preference versionPreference = preferenceScreen.getPreference(preferenceScreen.getPreferenceCount() - 1);
-        versionPreference.setSummary("The current version of the app is: " + BuildConfig.VERSION_NAME);
+        versionPreference.setSummary(getString(R.string.current_version, BuildConfig.VERSION_NAME));
     }
 }

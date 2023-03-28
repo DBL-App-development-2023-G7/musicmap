@@ -2,13 +2,13 @@
 
     <Preference
         app:fragment="com.example.musicmap.screens.settings.AccountSettingsFragment"
-        app:title="Account Settings"
+        app:title="@string/account_settings"
         app:icon="@drawable/person_icon"
-        app:summary="General account settings"/>
+        app:summary="@string/account_settings_description"/>
 
     <Preference
-        app:title="App Version"
-        app:summary="The current version of the app is:"
+        app:title="@string/app_version"
+        app:summary="@string/current_version"
         app:icon="@drawable/info_icon"/>
 
 </PreferenceScreen>
