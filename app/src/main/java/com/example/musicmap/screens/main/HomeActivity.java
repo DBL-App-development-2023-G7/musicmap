@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import androidx.fragment.app.FragmentManager;
+
 import com.example.musicmap.R;
 import com.example.musicmap.SessionListenerActivity;
+import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.screens.map.PostMapFragment;
 import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.user.Session;
@@ -13,6 +16,8 @@ import com.example.musicmap.util.ui.FragmentUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends SessionListenerActivity {
+
+    private MusicMemory currentMusicMemory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,5 +61,17 @@ public class HomeActivity extends SessionListenerActivity {
 
             return false;
         });
+    }
+
+    public FragmentManager getFragmentManagerFromActivity() {
+        return getSupportFragmentManager();
+    }
+
+    public MusicMemory getCurrentMusicMemory() {
+        return currentMusicMemory;
+    }
+
+    public void setCurrentMusicMemory(MusicMemory currentMusicMemory) {
+        this.currentMusicMemory = currentMusicMemory;
     }
 }

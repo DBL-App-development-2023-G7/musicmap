@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.musicmap.R;
 import com.example.musicmap.screens.auth.RegisterFragment;
+import com.example.musicmap.screens.main.HomeActivity;
 import com.example.musicmap.screens.main.MusicMemoryFragment;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.squareup.picasso.Picasso;
@@ -28,7 +29,6 @@ import java.util.List;
 public class FeedAdapter extends ArrayAdapter<MusicMemory> {
 
     private final Activity activityContext;
-    private static final int FRAGMENT_CONTAINER_ID = R.id.fragment_container_view;
 
     public FeedAdapter(@NonNull Activity activityContext, int resource, @NonNull List<MusicMemory> feedItems) {
         super(activityContext, resource, feedItems);
@@ -58,14 +58,9 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
         ImageView userImage = row.findViewById(R.id.user_profile_image);
 
         MusicMemory musicMemory = getItem(position);
-        MusicMemoryFragment mmFragment = new MusicMemoryFragment(musicMemory);
-        FragmentActivity fragmentActivity = (FragmentActivity) activityContext;
-        row.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentUtil.replaceFragment(fragmentActivity.getSupportManager(), FRAGMENT_CONTAINER_ID, mmFragment);
-            }
-        });
+        HomeActivity homeActivity = (HomeActivity) activityContext;
+        homeActivity.setCurrentMusicMemory(musicMemory);
+        row.setOnClickListener(v -> FragmentUtil.replaceFragment(homeActivity.getFragmentManagerFromActivity(), R.id.fragment_view, MusicMemoryFragment.class));
         if (musicMemory != null) {
             // TODO: more user-friendly display
             songName.setText(musicMemory.getSong());

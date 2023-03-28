@@ -1,5 +1,6 @@
 package com.example.musicmap.screens.main;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -27,23 +28,17 @@ public class MusicMemoryFragment extends Fragment {
     public static final String TAG = "MusicMemoryFragment";
 
     // TODO: Rename and change types of parameters
-    private final MusicMemory musicMemory;
-
-    public MusicMemoryFragment(MusicMemory mm) {
-        this.musicMemory = mm;
-    }
+    private MusicMemory musicMemory;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment MusicMemoryFragment.
      */
     // TODO: Rename and change types and number of parameters
     public static MusicMemoryFragment newInstance(MusicMemory mm) {
-        MusicMemoryFragment fragment = new MusicMemoryFragment(mm);
+        MusicMemoryFragment fragment = new MusicMemoryFragment();
         Bundle args = new Bundle();
         args.putString("song", mm.getSong());
         args.putString("photoURL", mm.getPhoto().toString());
@@ -56,6 +51,9 @@ public class MusicMemoryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HomeActivity activity = (HomeActivity) requireActivity();
+        this.musicMemory = activity.getCurrentMusicMemory();
+
         if (getArguments() != null) {
             this.song = getArguments().getString("song");
             this.photoURI = getArguments().getString("photoURL");
