@@ -55,14 +55,19 @@ public class SearchFragment extends MainFragment {
 
                     PagingCursorbased<PlayHistory> pageHistory =  pageHistoryFuture.join();
                     Log.d("debug", "execute recent history request done");
-                    List<CompletableFuture<Track>> trackFutures = Arrays.stream(pageHistory.getItems())
-                            .limit(4) // only get 4 most recent songs (To prevent API calls)
-                            .filter(playHistory ->
-                                    playHistory.getTrack().getType() == ModelObjectType.TRACK // assumes getTrack is not null
-                            ).map(playHistory -> playHistory.getTrack().getId())// actually just get the track id since we only need those for requests
-                            .map(trackId -> SpotifyUtils.getGetTrackRequest(trackId)) // prepare request to get full track data (since Album is not in simplified track)
-                            .map(request -> request.executeAsync())// call all requests
-                            .collect(Collectors.toList());
+                    PlayHistory[] historyItems = pageHistory.getItems();
+                    List<CompletableFuture<Track>> trackFutures = new ArrayList<>();
+                    if(historyItems != null){
+                        trackFutures.addAll(Arrays.stream(historyItems)
+                                .limit(4) // only get 4 most recent songs (To prevent API calls)
+                                .filter(playHistory ->
+                                        playHistory.getTrack().getType() == ModelObjectType.TRACK // assumes getTrack is not null
+                                ).map(playHistory -> playHistory.getTrack().getId())// actually just get the track id since we only need those for requests
+                                .map(trackId -> SpotifyUtils.getGetTrackRequest(trackId)) // prepare request to get full track data (since Album is not in simplified track)
+                                .map(request -> request.executeAsync())// call all requests
+                                .collect(Collectors.toList()));
+                    }
+
                     CurrentlyPlaying currentTrack = currentTrackFuture.join();
                     if(currentTrack != null) {
                         String currentTrackId = currentTrack.getItem().getId();
