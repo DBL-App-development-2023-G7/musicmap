@@ -14,7 +14,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.musicmap.R;
 import com.example.musicmap.util.firebase.AuthSystem;
-import com.example.musicmap.util.regex.ValidationUtil;
+import com.example.musicmap.util.regex.InputChecker;
 
 public class ChangePasswordDialogFragment extends DialogFragment {
 
@@ -56,7 +56,8 @@ public class ChangePasswordDialogFragment extends DialogFragment {
         String oldPassword = oldPasswordInput.getText().toString();
         String newPassword = newPasswordInput.getText().toString();
 
-        if (checkOldPassword(oldPassword) | checkNewPassword(newPassword)) {
+        if (InputChecker.checkPassword(oldPassword, oldPasswordInput) & InputChecker.checkPassword(newPassword,
+                newPasswordInput)) {
             AuthSystem.updatePassword(oldPassword, newPassword).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     this.dismiss();
@@ -68,38 +69,6 @@ public class ChangePasswordDialogFragment extends DialogFragment {
                     }
                 }
             });
-        }
-    }
-
-    private boolean checkOldPassword(String password) {
-        switch (ValidationUtil.isPasswordValid(password)) {
-            case EMPTY:
-                oldPasswordInput.setError(getString(R.string.input_error_enter_password));
-                return false;
-            case FORMAT:
-                oldPasswordInput.setError(getString(R.string.input_error_valid_password));
-                return false;
-            case VALID:
-                return true;
-            default:
-                oldPasswordInput.setError(getString(R.string.input_error_unexpected));
-                return false;
-        }
-    }
-
-    private boolean checkNewPassword(String password) {
-        switch (ValidationUtil.isPasswordValid(password)) {
-            case EMPTY:
-                newPasswordInput.setError(getString(R.string.input_error_enter_password));
-                return false;
-            case FORMAT:
-                newPasswordInput.setError(getString(R.string.input_error_valid_password));
-                return false;
-            case VALID:
-                return true;
-            default:
-                newPasswordInput.setError(getString(R.string.input_error_unexpected));
-                return false;
         }
     }
 

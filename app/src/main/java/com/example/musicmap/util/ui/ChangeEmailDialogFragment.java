@@ -14,7 +14,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.musicmap.R;
 import com.example.musicmap.util.firebase.AuthSystem;
-import com.example.musicmap.util.regex.ValidationUtil;
+import com.example.musicmap.util.regex.InputChecker;
 
 public class ChangeEmailDialogFragment extends DialogFragment {
 
@@ -56,7 +56,7 @@ public class ChangeEmailDialogFragment extends DialogFragment {
         String newEmail = newEmailInput.getText().toString();
         String password = passwordInput.getText().toString();
 
-        if (checkEmail(newEmail) | checkPassword(password)) {
+        if (InputChecker.checkEmail(newEmail, newEmailInput) | InputChecker.checkPassword(password, passwordInput)) {
             AuthSystem.updateEmail(newEmail, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     this.dismiss();
@@ -70,37 +70,4 @@ public class ChangeEmailDialogFragment extends DialogFragment {
             });
         }
     }
-
-    private boolean checkEmail(String email) {
-        switch (ValidationUtil.isEmailValid(email)) {
-            case EMPTY:
-                newEmailInput.setError(getString(R.string.input_error_enter_email));
-                return false;
-            case FORMAT:
-                newEmailInput.setError(getString(R.string.input_error_valid_email));
-                return false;
-            case VALID:
-                return true;
-            default:
-                newEmailInput.setError(getString(R.string.input_error_unexpected));
-                return false;
-        }
-    }
-
-    private boolean checkPassword(String password) {
-        switch (ValidationUtil.isPasswordValid(password)) {
-            case EMPTY:
-                passwordInput.setError(getString(R.string.input_error_enter_password));
-                return false;
-            case FORMAT:
-                passwordInput.setError(getString(R.string.input_error_valid_password));
-                return false;
-            case VALID:
-                return true;
-            default:
-                passwordInput.setError(getString(R.string.input_error_unexpected));
-                return false;
-        }
-    }
-
 }

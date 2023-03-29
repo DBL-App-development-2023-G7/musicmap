@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.musicmap.R;
 import com.example.musicmap.util.firebase.AuthSystem;
+import com.example.musicmap.util.regex.InputChecker;
 import com.example.musicmap.util.regex.ValidationUtil;
 
 public class DeleteAccountDialogFragment extends DialogFragment {
@@ -53,27 +54,11 @@ public class DeleteAccountDialogFragment extends DialogFragment {
     private void deleteAccount() {
         String password = passwordInput.getText().toString();
 
-        if (checkPassword(password)) {
+        if (InputChecker.checkPassword(password, passwordInput)) {
             AuthSystem.deleteUser(password).addOnFailureListener(exception -> {
                 String message = exception.getMessage();
                 passwordInput.setError(message);
             });
-        }
-    }
-
-    private boolean checkPassword(String password) {
-        switch (ValidationUtil.isPasswordValid(password)) {
-            case EMPTY:
-                passwordInput.setError(getString(R.string.input_error_enter_password));
-                return false;
-            case FORMAT:
-                passwordInput.setError(getString(R.string.input_error_valid_password));
-                return false;
-            case VALID:
-                return true;
-            default:
-                passwordInput.setError(getString(R.string.input_error_unexpected));
-                return false;
         }
     }
 
