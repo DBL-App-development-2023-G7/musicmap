@@ -42,8 +42,8 @@ public class ProfileActivity extends SessionAndInternetListenerActivity {
 
     private void setupActivity() {
         FragmentUtil.initFragment(getSupportFragmentManager(), R.id.profileFragment, ProfilePageFragment.class);
-
         ImageView backButton = findViewById(R.id.appbarBack);
+
         backButton.setOnClickListener(view -> {
             startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
             finish();
@@ -51,7 +51,10 @@ public class ProfileActivity extends SessionAndInternetListenerActivity {
 
         ImageView settingsButton = findViewById(R.id.appbarSettings);
 
-        settingsButton.setOnClickListener(view -> startActivity(new Intent(this, SettingsActivity.class)));
+        settingsButton.setOnClickListener(view -> {
+            startActivity(new Intent(this, SettingsActivity.class));
+            finish();
+        });
     }
 
 }
