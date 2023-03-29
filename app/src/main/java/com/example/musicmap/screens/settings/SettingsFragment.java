@@ -18,4 +18,5 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         Preference versionPreference = preferenceScreen.getPreference(preferenceScreen.getPreferenceCount() - 1);
         versionPreference.setSummary(getString(R.string.current_version, BuildConfig.VERSION_NAME));
     }
+
 }

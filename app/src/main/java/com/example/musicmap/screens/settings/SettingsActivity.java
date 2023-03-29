@@ -16,4 +16,5 @@ public class SettingsActivity extends SessionListenerActivity {
         ImageView backButton = findViewById(R.id.appbarBack);
         backButton.setOnClickListener(view -> super.onBackPressed());
     }
+
 }
