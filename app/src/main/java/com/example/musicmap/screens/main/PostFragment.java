@@ -18,18 +18,27 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.example.musicmap.R;
 import com.example.musicmap.util.spotify.SpotifyAuthActivity;
+import com.example.musicmap.util.spotify.SpotifyData;
 import com.example.musicmap.util.ui.FragmentUtil;
 
 
 import com.example.musicmap.util.spotify.SpotifySession;
+import com.spotify.sdk.android.auth.AuthorizationClient;
+import com.spotify.sdk.android.auth.AuthorizationResponse;
 import com.squareup.picasso.Picasso;
 
 
 import java.io.IOException;
+import java.net.URI;
+
+import se.michaelthelin.spotify.SpotifyApi;
+import se.michaelthelin.spotify.SpotifyHttpManager;
+import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 
 public class PostFragment extends MainFragment {
 
@@ -54,18 +63,33 @@ public class PostFragment extends MainFragment {
             }
         }
     );
+    ActivityResultLauncher<Intent> loginResultLauncher =  registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    Log.d("debug", String.format("[poop] callback!"));
+                    Intent resultIntent = result.getData();
+
+                    Log.d("debug", String.format("[poop] result? %s",result.toString()));
+                    if(resultIntent == null){
+                        Log.d("debug", String.format("[poop] result is null"));
+                    }
+                }
+            }
+    );
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("debug", "[poop] Fragment start");
-
+        Log.d("debug", "[poop] Fragment create!");
+        registerForSpotifyPKCE();
     }
     SpotifySession s;
     @Override
     public void onStart() {
         super.onStart();
-        ((SpotifyAuthActivity) requireActivity()).registerForSpotify();
+        Log.d("debug", "[poop] Fragment start!");
     }
 
     @Override
@@ -114,6 +138,59 @@ public class PostFragment extends MainFragment {
                     new String[] {Manifest.permission.CAMERA},
                     100
             );
+        }
+    }
+    public static final int REQUEST_CODE_2 = 69420;
+    private static final String codeChallenge = "w6iZIj99vHGtEx_NVl9u3sthTN646vvkiP8OMCGfPmo";
+
+    public void registerForSpotifyPKCE() {
+        URI redirectUri = SpotifyHttpManager.makeUri(SpotifyData.getRedirectUri());
+        SpotifyApi spotifyApi = new SpotifyApi.Builder()
+                .setClientId(SpotifyData.getClientId())
+                .setRedirectUri(redirectUri)
+                .build();
+        AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApi.authorizationCodePKCEUri(codeChallenge).build();
+        authorizationCodeUriRequest.executeAsync().thenAcceptAsync(uri -> {
+            try {
+                Log.d("debug", String.format("[poop] URI: %s", uri.toString()));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri.toString()));
+                browserIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                loginResultLauncher.launch(browserIntent);
+            } catch (Throwable e){
+                Log.d("debug", String.format("[poop] Error: %s", e.getMessage()));
+            }
+
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        Log.d("debug", String.format("[poop] callback!"));
+        Log.d("debug", String.format("[poop] callback %s!", resultCode));
+        if (requestCode == REQUEST_CODE_2){
+            Log.d("debug", String.format("[poop] responce recieved!"));
+            final String EXTRA_AUTH_RESPONSE = "EXTRA_AUTH_RESPONSE";
+            final String RESPONSE_KEY = "response";
+            // A lot of potential for errors here
+            AuthorizationResponse response = intent.getBundleExtra(EXTRA_AUTH_RESPONSE).getParcelable(RESPONSE_KEY);
+            switch (response.getType()) {
+                case TOKEN:
+                    String accessToken = response.getAccessToken();
+                    Log.d("debug", String.format("[poop] Token: %s", accessToken));
+                    SpotifyData.setToken(accessToken);
+                    break;
+
+                case ERROR:
+                    Log.d("debug", String.format("[poop] Sign in failed %s", response.getError()));
+                    break;
+
+                // Most likely auth flow was cancelled
+                default:
+                    Log.d("debug", String.format("[poop] default"));
+                    // Handle other cases
+            }
+
         }
     }
 
