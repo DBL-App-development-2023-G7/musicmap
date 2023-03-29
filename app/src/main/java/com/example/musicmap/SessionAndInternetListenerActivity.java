@@ -94,4 +94,5 @@ public abstract class SessionAndInternetListenerActivity extends AppCompatActivi
         session.removeListener(this);
         unregisterReceiver(internetCheckReceiver);
     }
+
 }

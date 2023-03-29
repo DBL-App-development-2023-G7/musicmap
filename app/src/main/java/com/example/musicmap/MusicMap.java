@@ -1,13 +1,10 @@
 package com.example.musicmap;
 
 import android.app.Application;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.res.Resources;
 
 import com.example.musicmap.services.InternetCheckService;
-import com.example.musicmap.util.Constants;
 
 /**
  * The main Application.
