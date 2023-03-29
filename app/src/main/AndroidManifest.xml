@@ -22,12 +22,6 @@
         <service android:name=".services.InternetCheckService" />
 
         <activity
-            android:name=".screens.NoInternetActivity"
-            android:exported="false" />
-
-        <service android:name=".services.InternetCheckService" />
-
-        <activity
             android:name=".screens.verification.VerificationActivity"
             android:exported="false" />
         <activity
