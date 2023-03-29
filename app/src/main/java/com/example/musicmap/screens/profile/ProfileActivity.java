@@ -1,11 +1,12 @@
 package com.example.musicmap.screens.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.example.musicmap.R;
 import com.example.musicmap.SessionAndInternetListenerActivity;
-import com.example.musicmap.util.ui.FragmentUtil;
+import com.example.musicmap.screens.main.HomeActivity;
 
 public class ProfileActivity extends SessionAndInternetListenerActivity {
 
@@ -39,7 +40,10 @@ public class ProfileActivity extends SessionAndInternetListenerActivity {
 
     private void setupActivity() {
         ImageView backButton = findViewById(R.id.appbarBack);
-        backButton.setOnClickListener(view -> super.onBackPressed());
+        backButton.setOnClickListener(view -> {
+            startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
+            finish();
+        });
 
         ImageView settingsButton = findViewById(R.id.appbarSettings);
         settingsButton.setOnClickListener(view -> {

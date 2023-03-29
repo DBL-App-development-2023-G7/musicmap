@@ -36,8 +36,6 @@ public class HomeActivity extends SessionAndInternetListenerActivity {
         if (currentLayout == R.layout.layout_no_internet) {
             setContentView(R.layout.activity_home);
             currentLayout = R.layout.activity_home;
-            FragmentUtil.initFragment(getSupportFragmentManager(), R.id.fragment_view,
-                    lastFragmentClass);
             setupActivity();
         }
     }
@@ -47,23 +45,21 @@ public class HomeActivity extends SessionAndInternetListenerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // default load feed
-        if (savedInstanceState == null) {
-            FragmentUtil.initFragment(getSupportFragmentManager(), R.id.fragment_view,
-                    FeedFragment.class);
-        }
-
         setupActivity();
     }
 
     private void setupActivity() {
         Session.getInstance();
 
+        FragmentUtil.initFragment(getSupportFragmentManager(), R.id.fragment_view, lastFragmentClass);
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         ImageView profileButton = findViewById(R.id.appbarProfile);
 
-        profileButton.setOnClickListener(view ->
-                startActivity(new Intent(HomeActivity.this, ProfileActivity.class)));
+        profileButton.setOnClickListener(view -> {
+            startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
+            finish();
+        });
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             // using ifs instead of switch as resource IDs will be non-final by default in
