@@ -23,6 +23,10 @@
             android:exported="false"
             android:theme="@style/Theme.MusicMap.NoActionBar"/>
         <activity
+            android:name=".screens.NoInternetActivity"
+            android:exported="false" />
+        <service android:name=".services.InternetCheckService" />
+        <activity
             android:name=".screens.verification.VerificationActivity"
             android:exported="false"
             android:theme="@style/Theme.MusicMap.NoActionBar"/>
@@ -33,8 +37,8 @@
         <activity
             android:name=".screens.main.HomeActivity"
             android:exported="true"
-            android:theme="@style/Theme.MusicMap.NoActionBar"
             android:label="MusicMap"
+            android:theme="@style/Theme.MusicMap.NoActionBar"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,9 +48,9 @@
         </activity>
         <activity
             android:name=".screens.auth.AuthActivity"
-            android:theme="@style/Theme.MusicMap.Auth"
             android:exported="false"
-            android:label="MusicMap" />
+            android:label="MusicMap"
+            android:theme="@style/Theme.MusicMap.Auth" />
     </application>
 
 </manifest>

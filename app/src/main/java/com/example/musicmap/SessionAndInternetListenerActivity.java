@@ -1,26 +1,47 @@
 package com.example.musicmap;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.musicmap.screens.NoInternetActivity;
 import com.example.musicmap.screens.auth.AuthActivity;
 import com.example.musicmap.screens.verification.VerificationActivity;
 import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
+import com.example.musicmap.util.Constants;
 
-public class SessionListenerActivity extends AppCompatActivity implements Session.Listener {
+public class SessionAndInternetListenerActivity extends AppCompatActivity implements Session.Listener {
 
     private Session session;
+
+    private final BroadcastReceiver internetCheckReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Constants.INTERNET_BROADCAST_ACTION)) {
+                boolean isInternetAvailable = intent.getBooleanExtra(Constants.INTERNET_BROADCAST_BUNDLE_KEY, true);
+                if (!isInternetAvailable) {
+                    startActivity(new Intent(SessionAndInternetListenerActivity.this, NoInternetActivity.class));
+                    finish();
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         session = Session.getInstance();
         session.addListener(this);
+
+        IntentFilter intentFilter = new IntentFilter(Constants.INTERNET_BROADCAST_ACTION);
+        registerReceiver(internetCheckReceiver, intentFilter);
     }
 
     @Override
@@ -66,6 +87,12 @@ public class SessionListenerActivity extends AppCompatActivity implements Sessio
     public void onStop() {
         super.onStop();
         session.removeListener(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(internetCheckReceiver);
     }
 
 }

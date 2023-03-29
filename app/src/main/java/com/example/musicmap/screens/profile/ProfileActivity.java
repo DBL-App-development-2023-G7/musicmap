@@ -5,10 +5,11 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.example.musicmap.R;
+import com.example.musicmap.SessionAndInternetListenerActivity;
 import com.example.musicmap.SessionListenerActivity;
 import com.example.musicmap.screens.settings.SettingsActivity;
 
-public class ProfileActivity extends SessionListenerActivity {
+public class ProfileActivity extends SessionAndInternetListenerActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
