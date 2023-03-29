@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,7 +19,6 @@ import com.example.musicmap.feed.FeedAdapter;
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
-import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.firebase.Queries;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -45,14 +43,6 @@ public class ProfilePageFragment extends Fragment {
         usernameTextView = profileView.findViewById(R.id.profileUsername_textView);
         profilePicture = profileView.findViewById(id.profilePictureImage);
         ListView profileListView = profileView.findViewById(R.id.mm_list);
-
-        // logout button
-        Button logoutButton = profileView.findViewById(R.id.logout_button);
-        logoutButton.setOnClickListener(view -> AuthSystem.logout());
-
-        // deleteAccount button
-        Button deleteAccountButton = profileView.findViewById(R.id.deleteAccount_button);
-        deleteAccountButton.setOnClickListener(view -> AuthSystem.deleteUser());
 
         Activity activity = requireActivity();
         feedAdapter = new FeedAdapter(activity, R.layout.single_post_layout_feed);

@@ -8,6 +8,7 @@ import com.example.musicmap.R;
 import com.example.musicmap.SessionAndInternetListenerActivity;
 import com.example.musicmap.screens.main.HomeActivity;
 import com.example.musicmap.util.ui.FragmentUtil;
+import com.example.musicmap.screens.settings.SettingsActivity;
 
 public class ProfileActivity extends SessionAndInternetListenerActivity {
 
@@ -49,9 +50,8 @@ public class ProfileActivity extends SessionAndInternetListenerActivity {
         });
 
         ImageView settingsButton = findViewById(R.id.appbarSettings);
-        settingsButton.setOnClickListener(view -> {
-            // TODO: add go to settings method
-        });
+
+        settingsButton.setOnClickListener(view -> startActivity(new Intent(this, SettingsActivity.class)));
     }
 
 }

@@ -19,11 +19,15 @@
         android:theme="@style/Theme.MusicMap"
         tools:targetApi="31">
 
+        <activity
+            android:name=".screens.settings.SettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MusicMap.NoActionBar"/>
         <service android:name=".services.InternetCheckService" />
-
         <activity
             android:name=".screens.verification.VerificationActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.MusicMap.NoActionBar"/>
         <activity
             android:name=".screens.profile.ProfileActivity"
             android:exported="false"

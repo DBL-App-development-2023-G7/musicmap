@@ -38,6 +38,9 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.22'
     implementation 'com.google.firebase:firebase-firestore:24.1.1'
+    implementation 'com.github.bumptech.glide:glide:4.15.0'
+    implementation 'com.google.firebase:firebase-storage'
+    implementation 'com.google.firebase:firebase-firestore:24.4.5'
     implementation 'com.google.firebase:firebase-auth'
     implementation "androidx.cardview:cardview:1.0.0"
     implementation platform('com.google.firebase:firebase-bom:31.2.1')
@@ -50,6 +53,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
 }
 
 apply from: 'checkstyle.gradle'
