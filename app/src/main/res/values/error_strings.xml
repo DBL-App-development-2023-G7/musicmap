@@ -1,6 +1,7 @@
 <resources>
     <string name="auth_error_something_wrong">Something went wrong.</string>
-    <string name="error_no_internet">Could not detect an internet connection.</string>
+    <string name="error_no_internet_title">No Internet Connection</string>
+    <string name="error_no_internet">MusicMap requires an active internet connection to function properly.</string>
     <string name="auth_error_incorrect_email_password">Incorrect email or password.</string>
     <string name="auth_error_incorrect_username_password">Incorrect username or password.</string>
     <string name="input_error_enter_email">Please enter an email address.</string>

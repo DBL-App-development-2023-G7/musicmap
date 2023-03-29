@@ -5,14 +5,14 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import com.example.musicmap.R;
-import com.example.musicmap.SessionListenerActivity;
+import com.example.musicmap.SessionAndInternetListenerActivity;
 import com.example.musicmap.screens.main.HomeActivity;
 import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
 import com.example.musicmap.util.firebase.AuthSystem;
 
-public class VerificationActivity extends SessionListenerActivity {
+public class VerificationActivity extends SessionAndInternetListenerActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
