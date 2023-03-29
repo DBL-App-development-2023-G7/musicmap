@@ -62,7 +62,7 @@ public class FeedFragment extends MainFragment {
 
             @Override
             public void onFeedDataLoadFailed() {
-                Message.showFailureMessage(viewGroup, getString(R.string.feed_error_loading));
+                Message.showFailureMessage(viewGroup, requireActivity().getString(R.string.feed_error_loading));
             }
         });
 
