@@ -38,7 +38,7 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
         activity = (AppCompatActivity) getActivity();
 
         if (activity == null) {
-            throw new IllegalArgumentException("The AccountSettingsFragment must be contained in an activity.");
+            throw new IllegalStateException("The AccountSettingsFragment must be contained in an activity.");
         }
 
         setupProfilePreferences();
@@ -66,7 +66,7 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
         PreferenceCategory profileCategory = preferenceScreen.findPreference("profile");
 
         if (profileCategory == null) {
-            throw new IllegalArgumentException("Could not find the profile preferences category.");
+            throw new IllegalStateException("Could not find the profile preferences category.");
         }
 
         Preference preferenceUsername = profileCategory.findPreference("username");
@@ -79,7 +79,7 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
         if (preferenceUsername == null || preferenceEmail == null || preferenceFirstName == null
                 || preferenceLastName == null || preferenceBirthdate == null
                 || preferenceChangeProfilePicture == null) {
-            throw new IllegalArgumentException("Could not find the children of the profile category.");
+            throw new IllegalStateException("Could not find the children of the profile category.");
         }
 
         User currentUser = Session.getInstance().getCurrentUser();
@@ -113,7 +113,7 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
         Preference preferenceChangePassword = securityCategory.findPreference("changePassword");
 
         if (preferenceChangeEmail == null || preferenceChangePassword == null) {
-            throw new IllegalArgumentException("Could not find the children of the security category.");
+            throw new IllegalStateException("Could not find the children of the security category.");
         }
 
         preferenceChangeEmail.setOnPreferenceClickListener(view -> {
@@ -133,14 +133,14 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
         PreferenceCategory otherCategory = preferenceScreen.findPreference("other");
 
         if (otherCategory == null) {
-            throw new IllegalArgumentException("Could not find the other preferences category.");
+            throw new IllegalStateException("Could not find the other preferences category.");
         }
 
         Preference preferenceLogout = otherCategory.findPreference("logout");
         Preference preferenceDeleteAccount = otherCategory.findPreference("deleteAccount");
 
         if (preferenceLogout == null || preferenceDeleteAccount == null) {
-            throw new IllegalArgumentException("Could not find the children of the profile category.");
+            throw new IllegalStateException("Could not find the children of the profile category.");
         }
 
         preferenceLogout.setOnPreferenceClickListener(preference -> {
