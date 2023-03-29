@@ -11,8 +11,8 @@ import android.widget.EditText;
 
 import com.example.musicmap.R;
 import com.example.musicmap.util.firebase.AuthSystem;
+import com.example.musicmap.util.regex.InputChecker;
 import com.example.musicmap.util.regex.MMPatterns;
-import com.example.musicmap.util.regex.ValidationUtil;
 import com.example.musicmap.util.ui.Message;
 
 public class LoginFragment extends AuthFragment {
@@ -43,24 +43,9 @@ public class LoginFragment extends AuthFragment {
         return rootView;
     }
 
-    private boolean checkIdentifier(String identifier) {
-        switch (ValidationUtil.isIdentifierValid(identifier)) {
-            case EMPTY:
-                identifierInput.setError(getString(R.string.input_error_enter_email));
-                return false;
-            case FORMAT:
-                identifierInput.setError(getString(R.string.input_error_valid_email));
-                return false;
-            case VALID:
-                return true;
-            default:
-                identifierInput.setError(getString(R.string.input_error_unexpected));
-                return false;
-        }
-    }
-
     protected boolean validate(String identifier, String password) {
-        return checkIdentifier(identifier) & checkPassword(passwordInput, password);
+        return InputChecker.checkIdentifier(identifier, identifierInput)
+                & InputChecker.checkPassword(password, passwordInput);
     }
 
     private void login() {

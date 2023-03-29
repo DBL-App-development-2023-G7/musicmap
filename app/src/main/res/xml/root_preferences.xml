@@ -1,0 +1,14 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        app:fragment="com.example.musicmap.screens.settings.AccountSettingsFragment"
+        app:title="@string/account_settings"
+        app:icon="@drawable/person_icon"
+        app:summary="@string/account_settings_description"/>
+
+    <Preference
+        app:title="@string/app_version"
+        app:summary="@string/current_version"
+        app:icon="@drawable/info_icon"/>
+
+</PreferenceScreen>
