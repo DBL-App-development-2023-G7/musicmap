@@ -1,5 +1,6 @@
 package com.example.musicmap.util.spotify;
 
+import android.media.session.MediaSession;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -19,6 +20,7 @@ import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.Track;
 import se.michaelthelin.spotify.model_objects.specification.TrackSimplified;
 import se.michaelthelin.spotify.requests.data.player.GetCurrentUsersRecentlyPlayedTracksRequest;
+import se.michaelthelin.spotify.requests.data.player.GetUsersCurrentlyPlayingTrackRequest;
 import se.michaelthelin.spotify.requests.data.search.simplified.SearchTracksRequest;
 import se.michaelthelin.spotify.requests.data.tracks.GetTrackRequest;
 
@@ -28,6 +30,20 @@ import se.michaelthelin.spotify.requests.data.tracks.GetTrackRequest;
  */
 public class SpotifyUtils {
 
+    public static CompletableFuture<Void> getWaitForTokenFuture(){
+         return CompletableFuture.runAsync(()->{
+                while(SpotifyData.getApi() == null){
+                    try {
+                        Log.d("debug", "[poop] wait for tokens");
+                        Thread.sleep(50); // I DO NOT CARE ABOUT THE WARNING!!!!
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                Log.d("debug", "[poop] token found!");
+                return;
+        });
+    }
     /**
      * Prepares a request object to get full track data
      * @param trackId the id of the track
@@ -82,5 +98,11 @@ public class SpotifyUtils {
     public static void loadImageFromTrack(Track track, ImageView view) {
         String imageUrl = track.getAlbum().getImages()[0].getUrl(); // just gets the first image url
         Picasso.get().load(imageUrl).into(view);
+    }
+
+    public static GetUsersCurrentlyPlayingTrackRequest getCurrentPlayingTrackRequest(){
+         return SpotifyData.getApi().getUsersCurrentlyPlayingTrack()
+                 .additionalTypes("track")
+                .build();
     }
 }

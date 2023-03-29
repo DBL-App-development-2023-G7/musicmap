@@ -21,6 +21,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.example.musicmap.R;
+import com.example.musicmap.util.spotify.SpotifyAuthActivity;
 import com.example.musicmap.util.ui.FragmentUtil;
 
 
@@ -64,6 +65,7 @@ public class PostFragment extends MainFragment {
     @Override
     public void onStart() {
         super.onStart();
+        ((SpotifyAuthActivity) requireActivity()).registerForSpotify();
     }
 
     @Override

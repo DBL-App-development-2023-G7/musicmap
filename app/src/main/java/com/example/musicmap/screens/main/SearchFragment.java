@@ -1,7 +1,5 @@
 package com.example.musicmap.screens.main;
 
-import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -12,27 +10,20 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.example.musicmap.R;
-import com.example.musicmap.feed.FeedAdapter;
-import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.util.spotify.SpotifySongAdapter;
 import com.example.musicmap.util.spotify.SpotifyUtils;
-import com.google.api.ResourceDescriptor;
-import com.google.firebase.firestore.GeoPoint;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import se.michaelthelin.spotify.enums.ModelObjectType;
-import se.michaelthelin.spotify.model_objects.specification.Image;
+import se.michaelthelin.spotify.model_objects.miscellaneous.CurrentlyPlaying;
+import se.michaelthelin.spotify.model_objects.specification.PagingCursorbased;
 import se.michaelthelin.spotify.model_objects.specification.PlayHistory;
 import se.michaelthelin.spotify.model_objects.specification.Track;
-import se.michaelthelin.spotify.model_objects.specification.TrackSimplified;
-import se.michaelthelin.spotify.requests.data.tracks.GetTrackRequest;
 
 /**
  * The fragment where the user is redirect to search for a track
@@ -53,8 +44,17 @@ public class SearchFragment extends MainFragment {
         rootView = inflater.inflate(R.layout.fragmen_search, container, false);
         // I know this is a monstrosity
         // any refactoring / formatting suggestions are welcome
-        SpotifyUtils.getGetRecentHistoryRequest().executeAsync().thenAccept(
-                pageHistory -> {
+        SpotifyUtils.getWaitForTokenFuture()
+            .thenAccept(unused -> {
+                Log.d("debug", "[poop]3");
+                try {
+                    CompletableFuture<CurrentlyPlaying> currentTrackFuture =
+                            SpotifyUtils.getCurrentPlayingTrackRequest().executeAsync();
+                    CompletableFuture<PagingCursorbased<PlayHistory>> pageHistoryFuture =
+                            SpotifyUtils.getGetRecentHistoryRequest().executeAsync();
+
+                    PagingCursorbased<PlayHistory> pageHistory =  pageHistoryFuture.join();
+                    Log.d("debug", "execute recent history request done");
                     List<CompletableFuture<Track>> trackFutures = Arrays.stream(pageHistory.getItems())
                             .limit(4) // only get 4 most recent songs (To prevent API calls)
                             .filter(playHistory ->
@@ -63,15 +63,35 @@ public class SearchFragment extends MainFragment {
                             .map(trackId -> SpotifyUtils.getGetTrackRequest(trackId)) // prepare request to get full track data (since Album is not in simplified track)
                             .map(request -> request.executeAsync())// call all requests
                             .collect(Collectors.toList());
+                    CurrentlyPlaying currentTrack = currentTrackFuture.join();
+                    if(currentTrack != null) {
+                        String currentTrackId = currentTrack.getItem().getId();
+                        trackFutures.add(0,
+                                SpotifyUtils.getGetTrackRequest(
+                                        currentTrackId
+                                ).executeAsync()
+                        );
+                    }
                     recentTrackList = new ArrayList<>();
                     for (CompletableFuture<Track> trackFuture: trackFutures) {
                         recentTrackList.add(trackFuture.join()); // gather all request results
                     }
-                })
-                .thenAcceptAsync(
-                        empty ->  updateSongListView(recentTrackList),
-                        requireActivity().getMainExecutor()
-                );
+                } catch (Throwable e) {
+                    Log.d("debug", "[poop] Error which we will ignore!");
+                    e.printStackTrace();
+                }
+                Log.d("debug", "[poop] End!");
+            }).thenAcceptAsync(
+                    unused2 ->  {
+                        try {
+                            Log.d("debug", "[poop] 2");
+                            updateSongListView(recentTrackList);
+                        } catch (Throwable e){
+                            Log.d("debug", "[poop] Error which we will ignore!");
+                            e.printStackTrace();
+                        }},
+                    requireActivity().getMainExecutor()
+            );
 
 
         // setup search widget

@@ -17,8 +17,8 @@ public class SpotifyData {
 
     public static void setToken(String inputToken){
         token = inputToken;
-        Log.d("debug", String.format("[poop] token recieved %s", token));
         spotifyApi = new SpotifyApi.Builder().setAccessToken(token).build();
+        Log.d("debug", String.format("[poop] token recieved %s", token));
     }
 
     public static String getToken() {
