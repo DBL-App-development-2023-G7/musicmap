@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import com.example.musicmap.R;
 import com.example.musicmap.SessionAndInternetListenerActivity;
 import com.example.musicmap.screens.main.HomeActivity;
+import com.example.musicmap.util.ui.FragmentUtil;
 
 public class ProfileActivity extends SessionAndInternetListenerActivity {
 
@@ -39,6 +40,8 @@ public class ProfileActivity extends SessionAndInternetListenerActivity {
     }
 
     private void setupActivity() {
+        FragmentUtil.initFragment(getSupportFragmentManager(), R.id.profileFragment, ProfilePageFragment.class);
+
         ImageView backButton = findViewById(R.id.appbarBack);
         backButton.setOnClickListener(view -> {
             startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
@@ -47,7 +50,7 @@ public class ProfileActivity extends SessionAndInternetListenerActivity {
 
         ImageView settingsButton = findViewById(R.id.appbarSettings);
         settingsButton.setOnClickListener(view -> {
-            //TODO add go to settings method
+            // TODO: add go to settings method
         });
     }
 

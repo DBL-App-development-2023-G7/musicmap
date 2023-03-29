@@ -63,12 +63,10 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/profileFragment"
-        android:name="com.example.musicmap.screens.profile.ProfilePageFragment"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
-        tools:layout="@layout/fragment_profile_page" />
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
