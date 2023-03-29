@@ -27,7 +27,7 @@ public class DeleteAccountDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
 
-        View dialogView = inflater.inflate(R.layout.delete_accout_dialog, null);
+        View dialogView = inflater.inflate(R.layout.delete_account_dialog, null);
         passwordInput = dialogView.findViewById(R.id.password_dialog_editText);
 
         // Inflate and set the layout for the dialog
