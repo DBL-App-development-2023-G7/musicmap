@@ -36,13 +36,15 @@
         <activity
             android:name=".screens.main.CameraActivity"
             android:exported="false"
-            android:theme="@style/Theme.MusicMap.NoActionBar"/>
+            android:theme="@style/Theme.MusicMap.NoActionBar"
+            />
         <activity
             android:name=".screens.main.HomeActivity"
             android:exported="true"
             android:label="MusicMap"
             android:theme="@style/Theme.MusicMap.NoActionBar"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -57,7 +59,6 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

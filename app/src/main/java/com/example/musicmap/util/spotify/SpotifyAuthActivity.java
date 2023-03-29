@@ -1,6 +1,7 @@
 package com.example.musicmap.util.spotify;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -39,16 +40,16 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
         );
 
         AuthorizationRequest mRequest = builder.build();
-        startActivityForResult(AuthorizationClient.createLoginActivityIntent(this, mRequest), REQUEST_CODE);
+        AuthorizationClient.openLoginInBrowser(this, mRequest);
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
 
-        if (requestCode == REQUEST_CODE) {
-            AuthorizationResponse response = AuthorizationClient.getResponse(resultCode, intent);
-
+        Uri uri = intent.getData();
+        if (uri != null) {
+            AuthorizationResponse response = AuthorizationResponse.fromUri(uri);
             switch (response.getType()) {
                 case TOKEN:
                     String accessToken = response.getAccessToken();
