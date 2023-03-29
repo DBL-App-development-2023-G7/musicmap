@@ -16,8 +16,8 @@ public class ProfileActivity extends SessionAndInternetListenerActivity {
     @Override
     protected void updateLayout(boolean internetAvailable) {
         if (!internetAvailable) {
-            setContentView(R.layout.layout_no_internet);
-            currentLayout = R.layout.layout_no_internet;
+            setContentView(R.layout.no_internet);
+            currentLayout = R.layout.no_internet;
             return;
         }
 
@@ -25,7 +25,7 @@ public class ProfileActivity extends SessionAndInternetListenerActivity {
             return;
         }
 
-        if (currentLayout == R.layout.layout_no_internet) {
+        if (currentLayout == R.layout.no_internet) {
             setContentView(R.layout.activity_profile);
             currentLayout = R.layout.activity_profile;
             setupActivity();

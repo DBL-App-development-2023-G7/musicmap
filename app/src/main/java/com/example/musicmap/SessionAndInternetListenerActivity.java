@@ -30,8 +30,13 @@ public abstract class SessionAndInternetListenerActivity extends AppCompatActivi
         }
     };
 
+    /**
+     * Abstract method that the child activities must override, to dynamically switch the layout
+     * from the activity/fragment to layout for no internet.
+     *
+     * @param internetAvailable true if internet connection available, false otherwise.
+     */
     protected abstract void updateLayout(boolean internetAvailable);
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
