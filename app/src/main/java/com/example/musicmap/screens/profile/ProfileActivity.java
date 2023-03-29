@@ -6,7 +6,6 @@ import android.widget.ImageView;
 
 import com.example.musicmap.R;
 import com.example.musicmap.SessionAndInternetListenerActivity;
-import com.example.musicmap.SessionListenerActivity;
 import com.example.musicmap.screens.settings.SettingsActivity;
 
 public class ProfileActivity extends SessionAndInternetListenerActivity {

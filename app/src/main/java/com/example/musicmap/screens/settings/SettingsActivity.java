@@ -4,9 +4,9 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.example.musicmap.R;
-import com.example.musicmap.SessionListenerActivity;
+import com.example.musicmap.SessionAndInternetListenerActivity;
 
-public class SettingsActivity extends SessionListenerActivity {
+public class SettingsActivity extends SessionAndInternetListenerActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
