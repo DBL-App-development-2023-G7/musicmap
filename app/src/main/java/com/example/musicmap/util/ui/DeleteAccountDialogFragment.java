@@ -15,7 +15,6 @@ import androidx.fragment.app.DialogFragment;
 import com.example.musicmap.R;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.regex.InputChecker;
-import com.example.musicmap.util.regex.ValidationUtil;
 
 public class DeleteAccountDialogFragment extends DialogFragment {
 
