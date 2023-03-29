@@ -31,7 +31,6 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
 
         builder.setScopes(new String[]{
                 "user-library-read",
-                "playlist-read-private",
                 "user-read-private",
                 "user-top-read",
                 "user-read-recently-played",
@@ -40,16 +39,15 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
         );
 
         AuthorizationRequest mRequest = builder.build();
-        AuthorizationClient.openLoginInBrowser(this, mRequest);
+        AuthorizationClient.openLoginActivity(this, REQUEST_CODE, mRequest);
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
 
-        Uri uri = intent.getData();
-        if (uri != null) {
-            AuthorizationResponse response = AuthorizationResponse.fromUri(uri);
+        if (requestCode == REQUEST_CODE) {
+            AuthorizationResponse response = AuthorizationClient.getResponse(resultCode, intent);
             switch (response.getType()) {
                 case TOKEN:
                     String accessToken = response.getAccessToken();
