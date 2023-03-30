@@ -19,7 +19,7 @@ import com.example.musicmap.util.Constants;
 
 public class SessionAndInternetListenerActivity extends AppCompatActivity implements Session.Listener {
 
-    private Session session;
+    protected Session session;
 
     private final BroadcastReceiver internetCheckReceiver = new BroadcastReceiver() {
         @Override

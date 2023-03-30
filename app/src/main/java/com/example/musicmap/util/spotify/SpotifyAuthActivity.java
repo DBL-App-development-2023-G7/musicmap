@@ -9,10 +9,14 @@ import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.Random;
 
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
@@ -23,55 +27,109 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
  * This is becvause on start of this activity the spotify token is refreshed
  * The problem is this extends auth acitivity which is not ideal
  */
-// TODO FIND A BETTER WAY OF MANAGING SPOTIFY TOKENS
+// TODO INSTEAD OF EXTENDING ACTIVITY ADD A LISTENER
 public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActivity {
-    public static final int REQUEST_CODE = 80082; // public so a fragment can use it
-    public static final int REQUEST_CODE_2 = 69420;
-    private static final String codeVerifyer = "w6iZIj99vHGtEx_NVl9u3sthTN646vvkiP8OMCGfPmo";
-    private static final SpotifyApi loginApi = new SpotifyApi.Builder()
-            .setClientId(SpotifyData.getClientId())
-            .setRedirectUri(SpotifyHttpManager.makeUri(SpotifyData.getRedirectUri()))
-            .build();
-    public void registerForSpotifyPKCE() {
 
-        MessageDigest digest = null;
+    private static final String CLIENT_ID = "56ab7fed83514a7a96a7b735737280d8";
+    private static final String REDIRECT_URI = "musicmap://spotify-auth";
+    private static String codeVerifier = "w6iZIj99vHGtEx_NVl9u3sthTN646vvkiP8OMCGfPmo";
+    private static final SpotifyApi loginApi = new SpotifyApi.Builder()
+            .setClientId(CLIENT_ID )
+            .setRedirectUri(SpotifyHttpManager.makeUri(REDIRECT_URI))
+            .build();
+
+    public interface InvalidTokenCallback{
+        public void onInvalidToken();
+    }
+    public interface ValidTokenCallback {
+        public void onValidToken(String apiToken);
+    }
+    public void refreshToken(ValidTokenCallback validTokenCallback, InvalidTokenCallback invalidTokenCallback) {
+        String currentUserId = session.getCurrentUser().getUid();
+        FirebaseTokenStorage tokenStorage = new FirebaseTokenStorage(currentUserId);
+        tokenStorage.getRefreshToken(refreshToken -> {
+            if(refreshToken == null){
+                invalidTokenCallback.onInvalidToken();
+                return;
+            }
+            loginApi.setRefreshToken(refreshToken);
+            loginApi.authorizationCodePKCERefresh().build().executeAsync()
+                    .handle((refreshResult, error) -> {
+                            if (error != null) {
+                                invalidTokenCallback.onInvalidToken();
+                                return null;
+                            }
+                            else return refreshResult;
+                    }).thenAccept(refreshResult -> {
+                            tokenStorage.storeRefreshToken(refreshResult.getRefreshToken());
+                            Log.d("debug", String.format("[poop] Successful refresh!"));
+                            SpotifyData.setToken(refreshResult.getAccessToken());
+                            validTokenCallback.onValidToken(refreshResult.getAccessToken());
+                    });
+        });
+    }
+
+    public void registerForSpotifyPKCE() {
+        codeVerifier = generateCodeVerifier();
+        String codeChallenge = generateCodeChallenge(codeVerifier);
+        Log.d("debug", String.format("[poop] Verifier: %s", codeVerifier));
+        Log.d("debug", String.format("[poop] Challenge: %s", codeChallenge));
+        AuthorizationCodeUriRequest authorizationCodeUriRequest = loginApi.authorizationCodePKCEUri(codeChallenge)
+                .scope("user-read-currently-playing,user-read-recently-played").build();
+        authorizationCodeUriRequest.executeAsync().thenAcceptAsync(uri -> {
+            Log.d("debug", String.format("[poop] URI: %s", uri.toString()));
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri.toString()));
+            startActivity(browserIntent);
+        });
+    }
+
+    private String generateCodeVerifier() {
+        final int VERIFIER_LEN = 50;
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] codeVerifier = new byte[VERIFIER_LEN];
+        secureRandom.nextBytes(codeVerifier);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(codeVerifier);
+    }
+
+    private String generateCodeChallenge(String codeVerifier){
         try {
-            digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(codeVerifyer.getBytes(StandardCharsets.US_ASCII));
-            byte[] encoded = Base64.getEncoder().withoutPadding().encode(hash);
-            String codeChallenge = new String(encoded);
-            Log.d("debug", String.format("[poop] Challenge: %s", codeChallenge));
-            AuthorizationCodeUriRequest authorizationCodeUriRequest = loginApi.authorizationCodePKCEUri(codeChallenge)
-                    .scope("user-read-currently-playing,user-read-recently-played").build();
-            authorizationCodeUriRequest.executeAsync().thenAcceptAsync(uri -> {
-                Log.d("debug", String.format("[poop] URI: %s", uri.toString()));
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri.toString()));
-                startActivity(browserIntent);
-            });
+            byte[] bytes = codeVerifier.getBytes(StandardCharsets.US_ASCII);
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(bytes, 0, bytes.length);
+            byte[] digest = messageDigest.digest();
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(digest);
         } catch (NoSuchAlgorithmException e) {
+            Log.d("debug", "[poop] This is literally impossible");
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
+        Log.d("debug", String.format("[poop] Verifier: %s", codeVerifier));
         Uri uri = intent.getData();
         if (uri != null){
             String authCode = uri.getQueryParameter("code");
             Log.d("debug", String.format("[poop] %s", uri.toString()));
-            loginApi.authorizationCodePKCE(authCode, codeVerifyer).build()
+            loginApi.authorizationCodePKCE(authCode, codeVerifier).build()
                     .executeAsync()
+                    .handle((result, error) -> {
+                            if (error != null){
+                                Log.d("debug", String.format("[poop] Error: %s",error.getMessage()));
+                            }
+                            return result;
+                    })
                     .thenAccept( authCredentials -> {
                                 Log.d("debug", String.format("[poop] pooo!"));
                                 Log.d("debug", String.format("[poop] Token: %s", authCredentials.getAccessToken()));
                                 Log.d("debug", String.format("[poop] ExpiryDate: %d", authCredentials.getExpiresIn()));
                                 Log.d("debug", String.format("[poop] Token type: %s", authCredentials.getTokenType()));
                                 Log.d("debug", String.format("[poop] RefreshToken: %s", authCredentials.getRefreshToken()));
-                                SpotifyData.setToken(authCredentials.getAccessToken());
                                 // TODO updateFirebase
+                                String currentUserId = session.getCurrentUser().getUid();
+                                FirebaseTokenStorage tokenStorage = new FirebaseTokenStorage(currentUserId);
+                                tokenStorage.storeRefreshToken(authCredentials.getRefreshToken());
                             }
                     );
         }

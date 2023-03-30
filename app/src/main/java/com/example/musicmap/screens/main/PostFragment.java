@@ -68,7 +68,9 @@ public class PostFragment extends MainFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("debug", "[poop] Fragment create!");
-        ((SpotifyAuthActivity) requireActivity()).registerForSpotifyPKCE();
+        ((SpotifyAuthActivity) requireActivity()).refreshToken(
+                token -> Log.d("debug", String.format("[poop] Acess token %s", token)),
+                () -> ((SpotifyAuthActivity) requireActivity()).registerForSpotifyPKCE());
     }
 
     @Override

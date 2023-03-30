@@ -33,7 +33,7 @@ public class SearchFragment extends MainFragment {
     // temporary store used by post fragment to get search result (I am too lazy to use a Model)
     public static Track resultTrack;
     // this list is computed only once at the start in order to avoid excessive calls to the API
-    private List<Track> recentTrackList;
+    private List<Track> recentTrackList = new ArrayList<>();
     private View rootView;
     // a countdown timer for the search query to reduce API spam
     private CountDownTimer searchQueryCountdown;
