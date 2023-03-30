@@ -11,28 +11,19 @@ import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
-import androidx.camera.core.Preview;
-import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.LifecycleCameraController;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 
 import com.example.musicmap.R;
-import com.google.common.util.concurrent.ListenableFuture;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 
 // maybe it should be an activity.. maybe a fragment?
 public class CameraActivity extends AppCompatActivity {
 
-    // the view of what the camera sees
-    private PreviewView cameraPreviewView;
-    // CameraX use case for capturing images
-    private ImageCapture imageCaptureUseCase;
     private LifecycleCameraController controller;
 
     @Override
@@ -43,47 +34,11 @@ public class CameraActivity extends AppCompatActivity {
         controller = new LifecycleCameraController(this);
         controller.bindToLifecycle(this);
 
-        cameraPreviewView = findViewById(R.id.cameraPreviewView);
+        // the view of what the camera sees
+        PreviewView cameraPreviewView = findViewById(R.id.cameraPreviewView);
         cameraPreviewView.setController(controller);
         ImageButton takePictureButton = findViewById(R.id.cameraCaptureButton);
         takePictureButton.setOnClickListener(view -> takePicture());
-    }
-
-    // Boilerplate code needed to setup cameraX
-    private void setupCamera() {
-        // create a cameraProvider which is basically fetching data about the device's camera
-        // it may take a second that is why it is a Future
-        ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
-
-        // add listener when camera is setup
-        cameraProviderFuture.addListener(() -> {
-            try {
-                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                // make sure the camera is not used anywhere else
-                cameraProvider.unbindAll();
-                // grab the back facing camera
-                CameraSelector cameraSelector = new CameraSelector.Builder()
-                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                        .build();
-                // Setup CameraX camera Preview "Use case" in order to get a view of what the camera is seeing
-                Preview previewUseCase = new Preview.Builder().build();
-                previewUseCase.setSurfaceProvider(cameraPreviewView.getSurfaceProvider());
-
-                //Setup CameraX image capture "Use case" in order to capture an image
-                imageCaptureUseCase = new ImageCapture.Builder()
-                        .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                        .build();
-                // bind the Use Cases tot the camera
-                // and bind the camera to the activity lifecycle
-                cameraProvider.bindToLifecycle(this, cameraSelector, previewUseCase, imageCaptureUseCase);
-            } catch (ExecutionException e) {
-                // no idea how to handle the exceptions
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }, getExecutor());
-
     }
 
     // Consider handling camera on a different executor
