@@ -54,9 +54,7 @@ android {
 
 }
 
-
 dependencies {
-
     implementation files('../libs/spotify-app-remote-release-0.7.2.aar')
     implementation "com.spotify.android:auth:2.0.1"
     implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.0.0'
@@ -105,7 +103,6 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'androidx.preference:preference-ktx:1.2.0'
-
 }
 
 apply from: 'checkstyle.gradle'
