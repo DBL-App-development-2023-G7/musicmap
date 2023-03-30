@@ -24,6 +24,7 @@ import com.spotify.protocol.types.Track;
  * I AM RIGHT NOW WORKING WITH THE WEB API WHICH IS IN SPOTIFY UTILS
  * I STILL KEEP THIS CLASS AROUND SINCE IT MAY BE USEFUL LATER
  */
+@Deprecated
 public class SpotifySession implements LifecycleEventObserver {
 
     private final Activity boundActivity;
