@@ -35,4 +35,38 @@
     <!-- post fragment end-->
 
     <string name="camera_fragment_post_button_text">Post</string>
+
+    <!--general settings start-->
+    <string name="account_settings">Account settings</string>
+    <string name="account_settings_description">General account settings</string>
+    <string name="app_version">App Version</string>
+    <string name="current_version">The current version of the app is: %1$s</string>
+    <!--general settings end-->
+
+    <!--change password start-->
+    <string name="change_password">Change password</string>
+    <string name="password_dialog_description">Please enter your current password and a new one to change your password.</string>
+    <string name="new_password">New Password</string>
+    <string name="old_password">Old Password</string>
+    <!--change password end-->
+
+    <!--change email start-->
+    <string name="change_email">Change email</string>
+    <string name="new_email">New Email</string>
+    <string name="email_dialog_description">Please enter your new email and current password.</string>
+    <!--change email end-->
+
+    <!--profile settings start-->
+    <string name="profile">Profile</string>
+    <string name="change_profile_picture">Change profile picture</string>
+    <string name="security">Security</string>
+    <string name="other">Other</string>
+    <!--profile settings end-->
+
+    <!--delete account start-->
+    <string name="delete_account_dialog_title">Are you sure you want to delete your account?</string>
+    <string name="delete_account_dialog_message">If you delete your account all of your data will be lost and you won\'t
+        be able to get it back. Please enter your password to confirm that you want to delete your account.</string>
+    <string name="cancel">Cancel</string>
+    <!--delete account end-->
 </resources>

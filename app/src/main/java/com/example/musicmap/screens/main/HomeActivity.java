@@ -36,7 +36,7 @@ public class HomeActivity extends SpotifyAuthActivity {
         ImageView profileButton = findViewById(R.id.appbarProfile);
 
         profileButton.setOnClickListener(view ->
-                startActivity(new Intent(HomeActivity.this, ProfileActivity.class)));
+                startActivity(new Intent(this, ProfileActivity.class)));
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             // using ifs instead of switch as resource IDs will be non-final by default in
