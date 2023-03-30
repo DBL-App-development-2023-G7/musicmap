@@ -49,7 +49,6 @@ public class HomeActivity extends SpotifyAuthActivity {
             }
 
             if (item.getItemId() == R.id.navbarMap) {
-                // TODO replace with implementation of MusicMapFragment once made
                 FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.fragment_view,
                         PostMapFragment.class);
                 return true;
