@@ -24,15 +24,16 @@ import se.michaelthelin.spotify.model_objects.specification.Track;
 
 /**
  * This adapter has been stolen from the  MusicMemory adapter
- * ALso note that this uses the Spotfy WRAPPER Track class not the spotify SDK track class
+ * ALso note that this uses the Spotify WRAPPER Track class not the spotify SDK track class
  */
-
-//TODO change the adapter view
-
+// TODO change the adapter view
 public class SpotifySongAdapter extends ArrayAdapter<Track> {
+
     private final Activity activityContext;
+
     public SpotifySongAdapter(@NonNull Activity activityContext, int resource, @NonNull List<Track> feedItems) {
         super(activityContext, resource, feedItems);
+
         this.activityContext = activityContext;
     }
 
@@ -51,7 +52,7 @@ public class SpotifySongAdapter extends ArrayAdapter<Track> {
         ImageView mainImage = row.findViewById(R.id.search_result_song_image_view);
 
         Track spotifyTrack = getItem(position);
-        if (spotifyTrack  != null) {
+        if (spotifyTrack != null) {
             titleText.setText(spotifyTrack.getName());
             shortText.setText(spotifyTrack.getArtists()[0].getName());
             Picasso.get().load(spotifyTrack.getAlbum().getImages()[0].getUrl()).into(mainImage);
@@ -69,4 +70,5 @@ public class SpotifySongAdapter extends ArrayAdapter<Track> {
         FragmentUtil.replaceFragment(fragmentActivity.getSupportFragmentManager(), R.id.fragment_view,
                 PostFragment.class);
     }
+
 }
