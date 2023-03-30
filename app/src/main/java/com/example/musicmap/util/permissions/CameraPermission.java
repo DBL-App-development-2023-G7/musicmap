@@ -17,7 +17,7 @@ public class CameraPermission extends Permission {
 
     @Override
     public String[] getAndroidPermissions() {
-        return new String[]{CAMERA};
+        return new String[]{Manifest.permission.CAMERA};
     }
 
     public boolean isGranted() {

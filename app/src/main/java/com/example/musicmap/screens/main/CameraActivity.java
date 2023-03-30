@@ -5,6 +5,7 @@ import static androidx.core.content.ContentProviderCompat.requireContext;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -40,7 +41,6 @@ public class CameraActivity extends AppCompatActivity {
     private PreviewView cameraPreviewView;
     // CameraX use case for capturing images
     private ImageCapture imageCaptureUseCase;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
