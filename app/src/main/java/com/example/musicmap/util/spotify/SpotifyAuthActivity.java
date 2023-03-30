@@ -6,18 +6,12 @@ import android.util.Log;
 
 import com.example.musicmap.SessionAndInternetListenerActivity;
 import com.example.musicmap.user.Session;
-import com.spotify.sdk.android.auth.AuthorizationClient;
-import com.spotify.sdk.android.auth.AuthorizationRequest;
-import com.spotify.sdk.android.auth.AuthorizationResponse;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
-import java.util.Random;
 
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
@@ -25,47 +19,49 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
 
 /**
  * This every activity that wants to do things with spotify should extend this class
- * This is becvause on start of this activity the spotify token is refreshed
- * The problem is this extends auth acitivity which is not ideal
+ * This is because on start of this activity the spotify token is refreshed
+ * The problem is this extends auth activity which is not ideal
  */
 // TODO INSTEAD OF EXTENDING ACTIVITY ADD A LISTENER
 public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActivity {
 
     private static final String CLIENT_ID = "56ab7fed83514a7a96a7b735737280d8";
     private static final String REDIRECT_URI = "musicmap://spotify-auth";
-    private static String codeVerifier = "w6iZIj99vHGtEx_NVl9u3sthTN646vvkiP8OMCGfPmo";
     private static final SpotifyApi loginApi = new SpotifyApi.Builder()
-            .setClientId(CLIENT_ID )
+            .setClientId(CLIENT_ID)
             .setRedirectUri(SpotifyHttpManager.makeUri(REDIRECT_URI))
             .build();
 
-    public interface InvalidTokenCallback{
-        public void onInvalidToken();
+    private static String codeVerifier = "w6iZIj99vHGtEx_NVl9u3sthTN646vvkiP8OMCGfPmo";
+
+    public interface InvalidTokenCallback {
+        void onInvalidToken();
     }
+
     public interface ValidTokenCallback {
-        public void onValidToken(String apiToken);
+        void onValidToken(String apiToken);
     }
+
     public void refreshToken(ValidTokenCallback validTokenCallback, InvalidTokenCallback invalidTokenCallback) {
         String currentUserId = Session.getInstance().getCurrentUser().getUid();
         FirebaseTokenStorage tokenStorage = new FirebaseTokenStorage(currentUserId);
         tokenStorage.getRefreshToken(refreshToken -> {
-            if(refreshToken == null){
+            if (refreshToken == null) {
                 invalidTokenCallback.onInvalidToken();
                 return;
             }
             loginApi.setRefreshToken(refreshToken);
             loginApi.authorizationCodePKCERefresh().build().executeAsync()
                     .handle((refreshResult, error) -> {
-                            if (error != null) {
-                                invalidTokenCallback.onInvalidToken();
-                                return null;
-                            }
-                            else return refreshResult;
+                        if (error != null) {
+                            invalidTokenCallback.onInvalidToken();
+                            return null;
+                        } else return refreshResult;
                     }).thenAccept(refreshResult -> {
-                            tokenStorage.storeRefreshToken(refreshResult.getRefreshToken());
-                            Log.d("debug", String.format("[poop] Successful refresh!"));
-                            SpotifyData.setToken(refreshResult.getAccessToken());
-                            validTokenCallback.onValidToken(refreshResult.getAccessToken());
+                        tokenStorage.storeRefreshToken(refreshResult.getRefreshToken());
+                        Log.d("debug", "[poop] Successful refresh!");
+                        SpotifyData.setToken(refreshResult.getAccessToken());
+                        validTokenCallback.onValidToken(refreshResult.getAccessToken());
                     });
         });
     }
@@ -92,7 +88,7 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
         return Base64.getUrlEncoder().withoutPadding().encodeToString(codeVerifier);
     }
 
-    private String generateCodeChallenge(String codeVerifier){
+    private String generateCodeChallenge(String codeVerifier) {
         try {
             byte[] bytes = codeVerifier.getBytes(StandardCharsets.US_ASCII);
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -110,19 +106,19 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
         super.onNewIntent(intent);
         Log.d("debug", String.format("[poop] Verifier: %s", codeVerifier));
         Uri uri = intent.getData();
-        if (uri != null){
+        if (uri != null) {
             String authCode = uri.getQueryParameter("code");
-            Log.d("debug", String.format("[poop] %s", uri.toString()));
+            Log.d("debug", String.format("[poop] %s", uri));
             loginApi.authorizationCodePKCE(authCode, codeVerifier).build()
                     .executeAsync()
                     .handle((result, error) -> {
-                            if (error != null){
-                                Log.d("debug", String.format("[poop] Error: %s",error.getMessage()));
-                            }
-                            return result;
+                        if (error != null) {
+                            Log.d("debug", String.format("[poop] Error: %s", error.getMessage()));
+                        }
+                        return result;
                     })
-                    .thenAccept( authCredentials -> {
-                                Log.d("debug", String.format("[poop] pooo!"));
+                    .thenAccept(authCredentials -> {
+                                Log.d("debug", "[poop] pooo!");
                                 Log.d("debug", String.format("[poop] Token: %s", authCredentials.getAccessToken()));
                                 Log.d("debug", String.format("[poop] ExpiryDate: %d", authCredentials.getExpiresIn()));
                                 Log.d("debug", String.format("[poop] Token type: %s", authCredentials.getTokenType()));
@@ -135,4 +131,5 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
                     );
         }
     }
+
 }
