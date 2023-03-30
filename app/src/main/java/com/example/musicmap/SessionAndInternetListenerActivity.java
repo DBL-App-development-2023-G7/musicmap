@@ -19,7 +19,7 @@ import com.example.musicmap.util.Constants;
 
 public class SessionAndInternetListenerActivity extends AppCompatActivity implements Session.Listener {
 
-    protected Session session;
+    private Session session;
 
     private final BroadcastReceiver internetCheckReceiver = new BroadcastReceiver() {
         @Override
@@ -33,11 +33,6 @@ public class SessionAndInternetListenerActivity extends AppCompatActivity implem
             }
         }
     };
-
-    // maybe I should not do this but I will leave this for Tudor to question my bad desicions
-    public Session getSession() {
-        return session;
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

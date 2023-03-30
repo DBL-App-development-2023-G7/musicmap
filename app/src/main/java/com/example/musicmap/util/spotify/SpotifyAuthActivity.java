@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.example.musicmap.SessionAndInternetListenerActivity;
+import com.example.musicmap.user.Session;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
@@ -45,7 +46,7 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
         public void onValidToken(String apiToken);
     }
     public void refreshToken(ValidTokenCallback validTokenCallback, InvalidTokenCallback invalidTokenCallback) {
-        String currentUserId = session.getCurrentUser().getUid();
+        String currentUserId = Session.getInstance().getCurrentUser().getUid();
         FirebaseTokenStorage tokenStorage = new FirebaseTokenStorage(currentUserId);
         tokenStorage.getRefreshToken(refreshToken -> {
             if(refreshToken == null){
@@ -127,7 +128,7 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
                                 Log.d("debug", String.format("[poop] Token type: %s", authCredentials.getTokenType()));
                                 Log.d("debug", String.format("[poop] RefreshToken: %s", authCredentials.getRefreshToken()));
                                 // TODO updateFirebase
-                                String currentUserId = session.getCurrentUser().getUid();
+                                String currentUserId = Session.getInstance().getCurrentUser().getUid();
                                 FirebaseTokenStorage tokenStorage = new FirebaseTokenStorage(currentUserId);
                                 tokenStorage.storeRefreshToken(authCredentials.getRefreshToken());
                             }

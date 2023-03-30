@@ -147,7 +147,7 @@ public class PostFragment extends MainFragment {
 //        cameraPermission.request();
         getPermission();
         parentActivity = (SpotifyAuthActivity) requireActivity();
-        Session session = parentActivity.getSession();
+        Session session = Session.getInstance();
         CompletableFuture.runAsync(() -> {
                 while(!session.isUserLoaded()){}
         }).thenAccept(unused -> {
@@ -269,7 +269,7 @@ public class PostFragment extends MainFragment {
             Log.d("debug", "[poop] Missing Location!");
             return;
         }
-        Session currentSession = ((SessionAndInternetListenerActivity)requireActivity()).getSession();
+        Session currentSession = Session.getInstance();
         String authorID = currentSession.getCurrentUser().getUid();
 
         Date timePosted = Calendar.getInstance().getTime();
