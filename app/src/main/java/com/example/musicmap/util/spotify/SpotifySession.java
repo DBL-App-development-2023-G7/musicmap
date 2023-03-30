@@ -13,7 +13,6 @@ import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.PlayerApi;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
-import com.spotify.protocol.client.CallResult;
 import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.PlayerState;
 import com.spotify.protocol.types.Track;
@@ -25,14 +24,16 @@ import com.spotify.protocol.types.Track;
  * I AM RIGHT NOW WORKING WITH THE WEB API WHICH IS IN SPOTIFY UTILS
  * I STILL KEEP THIS CLASS AROUND SINCE IT MAY BE USEFUL LATER
  */
-public class SpotifySession implements LifecycleEventObserver{
+public class SpotifySession implements LifecycleEventObserver {
+
+    private final Activity boundActivity;
+
     private SpotifyAppRemote spotifyRemoteConnection;
     private Track lastSong;
-    private Activity boundActivity;
-
 
     public SpotifySession(Activity activity) {
         this.boundActivity = activity;
+
         Lifecycle activityLifecycle = ((LifecycleOwner) boundActivity).getLifecycle();
         activityLifecycle.addObserver(this);
     }
@@ -52,38 +53,36 @@ public class SpotifySession implements LifecycleEventObserver{
                         .showAuthView(true)
                         .build();
         SpotifyAppRemote.connect(boundActivity, appAuthorizationParams, new Connector.ConnectionListener() {
-                public void onConnected(SpotifyAppRemote spotifyAppRemote) {
-                    Log.d("debug", "[poop] connected!");
-                    spotifyRemoteConnection = spotifyAppRemote;
-                    setupPlayerListener();
-                }
+            public void onConnected(SpotifyAppRemote spotifyAppRemote) {
+                Log.d("debug", "[poop] connected!");
+                spotifyRemoteConnection = spotifyAppRemote;
+                setupPlayerListener();
+            }
 
-                public void onFailure(Throwable throwable) {
-                    Log.e("MyActivity", throwable.getMessage(), throwable);
-                    // Something went wrong when attempting to connect! Handle errors here
-                }
+            public void onFailure(Throwable throwable) {
+                Log.e("MyActivity", throwable.getMessage(), throwable);
+                // Something went wrong when attempting to connect! Handle errors here
+            }
         });
     }
-
 
     private void setupPlayerListener() {
         PlayerApi playerApi = spotifyRemoteConnection.getPlayerApi();
         playerApi.getPlayerState()
                 .setResultCallback(playerState -> {
-                    if(!playerState.track.isPodcast && !playerState.track.isEpisode) {
-                        Log.d("debug", "[poop] Initial track update!");
-                        lastSong = playerState.track;
-                    }}
+                            if (!playerState.track.isPodcast && !playerState.track.isEpisode) {
+                                Log.d("debug", "[poop] Initial track update!");
+                                lastSong = playerState.track;
+                            }
+                        }
                 );
+
         playerApi.subscribeToPlayerState()
                 .setEventCallback(
-                        new Subscription.EventCallback<PlayerState>() {
-                            @Override
-                            public void onEvent(PlayerState data) {
-                                Log.d("debug", "[poop] Track update!");
-                                if(!data.track.isPodcast && !data.track.isEpisode) {
-                                    lastSong = data.track;
-                                }
+                        data -> {
+                            Log.d("debug", "[poop] Track update!");
+                            if (!data.track.isPodcast && !data.track.isEpisode) {
+                                lastSong = data.track;
                             }
                         }
                 );
@@ -91,15 +90,16 @@ public class SpotifySession implements LifecycleEventObserver{
 
     /**
      * Returns the most recent spotify song
+     *
      * @return the most recent song (could be null!)
      */
     public Track getLastSong() {
         return lastSong;
     }
 
-
     /**
      * A util method to load an SOn image into a view
+     *
      * @param song the song with the image
      * @param view the view to load the image into
      */
@@ -108,20 +108,21 @@ public class SpotifySession implements LifecycleEventObserver{
                 .getImagesApi()
                 .getImage(song.imageUri)
                 .setResultCallback(
-                         bitmap -> {
-                             Log.d("debug",String.format("Thread %d",Thread.currentThread().getId()));
-                             view.setImageBitmap(bitmap);
-                         }
+                        bitmap -> {
+                            Log.d("debug", String.format("Thread %d", Thread.currentThread().getId()));
+                            view.setImageBitmap(bitmap);
+                        }
                 );
     }
 
     /**
      * A method of the LifecycleEventObserver
      * Used internally to get updates on the calling activity
+     *
      * @param source The source of the event
-     * @param event The event
+     * @param event  The event
      */
-    public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event){
+    public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
         if (event == Lifecycle.Event.ON_START) {
             Log.d("debug", "[poop] Post view created!");
             connectToSpotify();
