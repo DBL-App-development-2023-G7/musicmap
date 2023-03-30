@@ -16,3 +16,4 @@ local.properties
 
 .idea/
 .keystore/
+/app/debug/*
