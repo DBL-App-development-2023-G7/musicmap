@@ -1,5 +1,8 @@
 package com.example.musicmap.screens.main;
 
+import static android.media.ExifInterface.ORIENTATION_NORMAL;
+import static android.media.ExifInterface.TAG_ORIENTATION;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -26,6 +29,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.exifinterface.media.ExifInterface;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.musicmap.R;
@@ -53,6 +57,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -69,7 +74,7 @@ public class PostFragment extends MainFragment {
     private FusedLocationProviderClient fusedLocationClient;
 
     private Location currentLocation;
-    private static Bitmap capturedImage; // needs to be static or data is lost //TODO find a better way of persisting data
+    public static Bitmap capturedImage; // needs to be static or data is lost //TODO find a better way of persisting data
     private Button addLocationButton;
     private ImageView capturedImagePreview;
 
@@ -82,11 +87,15 @@ public class PostFragment extends MainFragment {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     Log.d("debug", "[poop] Camera Activity result recieved!");
+
                     Uri imageUri = result.getData().getData(); // peak code right here
+                    Log.d("debug", String.format("[poop] Uri! %s", imageUri.toString()));
                     // fetch the result bitmap and display it
                     CompletableFuture.runAsync(() -> {
                         try {
-                            capturedImage = Picasso.get().load(imageUri).get();
+                            capturedImage = Picasso.get().load(imageUri)
+                                    .rotate(getImageRotationFromEXIF(imageUri))
+                                    .get();
                         } catch (IOException e) {
                             Log.d("debug", String.format("[poop] Image falied to load!"));
                         }
@@ -97,6 +106,37 @@ public class PostFragment extends MainFragment {
                 }
             }
     );
+    //TODO find a better place for this method
+    private float getImageRotationFromEXIF(Uri imageUri) {
+        float rotation = 0f;
+        try {
+
+            ExifInterface exifInterface = new ExifInterface(parentActivity.getContentResolver().openInputStream(imageUri));
+            int orientation = exifInterface.getAttributeInt(TAG_ORIENTATION, ORIENTATION_NORMAL);
+            switch (orientation){
+                case ExifInterface.ORIENTATION_ROTATE_90: {
+                    Log.d("debug", String.format("[poop] 90!"));
+                    rotation = 90f;
+                    break;
+                }
+                case ExifInterface.ORIENTATION_ROTATE_180: {
+                    Log.d("debug", String.format("[poop] 180!"));
+                    rotation = 180f;
+                    break;
+                }
+                case ExifInterface.ORIENTATION_ROTATE_270: {
+                    Log.d("debug", String.format("[poop] 270!"));
+                    rotation = -90f;
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            Log.d("debug", String.format("[poop] exception! %s", e.getMessage()));
+        }
+
+        return rotation;
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

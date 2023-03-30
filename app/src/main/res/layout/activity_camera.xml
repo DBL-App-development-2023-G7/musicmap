@@ -6,11 +6,14 @@
     android:layout_height="match_parent"
     android:background="@drawable/create_music_memory_backgound"
     tools:context=".screens.main.PostFragment">
+
     <androidx.camera.view.PreviewView
         android:id="@+id/cameraPreviewView"
         class="androidx.camera.view.PreviewView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-53dp" />
 
     <ImageButton
         android:id="@+id/cameraCaptureButton"

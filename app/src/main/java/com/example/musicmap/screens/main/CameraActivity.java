@@ -17,6 +17,8 @@ import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.camera.view.CameraController;
+import androidx.camera.view.LifecycleCameraController;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 
@@ -41,15 +43,20 @@ public class CameraActivity extends AppCompatActivity {
     private PreviewView cameraPreviewView;
     // CameraX use case for capturing images
     private ImageCapture imageCaptureUseCase;
+    LifecycleCameraController controller;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
+        controller = new LifecycleCameraController(this);
+        controller.bindToLifecycle(this);
+
+
         cameraPreviewView = findViewById(R.id.cameraPreviewView);
+        cameraPreviewView.setController(controller);
         ImageButton takePictureButton = findViewById(R.id.cameraCaptureButton);
         takePictureButton.setOnClickListener(view -> takePicture());
-        setupCamera();
     }
 
     // Boilerplate code needed to setup cameraX
@@ -120,7 +127,7 @@ public class CameraActivity extends AppCompatActivity {
             .build();
 
         // actually call the take picture method
-        imageCaptureUseCase.takePicture(
+        controller.takePicture(
             outputOptions,
             getExecutor(),
             new ImageCapture.OnImageSavedCallback() {
