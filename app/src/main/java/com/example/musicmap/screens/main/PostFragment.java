@@ -13,8 +13,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,14 +24,11 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.exifinterface.media.ExifInterface;
-import androidx.fragment.app.FragmentActivity;
 
 import com.example.musicmap.R;
-import com.example.musicmap.SessionAndInternetListenerActivity;
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.feed.Song;
 import com.example.musicmap.user.Session;
@@ -42,43 +37,40 @@ import com.example.musicmap.util.permissions.CameraPermission;
 import com.example.musicmap.util.permissions.LocationPermission;
 import com.example.musicmap.util.spotify.SpotifyAuthActivity;
 import com.example.musicmap.util.ui.FragmentUtil;
-
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import se.michaelthelin.spotify.model_objects.specification.Track;
-
 public class PostFragment extends MainFragment {
+
+    // needs to be static or data is lost
+    // TODO find a better way of persisting data
+    private static Bitmap capturedImage;
+
     private final LocationPermission locationPermission = new LocationPermission(this);
     private final CameraPermission cameraPermission = new CameraPermission(this);
     private FusedLocationProviderClient fusedLocationClient;
 
     private Location currentLocation;
-    public static Bitmap capturedImage; // needs to be static or data is lost //TODO find a better way of persisting data
     private Button addLocationButton;
     private ImageView capturedImagePreview;
 
-    SpotifyAuthActivity parentActivity;
+    private SpotifyAuthActivity parentActivity;
 
     // a launcher that launches the camera activity and handles the result
     ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
@@ -97,35 +89,35 @@ public class PostFragment extends MainFragment {
                                     .rotate(getImageRotationFromEXIF(imageUri))
                                     .get();
                         } catch (IOException e) {
-                            Log.d("debug", String.format("[poop] Image falied to load!"));
+                            Log.d("debug", "[poop] Image falied to load!");
                         }
                     }).thenAcceptAsync(unused -> {
                         capturedImagePreview.setImageBitmap(capturedImage);
                         capturedImagePreview.setVisibility(View.VISIBLE);
-                    },requireActivity().getMainExecutor());
+                    }, requireActivity().getMainExecutor());
                 }
             }
     );
+
     //TODO find a better place for this method
     private float getImageRotationFromEXIF(Uri imageUri) {
         float rotation = 0f;
         try {
-
             ExifInterface exifInterface = new ExifInterface(parentActivity.getContentResolver().openInputStream(imageUri));
             int orientation = exifInterface.getAttributeInt(TAG_ORIENTATION, ORIENTATION_NORMAL);
-            switch (orientation){
+            switch (orientation) {
                 case ExifInterface.ORIENTATION_ROTATE_90: {
-                    Log.d("debug", String.format("[poop] 90!"));
+                    Log.d("debug", "[poop] 90!");
                     rotation = 90f;
                     break;
                 }
                 case ExifInterface.ORIENTATION_ROTATE_180: {
-                    Log.d("debug", String.format("[poop] 180!"));
+                    Log.d("debug", "[poop] 180!");
                     rotation = 180f;
                     break;
                 }
                 case ExifInterface.ORIENTATION_ROTATE_270: {
-                    Log.d("debug", String.format("[poop] 270!"));
+                    Log.d("debug", "[poop] 270!");
                     rotation = -90f;
                     break;
                 }
@@ -149,19 +141,20 @@ public class PostFragment extends MainFragment {
         parentActivity = (SpotifyAuthActivity) requireActivity();
         Session session = Session.getInstance();
         CompletableFuture.runAsync(() -> {
-                while(!session.isUserLoaded()){}
+            while (!session.isUserLoaded()) {
+            }
         }).thenAccept(unused -> {
-                parentActivity.refreshToken(
-                        token -> Log.d("debug", String.format("[poop] Acess token %s", token)),
-                        () -> ((SpotifyAuthActivity) requireActivity()).registerForSpotifyPKCE()
-                );
+            parentActivity.refreshToken(
+                    token -> Log.d("debug", String.format("[poop] Acess token %s", token)),
+                    () -> ((SpotifyAuthActivity) requireActivity()).registerForSpotifyPKCE()
+            );
         });
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if(capturedImage == null){
+        if (capturedImage == null) {
             Log.d("debug", String.format("[poop] No image!"));
         }
         Log.d("debug", "[poop] Fragment start!");
@@ -200,7 +193,6 @@ public class PostFragment extends MainFragment {
         return rootView;
     }
 
-
     private void goToSearchFragment() {
         FragmentUtil.replaceFragment(requireActivity().getSupportFragmentManager(), R.id.fragment_view,
                 SearchFragment.class);
@@ -223,10 +215,9 @@ public class PostFragment extends MainFragment {
                         double lon = location.getLongitude();
                         Geocoder geocoder = new Geocoder(requireActivity());
                         try {
-                            List<Address>addressList = geocoder.getFromLocation(lat, lon, 1);
+                            List<Address> addressList = geocoder.getFromLocation(lat, lon, 1);
                             if (addressList.size() > 0) {
                                 Address address = addressList.get(0);
-                                String locationStr = String.format("Lat: %,.2f\nLon:%,.2f", lat, lon);
                                 List<String> addressFeatures = new ArrayList<>();
 
                                 addressFeatures.add(address.getThoroughfare());
@@ -235,40 +226,40 @@ public class PostFragment extends MainFragment {
                                 addressFeatures.add(address.getSubAdminArea());
                                 addressFeatures.add(address.getCountryName());
 
-                                for (String f: addressFeatures) {
+                                for (String f : addressFeatures) {
                                     Log.d("debug", String.format("[poop] Feature: %s", f));
                                 }
 
                                 String displayText = addressFeatures.stream()
-                                        .filter(f -> f != null)
+                                        .filter(Objects::nonNull)
                                         .limit(2)
                                         .collect(Collectors.joining(", "));
 
-
-
-                                if (displayText != null) addLocationButton.setText(displayText);
-                                else addLocationButton.setText(locationStr);
+                                addLocationButton.setText(displayText);
                             }
                         } catch (IOException e) {
                             Log.d("debug", "[poop] geocoder Exception!");
                         }
                     });
         } else {
-            //TODO here we add error message
+            // TODO here we add error message
             Log.d("debug", "[poop] No location permission granted!");
         }
     }
 
     // TODO Make this monster prettier
     // Below is some questionable code
-    private void postMusicMemory(){
+    private void postMusicMemory() {
         if (SearchFragment.resultTrack == null) {
             Log.d("debug", "[poop] Missing Track!!");
             return;
-        } if (currentLocation == null) {
+        }
+
+        if (currentLocation == null) {
             Log.d("debug", "[poop] Missing Location!");
             return;
         }
+
         Session currentSession = Session.getInstance();
         String authorID = currentSession.getCurrentUser().getUid();
 
@@ -278,7 +269,6 @@ public class PostFragment extends MainFragment {
                 currentLocation.getLongitude()
         );
 
-        Track currentTrack = SearchFragment.resultTrack;
         Song song = new Song(
                 SearchFragment.resultTrack.getName(),
                 SearchFragment.resultTrack.getArtists()[0].getId(),
@@ -287,7 +277,7 @@ public class PostFragment extends MainFragment {
                 SearchFragment.resultTrack.getPreviewUrl()
         );
 
-        if(capturedImage != null) {
+        if (capturedImage != null) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             capturedImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] data = baos.toByteArray();
@@ -296,15 +286,15 @@ public class PostFragment extends MainFragment {
             StorageReference imageRef = rootReference.child(String.format("users/%s/memories/%s.jpg", authorID, uuid));
             UploadTask uploadTask = imageRef.putBytes(data);
             uploadTask.continueWithTask(task -> {
-                    if (!task.isSuccessful()) {
-                        Log.d("debug", "[poop] Failed image upload!");
-                        throw task.getException();
-                    }
+                if (!task.isSuccessful()) {
+                    Log.d("debug", "[poop] Failed image upload!");
+                    throw task.getException();
+                }
 
-                    // Continue with the task to get the download URL
-                    return imageRef.getDownloadUrl();
-            }).addOnCompleteListener(imageUri ->{
-                Log.d("debug", String.format("[poop] Image uploaded! %s",imageUri.toString()));
+                // Continue with the task to get the download URL
+                return imageRef.getDownloadUrl();
+            }).addOnCompleteListener(imageUri -> {
+                Log.d("debug", String.format("[poop] Image uploaded! %s", imageUri.toString()));
                 Actions.postMusicMemory(new MusicMemory(
                         authorID,
                         timePosted,
@@ -312,15 +302,16 @@ public class PostFragment extends MainFragment {
                         imageUri.toString(),
                         song
                 )).addOnFailureListener(e ->
-                        Log.d("debug", String.format("[poop] Memory failed to upload! %s",e.getMessage()))
+                        Log.d("debug", String.format("[poop] Memory failed to upload! %s", e.getMessage()))
                 ).addOnCompleteListener(unused -> {
-                        clearData();
-                        FragmentUtil.replaceFragment(
-                                requireActivity().getSupportFragmentManager(),
-                                R.id.fragment_view,
-                                FeedFragment.class
-                        );
-                        Log.d("debug", String.format("[poop] Successful upload!"));}
+                            clearData();
+                            FragmentUtil.replaceFragment(
+                                    requireActivity().getSupportFragmentManager(),
+                                    R.id.fragment_view,
+                                    FeedFragment.class
+                            );
+                            Log.d("debug", String.format("[poop] Successful upload!"));
+                        }
                 );
             });
         } else {
@@ -331,10 +322,11 @@ public class PostFragment extends MainFragment {
                     song.getImageUri().toString(),
                     song
             )).addOnFailureListener(e ->
-                    Log.d("debug", String.format("[poop] Memory failed to upload! %s",e.getMessage()))
+                    Log.d("debug", String.format("[poop] Memory failed to upload! %s", e.getMessage()))
             ).addOnCompleteListener(unused ->
                     Log.d("debug", String.format("[poop] Successful upload!"))
             );
+
             clearData();
             FragmentUtil.replaceFragment(requireActivity().getSupportFragmentManager(), R.id.fragment_view,
                     FeedFragment.class);
@@ -346,6 +338,7 @@ public class PostFragment extends MainFragment {
         capturedImage = null;
         SearchFragment.resultTrack = null;
     }
+
     private void getPermission() {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED
@@ -357,4 +350,5 @@ public class PostFragment extends MainFragment {
             );
         }
     }
+
 }
