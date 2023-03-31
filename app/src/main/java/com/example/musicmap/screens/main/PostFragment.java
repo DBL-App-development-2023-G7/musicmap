@@ -79,8 +79,12 @@ public class PostFragment extends MainFragment {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     Log.d("debug", "[poop] Camera Activity result recieved!");
-
-                    Uri imageUri = result.getData().getData(); // peak code right here
+                    Intent resultIntent = result.getData();
+                    if(resultIntent == null) {
+                        Log.d("debug", "[poop] No result!");
+                        return;
+                    }
+                    Uri imageUri = resultIntent.getData(); // get image uri
                     Log.d("debug", String.format("[poop] Uri! %s", imageUri.toString()));
                     // fetch the result bitmap and display it
                     CompletableFuture.runAsync(() -> {
