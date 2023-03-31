@@ -14,13 +14,33 @@ import com.example.musicmap.util.firebase.AuthSystem;
 
 public class VerificationActivity extends SessionAndInternetListenerActivity {
 
+    private int currentLayout = R.layout.activity_verification;
+
+    @Override
+    protected void updateLayout(boolean internetAvailable) {
+        if (!internetAvailable) {
+            setContentView(R.layout.no_internet);
+            currentLayout = R.layout.no_internet;
+            return;
+        }
+
+        if (currentLayout == R.layout.activity_verification) {
+            return;
+        }
+
+        if (currentLayout == R.layout.no_internet) {
+            setContentView(R.layout.activity_verification);
+            currentLayout = R.layout.activity_verification;
+            setupActivity();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
 
-        Button signOutVerificationButton = findViewById(R.id.signout_verification_button);
-        signOutVerificationButton.setOnClickListener(view -> AuthSystem.logout());
+        setupActivity();
     }
 
     @Override
@@ -38,6 +58,11 @@ public class VerificationActivity extends SessionAndInternetListenerActivity {
             startActivity(homeIntent);
             finish();
         }
+    }
+
+    private void setupActivity() {
+        Button signOutVerificationButton = findViewById(R.id.signout_verification_button);
+        signOutVerificationButton.setOnClickListener(view -> AuthSystem.logout());
     }
 
 }
