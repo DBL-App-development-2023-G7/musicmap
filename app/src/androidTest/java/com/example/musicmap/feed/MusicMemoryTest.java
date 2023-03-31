@@ -23,7 +23,7 @@ public class MusicMemoryTest {
     public void setUp() {
         this.musicMemory = new MusicMemory("author-uid", new Date(),
                 new GeoPoint(10, 10), "https://imgur.com/photo", new Song(
-                        "me", "1234", null, "https://imgur.com/photo-3", "https://spotify.com/preview"
+                        "song", "1234", null, "https://imgur.com/photo-3", "https://spotify.com/preview"
         ));
     }
 
@@ -34,7 +34,7 @@ public class MusicMemoryTest {
 
     @Test
     public void testGetSong() {
-        assertEquals(this.musicMemory.getSong(), "song");
+        assertEquals(this.musicMemory.getSong().getName(), "song");
     }
 
 }
