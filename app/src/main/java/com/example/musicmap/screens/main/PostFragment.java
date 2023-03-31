@@ -297,13 +297,14 @@ public class PostFragment extends MainFragment {
 
                 // Continue with the task to get the download URL
                 return imageRef.getDownloadUrl();
-            }).addOnCompleteListener(imageUri -> {
-                Log.d("debug", String.format("[poop] Image uploaded! %s", imageUri.toString()));
+            }).addOnCompleteListener(task -> {
+                String imageUrl = task.getResult().toString();
+                Log.d("debug", String.format("[poop] Image uploaded! %s", imageUrl));
                 Actions.postMusicMemory(new MusicMemory(
                         authorID,
                         timePosted,
                         geoPointLocation,
-                        imageUri.toString(),
+                        imageUrl,
                         song
                 )).addOnFailureListener(e ->
                         Log.d("debug", String.format("[poop] Memory failed to upload! %s", e.getMessage()))
