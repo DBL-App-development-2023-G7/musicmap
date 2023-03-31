@@ -62,7 +62,8 @@ public class FeedFragment extends MainFragment {
 
             @Override
             public void onFeedDataLoadFailed() {
-                Message.showFailureMessage(viewGroup, getString(R.string.feed_error_loading));
+                // TODO: fix the crashing when the layout changes and message has not yet been served
+                // Message.showFailureMessage(viewGroup, getString(R.string.feed_error_loading));
             }
         });
 
