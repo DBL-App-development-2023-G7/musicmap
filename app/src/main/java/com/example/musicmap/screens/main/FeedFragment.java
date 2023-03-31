@@ -13,7 +13,6 @@ import com.example.musicmap.R;
 import com.example.musicmap.feed.FeedAdapter;
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.util.firebase.Queries;
-import com.example.musicmap.util.ui.Message;
 
 import java.util.ArrayList;
 import java.util.List;
