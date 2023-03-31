@@ -14,12 +14,12 @@ import java.util.Date;
 public class MusicMemory extends Post {
 
     private String photo;
-    private String song;
+    private Song song;
 
     @SuppressWarnings("unused")
     private MusicMemory() { }
 
-    public MusicMemory(String authorUid, Date timePosted, GeoPoint location, String photo, String song) {
+    public MusicMemory(String authorUid, Date timePosted, GeoPoint location, String photo, Song song) {
         super(authorUid, timePosted, location);
         this.photo = photo;
         this.song = song;
@@ -29,7 +29,7 @@ public class MusicMemory extends Post {
         return Uri.parse(photo);
     }
 
-    public String getSong() {
+    public Song getSong() {
         return song;
     }
 

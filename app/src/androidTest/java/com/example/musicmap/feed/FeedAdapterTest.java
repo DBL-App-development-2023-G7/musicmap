@@ -35,9 +35,13 @@ public class FeedAdapterTest {
     public void setUp() {
         List<MusicMemory> feedItems = new ArrayList<>();
         feedItems.add(new MusicMemory("author-uid-1", new Date(),
-                new GeoPoint(10, 10), "https://imgur.com/photo-1", "song-1"));
+                new GeoPoint(10, 10), "https://imgur.com/photo-1", new Song(
+                        "me", "1234", null, "https://imgur.com/photo-3", "https://spotify.com/preview"
+        )));
         feedItems.add(new MusicMemory("author-uid-2", new Date(),
-                new GeoPoint(20, 20), "https://imgur.com/photo-2", "song-2"));
+                new GeoPoint(20, 20), "https://imgur.com/photo-2", new Song(
+                "me", "1234", null, "https://imgur.com/photo-4", "https://spotify.com/preview"
+        )));
 
         when(mockActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).thenReturn(mockLayoutInflater);
         feedAdapter = new FeedAdapter(mockActivity, R.layout.single_post_layout_feed, feedItems);
