@@ -23,16 +23,12 @@ import java.util.concurrent.ExecutionException;
 
 public class QueriesTest {
 
-    private String userNameThatExistsInFirebase = "username";
-    private String userNameThatDoesNotExistsInFirebase = "some-username";
-    private String emailThatExistsInFirebase = "pradyumanreal7@gmail.com";
-    private String emailThatDoesnotExistInFirebase = "wrong@wrong";
-    private String authorUidThatExistsInFirebase = "9kPlvIKTVUQ3Tp2h9Mh0BpVKdwr1";
-    private String musicMemoryIdThatExistInFirebase = "NOqL72ibo1jHVPEZhQxs";
+    private final String authorUidThatExistsInFirebase = "9kPlvIKTVUQ3Tp2h9Mh0BpVKdwr1";
 
 
     @Test
     public void testGetUsersByUsername_success_exists() throws ExecutionException, InterruptedException {
+        String userNameThatExistsInFirebase = "username";
         Task<QuerySnapshot> task = Queries.getUsersWithUsername(userNameThatExistsInFirebase);
         QuerySnapshot querySnapshot = Tasks.await(task);
         assertFalse(querySnapshot.isEmpty());
@@ -42,6 +38,7 @@ public class QueriesTest {
 
     @Test
     public void testGetUsersByUsername_success_doesNotExist() throws ExecutionException, InterruptedException {
+        String userNameThatDoesNotExistsInFirebase = "some-username";
         Task<QuerySnapshot> task = Queries.getUsersWithUsername(userNameThatDoesNotExistsInFirebase);
         QuerySnapshot querySnapshot = Tasks.await(task);
         assertTrue(querySnapshot.isEmpty());
@@ -49,6 +46,7 @@ public class QueriesTest {
 
     @Test
     public void testGetUsersByEmail_success_exists() throws ExecutionException, InterruptedException {
+        String emailThatExistsInFirebase = "pradyumanreal7@gmail.com";
         Task<QuerySnapshot> task = Queries.getUserWithEmail(emailThatExistsInFirebase);
         QuerySnapshot querySnapshot = Tasks.await(task);
         assertFalse(querySnapshot.isEmpty());
@@ -58,6 +56,7 @@ public class QueriesTest {
 
     @Test
     public void testGetUsersByEmail_success_doesNotExist() throws ExecutionException, InterruptedException {
+        String emailThatDoesnotExistInFirebase = "wrong@wrong";
         Task<QuerySnapshot> task = Queries.getUserWithEmail(emailThatDoesnotExistInFirebase);
         QuerySnapshot querySnapshot = Tasks.await(task);
         assertTrue(querySnapshot.isEmpty());
@@ -65,6 +64,7 @@ public class QueriesTest {
 
     @Test
     public void testGetMusicMemoryByAuthorIdAndId_success_exists() throws ExecutionException, InterruptedException {
+        String musicMemoryIdThatExistInFirebase = "NOqL72ibo1jHVPEZhQxs";
         Task<MusicMemory> task = Queries.getMusicMemoryByAuthorIdAndId(authorUidThatExistsInFirebase, musicMemoryIdThatExistInFirebase);
         MusicMemory musicMemory = Tasks.await(task);
         assertNotNull(musicMemory);
@@ -78,6 +78,13 @@ public class QueriesTest {
         List<MusicMemory> musicMemories = Tasks.await(task);
         assertFalse(musicMemories.isEmpty());
         assertEquals(musicMemories.get(0).getAuthorUid(), authorUidThatExistsInFirebase);
+    }
+
+    @Test
+    public void testGetAllMusicMemories_success_exists() throws ExecutionException, InterruptedException {
+        Task<List<MusicMemory>> task = Queries.getAllMusicMemories();
+        List<MusicMemory> musicMemories = Tasks.await(task);
+        assertFalse(musicMemories.isEmpty());
     }
 
 }
