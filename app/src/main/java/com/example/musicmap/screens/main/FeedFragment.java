@@ -13,7 +13,6 @@ import com.example.musicmap.R;
 import com.example.musicmap.feed.FeedAdapter;
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.util.firebase.Queries;
-import com.example.musicmap.util.ui.Message;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +61,8 @@ public class FeedFragment extends MainFragment {
 
             @Override
             public void onFeedDataLoadFailed() {
-                Message.showFailureMessage(viewGroup, getString(R.string.feed_error_loading));
+                // TODO: fix the crashing when the layout changes and message has not yet been served
+                // Message.showFailureMessage(viewGroup, getString(R.string.feed_error_loading));
             }
         });
 

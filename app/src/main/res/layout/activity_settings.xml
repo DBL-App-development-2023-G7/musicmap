@@ -53,7 +53,6 @@
     <!--TODO: change layout_marginTop-->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentSettings"
-        android:name="com.example.musicmap.screens.settings.SettingsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="60dp"
