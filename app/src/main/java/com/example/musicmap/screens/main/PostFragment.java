@@ -1,8 +1,5 @@
 package com.example.musicmap.screens.main;
 
-import static android.media.ExifInterface.ORIENTATION_NORMAL;
-import static android.media.ExifInterface.TAG_ORIENTATION;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -37,6 +34,7 @@ import com.example.musicmap.util.permissions.CameraPermission;
 import com.example.musicmap.util.permissions.LocationPermission;
 import com.example.musicmap.util.spotify.SpotifyAuthActivity;
 import com.example.musicmap.util.ui.FragmentUtil;
+import com.example.musicmap.util.ui.ImageUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.firestore.GeoPoint;
@@ -61,16 +59,17 @@ public class PostFragment extends MainFragment {
     // needs to be static or data is lost
     // TODO find a better way of persisting data
     private static Bitmap capturedImage;
+    private static final String TAG = "PostFragment";
+
     private final LocationPermission locationPermission = new LocationPermission(this);
     private final CameraPermission cameraPermission = new CameraPermission(this);
     private FusedLocationProviderClient fusedLocationClient;
+
     private Location currentLocation;
     private Button addLocationButton;
     private ImageView capturedImagePreview;
 
     private SpotifyAuthActivity parentActivity;
-
-    public static MusicMemory memoryToPost;
 
     // a launcher that launches the camera activity and handles the result
     ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
@@ -78,22 +77,21 @@ public class PostFragment extends MainFragment {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    Log.d("debug", "[poop] Camera Activity result recieved!");
                     Intent resultIntent = result.getData();
-                    if(resultIntent == null) {
-                        Log.d("debug", "[poop] No result!");
+                    if (resultIntent == null) {
+                        Log.w(TAG, "Activity result from CameraActivity is null");
                         return;
                     }
-                    Uri imageUri = resultIntent.getData(); // get image uri
-                    Log.d("debug", String.format("[poop] Uri! %s", imageUri.toString()));
-                    // fetch the result bitmap and display it
+
+                    Uri imageUri = resultIntent.getData();
+
                     CompletableFuture.runAsync(() -> {
                         try {
                             capturedImage = Picasso.get().load(imageUri)
-                                    .rotate(getImageRotationFromEXIF(imageUri))
+                                    .rotate(ImageUtils.getImageRotationFromEXIF(parentActivity, imageUri))
                                     .get();
                         } catch (IOException e) {
-                            Log.d("debug", "[poop] Image falied to load!");
+                            Log.d(TAG, "Exception occurred while setting the image", e);
                         }
                     }).thenAcceptAsync(unused -> {
                         capturedImagePreview.setImageBitmap(capturedImage);
@@ -103,39 +101,10 @@ public class PostFragment extends MainFragment {
             }
     );
 
-    //TODO find a better place for this method
-    private float getImageRotationFromEXIF(Uri imageUri) {
-        float rotation = 0f;
-        try {
-            ExifInterface exifInterface = new ExifInterface(parentActivity.getContentResolver().openInputStream(imageUri));
-            int orientation = exifInterface.getAttributeInt(TAG_ORIENTATION, ORIENTATION_NORMAL);
-            switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90: {
-                    Log.d("debug", "[poop] 90!");
-                    rotation = 90f;
-                    break;
-                }
-                case ExifInterface.ORIENTATION_ROTATE_180: {
-                    Log.d("debug", "[poop] 180!");
-                    rotation = 180f;
-                    break;
-                }
-                case ExifInterface.ORIENTATION_ROTATE_270: {
-                    Log.d("debug", "[poop] 270!");
-                    rotation = -90f;
-                    break;
-                }
-            }
-        } catch (IOException e) {
-            Log.d("debug", String.format("[poop] exception! %s", e.getMessage()));
-        }
-        return rotation;
-
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("debug", "[poop] Fragment create!");
 
         locationPermission.request();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
@@ -183,6 +152,8 @@ public class PostFragment extends MainFragment {
         addSongButton.setOnClickListener(view -> goToSearchFragment());
 
         ImageView songImageView = rootView.findViewById(R.id.songPreviewImage);
+
+        // load the search result track if there is one
         if (SearchFragment.resultTrack != null) {
             songImageView.setVisibility(View.VISIBLE);
             Picasso.get().load(SearchFragment.resultTrack.getAlbum().getImages()[0].getUrl()).into(songImageView);
