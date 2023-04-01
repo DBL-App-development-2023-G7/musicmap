@@ -2,8 +2,12 @@ package com.example.musicmap.util.firebase;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import com.example.musicmap.feed.MusicMemory;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -14,6 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class QueriesTest {
@@ -22,9 +27,12 @@ public class QueriesTest {
     private String userNameThatDoesNotExistsInFirebase = "some-username";
     private String emailThatExistsInFirebase = "pradyumanreal7@gmail.com";
     private String emailThatDoesnotExistInFirebase = "wrong@wrong";
+    private String authorUidThatExistsInFirebase = "9kPlvIKTVUQ3Tp2h9Mh0BpVKdwr1";
+    private String musicMemoryIdThatExistInFirebase = "NOqL72ibo1jHVPEZhQxs";
+
 
     @Test
-    public void testGetUsersByUsername_success_usernameExists() throws ExecutionException, InterruptedException {
+    public void testGetUsersByUsername_success_exists() throws ExecutionException, InterruptedException {
         Task<QuerySnapshot> task = Queries.getUsersWithUsername(userNameThatExistsInFirebase);
         QuerySnapshot querySnapshot = Tasks.await(task);
         assertFalse(querySnapshot.isEmpty());
@@ -33,14 +41,14 @@ public class QueriesTest {
     }
 
     @Test
-    public void testGetUsersByUsername_success_usernameDoesNotExist() throws ExecutionException, InterruptedException {
+    public void testGetUsersByUsername_success_doesNotExist() throws ExecutionException, InterruptedException {
         Task<QuerySnapshot> task = Queries.getUsersWithUsername(userNameThatDoesNotExistsInFirebase);
         QuerySnapshot querySnapshot = Tasks.await(task);
         assertTrue(querySnapshot.isEmpty());
     }
 
     @Test
-    public void testGetUsersByUsername_success_emailExists() throws ExecutionException, InterruptedException {
+    public void testGetUsersByEmail_success_exists() throws ExecutionException, InterruptedException {
         Task<QuerySnapshot> task = Queries.getUserWithEmail(emailThatExistsInFirebase);
         QuerySnapshot querySnapshot = Tasks.await(task);
         assertFalse(querySnapshot.isEmpty());
@@ -49,10 +57,27 @@ public class QueriesTest {
     }
 
     @Test
-    public void testGetUsersByUsername_success_emailDoesNotExist() throws ExecutionException, InterruptedException {
+    public void testGetUsersByEmail_success_doesNotExist() throws ExecutionException, InterruptedException {
         Task<QuerySnapshot> task = Queries.getUserWithEmail(emailThatDoesnotExistInFirebase);
         QuerySnapshot querySnapshot = Tasks.await(task);
         assertTrue(querySnapshot.isEmpty());
+    }
+
+    @Test
+    public void testGetMusicMemoryByAuthorIdAndId_success_exists() throws ExecutionException, InterruptedException {
+        Task<MusicMemory> task = Queries.getMusicMemoryByAuthorIdAndId(authorUidThatExistsInFirebase, musicMemoryIdThatExistInFirebase);
+        MusicMemory musicMemory = Tasks.await(task);
+        assertNotNull(musicMemory);
+        assertEquals(musicMemory.getAuthorUid(), authorUidThatExistsInFirebase);
+        assertEquals(musicMemory.getUid(), musicMemoryIdThatExistInFirebase);
+    }
+
+    @Test
+    public void testGetMusicMemoriesByAuthorId_success_exists() throws ExecutionException, InterruptedException {
+        Task<List<MusicMemory>> task = Queries.getMusicMemoriesByAuthorId(authorUidThatExistsInFirebase);
+        List<MusicMemory> musicMemories = Tasks.await(task);
+        assertFalse(musicMemories.isEmpty());
+        assertEquals(musicMemories.get(0).getAuthorUid(), authorUidThatExistsInFirebase);
     }
 
 }
