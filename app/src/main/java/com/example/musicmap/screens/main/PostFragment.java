@@ -61,16 +61,16 @@ public class PostFragment extends MainFragment {
     // needs to be static or data is lost
     // TODO find a better way of persisting data
     private static Bitmap capturedImage;
-
     private final LocationPermission locationPermission = new LocationPermission(this);
     private final CameraPermission cameraPermission = new CameraPermission(this);
     private FusedLocationProviderClient fusedLocationClient;
-
     private Location currentLocation;
     private Button addLocationButton;
     private ImageView capturedImagePreview;
 
     private SpotifyAuthActivity parentActivity;
+
+    public static MusicMemory memoryToPost;
 
     // a launcher that launches the camera activity and handles the result
     ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
@@ -129,7 +129,6 @@ public class PostFragment extends MainFragment {
         } catch (IOException e) {
             Log.d("debug", String.format("[poop] exception! %s", e.getMessage()));
         }
-
         return rotation;
 
     }
@@ -137,13 +136,15 @@ public class PostFragment extends MainFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("debug", "[poop] Fragment create!");
 
         locationPermission.request();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+        fetchUserLocation();
 //        cameraPermission.request();
         getPermission();
         parentActivity = (SpotifyAuthActivity) requireActivity();
         Session session = Session.getInstance();
+
         CompletableFuture.runAsync(() -> {
             while (!session.isUserLoaded()) {
             }
@@ -174,24 +175,23 @@ public class PostFragment extends MainFragment {
             capturedImagePreview.setImageBitmap(capturedImage);
             capturedImagePreview.setVisibility(View.VISIBLE);
         }
-        Button addImageButton = rootView.findViewById(R.id.addImageButton); // should this also be defined?
+
+        Button addImageButton = rootView.findViewById(R.id.addImageButton);
         addImageButton.setOnClickListener(view -> goToCameraActivity());
 
         Button addSongButton = rootView.findViewById(R.id.addSongButton);
         addSongButton.setOnClickListener(view -> goToSearchFragment());
 
         ImageView songImageView = rootView.findViewById(R.id.songPreviewImage);
-
-        // load the search result track if there is one
         if (SearchFragment.resultTrack != null) {
             songImageView.setVisibility(View.VISIBLE);
             Picasso.get().load(SearchFragment.resultTrack.getAlbum().getImages()[0].getUrl()).into(songImageView);
             addSongButton.setText(SearchFragment.resultTrack.getName());
         }
+
         addLocationButton = rootView.findViewById(R.id.addLocationButton);
         addLocationButton.setOnClickListener(view -> fetchUserLocation());
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
-        fetchUserLocation();
+
         Button postMemoryButton = rootView.findViewById(R.id.postMemoryButton);
         postMemoryButton.setOnClickListener(view -> postMusicMemory());
         return rootView;
@@ -209,45 +209,58 @@ public class PostFragment extends MainFragment {
 
     @SuppressLint("MissingPermission")
     private void fetchUserLocation() {
-        Log.d("debug", "[poop] call made!");
         if (locationPermission.isCoarseGranted() && locationPermission.isFineGranted()) {
             Log.d("debug", "[poop] permission Granted!");
             fusedLocationClient.getLastLocation()
                     .addOnSuccessListener(requireActivity(), location -> {
+                        // if location received try to display it
                         currentLocation = location;
-                        double lat = location.getLatitude();
-                        double lon = location.getLongitude();
-                        Geocoder geocoder = new Geocoder(requireActivity());
-                        try {
-                            List<Address> addressList = geocoder.getFromLocation(lat, lon, 1);
-                            if (addressList.size() > 0) {
-                                Address address = addressList.get(0);
-                                List<String> addressFeatures = new ArrayList<>();
-
-                                addressFeatures.add(address.getThoroughfare());
-                                addressFeatures.add(address.getLocality());
-                                addressFeatures.add(address.getPremises());
-                                addressFeatures.add(address.getSubAdminArea());
-                                addressFeatures.add(address.getCountryName());
-
-                                for (String f : addressFeatures) {
-                                    Log.d("debug", String.format("[poop] Feature: %s", f));
-                                }
-
-                                String displayText = addressFeatures.stream()
-                                        .filter(Objects::nonNull)
-                                        .limit(2)
-                                        .collect(Collectors.joining(", "));
-
-                                addLocationButton.setText(displayText);
-                            }
-                        } catch (IOException e) {
-                            Log.d("debug", "[poop] geocoder Exception!");
-                        }
+                        String displayText = getLocationText(currentLocation);
+                        addLocationButton.setText(displayText);
+                    })
+                    .addOnFailureListener(requireActivity(), exception -> {
+                        // TODO ERROR MESSAGE!
                     });
         } else {
-            // TODO here we add error message
+            // TODO ERROR MESSAGE!
             Log.d("debug", "[poop] No location permission granted!");
+        }
+    }
+
+    // Takes a location and returns a human readable string to display on the search bar
+    private String getLocationText(Location location){
+        double lat = location.getLatitude();
+        double lon = location.getLongitude();
+
+        String resultString = String.format("Lat: %s \nLon: %s",
+                currentLocation.getLatitude(),
+                currentLocation.getLongitude()
+        );
+        Geocoder geocoder = new Geocoder(requireActivity());
+        try {
+            List<Address> addressList = geocoder.getFromLocation(lat, lon, 1);
+            if(addressList.size() == 0) {
+                // TODO LOG ERROR MESSAGE
+                return resultString;
+            }
+
+            Address address = addressList.get(0);
+            List<String> addressFeatures = new ArrayList<>();
+
+            addressFeatures.add(address.getThoroughfare());
+            addressFeatures.add(address.getLocality());
+            addressFeatures.add(address.getCountryName());
+
+            resultString = addressFeatures.stream()
+                    .filter(Objects::nonNull)
+                    .limit(2)
+                    .collect(Collectors.joining(", "));
+
+            return resultString;
+
+        } catch (IOException e) {
+            Log.d("debug", "[poop] geocoder Exception!");
+            return resultString;
         }
     }
 
@@ -337,6 +350,7 @@ public class PostFragment extends MainFragment {
                     FeedFragment.class);
         }
     }
+
 
     private void clearData() {
         currentLocation = null;

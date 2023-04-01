@@ -1,5 +1,6 @@
 package com.example.musicmap.util.firebase;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.example.musicmap.feed.ConcertMemory;
