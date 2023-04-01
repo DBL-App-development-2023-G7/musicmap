@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.Fragment;
 
 import com.example.musicmap.R;
-import com.example.musicmap.SessionListenerActivity;
+//import com.example.musicmap.SessionListenerActivity;
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.SessionAndInternetListenerActivity;
 import com.example.musicmap.screens.map.PostMapFragment;

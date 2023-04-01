@@ -8,9 +8,12 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.musicmap.R;
 import com.example.musicmap.feed.MusicMemory;
+import com.squareup.picasso.Picasso;
 
 import org.osmdroid.views.MapView;
 
@@ -27,6 +30,10 @@ public class MusicMemoryFragment extends Fragment {
     private String authorUID;
     private String photoURI;
     private MapView mapView;
+    private ImageView imageView;
+    private ImageView profilePictureView;
+    private TextView usernameView;
+    private TextView dateView;
 
     public static final String TAG = "MusicMemoryFragment";
 
@@ -34,14 +41,15 @@ public class MusicMemoryFragment extends Fragment {
     private MusicMemory musicMemory;
 
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         HomeActivity activity = (HomeActivity) requireActivity();
         this.musicMemory = activity.getCurrentMusicMemory();
-
         System.out.println(this.musicMemory.getSong());
-        System.out.println(this.musicMemory.getPhoto());
+        System.out.println("Photo: " + this.musicMemory.getPhoto());
+
         System.out.println(this.musicMemory.getLocation());
         System.out.println(this.musicMemory.getTimePosted());
     }
@@ -52,6 +60,8 @@ public class MusicMemoryFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_music_memory, container, false);
         this.mapView = rootView.findViewById(R.id.post_map);
+        this.imageView = rootView.findViewById(R.id.memoryImageView);
+        Picasso.get().load(this.musicMemory.getPhoto()).into(imageView);
         return rootView;
     }
 }
