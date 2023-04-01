@@ -5,12 +5,25 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import org.apache.hc.core5.http.ParseException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.stream.Collectors;
 
 import se.michaelthelin.spotify.SpotifyApi;
+import se.michaelthelin.spotify.enums.ModelObjectType;
+import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
+import se.michaelthelin.spotify.model_objects.miscellaneous.CurrentlyPlaying;
+import se.michaelthelin.spotify.model_objects.specification.PagingCursorbased;
+import se.michaelthelin.spotify.model_objects.specification.PlayHistory;
 import se.michaelthelin.spotify.model_objects.specification.Track;
 import se.michaelthelin.spotify.model_objects.specification.TrackSimplified;
+import se.michaelthelin.spotify.requests.AbstractRequest;
 import se.michaelthelin.spotify.requests.data.player.GetCurrentUsersRecentlyPlayedTracksRequest;
 import se.michaelthelin.spotify.requests.data.player.GetUsersCurrentlyPlayingTrackRequest;
 import se.michaelthelin.spotify.requests.data.search.simplified.SearchTracksRequest;
@@ -21,6 +34,53 @@ import se.michaelthelin.spotify.requests.data.tracks.GetTrackRequest;
  * However there is a lot of spotify logic happening in activities so this class needs to be expanded
  */
 public class SpotifyUtils {
+
+    public static CompletableFuture<List<Track>> getRecentTracksFuture(int maxTracks){
+        return CompletableFuture.supplyAsync(() -> {
+                List<Track> recentTrackList = new ArrayList<>();
+                try {
+                    PagingCursorbased<PlayHistory> pageHistory =
+                            SpotifyUtils.getGetRecentHistoryRequest().execute();
+                    PlayHistory[] historyItems = pageHistory.getItems();
+                    List<CompletableFuture<Track>> trackFutures = new ArrayList<>();
+
+                    if (historyItems != null) {
+                        trackFutures.addAll(Arrays.stream(historyItems)
+                                .limit(maxTracks) // only get 4 most recent songs (To prevent API calls)
+                                .filter(playHistory ->
+                                        playHistory.getTrack().getType() == ModelObjectType.TRACK // assumes getTrack is not null
+                                ).map(playHistory -> playHistory.getTrack().getId())// actually just get the track id since we only need those for requests
+                                .map(SpotifyUtils::getGetTrackRequest) // prepare request to get full track data (since Album is not in simplified track)
+                                .map(AbstractRequest::executeAsync)// call all requests
+                                .collect(Collectors.toList()));
+                    }
+
+                    for (CompletableFuture<Track> trackFuture : trackFutures) {
+                        recentTrackList.add(trackFuture.join()); // gather all request results
+                    }
+                } catch (IOException | SpotifyWebApiException | ParseException e) {
+                    Log.d("debug", "Spotify web api exception!");
+                }
+                return recentTrackList;
+        });
+    }
+
+    public static CompletableFuture<Track> getCurrentTrackFuture() {
+        return CompletableFuture.supplyAsync( () -> {
+            Track currentTrack = null;
+            try {
+                CurrentlyPlaying currentSimpleTrack =
+                        SpotifyUtils.getCurrentPlayingTrackRequest().execute();
+                if (currentSimpleTrack != null) {
+                    String currentTrackId = currentSimpleTrack.getItem().getId();
+                    currentTrack = SpotifyUtils.getGetTrackRequest(currentTrackId).execute();
+                }
+            } catch (IOException | SpotifyWebApiException | ParseException e) {
+                Log.d("debug", "Spotify web api exception!");
+            }
+            return currentTrack;
+        });
+    }
 
     public static CompletableFuture<Void> getWaitForTokenFuture() {
         return CompletableFuture.runAsync(() -> {

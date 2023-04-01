@@ -1,5 +1,8 @@
 package com.example.musicmap.screens.main;
 
+import static com.example.musicmap.util.spotify.SpotifyUtils.getCurrentTrackFuture;
+import static com.example.musicmap.util.spotify.SpotifyUtils.getRecentTracksFuture;
+
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -46,59 +49,26 @@ public class SearchFragment extends MainFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragmen_search, container, false);
-        // I know this is a monstrosity
-        // any refactoring / formatting suggestions are welcome
+
+        // If a spotify token is present
+        // get recent tracks and add them to the view.
         SpotifyUtils.getWaitForTokenFuture()
-                .thenAccept(unused -> {
-                    Log.d("debug", "[poop]3");
-                    try {
-                        CompletableFuture<CurrentlyPlaying> currentTrackFuture =
-                                SpotifyUtils.getCurrentPlayingTrackRequest().executeAsync();
-                        CompletableFuture<PagingCursorbased<PlayHistory>> pageHistoryFuture =
-                                SpotifyUtils.getGetRecentHistoryRequest().executeAsync();
-
-                        PagingCursorbased<PlayHistory> pageHistory = pageHistoryFuture.join();
-                        Log.d("debug", "execute recent history request done");
-                        PlayHistory[] historyItems = pageHistory.getItems();
-                        List<CompletableFuture<Track>> trackFutures = new ArrayList<>();
-                        if (historyItems != null) {
-                            trackFutures.addAll(Arrays.stream(historyItems)
-                                    .limit(4) // only get 4 most recent songs (To prevent API calls)
-                                    .filter(playHistory ->
-                                            playHistory.getTrack().getType() == ModelObjectType.TRACK // assumes getTrack is not null
-                                    ).map(playHistory -> playHistory.getTrack().getId())// actually just get the track id since we only need those for requests
-                                    .map(SpotifyUtils::getGetTrackRequest) // prepare request to get full track data (since Album is not in simplified track)
-                                    .map(AbstractRequest::executeAsync)// call all requests
-                                    .collect(Collectors.toList()));
-                        }
-
-                        CurrentlyPlaying currentTrack = currentTrackFuture.join();
-                        if (currentTrack != null) {
-                            String currentTrackId = currentTrack.getItem().getId();
-                            trackFutures.add(0,
-                                    SpotifyUtils.getGetTrackRequest(
-                                            currentTrackId
-                                    ).executeAsync()
-                            );
-                        }
-                        recentTrackList = new ArrayList<>();
-                        for (CompletableFuture<Track> trackFuture : trackFutures) {
-                            recentTrackList.add(trackFuture.join()); // gather all request results
-                        }
-                    } catch (Throwable e) {
-                        Log.d("debug", "[poop] Error which we will ignore!");
-                        e.printStackTrace();
-                    }
-                    Log.d("debug", "[poop] End!");
-                }).thenAcceptAsync(
-                        unused2 -> {
-                            try {
-                                Log.d("debug", "[poop] 2");
-                                updateSongListView(recentTrackList);
-                            } catch (Throwable e) {
-                                Log.d("debug", "[poop] Error which we will ignore!");
-                                e.printStackTrace();
-                            }
+                .thenCompose(unused ->
+                        getRecentTracksFuture(2).thenAcceptBoth(
+                                getCurrentTrackFuture(),
+                                (trackList, currentTrack) -> {
+                                    Log.d("debug", String.format("track size: %d", trackList.size()));
+                                    if(currentTrack != null){
+                                        recentTrackList.add(currentTrack);
+                                    }
+                                    recentTrackList.addAll(trackList);
+                                    Log.d("debug", String.format("track size2: %d", recentTrackList.size()));
+                                }
+                        )
+                ).thenAcceptAsync(
+                        unused -> {
+                            Log.d("debug", "Draw track");
+                            updateSongListView(recentTrackList);
                         },
                         requireActivity().getMainExecutor()
                 );
