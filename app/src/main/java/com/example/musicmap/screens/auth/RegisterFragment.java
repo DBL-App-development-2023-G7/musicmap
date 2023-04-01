@@ -12,15 +12,13 @@ import android.widget.EditText;
 import com.example.musicmap.R;
 import com.example.musicmap.user.UserData;
 import com.example.musicmap.util.firebase.AuthSystem;
-import com.example.musicmap.util.firebase.Queries;
-import com.example.musicmap.util.regex.ValidationUtil;
+import com.example.musicmap.util.regex.InputChecker;
 import com.example.musicmap.util.ui.BirthdatePickerDialog;
 import com.example.musicmap.util.ui.Message;
 
+import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 public class RegisterFragment extends AuthFragment {
 
@@ -54,7 +52,7 @@ public class RegisterFragment extends AuthFragment {
         usernameInput = rootView.findViewById(R.id.username_editText);
         usernameInput.setOnFocusChangeListener((view, hasFocus) -> {
             if (!hasFocus) {
-                checkUsername(usernameInput.getText().toString());
+                InputChecker.checkUsername(usernameInput.getText().toString(), usernameInput);
             }
         });
 
@@ -83,90 +81,11 @@ public class RegisterFragment extends AuthFragment {
         dialog.show();
     }
 
-    private boolean checkUsername(String username) {
-        switch (ValidationUtil.isUsernameValid(username)) {
-            case EMPTY:
-                usernameInput.setError(getString(R.string.input_error_enter_username));
-                return false;
-            case FORMAT:
-                usernameInput.setError(getString(R.string.input_error_valid_username));
-                return false;
-            case VALID:
-                Queries.getUsersWithUsername(username).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "usernameQuery:success");
-
-                        if (!task.getResult().isEmpty()) {
-                            usernameInput.setError(getString(R.string.input_error_username_exists));
-                        }
-                    } else {
-                        Log.d(TAG, "usernameQuery:fail");
-                    }
-                });
-                return true;
-            default:
-                usernameInput.setError(getString(R.string.input_error_unexpected));
-                return false;
-        }
-    }
-
-    private boolean checkFirstName(String firstName) {
-        switch (ValidationUtil.isMandatoryFieldValid(firstName)) {
-            case EMPTY:
-                firstNameInput.setError(getString(R.string.input_error_enter_first_name));
-                return false;
-            case VALID:
-                return true;
-            default:
-                firstNameInput.setError(getString(R.string.input_error_unexpected));
-                return false;
-        }
-    }
-
-    private boolean checkLastName(String lastName) {
-        switch (ValidationUtil.isMandatoryFieldValid(lastName)) {
-            case EMPTY:
-                lastNameInput.setError(getString(R.string.input_error_enter_last_name));
-                return false;
-            case VALID:
-                return true;
-            default:
-                lastNameInput.setError(getString(R.string.input_error_unexpected));
-                return false;
-        }
-    }
-
-    private boolean checkEmail(String email) {
-        switch (ValidationUtil.isEmailValid(email)) {
-            case EMPTY:
-                emailInput.setError(getString(R.string.input_error_enter_email));
-                return false;
-            case FORMAT:
-                emailInput.setError(getString(R.string.input_error_valid_email));
-                return false;
-            case VALID:
-                return true;
-            default:
-                emailInput.setError(getString(R.string.input_error_unexpected));
-                return false;
-        }
-    }
-
-    private boolean checkRepeatPassword(String repeatPassword, String password) {
-        if (!repeatPassword.equals(password)) {
-            repeatPasswordInput.setError(getString(R.string.input_error_passwords_not_matching));
-            return false;
-        }
-        repeatPasswordInput.setError(null);
-        return true;
-    }
-
     private boolean checkBirthdate(Date birthdate) {
         String birthdateText = birthdateInput.getText().toString();
-        SimpleDateFormat dateFormat =
-                new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getContext());
 
-        if (birthdateText.equals("")) {
+        if (birthdateText.isEmpty()) {
             birthdateInput.setError(getString(R.string.input_error_pick_date));
             return false;
         }
@@ -200,10 +119,12 @@ public class RegisterFragment extends AuthFragment {
      * @return whether the form input is valid.
      */
     protected boolean validate() {
-        return checkUsername(username)
-                & checkFirstName(firstName) & checkLastName(lastName)
-                & checkEmail(email)
-                & checkPassword(passwordInput, password) & checkRepeatPassword(repeatPassword, password)
+        return InputChecker.checkUsername(username, usernameInput)
+                & InputChecker.checkFirstName(firstName, firstNameInput)
+                & InputChecker.checkLastName(lastName, lastNameInput)
+                & InputChecker.checkEmail(email, emailInput)
+                & InputChecker.checkPassword(password, passwordInput)
+                & InputChecker.checkRepeatPassword(repeatPassword, password, passwordInput)
                 & checkBirthdate(birthdate);
     }
 

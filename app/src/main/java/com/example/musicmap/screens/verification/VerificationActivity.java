@@ -5,22 +5,42 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import com.example.musicmap.R;
-import com.example.musicmap.SessionListenerActivity;
+import com.example.musicmap.SessionAndInternetListenerActivity;
 import com.example.musicmap.screens.main.HomeActivity;
 import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
 import com.example.musicmap.util.firebase.AuthSystem;
 
-public class VerificationActivity extends SessionListenerActivity {
+public class VerificationActivity extends SessionAndInternetListenerActivity {
+
+    private int currentLayout = R.layout.activity_verification;
+
+    @Override
+    protected void updateLayout(boolean internetAvailable) {
+        if (!internetAvailable) {
+            setContentView(R.layout.no_internet);
+            currentLayout = R.layout.no_internet;
+            return;
+        }
+
+        if (currentLayout == R.layout.activity_verification) {
+            return;
+        }
+
+        if (currentLayout == R.layout.no_internet) {
+            setContentView(R.layout.activity_verification);
+            currentLayout = R.layout.activity_verification;
+            setupActivity();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
 
-        Button signOutVerificationButton = findViewById(R.id.signout_verification_button);
-        signOutVerificationButton.setOnClickListener(view -> AuthSystem.logout());
+        setupActivity();
     }
 
     @Override
@@ -38,6 +58,11 @@ public class VerificationActivity extends SessionListenerActivity {
             startActivity(homeIntent);
             finish();
         }
+    }
+
+    private void setupActivity() {
+        Button signOutVerificationButton = findViewById(R.id.signout_verification_button);
+        signOutVerificationButton.setOnClickListener(view -> AuthSystem.logout());
     }
 
 }

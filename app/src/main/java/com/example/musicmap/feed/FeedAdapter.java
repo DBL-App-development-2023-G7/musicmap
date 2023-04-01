@@ -63,7 +63,7 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
         row.setOnClickListener(v -> FragmentUtil.replaceFragment(homeActivity.getFragmentManagerFromActivity(), R.id.fragment_view, MusicMemoryFragment.class));
         if (musicMemory != null) {
             // TODO: more user-friendly display
-            songName.setText(musicMemory.getSong());
+            songName.setText(musicMemory.getSong().getName());
             songDetails.setText(String.format("%s %s", musicMemory.getAuthorUid(), musicMemory.getLocation()));
             Picasso.get().load(musicMemory.getPhoto()).into(memoryImage);
         }

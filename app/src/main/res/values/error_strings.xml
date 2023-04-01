@@ -1,6 +1,5 @@
 <resources>
     <string name="auth_error_something_wrong">Something went wrong.</string>
-    <string name="error_no_internet">Could not detect an internet connection.</string>
     <string name="auth_error_incorrect_email_password">Incorrect email or password.</string>
     <string name="auth_error_incorrect_username_password">Incorrect username or password.</string>
     <string name="input_error_enter_email">Please enter an email address.</string>
@@ -20,4 +19,5 @@
     <string name="auth_error_invalid_values">Some of the fields are incomplete or contain invalid values.</string>
     <string name="auth_error_failed_registration">Could not register, please try again later!</string>
     <string name="feed_error_loading">Could not load feed</string>
+    <string name="no_internet_error">Oops! MusicMap requires an active internet connection to function. We\'re tying to find a connection</string>
 </resources>

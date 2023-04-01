@@ -7,6 +7,9 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 
+import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 public class BirthdatePickerDialog extends DatePickerDialog {
@@ -36,8 +39,10 @@ public class BirthdatePickerDialog extends DatePickerDialog {
     public static OnDateSetListener applyDateToEditText(EditText editText) {
         return (datePicker, year, month, day) -> {
             month++;
-            String date = day + "/" + month + "/" + year;
-            editText.setText(date);
+            Date date = Date.from(LocalDate.of(year, month, day).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+            DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(datePicker.getContext());
+            editText.setText(dateFormat.format(date));
         };
     }
 

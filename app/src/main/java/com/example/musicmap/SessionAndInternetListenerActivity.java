@@ -1,6 +1,9 @@
 package com.example.musicmap;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -11,16 +14,38 @@ import com.example.musicmap.screens.verification.VerificationActivity;
 import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
+import com.example.musicmap.util.Constants;
 
-public class SessionListenerActivity extends AppCompatActivity implements Session.Listener {
+public abstract class SessionAndInternetListenerActivity extends AppCompatActivity implements Session.Listener {
 
     private Session session;
+
+    private final BroadcastReceiver internetCheckReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Constants.INTERNET_BROADCAST_ACTION)) {
+                boolean internetAvailable = intent.getBooleanExtra(Constants.INTERNET_BROADCAST_BUNDLE_KEY, true);
+                updateLayout(internetAvailable);
+            }
+        }
+    };
+
+    /**
+     * Abstract method that the child activities must override, to dynamically switch the layout
+     * from the activity/fragment to layout for no internet.
+     *
+     * @param internetAvailable true if internet connection available, false otherwise.
+     */
+    protected abstract void updateLayout(boolean internetAvailable);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         session = Session.getInstance();
         session.addListener(this);
+
+        IntentFilter intentFilter = new IntentFilter(Constants.INTERNET_BROADCAST_ACTION);
+        registerReceiver(internetCheckReceiver, intentFilter);
     }
 
     @Override
@@ -66,6 +91,13 @@ public class SessionListenerActivity extends AppCompatActivity implements Sessio
     public void onStop() {
         super.onStop();
         session.removeListener(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        session.removeListener(this);
+        unregisterReceiver(internetCheckReceiver);
     }
 
 }
