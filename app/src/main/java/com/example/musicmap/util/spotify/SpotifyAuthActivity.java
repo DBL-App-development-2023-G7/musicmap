@@ -26,6 +26,8 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
 // TODO INSTEAD OF EXTENDING ACTIVITY ADD A LISTENER
 public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActivity {
 
+
+    private static final String TAG = "SpotifyAuthActivity";
     private static final String CLIENT_ID = "56ab7fed83514a7a96a7b735737280d8";
     private static final String REDIRECT_URI = "musicmap://spotify-auth";
     private static final SpotifyApi loginApi = new SpotifyApi.Builder()
@@ -47,36 +49,43 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
 
         String currentUserId = Session.getInstance().getCurrentUser().getUid();
         FirebaseTokenStorage tokenStorage = new FirebaseTokenStorage(currentUserId);
+
         tokenStorage.getRefreshToken(refreshToken -> {
             if (refreshToken == null) {
                 invalidTokenCallback.onInvalidToken();
                 return;
             }
+
             loginApi.setRefreshToken(refreshToken);
-            loginApi.authorizationCodePKCERefresh().build().executeAsync()
-                    .handle((refreshResult, error) -> {
-                        if (error != null) {
-                            invalidTokenCallback.onInvalidToken();
-                            return null;
-                        } else return refreshResult;
-                    }).thenAccept(refreshResult -> {
-                        tokenStorage.storeRefreshToken(refreshResult.getRefreshToken());
-                        Log.d("debug", "[poop] Successful refresh!");
-                        SpotifyData.setToken(refreshResult.getAccessToken());
-                        validTokenCallback.onValidToken(refreshResult.getAccessToken());
-                    });
+            loginApi.authorizationCodePKCERefresh().build().executeAsync().handle((refreshResult, error) -> {
+                if (error != null) {
+                    invalidTokenCallback.onInvalidToken();
+                    return null;
+                } else {
+                    return refreshResult;
+                }
+            }).thenAccept(refreshResult -> {
+                Log.d(TAG, "The Spotify token was successfully refreshed!");
+
+                tokenStorage.storeRefreshToken(refreshResult.getRefreshToken());
+                SpotifyData.setToken(refreshResult.getAccessToken());
+                validTokenCallback.onValidToken(refreshResult.getAccessToken());
+            });
         });
     }
 
     public void registerForSpotifyPKCE() {
         codeVerifier = generateCodeVerifier();
         String codeChallenge = generateCodeChallenge(codeVerifier);
-        Log.d("debug", String.format("[poop] Verifier: %s", codeVerifier));
-        Log.d("debug", String.format("[poop] Challenge: %s", codeChallenge));
+
+        Log.d(TAG, String.format("Verifier: %s", codeVerifier));
+        Log.d(TAG, String.format("Challenge: %s", codeChallenge));
+
         AuthorizationCodeUriRequest authorizationCodeUriRequest = loginApi.authorizationCodePKCEUri(codeChallenge)
                 .scope("user-read-currently-playing,user-read-recently-played").build();
+
         authorizationCodeUriRequest.executeAsync().thenAcceptAsync(uri -> {
-            Log.d("debug", String.format("[poop] URI: %s", uri.toString()));
+            Log.d(TAG, String.format("URI: %s", uri.toString()));
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri.toString()));
             startActivity(browserIntent);
         });
@@ -84,9 +93,11 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
 
     private String generateCodeVerifier() {
         final int VERIFIER_LEN = 50;
-        SecureRandom secureRandom = new SecureRandom();
         byte[] codeVerifier = new byte[VERIFIER_LEN];
+        
+        SecureRandom secureRandom = new SecureRandom();
         secureRandom.nextBytes(codeVerifier);
+
         return Base64.getUrlEncoder().withoutPadding().encodeToString(codeVerifier);
     }
 
@@ -98,7 +109,6 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
             byte[] digest = messageDigest.digest();
             return Base64.getUrlEncoder().withoutPadding().encodeToString(digest);
         } catch (NoSuchAlgorithmException e) {
-            Log.d("debug", "[poop] This is literally impossible");
             throw new RuntimeException(e);
         }
     }
@@ -106,25 +116,25 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.d("debug", String.format("[poop] Verifier: %s", codeVerifier));
+        Log.d(TAG, String.format("Verifier: %s", codeVerifier));
         Uri uri = intent.getData();
         if (uri != null) {
             String authCode = uri.getQueryParameter("code");
-            Log.d("debug", String.format("[poop] %s", uri));
+            Log.d(TAG, uri.toString());
             loginApi.authorizationCodePKCE(authCode, codeVerifier).build()
                     .executeAsync()
                     .handle((result, error) -> {
                         if (error != null) {
-                            Log.d("debug", String.format("[poop] Error: %s", error.getMessage()));
+                            Log.d(TAG, String.format("Error: %s", error.getMessage()));
                         }
                         return result;
                     })
                     .thenAccept(authCredentials -> {
-                        Log.d("debug", "[poop] pooo!");
-                        Log.d("debug", String.format("[poop] Token: %s", authCredentials.getAccessToken()));
-                        Log.d("debug", String.format("[poop] ExpiryDate: %d", authCredentials.getExpiresIn()));
-                        Log.d("debug", String.format("[poop] Token type: %s", authCredentials.getTokenType()));
-                        Log.d("debug", String.format("[poop] RefreshToken: %s", authCredentials.getRefreshToken()));
+                        Log.d(TAG, "!");
+                        Log.d(TAG, String.format("Token: %s", authCredentials.getAccessToken()));
+                        Log.d(TAG, String.format("ExpiryDate: %d", authCredentials.getExpiresIn()));
+                        Log.d(TAG, String.format("Token type: %s", authCredentials.getTokenType()));
+                        Log.d(TAG, String.format("RefreshToken: %s", authCredentials.getRefreshToken()));
 
                         // TODO updateFirebase
                         String currentUserId = Session.getInstance().getCurrentUser().getUid();
