@@ -72,7 +72,7 @@ public class PostFragment extends MainFragment {
     private SpotifyAuthActivity parentActivity;
 
     // a launcher that launches the camera activity and handles the result
-    ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
