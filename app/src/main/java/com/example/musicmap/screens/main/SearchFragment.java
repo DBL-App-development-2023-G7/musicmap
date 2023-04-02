@@ -40,7 +40,7 @@ public class SearchFragment extends MainFragment {
     public static Track resultTrack;
 
     // this list is computed only once at the start in order to avoid excessive calls to the API
-    private List<Track> recentTrackList = new ArrayList<>();
+    private final List<Track> recentTrackList = new ArrayList<>();
     private View rootView;
 
     // a countdown timer for the search query to reduce API spam
@@ -97,7 +97,7 @@ public class SearchFragment extends MainFragment {
     private class SearchQueryTextListener implements SearchView.OnQueryTextListener {
         @Override
         public boolean onQueryTextSubmit(String query) {
-            // rerender feed
+            // re-render feed
             return false;
         }
 
@@ -113,7 +113,6 @@ public class SearchFragment extends MainFragment {
 
                 @Override
                 public void onFinish() {
-                    Log.d("debug", "[poop] query submitted!");
                     if (query.equals("")) {
                         updateSongListView(recentTrackList);
                     } else {
@@ -125,8 +124,8 @@ public class SearchFragment extends MainFragment {
                     }
                 }
             };
-            searchQueryCountdown.start();
 
+            searchQueryCountdown.start();
             return false;
         }
     }

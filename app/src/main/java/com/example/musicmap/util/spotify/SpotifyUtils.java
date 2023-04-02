@@ -59,7 +59,7 @@ public class SpotifyUtils {
                         recentTrackList.add(trackFuture.join()); // gather all request results
                     }
                 } catch (IOException | SpotifyWebApiException | ParseException e) {
-                    Log.d("debug", "Spotify web api exception!");
+                    Log.d("debug", "Spotify web api exception!", e);
                 }
                 return recentTrackList;
         });
@@ -76,7 +76,7 @@ public class SpotifyUtils {
                     currentTrack = SpotifyUtils.getGetTrackRequest(currentTrackId).execute();
                 }
             } catch (IOException | SpotifyWebApiException | ParseException e) {
-                Log.d("debug", "Spotify web api exception!");
+                Log.d("debug", "Spotify web api exception!", e);
             }
             return currentTrack;
         });
