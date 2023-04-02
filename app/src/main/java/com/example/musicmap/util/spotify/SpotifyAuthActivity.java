@@ -133,7 +133,7 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
                         return result;
                     })
                     .thenAccept(authCredentials -> {
-                        Log.d(TAG, "!");
+                        Log.d(TAG, "Got Spotify authentication credentials.");
                         Log.d(TAG, String.format("Token: %s", authCredentials.getAccessToken()));
                         Log.d(TAG, String.format("ExpiryDate: %d", authCredentials.getExpiresIn()));
                         Log.d(TAG, String.format("Token type: %s", authCredentials.getTokenType()));
