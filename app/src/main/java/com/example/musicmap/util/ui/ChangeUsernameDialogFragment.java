@@ -54,8 +54,19 @@ public class ChangeUsernameDialogFragment extends DialogFragment {
         String newUsername = newUsernameInput.getText().toString();
 
         if (InputChecker.checkUsername(newUsername, newUsernameInput)) {
-            AuthSystem.updateUsername(newUsername);
-            this.dismiss();
+            AuthSystem.updateUsername(newUsername).addOnCompleteListener(
+                    task -> {
+                        if (task.isSuccessful()) {
+                            this.dismiss();
+                        } else {
+                            Exception exception = task.getException();
+                            if (exception != null) {
+                                String message = exception.getMessage();
+                                newUsernameInput.setError(message);
+                            }
+                        }
+                    }
+            );
         }
     }
 }

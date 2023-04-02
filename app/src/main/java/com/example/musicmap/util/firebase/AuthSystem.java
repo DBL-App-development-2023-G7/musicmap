@@ -206,7 +206,14 @@ public class AuthSystem {
         Map<String, Object> data = new HashMap<>();
         data.put("username", username);
 
-        return documentReference.update(data);
+        return Queries.getUsersWithUsername(username).onSuccessTask(results -> {
+            if (!results.isEmpty()) {
+                tcs.setException(new FirebaseFirestoreException("The username already exists",
+                        FirebaseFirestoreException.Code.ALREADY_EXISTS));
+                return tcs.getTask();
+            }
+            return documentReference.update(data);
+        });
     }
 
     /**
