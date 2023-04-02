@@ -46,10 +46,7 @@ public class FirebaseTokenStorage {
                         Log.d("debug", "[poop] added refreshToken")
                 ).addOnFailureListener(exception ->
                         Log.d("debug", String.format("[poop] Firebase fail: %s",
-                                exception.getMessage()))
-                //CSOFF: Indentation
-                );
-        //CSON: Indentation
+                                exception.getMessage())));
     }
 
 }
