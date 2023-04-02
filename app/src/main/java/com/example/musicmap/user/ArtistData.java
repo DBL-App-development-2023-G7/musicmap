@@ -7,7 +7,6 @@ public class ArtistData extends UserData {
 
     private boolean verified;
 
-    @SuppressWarnings("unused") // set in manual artist verification process in database
     private String spotifyId;
 
     @SuppressWarnings("unused")
@@ -16,9 +15,14 @@ public class ArtistData extends UserData {
     }
 
     public ArtistData(UserData userData, boolean verified) {
+        this(userData, verified, null);
+    }
+
+    public ArtistData(UserData userData, boolean verified, String spotifyId) {
         super(userData.getUsername(), userData.getFirstName(), userData.getLastName(),
                 userData.getEmail(), userData.getBirthdate(), true);
         this.verified = verified;
+        this.spotifyId = spotifyId;
     }
 
     /**
@@ -26,8 +30,8 @@ public class ArtistData extends UserData {
      *
      * @return the verification status of the artist
      */
-    public boolean getVerified() {
-        return verified;
+    public boolean isVerified() {
+        return verified && spotifyId != null;
     }
 
     /**

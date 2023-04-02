@@ -27,7 +27,7 @@ public class Artist extends User {
      * @return true if the artist is verified
      */
     public boolean isVerified() {
-        return getArtistData().getVerified();
+        return getArtistData().isVerified();
     }
 
 }
