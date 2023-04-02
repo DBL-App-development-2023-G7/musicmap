@@ -129,7 +129,7 @@ public abstract class MapFragment extends Fragment {
             mapView.getController().setCenter(center);
         } else {
             // Set initial view to map of Netherlands
-            mapView.getController().setZoom(8.0);
+            mapView.getController().setZoom(7.5);
             mapView.getController().setCenter(new GeoPoint(52.132303, 5.645042));
         }
 
