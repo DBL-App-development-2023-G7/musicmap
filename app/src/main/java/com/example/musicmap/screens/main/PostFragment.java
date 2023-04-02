@@ -39,19 +39,14 @@ import com.example.musicmap.util.ui.Message;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class PostFragment extends MainFragment {
@@ -249,25 +244,8 @@ public class PostFragment extends MainFragment {
                 SearchFragment.resultTrack.getPreviewUrl()
         );
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        capturedImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-
-        StorageReference rootReference = FirebaseStorage.getInstance().getReference();
-        String uuid = UUID.randomUUID().toString();
-        StorageReference imageRef = rootReference.child(String.format("users/%s/memories/%s.jpg", authorID, uuid));
-        UploadTask uploadTask = imageRef.putBytes(data);
-        uploadTask.continueWithTask(task -> {
-            if (!task.isSuccessful()) {
-                Log.d("debug", "[poop] Failed image upload!");
-                throw task.getException();
-            }
-
-            // Continue with the task to get the download URL
-            return imageRef.getDownloadUrl();
-        }).addOnCompleteListener(task -> {
+        Actions.uploadMusicMemoryImage(capturedImage, authorID).addOnCompleteListener(task -> {
             String imageUrl = task.getResult().toString();
-            Log.d("debug", String.format("[poop] Image uploaded! %s", imageUrl));
             Actions.postMusicMemory(new MusicMemory(
                     authorID,
                     timePosted,
@@ -275,7 +253,7 @@ public class PostFragment extends MainFragment {
                     imageUrl,
                     song
             )).addOnFailureListener(e ->
-                    Log.d("debug", String.format("[poop] Memory failed to upload! %s", e.getMessage()))
+                    Message.showSuccessMessage(this.currentActivity, "Successfully created the music memory")
             ).addOnCompleteListener(unused -> {
                         clearData();
                         FragmentUtil.replaceFragment(
