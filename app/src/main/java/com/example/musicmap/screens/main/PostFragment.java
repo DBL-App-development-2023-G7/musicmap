@@ -2,6 +2,7 @@ package com.example.musicmap.screens.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -23,7 +24,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.exifinterface.media.ExifInterface;
 
 import com.example.musicmap.R;
 import com.example.musicmap.feed.MusicMemory;
@@ -35,6 +35,7 @@ import com.example.musicmap.util.permissions.LocationPermission;
 import com.example.musicmap.util.spotify.SpotifyAuthActivity;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.example.musicmap.util.ui.ImageUtils;
+import com.example.musicmap.util.ui.Message;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.firestore.GeoPoint;
@@ -51,7 +52,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class PostFragment extends MainFragment {
@@ -64,6 +64,9 @@ public class PostFragment extends MainFragment {
     private final LocationPermission locationPermission = new LocationPermission(this);
     private final CameraPermission cameraPermission = new CameraPermission(this);
     private FusedLocationProviderClient fusedLocationClient;
+
+    private Session currentSession;
+    private Activity currentActivity;
 
     private Location currentLocation;
     private Button addLocationButton;
@@ -85,18 +88,16 @@ public class PostFragment extends MainFragment {
 
                     Uri imageUri = resultIntent.getData();
 
-                    CompletableFuture.runAsync(() -> {
-                        try {
-                            capturedImage = Picasso.get().load(imageUri)
-                                    .rotate(ImageUtils.getImageRotationFromEXIF(parentActivity, imageUri))
-                                    .get();
-                        } catch (IOException e) {
-                            Log.d(TAG, "Exception occurred while setting the image", e);
-                        }
-                    }).thenAcceptAsync(unused -> {
+                    try {
+                        capturedImage = Picasso.get().load(imageUri)
+                                .rotate(ImageUtils.getImageRotationFromEXIF(parentActivity, imageUri))
+                                .get();
+
                         capturedImagePreview.setImageBitmap(capturedImage);
                         capturedImagePreview.setVisibility(View.VISIBLE);
-                    }, requireActivity().getMainExecutor());
+                    } catch (IOException e) {
+                        Log.d(TAG, "Exception occurred while setting the image", e);
+                    }
                 }
             }
     );
@@ -104,34 +105,17 @@ public class PostFragment extends MainFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("debug", "[poop] Fragment create!");
+        this.currentSession = Session.getInstance();
+        this.currentActivity = requireActivity();
 
-        locationPermission.request();
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+        locationPermission.forceRequest();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.currentActivity);
         fetchUserLocation();
 //        cameraPermission.request();
         getPermission();
-        parentActivity = (SpotifyAuthActivity) requireActivity();
-        Session session = Session.getInstance();
+        parentActivity = (SpotifyAuthActivity) this.currentActivity;
 
-        CompletableFuture.runAsync(() -> {
-            while (!session.isUserLoaded()) {
-            }
-        }).thenAccept(unused -> {
-            parentActivity.refreshToken(
-                    token -> Log.d("debug", String.format("[poop] Acess token %s", token)),
-                    () -> ((SpotifyAuthActivity) requireActivity()).registerForSpotifyPKCE()
-            );
-        });
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (capturedImage == null) {
-            Log.d("debug", String.format("[poop] No image!"));
-        }
-        Log.d("debug", "[poop] Fragment start!");
+        parentActivity.refreshToken(apiToken -> {}, () -> parentActivity.registerForSpotifyPKCE());
     }
 
     @Override
@@ -174,27 +158,24 @@ public class PostFragment extends MainFragment {
     }
 
     private void goToCameraActivity() {
-        Intent cameraIntent = new Intent(requireActivity(), CameraActivity.class);
+        Intent cameraIntent = new Intent(this.currentActivity, CameraActivity.class);
         cameraActivityResultLauncher.launch(cameraIntent);
     }
 
     @SuppressLint("MissingPermission")
     private void fetchUserLocation() {
         if (locationPermission.isCoarseGranted() && locationPermission.isFineGranted()) {
-            Log.d("debug", "[poop] permission Granted!");
             fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(requireActivity(), location -> {
-                        // if location received try to display it
+                    .addOnSuccessListener(this.currentActivity, location -> {
                         currentLocation = location;
                         String displayText = getLocationText(currentLocation);
                         addLocationButton.setText(displayText);
                     })
-                    .addOnFailureListener(requireActivity(), exception -> {
-                        // TODO ERROR MESSAGE!
+                    .addOnFailureListener(this.currentActivity, exception -> {
+                        Log.e(TAG, "Could not fetch user location", exception);
                     });
         } else {
-            // TODO ERROR MESSAGE!
-            Log.d("debug", "[poop] No location permission granted!");
+            Message.showFailureMessage(this.currentActivity, "Permission not granted for location");
         }
     }
 
@@ -207,11 +188,11 @@ public class PostFragment extends MainFragment {
                 currentLocation.getLatitude(),
                 currentLocation.getLongitude()
         );
-        Geocoder geocoder = new Geocoder(requireActivity());
+        Geocoder geocoder = new Geocoder(this.currentActivity);
         try {
             List<Address> addressList = geocoder.getFromLocation(lat, lon, 1);
-            if(addressList.size() == 0) {
-                // TODO LOG ERROR MESSAGE
+            if (addressList.size() == 0) {
+                Log.w(TAG, "Geocoder could not find an associated address");
                 return resultString;
             }
 
@@ -230,7 +211,7 @@ public class PostFragment extends MainFragment {
             return resultString;
 
         } catch (IOException e) {
-            Log.d("debug", "[poop] geocoder Exception!");
+            Log.w(TAG, "Something went wrong while using Geocoder", e);
             return resultString;
         }
     }
@@ -239,18 +220,21 @@ public class PostFragment extends MainFragment {
     // Below is some questionable code
     private void postMusicMemory() {
         if (SearchFragment.resultTrack == null) {
-            Log.d("debug", "[poop] Missing Track!!");
+            Message.showFailureMessage(this.currentActivity, "A track is required to post a music memory!");
             return;
         }
 
         if (currentLocation == null) {
-            Log.d("debug", "[poop] Missing Location!");
+            Message.showFailureMessage(this.currentActivity, "Location is required to post a music memory!");
             return;
         }
 
-        Session currentSession = Session.getInstance();
-        String authorID = currentSession.getCurrentUser().getUid();
+        if (capturedImage == null) {
+            Message.showFailureMessage(this.currentActivity, "An image is required to post a music memory!");
+            return;
+        }
 
+        String authorID = this.currentSession.getCurrentUser().getUid();
         Date timePosted = Calendar.getInstance().getTime();
         GeoPoint geoPointLocation = new GeoPoint(
                 currentLocation.getLatitude(),
@@ -260,66 +244,49 @@ public class PostFragment extends MainFragment {
         Song song = new Song(
                 SearchFragment.resultTrack.getName(),
                 SearchFragment.resultTrack.getArtists()[0].getId(),
-                null, // sadly it is null //TODO why?
+                null, // TODO: check this null cause
                 SearchFragment.resultTrack.getAlbum().getImages()[0].getUrl(),
                 SearchFragment.resultTrack.getPreviewUrl()
         );
 
-        if (capturedImage != null) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            capturedImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] data = baos.toByteArray();
-            StorageReference rootReference = FirebaseStorage.getInstance().getReference();
-            String uuid = UUID.randomUUID().toString();
-            StorageReference imageRef = rootReference.child(String.format("users/%s/memories/%s.jpg", authorID, uuid));
-            UploadTask uploadTask = imageRef.putBytes(data);
-            uploadTask.continueWithTask(task -> {
-                if (!task.isSuccessful()) {
-                    Log.d("debug", "[poop] Failed image upload!");
-                    throw task.getException();
-                }
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        capturedImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
 
-                // Continue with the task to get the download URL
-                return imageRef.getDownloadUrl();
-            }).addOnCompleteListener(task -> {
-                String imageUrl = task.getResult().toString();
-                Log.d("debug", String.format("[poop] Image uploaded! %s", imageUrl));
-                Actions.postMusicMemory(new MusicMemory(
-                        authorID,
-                        timePosted,
-                        geoPointLocation,
-                        imageUrl,
-                        song
-                )).addOnFailureListener(e ->
-                        Log.d("debug", String.format("[poop] Memory failed to upload! %s", e.getMessage()))
-                ).addOnCompleteListener(unused -> {
-                            clearData();
-                            FragmentUtil.replaceFragment(
-                                    requireActivity().getSupportFragmentManager(),
-                                    R.id.fragment_view,
-                                    FeedFragment.class
-                            );
-                            Log.d("debug", String.format("[poop] Successful upload!"));
-                        }
-                );
-            });
-        } else {
+        StorageReference rootReference = FirebaseStorage.getInstance().getReference();
+        String uuid = UUID.randomUUID().toString();
+        StorageReference imageRef = rootReference.child(String.format("users/%s/memories/%s.jpg", authorID, uuid));
+        UploadTask uploadTask = imageRef.putBytes(data);
+        uploadTask.continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                Log.d("debug", "[poop] Failed image upload!");
+                throw task.getException();
+            }
+
+            // Continue with the task to get the download URL
+            return imageRef.getDownloadUrl();
+        }).addOnCompleteListener(task -> {
+            String imageUrl = task.getResult().toString();
+            Log.d("debug", String.format("[poop] Image uploaded! %s", imageUrl));
             Actions.postMusicMemory(new MusicMemory(
                     authorID,
                     timePosted,
                     geoPointLocation,
-                    song.getImageUri().toString(),
+                    imageUrl,
                     song
             )).addOnFailureListener(e ->
                     Log.d("debug", String.format("[poop] Memory failed to upload! %s", e.getMessage()))
-            ).addOnCompleteListener(unused ->
-                    Log.d("debug", String.format("[poop] Successful upload!"))
+            ).addOnCompleteListener(unused -> {
+                        clearData();
+                        FragmentUtil.replaceFragment(
+                                requireActivity().getSupportFragmentManager(),
+                                R.id.fragment_view,
+                                FeedFragment.class
+                        );
+                        Message.showSuccessMessage(this.currentActivity, "Successfully created the music memory");
+                    }
             );
-
-            clearData();
-            FragmentUtil.replaceFragment(requireActivity().getSupportFragmentManager(), R.id.fragment_view,
-                    FeedFragment.class);
-        }
+        });
     }
 
 
@@ -330,11 +297,11 @@ public class PostFragment extends MainFragment {
     }
 
     private void getPermission() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+        if (ContextCompat.checkSelfPermission(this.currentActivity, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
-                    getActivity(),
+                    this.currentActivity,
                     new String[]{Manifest.permission.CAMERA},
                     100
             );
