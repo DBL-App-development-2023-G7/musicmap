@@ -4,11 +4,21 @@
         app:fragment="com.example.musicmap.screens.settings.AccountSettingsFragment"
         app:title="@string/account_settings"
         app:icon="@drawable/person_icon"
-        app:summary="@string/account_settings_description"/>
+        app:summary="@string/account_settings_description"
+        app:key="account"/>
+
+    <Preference
+        app:fragment="com.example.musicmap.screens.settings.ConnectionSettingsFragment"
+        app:title="Connections"
+        app:icon="@drawable/connect_icon"
+        app:summary="Connect your account with other platforms."
+        app:key="connection"
+        />
 
     <Preference
         app:title="@string/app_version"
         app:summary="@string/current_version"
-        app:icon="@drawable/info_icon"/>
+        app:icon="@drawable/info_icon"
+        app:key="version"/>
 
 </PreferenceScreen>
