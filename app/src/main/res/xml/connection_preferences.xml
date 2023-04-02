@@ -1,8 +1,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <Preference
-        app:title="Spotify"
-        app:summary="Link your Spotify account"
+        app:title="@string/spotify"
+        app:summary="@string/spotify_description"
         app:icon="@drawable/spotify_icon"
         />
 </PreferenceScreen>

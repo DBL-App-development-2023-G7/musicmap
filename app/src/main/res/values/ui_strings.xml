@@ -60,11 +60,23 @@
     <string name="security">Security</string>
     <string name="other">Other</string>
     <!--profile settings end-->
-
+    
     <!--delete account start-->
     <string name="delete_account_dialog_title">Are you sure you want to delete your account?</string>
     <string name="delete_account_dialog_message">If you delete your account all of your data will be lost and you won\'t
         be able to get it back. Please enter your password to confirm that you want to delete your account.</string>
     <string name="cancel">Cancel</string>
     <!--delete account end-->
+
+    <!--connection settings start-->
+    <string name="connections">Connections</string>
+    <string name="connections_description">Connect your account with other platforms.</string>
+    <!--connection settings end-->
+
+
+    <!--link spotify start-->
+    <string name="spotify">Spotify</string>
+    <string name="spotify_description">Link your Spotify account.</string>
+    <!--link spotify end -->
+    
 </resources>

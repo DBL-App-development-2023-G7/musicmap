@@ -9,9 +9,9 @@
 
     <Preference
         app:fragment="com.example.musicmap.screens.settings.ConnectionSettingsFragment"
-        app:title="Connections"
+        app:title="@string/connections"
         app:icon="@drawable/connect_icon"
-        app:summary="Connect your account with other platforms."
+        app:summary="@string/connections_description"
         app:key="connection"
         />
 
