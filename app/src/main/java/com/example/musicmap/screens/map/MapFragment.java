@@ -1,5 +1,6 @@
 package com.example.musicmap.screens.map;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -63,6 +64,7 @@ public abstract class MapFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -105,7 +107,16 @@ public abstract class MapFragment extends Fragment {
         // Add all overlays
         addOverlays();
 
-        if (sharedPreferences.contains("zoom")) {
+        boolean interactionAllowed = allowInteraction();
+
+        if (!interactionAllowed) {
+            mapView.getZoomController().setZoomInEnabled(false);
+            mapView.getZoomController().setZoomOutEnabled(false);
+            mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
+            mapView.setOnTouchListener((v, event) -> true);
+        }
+
+        if (sharedPreferences.contains("zoom") && interactionAllowed) {
             // Restore stored zoom level & map center
             mapView.getController().setZoom(Double.longBitsToDouble(
                     sharedPreferences.getLong(SHARED_PREFERENCE_ZOOM, 0)));
@@ -153,6 +164,15 @@ public abstract class MapFragment extends Fragment {
      * @return whether the current phone location should be displayed on the map.
      */
     protected boolean shouldDisplayCurrentLocation() {
+        return true;
+    }
+
+    /**
+     * Can be overridden to disable interaction with the map.
+     *
+     * @return whether the map can be interacted with.
+     */
+    protected boolean allowInteraction() {
         return true;
     }
 

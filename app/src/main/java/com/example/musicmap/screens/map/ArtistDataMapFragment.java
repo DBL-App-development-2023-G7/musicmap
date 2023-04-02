@@ -1,12 +1,6 @@
 package com.example.musicmap.screens.map;
 
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.annotation.NonNull;
 
 import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.Session;
@@ -28,16 +22,6 @@ public class ArtistDataMapFragment extends MapFragment {
     private final AtomicBoolean isUpdating = new AtomicBoolean(false);
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-
-        getMapView().getZoomController().setZoomInEnabled(false);
-        getMapView().getZoomController().setZoomOutEnabled(false);
-
-        return view;
-    }
-
-    @Override
     protected void addOverlays() {
         super.addOverlays();
 
@@ -48,6 +32,11 @@ public class ArtistDataMapFragment extends MapFragment {
 
     @Override
     protected boolean shouldDisplayCurrentLocation() {
+        return false;
+    }
+
+    @Override
+    protected boolean allowInteraction() {
         return false;
     }
 
