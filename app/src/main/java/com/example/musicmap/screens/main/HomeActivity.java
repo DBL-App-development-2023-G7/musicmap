@@ -2,6 +2,7 @@ package com.example.musicmap.screens.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.fragment.app.FragmentManager;
@@ -25,6 +26,8 @@ public class HomeActivity extends SessionAndInternetListenerActivity {
     private int currentLayout = R.layout.activity_home;
 
     private MusicMemory currentMusicMemory;
+
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void updateLayout(boolean internetAvailable) {
@@ -57,12 +60,12 @@ public class HomeActivity extends SessionAndInternetListenerActivity {
         new LocationPermission(this).forceRequest();
     }
 
-    private void setupActivity() {
+    public void setupActivity() {
         Session.getInstance();
 
         FragmentUtil.initFragment(getSupportFragmentManager(), R.id.fragment_view, lastFragmentClass);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        this.bottomNavigationView = findViewById(R.id.bottom_navigation);
         ImageView profileButton = findViewById(R.id.appbarProfile);
 
         profileButton.setOnClickListener(view -> {
@@ -108,5 +111,25 @@ public class HomeActivity extends SessionAndInternetListenerActivity {
 
     public void setCurrentMusicMemory(MusicMemory currentMusicMemory) {
         this.currentMusicMemory = currentMusicMemory;
+    }
+
+    @Override
+    public void onBackPressed(){
+        FragmentManager fragmentManager = this.getFragmentManagerFromActivity();
+        Fragment currentFragment = fragmentManager.findFragmentById(R.id.fragment_view);
+
+        if (currentFragment instanceof MusicMemoryFragment){
+            System.out.println(" hello!!!");
+            FragmentUtil.replaceFragment(fragmentManager, R.id.fragment_view, FeedFragment.class);
+            showBottomNav();
+        }
+    }
+
+    public void showBottomNav(){
+        this.bottomNavigationView.setVisibility(View.VISIBLE);
+    }
+
+    public void hideBottomNav(){
+        this.bottomNavigationView.setVisibility(View.INVISIBLE);
     }
 }
