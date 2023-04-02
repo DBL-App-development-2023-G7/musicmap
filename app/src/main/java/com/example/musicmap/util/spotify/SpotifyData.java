@@ -11,6 +11,7 @@ import se.michaelthelin.spotify.SpotifyApi;
  */
 public class SpotifyData {
 
+    //TODO this has to be moved in another file
     private static final String CLIENT_ID = "56ab7fed83514a7a96a7b735737280d8";
     private static final String REDIRECT_URI = "musicmap://spotify-auth";
 

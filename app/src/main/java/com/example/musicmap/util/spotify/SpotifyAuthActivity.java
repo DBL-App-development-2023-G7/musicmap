@@ -26,6 +26,7 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
 // TODO INSTEAD OF EXTENDING ACTIVITY ADD A LISTENER
 public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActivity {
 
+    //TODO this has to be moved in another file
     private static final String TAG = "SpotifyAuthActivity";
     private static final String CLIENT_ID = "56ab7fed83514a7a96a7b735737280d8";
     private static final String REDIRECT_URI = "musicmap://spotify-auth";
@@ -143,7 +144,8 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
                         String currentUserId = Session.getInstance().getCurrentUser().getUid();
                         FirebaseTokenStorage tokenStorage = new FirebaseTokenStorage(currentUserId);
                         tokenStorage.storeRefreshToken(authCredentials.getRefreshToken());
-                    });
+                    }
+            );
         }
     }
 

@@ -68,6 +68,7 @@ public class SpotifySongAdapter extends ArrayAdapter<Track> {
     private void goToPostFragment(Track track) {
         FragmentActivity fragmentActivity = (FragmentActivity) activityContext;
         SearchFragment.setResultTrack(track);
+
         FragmentUtil.replaceFragment(fragmentActivity.getSupportFragmentManager(), R.id.fragment_view,
                 PostFragment.class);
     }
