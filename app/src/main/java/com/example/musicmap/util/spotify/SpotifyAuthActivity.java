@@ -26,7 +26,6 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
 // TODO INSTEAD OF EXTENDING ACTIVITY ADD A LISTENER
 public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActivity {
 
-
     private static final String TAG = "SpotifyAuthActivity";
     private static final String CLIENT_ID = "56ab7fed83514a7a96a7b735737280d8";
     private static final String REDIRECT_URI = "musicmap://spotify-auth";
@@ -61,9 +60,9 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
                 if (error != null) {
                     invalidTokenCallback.onInvalidToken();
                     return null;
-                } else {
-                    return refreshResult;
                 }
+
+                return refreshResult;
             }).thenAccept(refreshResult -> {
                 Log.d(TAG, "The Spotify token was successfully refreshed!");
 
@@ -94,7 +93,7 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
     private String generateCodeVerifier() {
         final int VERIFIER_LEN = 50;
         byte[] codeVerifier = new byte[VERIFIER_LEN];
-        
+
         SecureRandom secureRandom = new SecureRandom();
         secureRandom.nextBytes(codeVerifier);
 
@@ -107,6 +106,7 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
             messageDigest.update(bytes, 0, bytes.length);
             byte[] digest = messageDigest.digest();
+
             return Base64.getUrlEncoder().withoutPadding().encodeToString(digest);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
@@ -116,11 +116,14 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+
         Log.d(TAG, String.format("Verifier: %s", codeVerifier));
         Uri uri = intent.getData();
+
         if (uri != null) {
             String authCode = uri.getQueryParameter("code");
             Log.d(TAG, uri.toString());
+
             loginApi.authorizationCodePKCE(authCode, codeVerifier).build()
                     .executeAsync()
                     .handle((result, error) -> {
