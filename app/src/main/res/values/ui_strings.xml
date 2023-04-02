@@ -38,13 +38,19 @@
     <!--change password start-->
     <string name="change_password">Change password</string>
     <string name="password_dialog_description">Please enter your current password and a new one to change your password.</string>
-    <string name="new_password">New Password</string>
-    <string name="old_password">Old Password</string>
+    <string name="new_password">New password</string>
+    <string name="old_password">Old password</string>
     <!--change password end-->
+
+    <!-- change username start -->
+    <string name="change_username">Change username</string>
+    <string name="new_username">New username</string>
+    <string name="username_dialog_description">Please enter your new username.</string>
+    <!-- change username end -->
 
     <!--change email start-->
     <string name="change_email">Change email</string>
-    <string name="new_email">New Email</string>
+    <string name="new_email">New email</string>
     <string name="email_dialog_description">Please enter your new email and current password.</string>
     <!--change email end-->
 
