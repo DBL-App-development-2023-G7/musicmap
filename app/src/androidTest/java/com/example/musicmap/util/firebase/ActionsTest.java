@@ -41,7 +41,8 @@ public class ActionsTest {
         when(firestore.collection("Users")).thenReturn(usersCollectionRef);
         when(usersCollectionRef.document(authorUid)).thenReturn(documentRef);
         when(documentRef.collection("MusicMemories")).thenReturn(Mockito.mock(CollectionReference.class));
-        when(documentRef.collection("MusicMemories").add(any(MusicMemory.class))).thenAnswer(invocation -> Tasks.forResult(null));
+        when(documentRef.collection("MusicMemories").add(any(MusicMemory.class)))
+                .thenAnswer(invocation -> Tasks.forResult(null));
 
         MusicMemory musicMemory = new MusicMemory("author-uid", new Date(),
                 new GeoPoint(10, 10), "https://imgur.com/photo", new Song(
@@ -59,14 +60,14 @@ public class ActionsTest {
         latch.await();
     }
 
-
     @Test
     public void postConcertMemory_success() throws InterruptedException {
         String authorUid = "author-uid";
         when(firestore.collection("Users")).thenReturn(usersCollectionRef);
         when(usersCollectionRef.document(authorUid)).thenReturn(documentRef);
         when(documentRef.collection("ConcertMemories")).thenReturn(Mockito.mock(CollectionReference.class));
-        when(documentRef.collection("ConcertMemories").add(any(ConcertMemory.class))).thenAnswer(invocation -> Tasks.forResult(null));
+        when(documentRef.collection("ConcertMemories").add(any(ConcertMemory.class)))
+                .thenAnswer(invocation -> Tasks.forResult(null));
 
         ConcertMemory concertMemory = new ConcertMemory("author-uid", new Date(),
                 new GeoPoint(10, 10), "name", "https://youtube.com/video");

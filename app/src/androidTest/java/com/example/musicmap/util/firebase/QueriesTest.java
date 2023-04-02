@@ -2,21 +2,15 @@ package com.example.musicmap.util.firebase;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.example.musicmap.feed.MusicMemory;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -24,7 +18,6 @@ import java.util.concurrent.ExecutionException;
 public class QueriesTest {
 
     private final String authorUidThatExistsInFirebase = "9kPlvIKTVUQ3Tp2h9Mh0BpVKdwr1";
-
 
     @Test
     public void testGetUsersByUsername_success_exists() throws ExecutionException, InterruptedException {
@@ -65,7 +58,8 @@ public class QueriesTest {
     @Test
     public void testGetMusicMemoryByAuthorIdAndId_success_exists() throws ExecutionException, InterruptedException {
         String musicMemoryIdThatExistInFirebase = "NOqL72ibo1jHVPEZhQxs";
-        Task<MusicMemory> task = Queries.getMusicMemoryByAuthorIdAndId(authorUidThatExistsInFirebase, musicMemoryIdThatExistInFirebase);
+        Task<MusicMemory> task = Queries.getMusicMemoryByAuthorIdAndId(authorUidThatExistsInFirebase,
+                musicMemoryIdThatExistInFirebase);
         MusicMemory musicMemory = Tasks.await(task);
         assertNotNull(musicMemory);
         assertEquals(musicMemory.getAuthorUid(), authorUidThatExistsInFirebase);
