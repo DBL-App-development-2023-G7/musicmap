@@ -5,8 +5,9 @@ import android.util.Log;
 import se.michaelthelin.spotify.SpotifyApi;
 
 /**
- * A storage class which stores some global variables
- * Using static classes is not ideal but it is easy to do
+ * A storage class which stores some global variables.
+ *
+ * Using static classes is not ideal but it is easy to do.
  */
 public class SpotifyData {
 

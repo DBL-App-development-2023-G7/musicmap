@@ -23,14 +23,14 @@ import java.util.List;
 import se.michaelthelin.spotify.model_objects.specification.Track;
 
 /**
- * The fragment where the user is redirect to search for a track
+ * The fragment where the user is redirect to search for a track.
  */
 public class SearchFragment extends MainFragment {
 
     private static final int COUNTDOWN_DELAY = 400;
 
     // temporary store used by post fragment to get search result (I am too lazy to use a Model)
-    public static Track resultTrack;
+    private static Track resultTrack;
 
     // this list is computed only once at the start in order to avoid excessive calls to the API
     private final List<Track> recentTrackList = new ArrayList<>();
@@ -38,6 +38,14 @@ public class SearchFragment extends MainFragment {
 
     // a countdown timer for the search query to reduce API spam
     private CountDownTimer searchQueryCountdown;
+
+    public static Track getResultTrack() {
+        return resultTrack;
+    }
+
+    public static void setResultTrack(Track resultTrack) {
+        SearchFragment.resultTrack = resultTrack;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,7 +59,7 @@ public class SearchFragment extends MainFragment {
                                 getCurrentTrackFuture(),
                                 (trackList, currentTrack) -> {
                                     Log.d("debug", String.format("track size: %d", trackList.size()));
-                                    if(currentTrack != null){
+                                    if (currentTrack != null) {
                                         recentTrackList.add(currentTrack);
                                     }
                                     recentTrackList.addAll(trackList);
@@ -64,7 +72,9 @@ public class SearchFragment extends MainFragment {
                             updateSongListView(recentTrackList);
                         },
                         requireActivity().getMainExecutor()
+                //CSOFF: Indentation
                 );
+        //CSON: Indentation
 
         // setup search widget
         SearchView searchView = rootView.findViewById(R.id.spotify_search_view);

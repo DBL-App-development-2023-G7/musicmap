@@ -18,9 +18,10 @@ import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 
 /**
- * This every activity that wants to do things with spotify should extend this class
- * This is because on start of this activity the spotify token is refreshed
- * The problem is this extends auth activity which is not ideal
+ * Every activity that wants to do things with Spotify should extend this class.
+ *
+ * This is because on start of this activity the spotify token is refreshed.
+ * The problem is this extends auth activity which is not ideal.
  */
 // TODO INSTEAD OF EXTENDING ACTIVITY ADD A LISTENER
 public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActivity {
@@ -121,15 +122,20 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
                     .thenAccept(authCredentials -> {
                                 Log.d("debug", "[poop] pooo!");
                                 Log.d("debug", String.format("[poop] Token: %s", authCredentials.getAccessToken()));
-                                Log.d("debug", String.format("[poop] ExpiryDate: %d", authCredentials.getExpiresIn()));
-                                Log.d("debug", String.format("[poop] Token type: %s", authCredentials.getTokenType()));
-                                Log.d("debug", String.format("[poop] RefreshToken: %s", authCredentials.getRefreshToken()));
+                                Log.d("debug", String.format("[poop] ExpiryDate: %d",
+                                        authCredentials.getExpiresIn()));
+                                Log.d("debug", String.format("[poop] Token type: %s",
+                                        authCredentials.getTokenType()));
+                                Log.d("debug", String.format("[poop] RefreshToken: %s",
+                                        authCredentials.getRefreshToken()));
                                 // TODO updateFirebase
                                 String currentUserId = Session.getInstance().getCurrentUser().getUid();
                                 FirebaseTokenStorage tokenStorage = new FirebaseTokenStorage(currentUserId);
                                 tokenStorage.storeRefreshToken(authCredentials.getRefreshToken());
                             }
+                            //CSOFF: Indentation
                     );
+            //CSON: Indentation
         }
     }
 

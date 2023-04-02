@@ -47,7 +47,9 @@ public class FirebaseTokenStorage {
                 ).addOnFailureListener(exception ->
                         Log.d("debug", String.format("[poop] Firebase fail: %s",
                                 exception.getMessage()))
+                //CSOFF: Indentation
                 );
+        //CSON: Indentation
     }
 
 }
