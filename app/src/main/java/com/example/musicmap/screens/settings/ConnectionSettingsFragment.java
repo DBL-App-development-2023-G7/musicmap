@@ -3,7 +3,6 @@ package com.example.musicmap.screens.settings;
 import android.os.Bundle;
 
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceScreen;
 
 import com.example.musicmap.R;
 
