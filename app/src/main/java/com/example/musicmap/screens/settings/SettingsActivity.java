@@ -57,7 +57,6 @@ public class SettingsActivity extends SessionAndInternetListenerActivity {
         }
     }
 
-
     private void setupActivity() {
         FragmentUtil.initFragment(getSupportFragmentManager(), R.id.fragmentSettings, SettingsFragment.class);
         ImageView backButton = findViewById(R.id.appbarBack);
