@@ -46,7 +46,8 @@ public class FirebaseTokenStorage {
                 .addOnSuccessListener(unused ->
                         Log.d(TAG, "Added refreshToken to the Firebase Firestore database."))
                 .addOnFailureListener(exception ->
-                        Log.d(TAG, String.format("Firebase fail: %s", exception.getMessage())));
+                        Log.d(TAG, String.format("Firebase fail: %s", exception.getMessage()))
+        );
     }
 
 }
