@@ -57,7 +57,7 @@ public class Song {
     @Override
     public String toString() {
         return String.format(
-                "Song{name='%s', spotifyAristId='%s', artistUid='%s', imageUri='%s', musicPreviewUri='%s'}",
+                "Song{name='%s', spotifyArtistId='%s', artistUid='%s', imageUri='%s', musicPreviewUri='%s'}",
                 name, spotifyArtistId, artistUid, imageUri, musicPreviewUri);
     }
 
