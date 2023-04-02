@@ -45,6 +45,9 @@ public class MusicMemoryFragment extends Fragment {
     private TextView usernameView;
     private TextView dateView;
     private ImageView backButton;
+    private TextView songAuthorView;
+    private TextView songNameView;
+    private ImageView songPictureView;
 
     public static final String TAG = "MusicMemoryFragment";
 
@@ -79,14 +82,22 @@ public class MusicMemoryFragment extends Fragment {
         this.dateView = rootView.findViewById(R.id.date_text_view);
         this.usernameView = rootView.findViewById(R.id.username_text_view);
         this.backButton = rootView.findViewById(R.id.appbarBack);
+        this.songAuthorView = rootView.findViewById(R.id.song_author_view);
+        this.songNameView = rootView.findViewById(R.id.song_name_view);
+        this.songPictureView = rootView.findViewById(R.id.song_picture_view);
 
         /* Putting in all the data. */
         Picasso.get().load(this.musicMemory.getPhoto()).into(imageView);
+        this.songAuthorView.setText(this.musicMemory.getSong().getSpotifyAristId());
+        this.songNameView.setText(this.musicMemory.getSong().getName());
+        System.out.println(this.musicMemory.getSong().getImageUri());
+
         AuthSystem.getUserData(this.musicMemory.getAuthorUid()).addOnCompleteListener(task -> {
             UserData data = task.getResult();
             this.usernameView.setText(data.getUsername());
             System.out.println(data.getProfilePicture() + "|| " + data.getProfilePictureUri());
             Picasso.get().load(data.getProfilePictureUri()).into(this.profilePictureView);
+            Picasso.get().load(this.musicMemory.getSong().getImageUri()).into(this.songPictureView);
         });
         this.dateView.setText(this.musicMemory.getTimePosted().toString());
 
