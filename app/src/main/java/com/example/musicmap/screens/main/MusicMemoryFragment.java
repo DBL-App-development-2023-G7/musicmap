@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.example.musicmap.R;
 import com.example.musicmap.feed.MusicMemory;
+import com.example.musicmap.user.UserData;
+import com.example.musicmap.util.firebase.AuthSystem;
 import com.squareup.picasso.Picasso;
 
 import org.osmdroid.views.MapView;
@@ -34,6 +36,7 @@ public class MusicMemoryFragment extends Fragment {
     private ImageView profilePictureView;
     private TextView usernameView;
     private TextView dateView;
+    private ImageView backButton;
 
     public static final String TAG = "MusicMemoryFragment";
 
@@ -48,8 +51,6 @@ public class MusicMemoryFragment extends Fragment {
         HomeActivity activity = (HomeActivity) requireActivity();
         this.musicMemory = activity.getCurrentMusicMemory();
         System.out.println(this.musicMemory.getSong());
-        System.out.println("Photo: " + this.musicMemory.getPhoto());
-
         System.out.println(this.musicMemory.getLocation());
         System.out.println(this.musicMemory.getTimePosted());
     }
@@ -59,9 +60,24 @@ public class MusicMemoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_music_memory, container, false);
+
+        /* Assigning all views. */
         this.mapView = rootView.findViewById(R.id.post_map);
         this.imageView = rootView.findViewById(R.id.memoryImageView);
+        this.profilePictureView = rootView.findViewById(R.id.profile_picture_view);
+        this.dateView = rootView.findViewById(R.id.date_text_view);
+        this.usernameView = rootView.findViewById(R.id.username_text_view);
+        this.backButton = rootView.findViewById(R.id.appbarBack);
+
+        /* Putting in all the data. */
         Picasso.get().load(this.musicMemory.getPhoto()).into(imageView);
+        AuthSystem.getUserData(this.musicMemory.getAuthorUid()).addOnCompleteListener(task -> {
+            UserData data = task.getResult();
+            this.usernameView.setText(data.getUsername());
+            System.out.println(data.getProfilePicture() + "|| " + data.getProfilePictureUri());
+            Picasso.get().load(data.getProfilePictureUri()).into(this.profilePictureView);
+        });
+        this.dateView.setText(this.musicMemory.getTimePosted().toString());
         return rootView;
     }
 }
