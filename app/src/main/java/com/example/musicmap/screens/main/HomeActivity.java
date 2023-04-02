@@ -1,7 +1,6 @@
 package com.example.musicmap.screens.main;
 
 import android.content.Intent;
-import android.graphics.Camera;
 import android.os.Bundle;
 import android.widget.ImageView;
 
@@ -12,9 +11,7 @@ import com.example.musicmap.SessionAndInternetListenerActivity;
 import com.example.musicmap.screens.map.PostMapFragment;
 import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.user.Session;
-import com.example.musicmap.util.permissions.CameraPermission;
 import com.example.musicmap.util.permissions.LocationPermission;
-import com.example.musicmap.util.permissions.MediaPermission;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
