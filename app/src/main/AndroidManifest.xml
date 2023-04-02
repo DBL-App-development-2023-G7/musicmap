@@ -23,6 +23,7 @@
         <activity
             android:name=".screens.settings.SettingsActivity"
             android:exported="false"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.MusicMap.NoActionBar"/>
         <service android:name=".services.InternetCheckService" />
         <activity
@@ -43,6 +44,7 @@
             android:exported="true"
             android:label="MusicMap"
             android:theme="@style/Theme.MusicMap.NoActionBar"
+            android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustPan"
             android:launchMode="singleTask">
             <intent-filter android:autoVerify="true">
@@ -54,7 +56,6 @@
                     android:host="spotify-auth"
                     android:scheme="musicmap"/>
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
