@@ -7,6 +7,9 @@ public class ArtistData extends UserData {
 
     private boolean verified;
 
+    @SuppressWarnings("unused") // set in manual artist verification process in database
+    private String spotifyId;
+
     @SuppressWarnings("unused")
     ArtistData() {
         // Used for Firebase POJO deserialization (toObject)
@@ -25,6 +28,15 @@ public class ArtistData extends UserData {
      */
     public boolean getVerified() {
         return verified;
+    }
+
+    /**
+     * Gets the Spotify ID of the artist.
+     *
+     * @return the Spotify ID.
+     */
+    public String getSpotifyId() {
+        return spotifyId;
     }
 
     @Override
