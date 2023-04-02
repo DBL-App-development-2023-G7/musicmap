@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import com.example.musicmap.R;
 import com.example.musicmap.SessionAndInternetListenerActivity;
+import com.example.musicmap.screens.main.HomeActivity;
 import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.util.ui.FragmentUtil;
 
@@ -40,13 +41,19 @@ public class SettingsActivity extends SessionAndInternetListenerActivity {
         setupActivity();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(SettingsActivity.this, ProfileActivity.class));
+        finish();
+    }
+
     private void setupActivity() {
         FragmentUtil.initFragment(getSupportFragmentManager(), R.id.fragmentSettings, SettingsFragment.class);
         ImageView backButton = findViewById(R.id.appbarBack);
 
         backButton.setOnClickListener(view -> {
-            startActivity(new Intent(SettingsActivity.this, ProfileActivity.class));
-            finish();
+            this.onBackPressed();
         });
     }
 
