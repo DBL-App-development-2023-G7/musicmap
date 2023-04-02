@@ -6,11 +6,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +42,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.firestore.GeoPoint;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -84,12 +87,24 @@ public class PostFragment extends MainFragment {
                     Uri imageUri = resultIntent.getData();
 
                     try {
-                        capturedImage = Picasso.get().load(imageUri)
+                        Picasso.get().load(imageUri)
                                 .rotate(ImageUtils.getImageRotationFromEXIF(parentActivity, imageUri))
-                                .get();
+                                .into(new Target() {
+                                    @Override
+                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                        capturedImage = bitmap;
+                                        capturedImagePreview.setImageBitmap(capturedImage);
+                                        capturedImagePreview.setVisibility(View.VISIBLE);
+                                    }
 
-                        capturedImagePreview.setImageBitmap(capturedImage);
-                        capturedImagePreview.setVisibility(View.VISIBLE);
+                                    @Override
+                                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                                        Log.d(TAG, "Exception occurred while setting the image", e);
+                                    }
+
+                                    @Override
+                                    public void onPrepareLoad(Drawable placeHolderDrawable) {}
+                                });
                     } catch (IOException e) {
                         Log.d(TAG, "Exception occurred while setting the image", e);
                     }
