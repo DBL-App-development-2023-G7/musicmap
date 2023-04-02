@@ -11,6 +11,7 @@ import com.example.musicmap.SessionAndInternetListenerActivity;
 import com.example.musicmap.screens.map.PostMapFragment;
 import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.user.Session;
+import com.example.musicmap.util.permissions.LocationPermission;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -44,6 +45,10 @@ public class HomeActivity extends SessionAndInternetListenerActivity {
         setContentView(R.layout.activity_home);
 
         setupActivity();
+
+        // TODO cleanup (e.g. util method in Permission to request all)
+        // only LocationPermission because others don't give popup anyway
+        new LocationPermission(this).forceRequest();
     }
 
     private void setupActivity() {
