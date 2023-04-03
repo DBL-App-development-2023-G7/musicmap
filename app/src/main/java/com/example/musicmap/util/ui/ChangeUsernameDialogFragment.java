@@ -47,13 +47,13 @@ public class ChangeUsernameDialogFragment extends DialogFragment {
         // Required so that the dialog won't close when an error occurs after pressing delete account
         alertDialog.setOnShowListener(dialog -> {
             Button button = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            button.setOnClickListener(view -> changeEmail());
+            button.setOnClickListener(view -> changeUsername());
         });
 
         return alertDialog;
     }
 
-    private void changeEmail() {
+    private void changeUsername() {
         String newUsername = newUsernameInput.getText().toString();
 
         if (InputChecker.checkUsername(newUsername, newUsernameInput)) {
