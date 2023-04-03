@@ -40,6 +40,18 @@ public class AuthSystem {
     }
 
     /**
+     * This method adds the user and its attributes to the Firebase Firestore database. This overloaded
+     * method is mainly for testing purposes.
+     *
+     * @param firestore the FirebaseFirestore instance to use
+     * @param user the user to add to the Firestore database
+     * @return the task
+     */
+    public static Task<Void> addUserToFirestore(@NonNull FirebaseFirestore firestore, @NonNull User user) {
+        return firestore.collection("Users").document(user.getUid()).set(user.getData());
+    }
+
+    /**
      * This method registers a user using the Firebase Auth system. This method also add the date that is not contained
      * in the profile of the user to the Firestore Database and sends a verification email to the given user's email
      * address.
