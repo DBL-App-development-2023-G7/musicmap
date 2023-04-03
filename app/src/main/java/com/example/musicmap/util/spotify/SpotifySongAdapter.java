@@ -23,8 +23,9 @@ import java.util.List;
 import se.michaelthelin.spotify.model_objects.specification.Track;
 
 /**
- * This adapter has been stolen from the  MusicMemory adapter
- * ALso note that this uses the Spotify WRAPPER Track class not the spotify SDK track class
+ * This adapter has been stolen from the  MusicMemory adapter.
+ *
+ * Also note that this uses the Spotify WRAPPER Track class not the spotify SDK track class
  */
 // TODO change the adapter view
 public class SpotifySongAdapter extends ArrayAdapter<Track> {
@@ -66,7 +67,8 @@ public class SpotifySongAdapter extends ArrayAdapter<Track> {
     // a return back to the post and set the search result track
     private void goToPostFragment(Track track) {
         FragmentActivity fragmentActivity = (FragmentActivity) activityContext;
-        SearchFragment.resultTrack = track;
+        SearchFragment.setResultTrack(track);
+
         FragmentUtil.replaceFragment(fragmentActivity.getSupportFragmentManager(), R.id.fragment_view,
                 PostFragment.class);
     }

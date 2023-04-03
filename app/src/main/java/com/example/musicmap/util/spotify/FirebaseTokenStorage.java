@@ -3,11 +3,11 @@ package com.example.musicmap.util.spotify;
 import android.util.Log;
 
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class FirebaseTokenStorage {
 
+    private static final String TAG = "FirebaseTokenStorage";
     private static final String REFRESH_TOKEN_FIELD = "refreshToken";
 
     private final String userID;
@@ -23,31 +23,31 @@ public class FirebaseTokenStorage {
     public void getRefreshToken(TokenReceivedCallback tokenReceivedCallback) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         DocumentReference docRef = firestore.collection("Users").document(userID);
-        docRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    String refreshToken = document.getString(REFRESH_TOKEN_FIELD);
-                    tokenReceivedCallback.onComplete(refreshToken);
-                } else {
-                    Log.d("debug", "[poop] No such document");
-                }
-            } else {
-                Log.d("debug", "[poop] Firestore failed!");
+
+        docRef.get().addOnSuccessListener(document -> {
+
+            if (!document.exists()) {
+                Log.d(TAG, "The user does not have a refresh token stored in the Firestore database.");
+                return;
             }
-        });
+
+            String refreshToken = document.getString(REFRESH_TOKEN_FIELD);
+            tokenReceivedCallback.onComplete(refreshToken);
+        }).addOnFailureListener(exception ->
+                Log.d(TAG, String.format("Firestore failed while trying to get the Spotify refresh token. %s",
+                        exception.getMessage())));
     }
 
     public void storeRefreshToken(String token) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
         firestore.collection("Users").document(userID)
                 .update(REFRESH_TOKEN_FIELD, token)
-                .addOnCompleteListener(unused ->
-                        Log.d("debug", "[poop] added refreshToken")
-                ).addOnFailureListener(exception ->
-                        Log.d("debug", String.format("[poop] Firebase fail: %s",
-                                exception.getMessage()))
-                );
+                .addOnSuccessListener(unused ->
+                        Log.d(TAG, "Added refreshToken to the Firebase Firestore database."))
+                .addOnFailureListener(exception ->
+                        Log.d(TAG, String.format("Firebase fail: %s", exception.getMessage()))
+        );
     }
 
 }

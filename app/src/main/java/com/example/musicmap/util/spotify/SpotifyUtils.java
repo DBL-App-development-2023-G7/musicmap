@@ -30,43 +30,49 @@ import se.michaelthelin.spotify.requests.data.search.simplified.SearchTracksRequ
 import se.michaelthelin.spotify.requests.data.tracks.GetTrackRequest;
 
 /**
- * A utility class to reduce the amount of spotify related code in the main activities
- * However there is a lot of spotify logic happening in activities so this class needs to be expanded
+ * A utility class to reduce the amount of spotify related code in the main activities.
+ * <p>
+ * However there is a lot of spotify logic happening in activities so this class needs to be expanded.
  */
 public class SpotifyUtils {
 
-    public static CompletableFuture<List<Track>> getRecentTracksFuture(int maxTracks){
+    public static final String TAG = "SpotifyUtils";
+
+    public static CompletableFuture<List<Track>> getRecentTracksFuture(int maxTracks) {
         return CompletableFuture.supplyAsync(() -> {
-                List<Track> recentTrackList = new ArrayList<>();
-                try {
-                    PagingCursorbased<PlayHistory> pageHistory =
-                            SpotifyUtils.getGetRecentHistoryRequest().execute();
-                    PlayHistory[] historyItems = pageHistory.getItems();
-                    List<CompletableFuture<Track>> trackFutures = new ArrayList<>();
+            List<Track> recentTrackList = new ArrayList<>();
+            try {
+                PagingCursorbased<PlayHistory> pageHistory =
+                        SpotifyUtils.getGetRecentHistoryRequest().execute();
+                PlayHistory[] historyItems = pageHistory.getItems();
+                List<CompletableFuture<Track>> trackFutures = new ArrayList<>();
 
-                    if (historyItems != null) {
-                        trackFutures.addAll(Arrays.stream(historyItems)
-                                .limit(maxTracks) // only get 4 most recent songs (To prevent API calls)
-                                .filter(playHistory ->
-                                        playHistory.getTrack().getType() == ModelObjectType.TRACK // assumes getTrack is not null
-                                ).map(playHistory -> playHistory.getTrack().getId())// actually just get the track id since we only need those for requests
-                                .map(SpotifyUtils::getGetTrackRequest) // prepare request to get full track data (since Album is not in simplified track)
-                                .map(AbstractRequest::executeAsync)// call all requests
-                                .collect(Collectors.toList()));
-                    }
-
-                    for (CompletableFuture<Track> trackFuture : trackFutures) {
-                        recentTrackList.add(trackFuture.join()); // gather all request results
-                    }
-                } catch (IOException | SpotifyWebApiException | ParseException e) {
-                    Log.d("debug", "Spotify web api exception!", e);
+                if (historyItems != null) {
+                    trackFutures.addAll(Arrays.stream(historyItems)
+                            .limit(maxTracks) // only get 4 most recent songs (To prevent API calls)
+                            .filter(playHistory ->
+                                            playHistory.getTrack().getType() == ModelObjectType.TRACK
+                                    // assumes getTrack is not null
+                            ).map(playHistory -> playHistory.getTrack().getId())
+                            // actually just get the track id since we only need those for requests
+                            .map(SpotifyUtils::getGetTrackRequest)
+                            // prepare request to get full track data (since Album is not in simplified track)
+                            .map(AbstractRequest::executeAsync)// call all requests
+                            .collect(Collectors.toList()));
                 }
-                return recentTrackList;
+
+                for (CompletableFuture<Track> trackFuture : trackFutures) {
+                    recentTrackList.add(trackFuture.join()); // gather all request results
+                }
+            } catch (IOException | SpotifyWebApiException | ParseException e) {
+                Log.d(TAG, "Spotify web api exception!", e);
+            }
+            return recentTrackList;
         });
     }
 
     public static CompletableFuture<Track> getCurrentTrackFuture() {
-        return CompletableFuture.supplyAsync( () -> {
+        return CompletableFuture.supplyAsync(() -> {
             Track currentTrack = null;
             try {
                 CurrentlyPlaying currentSimpleTrack =
@@ -76,7 +82,7 @@ public class SpotifyUtils {
                     currentTrack = SpotifyUtils.getGetTrackRequest(currentTrackId).execute();
                 }
             } catch (IOException | SpotifyWebApiException | ParseException e) {
-                Log.d("debug", "Spotify web api exception!", e);
+                Log.d(TAG, "Spotify web api exception!", e);
             }
             return currentTrack;
         });
@@ -86,24 +92,27 @@ public class SpotifyUtils {
         return CompletableFuture.runAsync(() -> {
             while (SpotifyData.getApi() == null) {
                 try {
-                    Log.d("debug", "[poop] wait for tokens");
+                    Log.d(TAG, "Waiting for token.");
+
+                    //TODO look for better options
                     Thread.sleep(50); // I DO NOT CARE ABOUT THE WARNING!!!!
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
-            Log.d("debug", "[poop] token found!");
+            Log.d(TAG, "Token found!");
         });
     }
 
     /**
-     * Prepares a request object to get full track data
+     * Prepares a request object to get full track data.
      *
      * @param trackId the id of the track
      * @return the request object
      */
     public static GetTrackRequest getGetTrackRequest(String trackId) {
         SpotifyApi api = SpotifyData.getApi();
+
         if (api == null) {
             throw new NullPointerException("No spotify API loaded");
         }
@@ -112,7 +121,7 @@ public class SpotifyUtils {
     }
 
     /**
-     * Prepares a request object to retrieve a users listening history
+     * Prepares a request object to retrieve a users listening history.
      *
      * @return the request object
      */
@@ -121,7 +130,7 @@ public class SpotifyUtils {
     }
 
     /**
-     * Prepares a request object to retrieve list of tracks based on a search query
+     * Prepares a request object to retrieve list of tracks based on a search query.
      *
      * @param prompt the search prompt
      * @return the request object
@@ -131,7 +140,7 @@ public class SpotifyUtils {
     }
 
     /**
-     * Loads an image from a given simple song into a view (This uses the SPOTIFY WRAPPER SIMPLE TRACK CLASS)
+     * Loads an image from a given simple song into a view (This uses the SPOTIFY WRAPPER SIMPLE TRACK CLASS).
      *
      * @param simpleTrack the track containing the image
      * @param view        the view of the track
@@ -140,13 +149,13 @@ public class SpotifyUtils {
     public static void loadImageFromSimplifiedTrack(TrackSimplified simpleTrack, ImageView view, Executor executor) {
         getGetTrackRequest(simpleTrack.getId()).executeAsync()
                 .thenAcceptAsync(track -> {
-                    Log.d("debug", "[poop] Full image data fetched!");
+                    Log.d(TAG, "Full image data fetched!");
                     loadImageFromTrack(track, view);
                 }, executor);
     }
 
     /**
-     * Loads an image from a given song (This uses the SPOTIFY WRAPPER  SIMPLE TRACK CLASS)
+     * Loads an image from a given song (This uses the SPOTIFY WRAPPER  SIMPLE TRACK CLASS).
      *
      * @param track the track containing the image
      * @param view  the view of the track
@@ -157,9 +166,7 @@ public class SpotifyUtils {
     }
 
     public static GetUsersCurrentlyPlayingTrackRequest getCurrentPlayingTrackRequest() {
-        return SpotifyData.getApi().getUsersCurrentlyPlayingTrack()
-                .additionalTypes("track")
-                .build();
+        return SpotifyData.getApi().getUsersCurrentlyPlayingTrack().additionalTypes("track").build();
     }
 
 }

@@ -12,7 +12,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,7 +72,7 @@ public class PostFragment extends MainFragment {
     private SpotifyAuthActivity parentActivity;
 
     // a launcher that launches the camera activity and handles the result
-    ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -148,10 +147,10 @@ public class PostFragment extends MainFragment {
         ImageView songImageView = rootView.findViewById(R.id.songPreviewImage);
 
         // load the search result track if there is one
-        if (SearchFragment.resultTrack != null) {
+        if (SearchFragment.getResultTrack() != null) {
             songImageView.setVisibility(View.VISIBLE);
-            Picasso.get().load(SearchFragment.resultTrack.getAlbum().getImages()[0].getUrl()).into(songImageView);
-            addSongButton.setText(SearchFragment.resultTrack.getName());
+            Picasso.get().load(SearchFragment.getResultTrack().getAlbum().getImages()[0].getUrl()).into(songImageView);
+            addSongButton.setText(SearchFragment.getResultTrack().getName());
         }
 
         addLocationButton = rootView.findViewById(R.id.addLocationButton);
@@ -229,7 +228,7 @@ public class PostFragment extends MainFragment {
     // TODO Make this monster prettier
     // Below is some questionable code
     private void postMusicMemory() {
-        if (SearchFragment.resultTrack == null) {
+        if (SearchFragment.getResultTrack() == null) {
             Message.showFailureMessage(this.currentActivity, "A track is required to post a music memory!");
             return;
         }
@@ -252,11 +251,11 @@ public class PostFragment extends MainFragment {
         );
 
         Song song = new Song(
-                SearchFragment.resultTrack.getName(),
-                SearchFragment.resultTrack.getArtists()[0].getId(),
+                SearchFragment.getResultTrack().getName(),
+                SearchFragment.getResultTrack().getArtists()[0].getId(),
                 null, // TODO: check this null cause
-                SearchFragment.resultTrack.getAlbum().getImages()[0].getUrl(),
-                SearchFragment.resultTrack.getPreviewUrl()
+                SearchFragment.getResultTrack().getAlbum().getImages()[0].getUrl(),
+                SearchFragment.getResultTrack().getPreviewUrl()
         );
 
         Actions.uploadMusicMemoryImage(capturedImage, authorID).addOnCompleteListener(task -> {
@@ -282,11 +281,10 @@ public class PostFragment extends MainFragment {
         });
     }
 
-
     private void clearData() {
         currentLocation = null;
         capturedImage = null;
-        SearchFragment.resultTrack = null;
+        SearchFragment.setResultTrack(null);
     }
 
     private void getPermission() {

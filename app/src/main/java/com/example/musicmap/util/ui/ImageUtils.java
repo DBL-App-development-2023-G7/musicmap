@@ -31,6 +31,8 @@ public class ImageUtils {
                 rotation = -90f;
                 break;
             }
+            default:
+                break;
         }
 
         return rotation;
