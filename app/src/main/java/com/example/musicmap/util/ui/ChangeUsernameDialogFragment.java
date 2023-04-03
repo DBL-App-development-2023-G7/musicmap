@@ -73,4 +73,5 @@ public class ChangeUsernameDialogFragment extends DialogFragment {
             );
         }
     }
+
 }
