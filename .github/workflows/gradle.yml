@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 7
 
     steps:
       - uses: actions/checkout@v3
@@ -38,6 +38,7 @@ jobs:
       matrix:
         api-level: [ 29 ]
         arch: [ x86_64 ]
+        first-boot-delay: [1000]
 
     steps:
       - name: Checkout
@@ -62,17 +63,19 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           arch: ${{ matrix.arch }}
-          force-avd-creation: false
-          disk-size: 1500M
-          heap-size: 1000M
-          emulator-options: -no-window -gpu -noaudio -no-boot-anim -camera-back none
+          profile: pixel_3a
           script: echo "AVD snapshot for caching finished"
       - name: Run Android tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
           arch: ${{ matrix.arch }}
-          disable-animations: true
-          disk-size: 1500M
-          heap-size: 1000M
-          script: ./gradlew connectedCheck
+          profile: pixel_3a
+          script: ./gradlew connectedCheck --stacktrace
+      - name: Upload test report as artifact
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-reports
+          retention-days: 3
+          path: '*/build/reports/androidTests'
