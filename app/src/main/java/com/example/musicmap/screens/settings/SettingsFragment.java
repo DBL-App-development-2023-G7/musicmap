@@ -15,7 +15,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
         PreferenceScreen preferenceScreen = getPreferenceScreen();
-        Preference versionPreference = preferenceScreen.getPreference(preferenceScreen.getPreferenceCount() - 1);
+
+        Preference versionPreference = preferenceScreen.findPreference("version");
+
+        if (versionPreference == null) {
+            throw new IllegalStateException("Did not manage to find the version preference.");
+        }
+
         versionPreference.setSummary(getString(R.string.current_version, BuildConfig.VERSION_NAME));
     }
 
