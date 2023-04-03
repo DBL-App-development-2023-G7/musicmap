@@ -74,22 +74,18 @@ jobs:
           disk-size: 1500M
           heap-size: 512M
           script: |
-            ./gradlew connectedCheck
+            ./gradlew connectedCheck --stacktrace
             if [ $? -eq 0 ]; then
               echo "All tests passed"
             else
               echo "Some tests failed"
               mkdir -p test-results
-              find app/build/outputs/ -type f -name "*.xml" -exec mv {} test-results/ \;
-              echo "::set-output name=artifact_name::android-test-results"
-              echo "::set-output name=artifact_path::test-results"
-              echo "::set-output name=artifact_type::zip"
             fi
       - name: Upload test report as artifact
         if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ steps.androidTest.outputs.artifact_name }}
-          path: ${{ steps.androidTest.outputs.artifact_path }}
+          name: test-reports
           retention-days: 3
+          path: '*/build/reports/androidTests'
 
