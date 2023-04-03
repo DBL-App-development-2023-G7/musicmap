@@ -32,7 +32,7 @@ jobs:
   androidTest:
     needs: build
     runs-on: macos-latest
-    timeout-minutes: 17
+    timeout-minutes: 20
 
     strategy:
       matrix:
@@ -62,20 +62,15 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
-          force-avd-creation: false
-          profile: Nexus 5X
-          emulator-build: 6110076
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
+          arch: ${{ matrix.arch }}
+          profile: pixel_3a
           script: echo "AVD snapshot for caching finished"
       - name: Run Android tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
-          force-avd-creation: false
-          disable-animations: true
-          profile: Nexus 5X
-          emulator-build: 6110076
+          arch: ${{ matrix.arch }}
+          profile: pixel_3a
           script: ./gradlew connectedCheck --stacktrace
       - name: Upload test report as artifact
         if: ${{ always() }}
