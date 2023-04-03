@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.example.musicmap.feed.ConcertMemory;
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.feed.Song;
 import com.google.android.gms.tasks.Task;
