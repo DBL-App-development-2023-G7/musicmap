@@ -32,11 +32,11 @@ jobs:
   androidTest:
     needs: build
     runs-on: macos-latest
-    timeout-minutes: 15
+    timeout-minutes: 17
 
     strategy:
       matrix:
-        api-level: [ 29 ]
+        api-level: [ 30 ]
         arch: [ x86_64 ]
         first-boot-delay: [1000]
 
@@ -71,8 +71,7 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           disable-animations: true
-          disk-size: 1500M
-          heap-size: 512M
+          profile: Nexus 6
           script: |
             ./gradlew connectedCheck --stacktrace
             if [ $? -eq 0 ]; then
