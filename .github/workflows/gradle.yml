@@ -36,7 +36,7 @@ jobs:
 
     strategy:
       matrix:
-        api-level: [ 30 ]
+        api-level: [ 29 ]
         arch: [ x86_64 ]
         first-boot-delay: [1000]
 
@@ -63,6 +63,8 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           force-avd-creation: false
+          profile: Nexus 5X
+          emulator-build: 6110076
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
           script: echo "AVD snapshot for caching finished"
@@ -70,16 +72,11 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
           disable-animations: true
-          profile: Nexus 6
-          script: |
-            ./gradlew connectedCheck --stacktrace
-            if [ $? -eq 0 ]; then
-              echo "All tests passed"
-            else
-              echo "Some tests failed"
-              mkdir -p test-results
-            fi
+          profile: Nexus 5X
+          emulator-build: 6110076
+          script: ./gradlew connectedCheck --stacktrace
       - name: Upload test report as artifact
         if: ${{ always() }}
         uses: actions/upload-artifact@v3
