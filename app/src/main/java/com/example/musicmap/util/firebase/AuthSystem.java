@@ -195,6 +195,40 @@ public class AuthSystem {
     }
 
     /**
+     * This method updates the username of the with the one given in the {@code username} parameter.
+     *
+     * @param username the new username of the user
+     * @return the result of the task
+     */
+    public static Task<Void> updateUsername(String username) {
+        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = auth.getCurrentUser();
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+        if (firebaseUser == null) {
+            tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
+            return tcs.getTask();
+        }
+
+        DocumentReference documentReference =
+                firestore.collection("Users").document(firebaseUser.getUid());
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("username", username);
+
+        return Queries.getUsersWithUsername(username).onSuccessTask(results -> {
+            if (!results.isEmpty()) {
+                tcs.setException(new FirebaseFirestoreException("The username already exists",
+                        FirebaseFirestoreException.Code.ALREADY_EXISTS));
+                return tcs.getTask();
+            }
+            return documentReference.update(data);
+        });
+    }
+
+    /**
      * This method uploads the given photo as the profile picture of the currently connected user.
      *
      * @param photoUri the local uri of the photo that needs to be uploaded
