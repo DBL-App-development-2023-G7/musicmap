@@ -56,7 +56,6 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
 
         MusicMemory musicMemory = getItem(position);
         HomeActivity homeActivity = (HomeActivity) activityContext;
-        homeActivity.setCurrentMusicMemory(musicMemory);
 
         row.setOnClickListener(v -> {
             Bundle args = new Bundle();

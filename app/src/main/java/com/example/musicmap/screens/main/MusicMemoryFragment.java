@@ -1,8 +1,10 @@
 package com.example.musicmap.screens.main;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +18,9 @@ import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.screens.map.MusicMemoryMapFragment;
 import com.example.musicmap.user.UserData;
 import com.example.musicmap.util.firebase.AuthSystem;
+import com.example.musicmap.util.firebase.Queries;
 import com.example.musicmap.util.ui.FragmentUtil;
+import com.example.musicmap.util.ui.Message;
 import com.squareup.picasso.Picasso;
 
 import org.osmdroid.config.Configuration;
@@ -30,11 +34,6 @@ public class MusicMemoryFragment extends Fragment {
 
     private static final String TAG = "MusicMemoryFragment";
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private String song;
-    private String authorUID;
-    private String photoURI;
     private ImageView imageView;
     private ImageView profilePictureView;
     private TextView usernameView;
@@ -44,31 +43,27 @@ public class MusicMemoryFragment extends Fragment {
     private TextView songNameView;
     private ImageView songPictureView;
 
-    // TODO: Rename and change types of parameters
-    private MusicMemory musicMemory;
-    private HomeActivity activity;
-
+    // Details about the MusicMemory this fragment is for
+    private String authorUid;
+    private String musicMemoryUid;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.activity = (HomeActivity) requireActivity();
-        activity.hideBottomNav();
-        this.musicMemory = activity.getCurrentMusicMemory();
-        System.out.println(this.musicMemory.getSong());
-        System.out.println(this.musicMemory.getLocation());
-        System.out.println(this.musicMemory.getTimePosted());
+
+        Bundle args = getArguments();
+        if (args == null) {
+            throw new IllegalArgumentException("No arguments provided to MusicMemoryFragment");
+        }
+
+        musicMemoryUid = args.getString("music_memory_uid");
+        authorUid = args.getString("author_uid");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Bundle args = getArguments(); // TODO actually provide arguments
-        if (args == null) {
-            throw new IllegalArgumentException("No arguments provided to MusicMemoryFragment");
-        }
-
-        String musicMemoryUid = args.getString("music_memory_uid");
-        String authorUid = args.getString("author_uid");
+        Activity activity = requireActivity();
 
         Context ctx = activity.getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
@@ -93,23 +88,43 @@ public class MusicMemoryFragment extends Fragment {
         this.songNameView = rootView.findViewById(R.id.song_name_view);
         this.songPictureView = rootView.findViewById(R.id.song_picture_view);
 
-        /* Putting in all the data. */
-        Picasso.get().load(this.musicMemory.getPhoto()).into(imageView);
-        this.songAuthorView.setText(this.musicMemory.getSong().getSpotifyAristId());
-        this.songNameView.setText(this.musicMemory.getSong().getName());
-        System.out.println(this.musicMemory.getSong().getImageUri());
-
-        AuthSystem.getUserData(this.musicMemory.getAuthorUid()).addOnCompleteListener(task -> {
-            UserData data = task.getResult();
-            this.usernameView.setText(data.getUsername());
-            System.out.println(data.getProfilePicture() + "|| " + data.getProfilePictureUri());
-            Picasso.get().load(data.getProfilePictureUri()).into(this.profilePictureView);
-            Picasso.get().load(this.musicMemory.getSong().getImageUri()).into(this.songPictureView);
-        });
-        this.dateView.setText(this.musicMemory.getTimePosted().toString());
-
         /* Back button handling.*/
-        this.backButton.setOnClickListener(task -> this.activity.onBackPressed());
+        this.backButton.setOnClickListener(task -> activity.onBackPressed());
+
+        // TODO maybe some sort of loading symbol before MusicMemory is loaded
+
+        Queries.getMusicMemoryByAuthorIdAndId(authorUid, musicMemoryUid).addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Log.e(TAG, "MusicMemory could not be loaded in MusicMemoryFragment", task.getException());
+                Message.showFailureMessage(container, "Music Memory could not be loaded");
+                return;
+            }
+            
+            MusicMemory musicMemory = task.getResult();
+
+            Picasso.get().load(musicMemory.getPhoto()).into(imageView);
+            this.songAuthorView.setText(musicMemory.getSong().getSpotifyAristId());
+            this.songNameView.setText(musicMemory.getSong().getName());
+            System.out.println(musicMemory.getSong().getImageUri());
+
+            AuthSystem.getUserData(musicMemory.getAuthorUid()).addOnCompleteListener(userDataTask -> {
+                if (!userDataTask.isSuccessful()) {
+                    Log.e(TAG, "MusicMemory could not be loaded in MusicMemoryFragment",
+                            userDataTask.getException());
+                    Message.showFailureMessage(container, "Music Memory author data could not be loaded");
+                    return;
+                }
+
+                UserData data = userDataTask.getResult();
+
+                this.usernameView.setText(data.getUsername());
+                System.out.println(data.getProfilePicture() + "|| " + data.getProfilePictureUri());
+
+                Picasso.get().load(data.getProfilePictureUri()).into(this.profilePictureView);
+                Picasso.get().load(musicMemory.getSong().getImageUri()).into(this.songPictureView);
+            });
+            this.dateView.setText(musicMemory.getTimePosted().toString());
+        });
 
         return rootView;
     }

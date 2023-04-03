@@ -25,8 +25,6 @@ public class HomeActivity extends SessionAndInternetListenerActivity {
     private Class<? extends Fragment> lastFragmentClass = FeedFragment.class;
     private int currentLayout = R.layout.activity_home;
 
-    private MusicMemory currentMusicMemory;
-
     private BottomNavigationView bottomNavigationView;
 
     @Override
@@ -103,14 +101,6 @@ public class HomeActivity extends SessionAndInternetListenerActivity {
 
     public FragmentManager getFragmentManagerFromActivity() {
         return getSupportFragmentManager();
-    }
-
-    public MusicMemory getCurrentMusicMemory() {
-        return currentMusicMemory;
-    }
-
-    public void setCurrentMusicMemory(MusicMemory currentMusicMemory) {
-        this.currentMusicMemory = currentMusicMemory;
     }
 
     @Override
