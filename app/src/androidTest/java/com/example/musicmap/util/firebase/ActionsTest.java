@@ -28,7 +28,6 @@ public class ActionsTest {
                 "song", "1234", null, "https://imgur.com/photo-3", "https://spotify.com/preview"
         ));
 
-
         FirebaseFirestore firestoreMock = mock(FirebaseFirestore.class);
         CollectionReference collectionReferenceMock = mock(CollectionReference.class);
         DocumentReference documentReferenceMock = mock(DocumentReference.class);
@@ -51,7 +50,6 @@ public class ActionsTest {
     public void postConcertMemory_success() {
         ConcertMemory concertMemory = new ConcertMemory("author-uid", new Date(),
                 new GeoPoint(10, 10), "name", "https://youtube.com/video");
-
 
         FirebaseFirestore firestoreMock = mock(FirebaseFirestore.class);
         CollectionReference collectionReferenceMock = mock(CollectionReference.class);
