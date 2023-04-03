@@ -87,10 +87,9 @@ jobs:
             fi
       - name: Upload test report as artifact
         if: ${{ always() }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.androidTest.outputs.artifact_name }}
           path: ${{ steps.androidTest.outputs.artifact_path }}
           retention-days: 3
-          archive-format: ${{ steps.androidTest.outputs.artifact_type }}
 
