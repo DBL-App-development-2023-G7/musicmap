@@ -32,12 +32,13 @@ jobs:
   androidTest:
     needs: build
     runs-on: macos-latest
-    timeout-minutes: 13
+    timeout-minutes: 15
 
     strategy:
       matrix:
         api-level: [ 29 ]
         arch: [ x86_64 ]
+        first-boot-delay: [1000]
 
     steps:
       - name: Checkout
@@ -62,13 +63,16 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           force-avd-creation: false
-          emulator-options: -noaudio -no-boot-anim
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
           script: echo "AVD snapshot for caching finished"
       - name: Run Android tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
           disable-animations: true
+          disk-size: 1500M
+          heap-size: 512M
           script: |
             ./gradlew connectedCheck
             if [ $? -eq 0 ]; then
@@ -77,10 +81,6 @@ jobs:
               echo "Some tests failed"
               mkdir -p test-results
               find app/build/outputs/ -type f -name "*.xml" -exec mv {} test-results/ \;
-              # Upload the test report files as an artifact
-              # You can customize the name of the artifact and the path to the files as needed
-              # The artifact will be available for download in the "Artifacts" tab of the workflow run
-              # in the GitHub Actions UI
               echo "::set-output name=artifact_name::android-test-results"
               echo "::set-output name=artifact_path::test-results"
               echo "::set-output name=artifact_type::zip"
