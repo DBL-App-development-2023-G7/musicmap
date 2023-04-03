@@ -63,16 +63,16 @@
             app:layout_constraintTop_toBottomOf="@+id/song_name_view" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <org.osmdroid.views.MapView
-        android:id="@+id/post_map"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/music_memory_map"
+        android:name="com.example.musicmap.screens.map.MusicMemoryMapFragment"
         android:layout_width="319dp"
         android:layout_height="226dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/song_bit_layout">
-
-    </org.osmdroid.views.MapView>
+        app:layout_constraintTop_toBottomOf="@+id/song_bit_layout"
+        tools:layout="@layout/fragment_map" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"

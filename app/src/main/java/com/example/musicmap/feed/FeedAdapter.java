@@ -1,9 +1,7 @@
 package com.example.musicmap.feed;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +11,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
 
 import com.example.musicmap.R;
-import com.example.musicmap.screens.auth.RegisterFragment;
 import com.example.musicmap.screens.main.HomeActivity;
 import com.example.musicmap.screens.main.MusicMemoryFragment;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 /**
@@ -60,7 +57,14 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
         MusicMemory musicMemory = getItem(position);
         HomeActivity homeActivity = (HomeActivity) activityContext;
         homeActivity.setCurrentMusicMemory(musicMemory);
-        row.setOnClickListener(v -> FragmentUtil.replaceFragment(homeActivity.getFragmentManagerFromActivity(), R.id.fragment_view, MusicMemoryFragment.class));
+        row.setOnClickListener(v -> {
+            Bundle args = new Bundle();
+            args.putString("author_uid", musicMemory.getAuthorUid());
+            args.putString("music_memory_uid", musicMemory.getUid());
+
+            FragmentUtil.replaceFragment(homeActivity.getFragmentManagerFromActivity(), R.id.fragment_view,
+                    MusicMemoryFragment.class, args);
+        });
         if (musicMemory != null) {
             // TODO: more user-friendly display
             songName.setText(musicMemory.getSong().getName());
