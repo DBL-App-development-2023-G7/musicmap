@@ -7,6 +7,8 @@ import com.example.musicmap.util.map.MusicMemoryOverlay;
 
 /**
  * A map fragment for displaying the location of a music memory.
+ *
+ * Requires two arguments: author UID and post UID.
  */
 public class MusicMemoryMapFragment extends MapFragment {
 

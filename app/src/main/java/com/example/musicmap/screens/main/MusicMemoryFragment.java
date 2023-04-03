@@ -22,11 +22,13 @@ import com.squareup.picasso.Picasso;
 import org.osmdroid.config.Configuration;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link MusicMemoryFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * A fragment displaying a single music memory.
+ *
+ * Requires two string arguments: author UID and post UID.
  */
 public class MusicMemoryFragment extends Fragment {
+
+    private static final String TAG = "MusicMemoryFragment";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -42,12 +44,9 @@ public class MusicMemoryFragment extends Fragment {
     private TextView songNameView;
     private ImageView songPictureView;
 
-    public static final String TAG = "MusicMemoryFragment";
-
     // TODO: Rename and change types of parameters
     private MusicMemory musicMemory;
     private HomeActivity activity;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,11 +108,9 @@ public class MusicMemoryFragment extends Fragment {
         });
         this.dateView.setText(this.musicMemory.getTimePosted().toString());
 
-        /* Backbutton handling.*/
-        this.backButton.setOnClickListener(task->{
-                this.activity.onBackPressed();
-        }
-        );
+        /* Back button handling.*/
+        this.backButton.setOnClickListener(task -> this.activity.onBackPressed());
+
         return rootView;
     }
 
