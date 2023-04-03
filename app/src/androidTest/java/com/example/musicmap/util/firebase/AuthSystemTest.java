@@ -34,5 +34,5 @@ public class AuthSystemTest {
         verify(firestore.collection("Users")).document(user.getUid());
         verify(firestore.collection("Users").document(user.getUid())).set(user.getData());
     }
-    
+
 }

@@ -21,7 +21,7 @@ public class QueriesTest {
 
     @Test
     public void testGetUsersByUsername_success_exists() throws ExecutionException, InterruptedException {
-        String userNameThatExistsInFirebase = "username";
+        String userNameThatExistsInFirebase = "TjeerdRoks";
         Task<QuerySnapshot> task = Queries.getUsersWithUsername(userNameThatExistsInFirebase);
         QuerySnapshot querySnapshot = Tasks.await(task);
         assertFalse(querySnapshot.isEmpty());
