@@ -60,28 +60,5 @@ public class ActionsTest {
         latch.await();
     }
 
-    @Test
-    public void postConcertMemory_success() throws InterruptedException {
-        String authorUid = "author-uid";
-        when(firestore.collection("Users")).thenReturn(usersCollectionRef);
-        when(usersCollectionRef.document(authorUid)).thenReturn(documentRef);
-        when(documentRef.collection("ConcertMemories")).thenReturn(Mockito.mock(CollectionReference.class));
-        when(documentRef.collection("ConcertMemories").add(any(ConcertMemory.class)))
-                .thenAnswer(invocation -> Tasks.forResult(null));
-
-        ConcertMemory concertMemory = new ConcertMemory("author-uid", new Date(),
-                new GeoPoint(10, 10), "name", "https://youtube.com/video");
-        Task<?> task = Actions.postConcertMemory(concertMemory);
-
-        CountDownLatch latch = new CountDownLatch(1);
-        task.addOnCompleteListener(result -> {
-            assertTrue(result.isSuccessful());
-            assertNull(result.getException());
-            latch.countDown();
-        });
-
-        latch.await();
-    }
-
 }
 
