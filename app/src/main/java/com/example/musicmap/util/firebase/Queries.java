@@ -2,16 +2,21 @@ package com.example.musicmap.util.firebase;
 
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.feed.Post;
+import com.example.musicmap.feed.Song;
+import com.example.musicmap.screens.artist.SongCount;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -156,6 +161,38 @@ public class Queries {
             }
             return taskCompletionSource.getTask();
         });
+    }
+
+    /**
+     * Fetches the most popular songs for an artist.
+     *
+     * @param artistId the id of the artist
+     * @param count the number of songs to return (or all, whichever less)
+     * @return {@code count} number of most popular songs for the artist
+     */
+    public static Task<List<SongCount>> getMostPopularSongsByArtist(String artistId, int count) {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+        return firestore.collectionGroup("MusicMemories")
+                .whereEqualTo("song.spotifyArtistId", artistId)
+                .get()
+                .continueWith(task -> {
+                    Map<Song, Long> songMap = new HashMap<>();
+
+                    for (QueryDocumentSnapshot musicMemorySnapshot : task.getResult()) {
+                        Song song = deserialize(musicMemorySnapshot, MusicMemory.class).getSong();
+
+                        if (song != null) {
+                            songMap.put(song, songMap.getOrDefault(song, 0l) + 1);
+                        }
+                    }
+
+                    return songMap.entrySet().stream()
+                            .sorted(Map.Entry.<Song, Long>comparingByValue().reversed())
+                            .limit(count)
+                            .map(entry -> new SongCount(entry.getKey(), entry.getValue()))
+                            .collect(Collectors.toList());
+                });
     }
 
     /**

@@ -1,5 +1,6 @@
 <resources>
     <!--navbar strings start-->
+    <string name="navbar_artist_data">Data</string>
     <string name="navbar_post">Post</string>
     <string name="navbar_feed">Feed</string>
     <string name="navbar_map">Map</string>
