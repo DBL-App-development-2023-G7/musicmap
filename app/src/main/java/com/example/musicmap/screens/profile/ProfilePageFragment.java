@@ -22,8 +22,6 @@ import com.example.musicmap.user.User;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.firebase.Queries;
 import com.example.musicmap.util.ui.Message;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -68,29 +66,26 @@ public class ProfilePageFragment extends Fragment {
     }
 
     private void displayData(User user) {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = auth.getCurrentUser();
-
-        if (firebaseUser != null) {
-            if (user != null) {
-                usernameTextView.setText(user.getData().getUsername());
-                if (user.getData().hasProfilePicture()) {
-                    Uri uri = user.getData().getProfilePictureUri();
-                    Picasso.get().load(uri).into(profilePicture);
-                }
-            }
-
-            Queries.getMusicMemoriesByAuthorId(firebaseUser.getUid()).addOnCompleteListener(completedTask -> {
-                if (completedTask.isSuccessful()) {
-                    List<MusicMemory> feed = completedTask.getResult();
-                    feedAdapter.addAll(feed);
-                    feedAdapter.notifyDataSetChanged();
-                } else {
-                    Log.e(TAG, "Exception occurred while getting music memories from author",
-                            completedTask.getException());
-                }
-            });
+        if (user == null) {
+            return;
         }
+
+        usernameTextView.setText(user.getData().getUsername());
+        if (user.getData().hasProfilePicture()) {
+            Uri uri = user.getData().getProfilePictureUri();
+            Picasso.get().load(uri).into(profilePicture);
+        }
+
+        Queries.getMusicMemoriesByAuthorId(user.getUid()).addOnCompleteListener(completedTask -> {
+            if (completedTask.isSuccessful()) {
+                List<MusicMemory> feed = completedTask.getResult();
+                feedAdapter.addAll(feed);
+                feedAdapter.notifyDataSetChanged();
+            } else {
+                Log.e(TAG, "Exception occurred while getting music memories from author",
+                        completedTask.getException());
+            }
+        });
     }
 
 }
