@@ -2,13 +2,17 @@ package com.example.musicmap.screens.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.example.musicmap.R;
 import com.example.musicmap.SessionAndInternetListenerActivity;
 import com.example.musicmap.screens.main.HomeActivity;
+import com.example.musicmap.user.Session;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.example.musicmap.screens.settings.SettingsActivity;
+
+import java.util.Objects;
 
 public class ProfileActivity extends SessionAndInternetListenerActivity {
 
@@ -58,6 +62,13 @@ public class ProfileActivity extends SessionAndInternetListenerActivity {
         });
 
         ImageView settingsButton = findViewById(R.id.appbarSettings);
+
+        // Disable settings button if profile is for a different user
+        if (!Session.getInstance().getCurrentUser().getUid().equals(getIntent().getStringExtra("user_uid"))) {
+            settingsButton.setVisibility(View.INVISIBLE);
+        } else {
+            settingsButton.setVisibility(View.VISIBLE);
+        }
 
         settingsButton.setOnClickListener(view -> {
             startActivity(new Intent(this, SettingsActivity.class));
