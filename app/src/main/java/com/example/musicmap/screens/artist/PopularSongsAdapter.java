@@ -17,11 +17,11 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class PopularSongsAdapter extends ArrayAdapter<Song> {
+public class PopularSongsAdapter extends ArrayAdapter<SongCount> {
 
     private final Activity activityContext;
 
-    public PopularSongsAdapter(@NonNull Activity activityContext, int resource, @NonNull List<Song> songs) {
+    public PopularSongsAdapter(@NonNull Activity activityContext, int resource, @NonNull List<SongCount> songs) {
         super(activityContext, resource, songs);
         this.activityContext = activityContext;
     }
@@ -39,10 +39,13 @@ public class PopularSongsAdapter extends ArrayAdapter<Song> {
         TextView songName = row.findViewById(R.id.popular_song_name);
         TextView streamDetails = row.findViewById(R.id.popular_song_count);
 
-        Song song = getItem(position);
-        if (song != null) {
+        SongCount songCount = getItem(position);
+        if (songCount != null) {
+            Song song = songCount.getSong();
+            Long count = songCount.getCount();
+
             songName.setText(song.getName());
-            streamDetails.setText(String.format(activityContext.getString(R.string.ranked), (position + 1)));
+            streamDetails.setText(String.format(activityContext.getString(R.string.referenced), count));
             Picasso.get().load(song.getImageUri()).into(songImage);
         }
 

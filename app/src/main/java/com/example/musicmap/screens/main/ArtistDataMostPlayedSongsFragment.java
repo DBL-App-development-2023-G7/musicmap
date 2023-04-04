@@ -11,8 +11,8 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 
 import com.example.musicmap.R;
-import com.example.musicmap.feed.Song;
 import com.example.musicmap.screens.artist.PopularSongsAdapter;
+import com.example.musicmap.screens.artist.SongCount;
 import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
@@ -46,7 +46,7 @@ public class ArtistDataMostPlayedSongsFragment extends MainFragment {
 
         Queries.getMostPopularSongsByArtist(spotifyArtistId, NUMBER_OF_SONGS).addOnCompleteListener(completedTask -> {
             if (completedTask.isSuccessful()) {
-                List<Song> topSongs = completedTask.getResult();
+                List<SongCount> topSongs = completedTask.getResult();
                 popularSongsAdapter.addAll(topSongs);
                 popularSongsAdapter.notifyDataSetChanged();
             } else {

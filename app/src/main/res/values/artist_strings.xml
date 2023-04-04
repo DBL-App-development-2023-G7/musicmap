@@ -6,6 +6,6 @@
     <string name="total_streams_label">Total streams:</string>
     <string name="welcome_data_page">Welcome to your data page!</string>
     <string name="ranking_artist">Your ranking as an artist:</string>
-    <string name="ranked">Ranked %d</string>
+    <string name="referenced">Referenced %d times in music memories worldwide</string>
     <!--artist data strings end-->
 </resources>

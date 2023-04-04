@@ -3,6 +3,7 @@ package com.example.musicmap.util.firebase;
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.feed.Post;
 import com.example.musicmap.feed.Song;
+import com.example.musicmap.screens.artist.SongCount;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.firestore.DocumentReference;
@@ -169,27 +170,27 @@ public class Queries {
      * @param count the number of songs to return (or all, whichever less)
      * @return {@code count} number of most popular songs for the artist
      */
-    public static Task<List<Song>> getMostPopularSongsByArtist(String artistId, int count) {
+    public static Task<List<SongCount>> getMostPopularSongsByArtist(String artistId, int count) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
         return firestore.collectionGroup("MusicMemories")
                 .whereEqualTo("song.spotifyArtistId", artistId)
                 .get()
                 .continueWith(task -> {
-                    Map<Song, Integer> songMap = new HashMap<>();
+                    Map<Song, Long> songMap = new HashMap<>();
 
                     for (QueryDocumentSnapshot musicMemorySnapshot : task.getResult()) {
                         Song song = musicMemorySnapshot.toObject(MusicMemory.class).getSong();
 
                         if (song != null) {
-                            songMap.put(song, songMap.getOrDefault(song, 0) + 1);
+                            songMap.put(song, songMap.getOrDefault(song, 0l) + 1);
                         }
                     }
 
                     return songMap.entrySet().stream()
-                            .sorted(Map.Entry.<Song, Integer>comparingByValue().reversed())
+                            .sorted(Map.Entry.<Song, Long>comparingByValue().reversed())
                             .limit(count)
-                            .map(Map.Entry::getKey)
+                            .map(entry -> new SongCount(entry.getKey(), entry.getValue()))
                             .collect(Collectors.toList());
                 });
     }
