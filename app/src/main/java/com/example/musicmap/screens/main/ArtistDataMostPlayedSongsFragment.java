@@ -17,6 +17,7 @@ import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
 import com.example.musicmap.util.firebase.Queries;
+import com.example.musicmap.util.ui.Message;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,7 @@ public class ArtistDataMostPlayedSongsFragment extends MainFragment {
                 popularSongsAdapter.notifyDataSetChanged();
             } else {
                 Log.e(TAG, "Exception occurred while getting most popular songs", completedTask.getException());
+                Message.showFailureMessage(requireActivity(), "Could not retrieve most popular songs");
             }
         });
 

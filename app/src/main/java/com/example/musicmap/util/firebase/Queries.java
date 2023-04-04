@@ -180,7 +180,7 @@ public class Queries {
                     Map<Song, Long> songMap = new HashMap<>();
 
                     for (QueryDocumentSnapshot musicMemorySnapshot : task.getResult()) {
-                        Song song = musicMemorySnapshot.toObject(MusicMemory.class).getSong();
+                        Song song = deserialize(musicMemorySnapshot, MusicMemory.class).getSong();
 
                         if (song != null) {
                             songMap.put(song, songMap.getOrDefault(song, 0l) + 1);
