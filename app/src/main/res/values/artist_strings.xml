@@ -1,5 +1,6 @@
 <resources>
     <!--artist data strings start-->
+    <string name="artist">Artist</string>
     <string name="artist_data_page">Artist Data Page</string>
     <string name="map_label">Where is your music mostly streamed?</string>
     <string name="top_streams_label">Top played songs:</string>
