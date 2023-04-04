@@ -96,6 +96,7 @@ public class Actions {
                         Log.e(TAG, "Could not create concert memory", task.getException());
                     }
                 });
+    }
 
     /**
      * Uploads music memory image for the user.
