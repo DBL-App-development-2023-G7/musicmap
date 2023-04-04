@@ -11,7 +11,6 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 
 import com.example.musicmap.R;
-import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.feed.Song;
 import com.example.musicmap.screens.artist.PopularSongsAdapter;
 import com.example.musicmap.user.Artist;
