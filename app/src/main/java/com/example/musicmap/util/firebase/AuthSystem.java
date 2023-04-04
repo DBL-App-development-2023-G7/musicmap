@@ -36,7 +36,7 @@ public class AuthSystem {
      */
     public static Task<Void> addUserToFirestore(@NonNull User user) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        return firestore.collection("Users").document(user.getUid()).set(user.getData());
+        return addUserToFirestore(firestore, user);
     }
 
     /**

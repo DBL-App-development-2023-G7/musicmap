@@ -26,22 +26,12 @@ public class Actions {
      * @param musicMemory the music-memory object
      */
     public static Task<?> postMusicMemory(MusicMemory musicMemory) {
-        String authorUid = musicMemory.getAuthorUid();
-
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        return firestore.collection("Users").document(authorUid)
-                .collection("MusicMemories").add(musicMemory).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Log.i(TAG, "Successfully created music memory with ID " + task.getResult().getId());
-                    } else {
-                        Log.e(TAG, "Could not create music memory", task.getException());
-                    }
-                });
+        return postMusicMemory(firestore, musicMemory);
     }
 
     /**
-     * Posts the music-memory for the {@code MusicMemory.authorUid}. Overloaded method mainly used
-     * for testing.
+     * Overloaded method to post the music-memory for the {@code MusicMemory.authorUid}.
      *
      * @param firestore the firebaseFirestore reference for DI
      * @param musicMemory the music-memory object
@@ -65,22 +55,12 @@ public class Actions {
      * @param concertMemory the concert-memory object
      */
     public static Task<?> postConcertMemory(ConcertMemory concertMemory) {
-        String authorUid = concertMemory.getAuthorUid();
-
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        return firestore.collection("Users").document(authorUid)
-                .collection("ConcertMemories").add(concertMemory).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Log.i(TAG, "Successfully created concert memory with ID " + task.getResult().getId());
-                    } else {
-                        Log.e(TAG, "Could not create concert memory", task.getException());
-                    }
-                });
+        return postConcertMemory(firestore, concertMemory);
     }
 
     /**
-     * Posts the concert-memory for the {@code ConcertMemory.authorUid}. Overloaded method mainly used
-     * for testing.
+     * Overloaded method to posts the concert-memory for the {@code ConcertMemory.authorUid}.
      *
      * @param firestore the firebaseFirestore instance for DI
      * @param concertMemory the concert-memory object
