@@ -7,15 +7,15 @@ import android.widget.ImageView;
 import androidx.fragment.app.Fragment;
 
 import com.example.musicmap.R;
-import com.example.musicmap.SessionAndInternetListenerActivity;
 import com.example.musicmap.screens.map.PostMapFragment;
 import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.user.Session;
+import com.example.musicmap.util.spotify.SpotifyAuthActivity;
 import com.example.musicmap.util.permissions.LocationPermission;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class HomeActivity extends SessionAndInternetListenerActivity {
+public class HomeActivity extends SpotifyAuthActivity {
 
     private Class<? extends Fragment> lastFragmentClass = FeedFragment.class;
     private int currentLayout = R.layout.activity_home;

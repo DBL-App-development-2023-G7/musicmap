@@ -17,13 +17,12 @@ public class ArtistDataTest {
     public void setUp() {
         UserData userData = new UserData("username", "User",
                 "Name", "user@email.com", new Date(), true);
-        this.artistData = new ArtistData(userData, true);
-
+        this.artistData = new ArtistData(userData, true, "spotify-id");
     }
 
     @Test
     public void testGetVerified() {
-        assertTrue(this.artistData.getVerified());
+        assertTrue(this.artistData.isVerified());
     }
 
     @Test

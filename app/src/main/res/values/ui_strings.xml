@@ -28,6 +28,14 @@
     <string name="feed_song_art">Image of song</string>
     <!--feed strings end-->
 
+    <!-- post fragment start-->
+    <string name="post_fragment_add_image_button_text">Add image</string>
+    <string name="post_fragment_add_song_button_text">Add Song</string>
+    <string name="post_fragment_get_location_button_text">Get location</string>
+    <!-- post fragment end-->
+
+    <string name="camera_fragment_post_button_text">Post</string>
+
     <!--general settings start-->
     <string name="account_settings">Account settings</string>
     <string name="account_settings_description">General account settings</string>

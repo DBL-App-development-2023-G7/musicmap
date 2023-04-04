@@ -1,14 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/create_music_memory_backgound"
     tools:context=".screens.main.PostFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textColor="@color/white"
-        android:text="Temporary post fragment text" />
+    <!-- GUIDILENS TO PREVENTY THE FRAGMENT CONTENTS TO OVERLAP WITH THE NAVBARS-->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="@dimen/navbar_min_height" />
 
-</FrameLayout>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/toolbar_margin" />
+    <!--NOTE THERE MAY BE SOME WEIRD SCROLLING BEHAVIOUR ON SOME SPECIFIC SCREEN SIZES-->
+    <!--THIS MAY HAPPEN BECAUSE THE GUIDELINES DO NOT MATCH THE SIZE OF THE NAVBAR AND TOP BAR -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        tools:layout_editor_absoluteX="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <!--Do not fix the warning above It is intentional-->
+            <Button
+                android:id="@+id/addImageButton"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="344dp"
+                android:layout_height="144dp"
+                android:layout_marginTop="40dp"
+                android:text="@string/post_fragment_add_image_button_text"
+                android:textColor="@color/white"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/add_photo_icon"
+                app:iconGravity="textTop"
+                app:iconPadding="6dp"
+                app:iconTint="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.492"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/gray_medium"
+                app:strokeWidth="2dp" />
+
+            <!--TODO add display song image in this button  -->
+
+            <ImageView
+                android:id="@+id/previewCapturedImage"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="invisible"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="@+id/addImageButton"
+                app:layout_constraintEnd_toEndOf="@+id/addImageButton"
+                app:layout_constraintStart_toStartOf="@+id/addImageButton"
+                app:layout_constraintTop_toTopOf="@+id/addImageButton"
+                app:layout_constraintVertical_bias="0.0"
+                tools:src="@tools:sample/avatars" />
+
+            <ImageView
+                android:id="@+id/songPreviewImage"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="40dp"
+                android:scaleType="fitXY"
+                android:visibility="invisible"
+                app:layout_constraintDimensionRatio="2.388:1"
+                app:layout_constraintEnd_toEndOf="@+id/addImageButton"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/addImageButton"
+                app:layout_constraintTop_toBottomOf="@+id/addImageButton"
+                tools:visibility="invisible" />
+
+            <Button
+                android:id="@+id/addSongButton"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="start|center_vertical"
+                android:text="@string/post_fragment_add_song_button_text"
+                android:textColor="@color/white"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/music_note_icon"
+                app:iconGravity="textStart"
+                app:iconPadding="6dp"
+                app:iconTint="@color/white"
+                app:layout_constraintDimensionRatio="w,1:5.7"
+                app:layout_constraintEnd_toEndOf="@+id/addImageButton"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/addImageButton"
+                app:layout_constraintTop_toBottomOf="@+id/songPreviewImage"
+                app:strokeColor="@color/gray_medium"
+                app:strokeWidth="2dp" />
+
+
+            <Button
+                android:id="@+id/addLocationButton"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="40dp"
+                android:gravity="start|center_vertical"
+                android:text="@string/post_fragment_get_location_button_text"
+                android:textColor="@color/white"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/location_icon"
+                app:iconGravity="textStart"
+                app:iconPadding="6dp"
+                app:iconTint="@color/white"
+                app:layout_constraintDimensionRatio="5.71:1"
+                app:layout_constraintEnd_toEndOf="@+id/addImageButton"
+                app:layout_constraintStart_toStartOf="@+id/addImageButton"
+                app:layout_constraintTop_toBottomOf="@+id/addSongButton"
+                app:strokeColor="@color/gray_medium"
+                app:strokeWidth="2dp" />
+
+            <Button
+                android:id="@+id/postMemoryButton"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="40dp"
+                android:text="@string/camera_fragment_post_button_text"
+                android:textColor="@color/white"
+                app:cornerRadius="10dp"
+                app:layout_constraintDimensionRatio="5.71:1"
+                app:layout_constraintEnd_toEndOf="@+id/addImageButton"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/addImageButton"
+                app:layout_constraintTop_toBottomOf="@+id/addLocationButton"
+                app:strokeColor="@color/purple_base"
+                app:strokeWidth="3dp" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
