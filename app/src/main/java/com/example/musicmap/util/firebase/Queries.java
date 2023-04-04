@@ -2,15 +2,22 @@ package com.example.musicmap.util.firebase;
 
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.feed.Post;
+import com.example.musicmap.feed.Song;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Queries {
@@ -125,6 +132,42 @@ public class Queries {
             return taskCompletionSource.getTask();
         });
     }
+
+    /**
+     * Fetches the most popular songs for an artist.
+     *
+     * @param artistId the id of the artist
+     * @param count the number of songs to return (or all, whichever less)
+     * @return {@code count} number of most popular songs for the artist
+     */
+    public static Task<List<Song>> getMostPopularSongsByArtist(String artistId, int count) {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+        return firestore.collectionGroup("MusicMemories")
+                .whereEqualTo("song.artistUid", artistId)
+                .get()
+                .continueWith(task -> {
+                    Map<String, Integer> songCounts = new HashMap<>();
+                    Map<String, Song> songMap = new HashMap<>();
+
+                    for (QueryDocumentSnapshot musicMemorySnapshot : task.getResult()) {
+                        Song song = musicMemorySnapshot.toObject(MusicMemory.class).getSong();
+
+                        if (song != null) {
+                            String songImageUriUnique = song.getImageUri().toString();
+                            songMap.put(songImageUriUnique, song);
+                            songCounts.put(songImageUriUnique, songCounts.getOrDefault(songImageUriUnique, 0) + 1);
+                        }
+                    }
+
+                    return songCounts.entrySet().stream()
+                            .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                            .limit(count)
+                            .map(entry -> songMap.get(entry.getKey()))
+                            .collect(Collectors.toList());
+                });
+    }
+
 
     /**
      * Deserializes the given document into a post of the given class.
