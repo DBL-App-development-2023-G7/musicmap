@@ -148,7 +148,7 @@ public class Queries {
                     Map<String, Song> songMap = new HashMap<>();
 
                     for (QueryDocumentSnapshot musicMemorySnapshot : task.getResult()) {
-                        Song song = musicMemorySnapshot.toObject(MusicMemory.class).getSong();
+                        Song song = deserialize(musicMemorySnapshot, MusicMemory.class).getSong();
 
                         if (song != null) {
                             // using song image uri for unique key as we don't have songId
