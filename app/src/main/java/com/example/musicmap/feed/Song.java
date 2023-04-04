@@ -10,7 +10,7 @@ public class Song {
 
     private String name;
 
-    private String spotifyAristId;
+    private String spotifyArtistId;
     @Nullable
     private String artistUid;
 
@@ -21,12 +21,12 @@ public class Song {
     public Song() { }
 
     public Song(String name,
-                String spotifyAristId,
+                String spotifyArtistId,
                 @Nullable String artistUid,
                 String imageUri,
                 String musicPreviewUri) {
         this.name = name;
-        this.spotifyAristId = spotifyAristId;
+        this.spotifyArtistId = spotifyArtistId;
         this.artistUid = artistUid;
         this.imageUri = imageUri;
         this.musicPreviewUri = musicPreviewUri;
@@ -36,8 +36,8 @@ public class Song {
         return name;
     }
 
-    public String getSpotifyAristId() {
-        return spotifyAristId;
+    public String getSpotifyArtistId() {
+        return spotifyArtistId;
     }
 
     @Nullable
@@ -57,8 +57,8 @@ public class Song {
     @Override
     public String toString() {
         return String.format(
-                "Song{name='%s', spotifyAristId='%s', artistUid='%s', imageUri='%s', musicPreviewUri='%s'}",
-                name, spotifyAristId, artistUid, imageUri, musicPreviewUri);
+                "Song{name='%s', spotifyArtistId='%s', artistUid='%s', imageUri='%s', musicPreviewUri='%s'}",
+                name, spotifyArtistId, artistUid, imageUri, musicPreviewUri);
     }
 
 }
