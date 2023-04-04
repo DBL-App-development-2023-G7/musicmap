@@ -42,7 +42,7 @@ public class PopularSongsAdapter extends ArrayAdapter<Song> {
         Song song = getItem(position);
         if (song != null) {
             songName.setText(song.getName());
-            streamDetails.setText(song.getSpotifyAristId());
+            streamDetails.setText(song.getSpotifyArtistId());
             Picasso.get().load(song.getImageUri()).into(songImage);
         }
 

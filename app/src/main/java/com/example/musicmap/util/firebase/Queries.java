@@ -141,7 +141,7 @@ public class Queries {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
         return firestore.collectionGroup("MusicMemories")
-                .whereEqualTo("song.artistUid", artistId)
+                .whereEqualTo("song.spotifyAristId", artistId)
                 .get()
                 .continueWith(task -> {
                     Map<String, Integer> songCounts = new HashMap<>();

@@ -42,7 +42,7 @@ public class ArtistDataMostPlayedSongsFragment extends MainFragment {
         }
 
         Artist artist = (Artist) user;
-        String spotifyArtistId = artist.getArtistData().getUsername();
+        String spotifyArtistId = artist.getArtistData().getSpotifyId();
 
         Queries.getMostPopularSongsByArtist(spotifyArtistId, NUMBER_OF_SONGS).addOnCompleteListener(completedTask -> {
             if (completedTask.isSuccessful()) {
