@@ -8,11 +8,9 @@ import android.widget.ImageView;
 import com.example.musicmap.R;
 import com.example.musicmap.SessionAndInternetListenerActivity;
 import com.example.musicmap.screens.main.HomeActivity;
+import com.example.musicmap.screens.settings.SettingsActivity;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.util.ui.FragmentUtil;
-import com.example.musicmap.screens.settings.SettingsActivity;
-
-import java.util.Objects;
 
 public class ProfileActivity extends SessionAndInternetListenerActivity {
 
