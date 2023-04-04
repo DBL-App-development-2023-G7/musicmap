@@ -5,6 +5,7 @@ import com.example.musicmap.feed.Post;
 import com.example.musicmap.feed.Song;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -12,6 +13,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,7 +143,7 @@ public class Queries {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
         return firestore.collectionGroup("MusicMemories")
-                .whereEqualTo("song.spotifyAristId", artistId)
+                .whereEqualTo("song.spotifyArtistId", artistId)
                 .get()
                 .continueWith(task -> {
                     Map<String, Integer> songCounts = new HashMap<>();
@@ -151,6 +153,7 @@ public class Queries {
                         Song song = musicMemorySnapshot.toObject(MusicMemory.class).getSong();
 
                         if (song != null) {
+                            // using song image uri for unique key as we don't have songId
                             String songImageUriUnique = song.getImageUri().toString();
                             songMap.put(songImageUriUnique, song);
                             songCounts.put(songImageUriUnique, songCounts.getOrDefault(songImageUriUnique, 0) + 1);

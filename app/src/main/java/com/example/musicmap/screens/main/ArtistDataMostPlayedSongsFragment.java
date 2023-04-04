@@ -37,7 +37,7 @@ public class ArtistDataMostPlayedSongsFragment extends MainFragment {
         feedListView.setAdapter(popularSongsAdapter);
         User user = Session.getInstance().getCurrentUser();
 
-        if (!user.isArtist()) {
+        if (!user.isArtist() || !((Artist) user).getArtistData().isVerified()) {
             throw new IllegalStateException("ArtistDataMostPopularSongsFragment cannot be served for non-artist user.");
         }
 
