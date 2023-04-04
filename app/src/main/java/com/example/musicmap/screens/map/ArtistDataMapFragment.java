@@ -68,7 +68,7 @@ public class ArtistDataMapFragment extends MapFragment {
         // Start fetching music memories
         // TODO can become a large query with many music memories
         //  add util method to use Firestore APIs filtering stuff
-        Queries.getAllMusicMemories().addOnCompleteListener(completedTask -> {
+        Queries.getAllMusicMemoriesInLastTwentyFourHours().addOnCompleteListener(completedTask -> {
             if (completedTask.isSuccessful()) {
                 // Add all retrieved music memories to map
                 completedTask.getResult().stream()

@@ -10,7 +10,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class Queries {
@@ -99,31 +101,33 @@ public class Queries {
     }
 
     /**
-     * Fetches all the music memories (used for the feed).
+     * Fetches all the music memories created in the last 24 hours.
      *
      * @return feed
      */
-    public static Task<List<MusicMemory>> getAllMusicMemories() {
-        // TODO: update the implementation based on how we decide to limit the feed
+    public static Task<List<MusicMemory>> getAllMusicMemoriesInLastTwentyFourHours() {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        long timestamp24HoursAgo = System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24);
 
-        return firestore.collectionGroup("MusicMemories").get().continueWithTask(task -> {
-            TaskCompletionSource<List<MusicMemory>> taskCompletionSource = new TaskCompletionSource<>();
+        return firestore.collectionGroup("MusicMemories")
+                .whereGreaterThan("timePosted", new Date(timestamp24HoursAgo))
+                .get().continueWithTask(task -> {
+                    TaskCompletionSource<List<MusicMemory>> taskCompletionSource = new TaskCompletionSource<>();
 
-            if (task.isSuccessful()) {
-                QuerySnapshot querySnapshot = task.getResult();
-                List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+                    if (task.isSuccessful()) {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        List<DocumentSnapshot> documents = querySnapshot.getDocuments();
 
-                List<MusicMemory> musicMemories = documents.stream()
-                        .map(document -> deserialize(document, MusicMemory.class))
-                        .collect(Collectors.toList());
+                        List<MusicMemory> musicMemories = documents.stream()
+                                .map(document -> deserialize(document, MusicMemory.class))
+                                .collect(Collectors.toList());
 
-                taskCompletionSource.setResult(musicMemories);
-            } else {
-                taskCompletionSource.setException(task.getException());
-            }
-            return taskCompletionSource.getTask();
-        });
+                        taskCompletionSource.setResult(musicMemories);
+                    } else {
+                        taskCompletionSource.setException(task.getException());
+                    }
+                    return taskCompletionSource.getTask();
+                });
     }
 
     /**
