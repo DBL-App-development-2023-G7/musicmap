@@ -8,7 +8,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 
 import com.example.musicmap.R;
-import com.google.firebase.firestore.GeoPoint;
+import com.example.musicmap.TestDataStore;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -34,14 +33,8 @@ public class FeedAdapterTest {
     @Before
     public void setUp() {
         List<MusicMemory> feedItems = new ArrayList<>();
-        feedItems.add(new MusicMemory("author-uid-1", new Date(),
-                new GeoPoint(10, 10), "https://imgur.com/photo-1", new Song(
-                        "song-1", "1234", null, "https://imgur.com/photo-3", "https://spotify.com/preview"
-        )));
-        feedItems.add(new MusicMemory("author-uid-2", new Date(),
-                new GeoPoint(20, 20), "https://imgur.com/photo-2", new Song(
-                "song-2", "1234", null, "https://imgur.com/photo-4", "https://spotify.com/preview"
-        )));
+        feedItems.add(TestDataStore.getValidMusicMemory());
+        feedItems.add(TestDataStore.getValidMusicMemory());
 
         when(mockActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).thenReturn(mockLayoutInflater);
         feedAdapter = new FeedAdapter(mockActivity, R.layout.single_post_layout_feed, feedItems);

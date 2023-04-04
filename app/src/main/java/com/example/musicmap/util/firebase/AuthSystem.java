@@ -40,8 +40,7 @@ public class AuthSystem {
     }
 
     /**
-     * This method adds the user and its attributes to the Firebase Firestore database. This overloaded
-     * method is mainly for testing purposes.
+     * This overloaded methods adds the user and its attributes to the Firebase Firestore database.
      *
      * @param firestore the FirebaseFirestore instance to use
      * @param user the user to add to the Firestore database

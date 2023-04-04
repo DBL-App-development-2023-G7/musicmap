@@ -6,13 +6,11 @@ import android.net.Uri;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.google.firebase.firestore.GeoPoint;
+import com.example.musicmap.TestDataStore;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.Date;
 
 @RunWith(AndroidJUnit4.class)
 public class ConcertMemoryTest {
@@ -21,8 +19,7 @@ public class ConcertMemoryTest {
 
     @Before
     public void setUp() {
-        this.concertMemory = new ConcertMemory("author-uid", new Date(),
-                new GeoPoint(10, 10), "name", "https://youtube.com/video");
+        this.concertMemory = TestDataStore.getValidConcertMemory();
     }
 
     @Test

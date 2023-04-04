@@ -5,19 +5,16 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.example.musicmap.TestDataStore;
 import com.example.musicmap.feed.ConcertMemory;
 import com.example.musicmap.feed.MusicMemory;
-import com.example.musicmap.feed.Song;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Test;
-
-import java.util.Date;
 
 /**
  * Test posting to the Firebase Firestore without actually posting to the live database,
@@ -27,10 +24,7 @@ public class ActionsTest {
 
     @Test
     public void postMusicMemory_success() {
-        MusicMemory musicMemory = new MusicMemory("author-uid", new Date(),
-                new GeoPoint(10, 10), "https://imgur.com/photo", new Song(
-                "song", "1234", null, "https://imgur.com/photo-3", "https://spotify.com/preview"
-        ));
+        MusicMemory musicMemory = TestDataStore.getValidMusicMemory();
 
         FirebaseFirestore firestoreMock = mock(FirebaseFirestore.class);
         CollectionReference collectionReferenceMock = mock(CollectionReference.class);
@@ -52,8 +46,7 @@ public class ActionsTest {
 
     @Test
     public void postConcertMemory_success() {
-        ConcertMemory concertMemory = new ConcertMemory("author-uid", new Date(),
-                new GeoPoint(10, 10), "name", "https://youtube.com/video");
+        ConcertMemory concertMemory = TestDataStore.getValidConcertMemory();
 
         FirebaseFirestore firestoreMock = mock(FirebaseFirestore.class);
         CollectionReference collectionReferenceMock = mock(CollectionReference.class);

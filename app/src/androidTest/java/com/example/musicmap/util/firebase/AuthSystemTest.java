@@ -5,8 +5,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.example.musicmap.TestDataStore;
 import com.example.musicmap.user.User;
-import com.example.musicmap.util.user.UserDataTestStore;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -26,7 +26,7 @@ public class AuthSystemTest {
         when(mockCollectionReference.document(any())).thenReturn(mockDocumentReference);
         when(mockDocumentReference.set(any())).thenReturn(Tasks.forResult(null));
 
-        User user = new User(UserDataTestStore.getValidUserData(), "uid");
+        User user = new User(TestDataStore.getValidUserData(), "uid");
 
         AuthSystem.addUserToFirestore(firestore, user);
 
