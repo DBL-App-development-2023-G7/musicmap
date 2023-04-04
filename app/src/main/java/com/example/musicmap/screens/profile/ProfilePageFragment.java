@@ -19,7 +19,9 @@ import com.example.musicmap.feed.FeedAdapter;
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
+import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.firebase.Queries;
+import com.example.musicmap.util.ui.Message;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -48,14 +50,26 @@ public class ProfilePageFragment extends Fragment {
         feedAdapter = new FeedAdapter(activity, R.layout.single_post_layout_feed);
         profileListView.setAdapter(feedAdapter);
 
-        displayData();
+        Bundle args = getArguments();
+        if (args == null || args.getString("user_uid") == null) {
+            displayData(Session.getInstance().getCurrentUser());
+        } else {
+            String userUid = args.getString("user_uid");
+            AuthSystem.getUser(userUid).addOnCompleteListener(task -> {
+                if (!task.isSuccessful()) {
+                    Log.e(TAG, "Exception occurred while getting user data for profile", task.getException());
+                    Message.showFailureMessage(container, "Could not load user data");
+                    return;
+                }
+
+                displayData(task.getResult());
+            });
+        }
 
         return profileView;
     }
 
-    private void displayData() {
-        User currentUser = Session.getInstance().getCurrentUser();
-
+    private void displayData(User user) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
@@ -68,10 +82,10 @@ public class ProfilePageFragment extends Fragment {
                 }
             });
 
-            if (currentUser != null) {
-                usernameTextView.setText(currentUser.getData().getUsername());
-                if (currentUser.getData().hasProfilePicture()) {
-                    Uri uri = currentUser.getData().getProfilePictureUri();
+            if (user != null) {
+                usernameTextView.setText(user.getData().getUsername());
+                if (user.getData().hasProfilePicture()) {
+                    Uri uri = user.getData().getProfilePictureUri();
                     Picasso.get().load(uri).into(profilePicture);
                 }
             }

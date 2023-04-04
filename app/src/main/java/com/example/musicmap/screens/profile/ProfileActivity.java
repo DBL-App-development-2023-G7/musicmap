@@ -43,12 +43,14 @@ public class ProfileActivity extends SessionAndInternetListenerActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
+        startActivity(new Intent(this, HomeActivity.class));
         finish();
     }
 
     private void setupActivity() {
-        FragmentUtil.initFragment(getSupportFragmentManager(), R.id.profileFragment, ProfilePageFragment.class);
+        FragmentUtil.initFragment(getSupportFragmentManager(), R.id.profileFragment, ProfilePageFragment.class,
+                getIntent().getExtras());
+
         ImageView backButton = findViewById(R.id.appbarBack);
 
         backButton.setOnClickListener(view -> {
