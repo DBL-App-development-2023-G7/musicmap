@@ -176,24 +176,20 @@ public class Queries {
                 .whereEqualTo("song.spotifyArtistId", artistId)
                 .get()
                 .continueWith(task -> {
-                    Map<String, Integer> songCounts = new HashMap<>();
-                    Map<String, Song> songMap = new HashMap<>();
+                    Map<Song, Integer> songMap = new HashMap<>();
 
                     for (QueryDocumentSnapshot musicMemorySnapshot : task.getResult()) {
                         Song song = musicMemorySnapshot.toObject(MusicMemory.class).getSong();
 
                         if (song != null) {
-                            // using song image uri for unique key as we don't have songId
-                            String songImageUriUnique = song.getImageUri().toString();
-                            songMap.put(songImageUriUnique, song);
-                            songCounts.put(songImageUriUnique, songCounts.getOrDefault(songImageUriUnique, 0) + 1);
+                            songMap.put(song, songMap.getOrDefault(song, 0) + 1);
                         }
                     }
 
-                    return songCounts.entrySet().stream()
-                            .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                    return songMap.entrySet().stream()
+                            .sorted(Map.Entry.<Song, Integer>comparingByValue().reversed())
                             .limit(count)
-                            .map(entry -> songMap.get(entry.getKey()))
+                            .map(Map.Entry::getKey)
                             .collect(Collectors.toList());
                 });
     }
