@@ -19,6 +19,10 @@ import org.junit.Test;
 
 import java.util.Date;
 
+/**
+ * Test posting to the Firebase Firestore without actually posting to the live database,
+ * through mocking.
+ */
 public class ActionsTest {
 
     @Test
