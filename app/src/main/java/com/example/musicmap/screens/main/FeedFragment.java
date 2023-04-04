@@ -70,7 +70,7 @@ public class FeedFragment extends MainFragment {
     }
 
     private void getFeed(int size, OnFeedDataLoadedListener listener) {
-        Queries.getAllMusicMemories().addOnCompleteListener(completedTask -> {
+        Queries.getAllMusicMemoriesInLastTwentyFourHours().addOnCompleteListener(completedTask -> {
             if (completedTask.isSuccessful()) {
                 List<MusicMemory> feed = completedTask.getResult().
                         subList(0, Math.min(completedTask.getResult().size(), size));
