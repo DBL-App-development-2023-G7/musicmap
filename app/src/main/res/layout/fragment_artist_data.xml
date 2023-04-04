@@ -98,6 +98,18 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragment_view_most_played"
+                android:name="com.example.musicmap.screens.main.ArtistDataMostPlayedSongsFragment"
+                android:layout_width="312dp"
+                android:layout_height="275dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/topPlayedSongLabel"
+                tools:layout="@layout/fragment_map" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
