@@ -103,7 +103,7 @@ public class Queries {
     /**
      * Fetches all the music memories created in the last 24 hours.
      *
-     * @return feed
+     * @return music memories in last 24 hours.
      */
     public static Task<List<MusicMemory>> getAllMusicMemoriesInLastTwentyFourHours() {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -128,6 +128,34 @@ public class Queries {
                     }
                     return taskCompletionSource.getTask();
                 });
+    }
+
+    /**
+     * Fetches all the music memories.
+     *
+     * @return all music emmories
+     */
+    public static Task<List<MusicMemory>> getAllMusicMemories() {
+        // TODO: update the implementation based on how we decide to limit the feed
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+        return firestore.collectionGroup("MusicMemories").get().continueWithTask(task -> {
+            TaskCompletionSource<List<MusicMemory>> taskCompletionSource = new TaskCompletionSource<>();
+
+            if (task.isSuccessful()) {
+                QuerySnapshot querySnapshot = task.getResult();
+                List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+
+                List<MusicMemory> musicMemories = documents.stream()
+                        .map(document -> deserialize(document, MusicMemory.class))
+                        .collect(Collectors.toList());
+
+                taskCompletionSource.setResult(musicMemories);
+            } else {
+                taskCompletionSource.setException(task.getException());
+            }
+            return taskCompletionSource.getTask();
+        });
     }
 
     /**
