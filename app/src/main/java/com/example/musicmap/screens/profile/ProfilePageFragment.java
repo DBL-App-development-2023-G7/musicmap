@@ -32,7 +32,6 @@ public class ProfilePageFragment extends Fragment {
 
     private static final String TAG = "ProfilePageFragment";
 
-    private TextView emailVerifiedTextView;
     private TextView usernameTextView;
     private ImageView profilePicture;
     private FeedAdapter feedAdapter;
@@ -41,7 +40,6 @@ public class ProfilePageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View profileView = inflater.inflate(R.layout.fragment_profile_page, container, false);
 
-        emailVerifiedTextView = profileView.findViewById(id.emailVerified_text);
         usernameTextView = profileView.findViewById(R.id.profileUsername_textView);
         profilePicture = profileView.findViewById(id.profilePictureImage);
         ListView profileListView = profileView.findViewById(R.id.mm_list);
@@ -74,14 +72,6 @@ public class ProfilePageFragment extends Fragment {
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
         if (firebaseUser != null) {
-            firebaseUser.reload().addOnCompleteListener(task -> {
-                if (!firebaseUser.isEmailVerified()) {
-                    emailVerifiedTextView.setText(getString(R.string.email_not_verified));
-                } else {
-                    emailVerifiedTextView.setText(getString(R.string.email_verified));
-                }
-            });
-
             if (user != null) {
                 usernameTextView.setText(user.getData().getUsername());
                 if (user.getData().hasProfilePicture()) {
