@@ -9,4 +9,5 @@ public class UserDataTestStore {
     public static UserData getValidUserData() {
         return new UserData("username", "User", "Name", "user@example.com", new Date());
     }
+
 }
