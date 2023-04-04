@@ -42,7 +42,7 @@ public class PopularSongsAdapter extends ArrayAdapter<Song> {
         Song song = getItem(position);
         if (song != null) {
             songName.setText(song.getName());
-            streamDetails.setText(String.format("Ranked %d", (position + 1)));
+            streamDetails.setText(String.format(activityContext.getString(R.string.ranked), (position + 1)));
             Picasso.get().load(song.getImageUri()).into(songImage);
         }
 
