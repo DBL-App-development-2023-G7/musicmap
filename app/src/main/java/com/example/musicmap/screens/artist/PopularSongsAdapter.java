@@ -35,9 +35,9 @@ public class PopularSongsAdapter extends ArrayAdapter<SongCount> {
             row = inflater.inflate(R.layout.song_layout_artist_data, parent, false);
         }
 
-        ImageView songImage = row.findViewById(R.id.popular_song_image);
-        TextView songName = row.findViewById(R.id.popular_song_name);
-        TextView streamDetails = row.findViewById(R.id.popular_song_count);
+        ImageView songImage = row.findViewById(R.id.spotify_album_cover);
+        TextView songName = row.findViewById(R.id.song_name);
+        TextView streamDetails = row.findViewById(R.id.artist_name);
 
         SongCount songCount = getItem(position);
         if (songCount != null) {

@@ -68,7 +68,8 @@
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragmentContainerView"
                 android:name="com.example.musicmap.screens.map.ArtistDataMapFragment"
-                android:layout_width="312dp"
+                android:layout_width="match_parent"
+                android:padding="5dp"
                 android:layout_height="275dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -102,7 +103,7 @@
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragment_view_most_played"
                 android:name="com.example.musicmap.screens.main.ArtistDataMostPlayedSongsFragment"
-                android:layout_width="312dp"
+                android:layout_width="match_parent"
                 android:layout_height="275dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"

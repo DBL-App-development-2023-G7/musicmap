@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.musicmap.R;
 import com.example.musicmap.screens.artist.PopularSongsAdapter;
@@ -34,8 +35,8 @@ public class ArtistDataMostPlayedSongsFragment extends MainFragment {
 
         PopularSongsAdapter popularSongsAdapter = new PopularSongsAdapter(activity, R.layout.song_layout_artist_data,
                 new ArrayList<>());
-        ListView feedListView = mostPlayedSongsView.findViewById(R.id.most_played_list);
-        feedListView.setAdapter(popularSongsAdapter);
+        ListView popularSongsListView = mostPlayedSongsView.findViewById(R.id.most_played_list);
+        popularSongsListView.setAdapter(popularSongsAdapter);
         User user = Session.getInstance().getCurrentUser();
 
         if (!user.isArtist() || !((Artist) user).getArtistData().isVerified()) {
