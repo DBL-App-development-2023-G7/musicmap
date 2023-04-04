@@ -34,7 +34,7 @@ public class FeedAdapterTest {
     public void setUp() {
         List<MusicMemory> feedItems = new ArrayList<>();
         feedItems.add(TestDataStore.getValidMusicMemory());
-        feedItems.add(TestDataStore.getValidMusicMemory());
+        feedItems.add(TestDataStore.getValidMusicMemory("author-uid-2", "song-2"));
 
         when(mockActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).thenReturn(mockLayoutInflater);
         feedAdapter = new FeedAdapter(mockActivity, R.layout.single_post_layout_feed, feedItems);
@@ -47,7 +47,7 @@ public class FeedAdapterTest {
 
     @Test
     public void testGetItem() {
-        assertEquals("song-1", feedAdapter.getItem(0).getSong().getName());
+        assertEquals("song", feedAdapter.getItem(0).getSong().getName());
         assertEquals("song-2", feedAdapter.getItem(1).getSong().getName());
     }
 
