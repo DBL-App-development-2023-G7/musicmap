@@ -23,9 +23,9 @@
     <string name="email_verified">Your email is verified!</string>
     <string name="email_not_verified">Your email is not verified!</string>
     <string name="awaiting_verification">Account awaiting verification.</string>
-    <string name="awaiting_verification_text_user"> If you are a user you should receive an email in you inbox shortly which will ask to verify your email!
-        Upon verifying you will gain access to the app.</string>
-    <string name="awaiting_verification_text_artist"> If you are an artist you will receive a message from our team when your artist account has been verified!
+    <string name="awaiting_verification_text_user"> You will receive an email in your inbox to verify your email! This may be in your spam inbox!
+        When you have verified your email please restart the app and you will gain access to MusicMap!</string>
+    <string name="awaiting_verification_text_artist"> You will receive a message from our team when your artist account has been verified!
         Our team is hard at work to verifying all the artist accounts so hang on tight!</string>
     <!--auth strings end-->
 </resources>

@@ -2,7 +2,9 @@ package com.example.musicmap.screens.verification;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.musicmap.R;
 import com.example.musicmap.SessionAndInternetListenerActivity;
@@ -74,6 +76,17 @@ public class VerificationActivity extends SessionAndInternetListenerActivity {
     }
 
     private void setupActivity() {
+        User currentUser = Session.getInstance().getCurrentUser();
+
+        TextView userMsg = findViewById(R.id.userTextView);
+        TextView artistMsg = findViewById(R.id.artistTextView);
+
+        if (currentUser instanceof Artist) {
+            artistMsg.setVisibility(View.VISIBLE);
+        } else {
+            userMsg.setVisibility(View.VISIBLE);
+        }
+
         Button signOutVerificationButton = findViewById(R.id.signout_verification_button);
         signOutVerificationButton.setOnClickListener(view -> AuthSystem.logout());
     }
