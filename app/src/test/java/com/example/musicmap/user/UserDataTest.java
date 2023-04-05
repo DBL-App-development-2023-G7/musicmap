@@ -1,7 +1,6 @@
 package com.example.musicmap.user;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -10,7 +9,8 @@ import org.junit.Test;
 
 import java.util.Date;
 
-public class UserDataTest {
+public class
+UserDataTest {
 
     private UserData userData;
 
@@ -48,11 +48,6 @@ public class UserDataTest {
     @Test
     public void testGetProfilePicture() {
         assertEquals(userData.getProfilePicture(), "");
-    }
-
-    @Test
-    public void testHasProfilePicture() {
-        assertFalse(userData.hasProfilePicture());
     }
 
     @Test

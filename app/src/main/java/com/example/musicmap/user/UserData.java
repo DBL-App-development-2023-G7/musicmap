@@ -100,6 +100,9 @@ public class UserData {
      */
     @Exclude
     public Uri getProfilePictureUri() {
+        if (profilePicture.isEmpty()) {
+            return Uri.parse(Constants.PROFILE_USER_UID_ARGUMENT);
+        }
         return Uri.parse(profilePicture);
     }
 
