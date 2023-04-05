@@ -1,6 +1,9 @@
 package com.example.musicmap.feed;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.musicmap.R;
+import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.user.User;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.ui.CircleTransform;
@@ -61,6 +65,12 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
                     User musicMemoryAuthor = task.getResult();
                     Picasso.get().load(musicMemoryAuthor.getData().getProfilePictureUri())
                             .transform(new CircleTransform()).into(userImage);
+
+                    userImage.setOnClickListener(view -> {
+                        Intent intent = new Intent(activityContext, ProfileActivity.class);
+                        intent.putExtra("user_uid", musicMemory.getAuthorUid());
+                        activityContext.startActivity(intent);
+                    });
                 } else {
                     Log.e(TAG, "Could not fetch author of the music memory", task.getException());
                 }
