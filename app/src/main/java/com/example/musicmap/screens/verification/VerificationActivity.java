@@ -11,6 +11,8 @@ import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
 import com.example.musicmap.util.firebase.AuthSystem;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class VerificationActivity extends SessionAndInternetListenerActivity {
 
@@ -51,23 +53,37 @@ public class VerificationActivity extends SessionAndInternetListenerActivity {
             return;
         }
 
-        if (!(currentUser instanceof Artist)) {
-            throw new IllegalStateException("In VerificationActivity while current user is not an artist");
+        if(currentUser instanceof Artist) {
+            Artist currentArtist = (Artist) currentUser;
+
+            if (currentArtist.isVerified()) {
+                redirectUser();
+            }
+        } else {
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+            if (firebaseUser != null) {
+                firebaseUser.reload().addOnCompleteListener(task -> {
+                    if (firebaseUser.isEmailVerified()) {
+                        redirectUser();
+                    }
+                });
+            }
         }
 
-        Artist currentArtist = (Artist) currentUser;
 
-        if (currentArtist.isVerified()) {
-            Intent homeIntent = new Intent(this, HomeActivity.class);
-            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(homeIntent);
-            finish();
-        }
     }
 
     private void setupActivity() {
         Button signOutVerificationButton = findViewById(R.id.signout_verification_button);
         signOutVerificationButton.setOnClickListener(view -> AuthSystem.logout());
+    }
+
+    private void redirectUser() {
+        Intent homeIntent = new Intent(this, HomeActivity.class);
+        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(homeIntent);
+        finish();
     }
 
 }
