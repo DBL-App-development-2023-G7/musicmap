@@ -46,6 +46,11 @@ public class VerificationActivity extends SessionAndInternetListenerActivity {
     @Override
     public void onSessionStateChanged() {
         User currentUser = Session.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            super.onSessionStateChanged();
+            return;
+        }
+
         if (!(currentUser instanceof Artist)) {
             throw new IllegalStateException("In VerificationActivity while current user is not an artist");
         }

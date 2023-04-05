@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
+import androidx.annotation.CallSuper;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -49,6 +50,7 @@ public abstract class SessionAndInternetListenerActivity extends AppCompatActivi
     }
 
     @Override
+    @CallSuper
     public void onSessionStateChanged() {
         if (!session.isUserConnected()) {
             loadAuthActivity();
