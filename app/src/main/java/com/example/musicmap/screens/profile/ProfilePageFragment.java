@@ -44,7 +44,7 @@ public class ProfilePageFragment extends Fragment {
         ListView profileListView = profileView.findViewById(R.id.mm_list);
 
         Activity activity = requireActivity();
-        feedAdapter = new FeedAdapter(activity, R.layout.single_post_layout_feed);
+        feedAdapter = new FeedAdapter(activity, R.layout.single_post_layout_feed, false);
         profileListView.setAdapter(feedAdapter);
 
         Bundle args = getArguments();
@@ -72,10 +72,8 @@ public class ProfilePageFragment extends Fragment {
         }
 
         usernameTextView.setText(user.getData().getUsername());
-        if (user.getData().hasProfilePicture()) {
-            Uri uri = user.getData().getProfilePictureUri();
-            Picasso.get().load(uri).into(profilePicture);
-        }
+        Uri uri = user.getData().getProfilePictureUri();
+        Picasso.get().load(uri).into(profilePicture);
 
         Queries.getMusicMemoriesByAuthorId(user.getUid()).addOnCompleteListener(completedTask -> {
             if (completedTask.isSuccessful()) {

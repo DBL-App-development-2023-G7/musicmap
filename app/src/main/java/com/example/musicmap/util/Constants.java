@@ -17,4 +17,6 @@ public final class Constants {
 
     public static final String PROFILE_USER_UID_ARGUMENT = "user_uid";
 
+    public static final String DEFAULT_USER_IMAGE_URI = "https://i.imgur.com/GvsgVco.jpeg";
+
 }
