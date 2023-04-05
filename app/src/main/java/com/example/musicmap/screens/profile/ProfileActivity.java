@@ -15,6 +15,7 @@ import com.example.musicmap.util.ui.FragmentUtil;
 public class ProfileActivity extends SessionAndInternetListenerActivity {
 
     private int currentLayout = R.layout.activity_profile;
+    private Bundle currentBundle = null;
 
     @Override
     protected void updateLayout(boolean internetAvailable) {
@@ -39,6 +40,7 @@ public class ProfileActivity extends SessionAndInternetListenerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        this.currentBundle = getIntent().getExtras();
         setupActivity();
     }
 
@@ -51,7 +53,7 @@ public class ProfileActivity extends SessionAndInternetListenerActivity {
 
     private void setupActivity() {
         FragmentUtil.initFragment(getSupportFragmentManager(), R.id.profileFragment, ProfilePageFragment.class,
-                getIntent().getExtras());
+                this.currentBundle);
 
         ImageView backButton = findViewById(R.id.appbarBack);
 

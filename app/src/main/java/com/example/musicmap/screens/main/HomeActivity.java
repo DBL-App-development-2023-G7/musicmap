@@ -1,5 +1,7 @@
 package com.example.musicmap.screens.main;
 
+import static java.security.AccessController.getContext;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -25,6 +27,7 @@ public class HomeActivity extends SpotifyAuthActivity {
     private int currentLayout = R.layout.activity_home;
 
     private BottomNavigationView bottomNavigationView;
+    private ImageView profileButton;
 
     @Override
     protected void updateLayout(boolean internetAvailable) {
@@ -61,6 +64,7 @@ public class HomeActivity extends SpotifyAuthActivity {
     public void onSessionStateChanged() {
         User currentUser = Session.getInstance().getCurrentUser();
         updateNavbar(currentUser);
+        setupProfileButton(currentUser);
     }
 
     private void setupActivity() {
@@ -68,14 +72,10 @@ public class HomeActivity extends SpotifyAuthActivity {
         FragmentUtil.initFragment(getSupportFragmentManager(), R.id.fragment_view, lastFragmentClass);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        ImageView profileButton = findViewById(R.id.appbarProfile);
-
-        profileButton.setOnClickListener(view -> {
-            startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
-            finish();
-        });
+        profileButton = findViewById(R.id.appbarProfile);
 
         updateNavbar(currentUser);
+        setupProfileButton(currentUser);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             // using ifs instead of switch as resource IDs will be non-final by default in
@@ -124,6 +124,19 @@ public class HomeActivity extends SpotifyAuthActivity {
         boolean isArtist = currentUser != null && currentUser.isArtist();
         post.setVisible(!isArtist);
         artistData.setVisible(isArtist);
+    }
+
+    private void setupProfileButton(User currentUser) {
+        if (currentUser == null || profileButton == null) {
+            return;
+        }
+
+        profileButton.setOnClickListener(view -> {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra("user_uid", currentUser.getUid());
+            startActivity(intent);
+            finish();
+        });
     }
 
 }
