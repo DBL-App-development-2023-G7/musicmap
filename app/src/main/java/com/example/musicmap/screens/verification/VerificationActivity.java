@@ -35,7 +35,7 @@ public class VerificationActivity extends SessionAndInternetListenerActivity {
         if (currentLayout == R.layout.no_internet) {
             setContentView(R.layout.activity_verification);
             currentLayout = R.layout.activity_verification;
-            setupActivity();
+            setupLayout();
         }
     }
 
@@ -44,7 +44,7 @@ public class VerificationActivity extends SessionAndInternetListenerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
 
-        setupActivity();
+        setupLayout();
     }
 
     @Override
@@ -75,12 +75,12 @@ public class VerificationActivity extends SessionAndInternetListenerActivity {
 
     }
 
-    private void setupActivity() {
-        User currentUser = Session.getInstance().getCurrentUser();
-
+    private void setupLayout() {
         TextView userMsg = findViewById(R.id.userTextView);
         TextView artistMsg = findViewById(R.id.artistTextView);
 
+        User currentUser = Session.getInstance().getCurrentUser();
+        
         if (currentUser instanceof Artist) {
             artistMsg.setVisibility(View.VISIBLE);
         } else {
