@@ -67,9 +67,13 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
             AuthSystem.getUser(musicMemory.getAuthorUid()).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     User musicMemoryAuthor = task.getResult();
-                    Picasso.get().load(musicMemoryAuthor.getData().getProfilePictureUri())
-                            .transform(new CircleTransform()).into(userImage);
+                    String userImageUri = musicMemoryAuthor.getData().getProfilePictureUri().toString();
 
+                    if (userImageUri.isEmpty()) {
+                        userImageUri = Constants.FEED_DEFAULT_USER_IMAGE_URI;
+                    }
+
+                    Picasso.get().load(userImageUri).transform(new CircleTransform()).into(userImage);
                     userImage.setVisibility(View.VISIBLE);
                     userImage.setOnClickListener(view -> {
                         Intent intent = new Intent(activityContext, ProfileActivity.class);
