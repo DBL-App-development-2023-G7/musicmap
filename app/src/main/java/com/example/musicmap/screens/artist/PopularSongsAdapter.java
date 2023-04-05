@@ -45,6 +45,7 @@ public class PopularSongsAdapter extends ArrayAdapter<SongCount> {
             Long count = songCount.getCount();
 
             songName.setText(song.getName());
+            songName.setSelected(true);
             streamDetails.setText(String.format(activityContext.getString(R.string.referenced), count));
             Picasso.get().load(song.getImageUri()).into(songImage);
         }

@@ -57,8 +57,10 @@
             android:id="@+id/song_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit ="marquee_forever"
             android:text="@string/song"
-            android:maxLines="1"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
