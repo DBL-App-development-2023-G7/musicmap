@@ -19,6 +19,7 @@ import com.example.musicmap.feed.FeedAdapter;
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
+import com.example.musicmap.util.Constants;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.firebase.Queries;
 import com.example.musicmap.util.ui.Message;
@@ -47,10 +48,10 @@ public class ProfilePageFragment extends Fragment {
         profileListView.setAdapter(feedAdapter);
 
         Bundle args = getArguments();
-        if (args == null || args.getString("user_uid") == null) {
+        if (args == null || args.getString(Constants.PROFILE_USER_UID_ARGUMENT) == null) {
             displayData(Session.getInstance().getCurrentUser());
         } else {
-            String userUid = args.getString("user_uid");
+            String userUid = args.getString(Constants.PROFILE_USER_UID_ARGUMENT);
             AuthSystem.getUser(userUid).addOnCompleteListener(task -> {
                 if (!task.isSuccessful()) {
                     Log.e(TAG, "Exception occurred while getting user data for profile", task.getException());

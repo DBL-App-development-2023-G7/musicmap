@@ -10,6 +10,7 @@ import com.example.musicmap.SessionAndInternetListenerActivity;
 import com.example.musicmap.screens.main.HomeActivity;
 import com.example.musicmap.screens.settings.SettingsActivity;
 import com.example.musicmap.user.Session;
+import com.example.musicmap.util.Constants;
 import com.example.musicmap.util.ui.FragmentUtil;
 
 public class ProfileActivity extends SessionAndInternetListenerActivity {
@@ -64,7 +65,8 @@ public class ProfileActivity extends SessionAndInternetListenerActivity {
         ImageView settingsButton = findViewById(R.id.appbarSettings);
 
         // Disable settings button if profile is for a different user
-        if (!Session.getInstance().getCurrentUser().getUid().equals(getIntent().getStringExtra("user_uid"))) {
+        if (!Session.getInstance().getCurrentUser().getUid().equals(
+                getIntent().getStringExtra(Constants.PROFILE_USER_UID_ARGUMENT))) {
             settingsButton.setVisibility(View.INVISIBLE);
         } else {
             settingsButton.setVisibility(View.VISIBLE);

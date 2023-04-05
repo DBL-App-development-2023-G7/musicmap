@@ -14,6 +14,7 @@ import com.example.musicmap.screens.map.PostMapFragment;
 import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
+import com.example.musicmap.util.Constants;
 import com.example.musicmap.util.permissions.LocationPermission;
 import com.example.musicmap.util.spotify.SpotifyAuthActivity;
 import com.example.musicmap.util.ui.FragmentUtil;
@@ -131,7 +132,7 @@ public class HomeActivity extends SpotifyAuthActivity {
 
         profileButton.setOnClickListener(view -> {
             Intent intent = new Intent(this, ProfileActivity.class);
-            intent.putExtra("user_uid", currentUser.getUid());
+            intent.putExtra(Constants.PROFILE_USER_UID_ARGUMENT, currentUser.getUid());
             startActivity(intent);
             finish();
         });
