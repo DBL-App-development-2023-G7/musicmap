@@ -1,7 +1,5 @@
 package com.example.musicmap.screens.main;
 
-import static java.security.AccessController.getContext;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,8 +14,8 @@ import com.example.musicmap.screens.map.PostMapFragment;
 import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
-import com.example.musicmap.util.spotify.SpotifyAuthActivity;
 import com.example.musicmap.util.permissions.LocationPermission;
+import com.example.musicmap.util.spotify.SpotifyAuthActivity;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
