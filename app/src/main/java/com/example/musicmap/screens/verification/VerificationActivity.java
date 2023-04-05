@@ -53,7 +53,7 @@ public class VerificationActivity extends SessionAndInternetListenerActivity {
             return;
         }
 
-        if(currentUser instanceof Artist) {
+        if (currentUser instanceof Artist) {
             Artist currentArtist = (Artist) currentUser;
 
             if (currentArtist.isVerified()) {
@@ -70,7 +70,6 @@ public class VerificationActivity extends SessionAndInternetListenerActivity {
                 });
             }
         }
-
 
     }
 

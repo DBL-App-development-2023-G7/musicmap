@@ -62,7 +62,7 @@ public abstract class SessionAndInternetListenerActivity extends AppCompatActivi
             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             if (currentUser.isArtist() && !((Artist) currentUser).isVerified()) {
                 loadVerificationActivity();
-            }else if (firebaseUser != null) {
+            } else if (firebaseUser != null) {
                 firebaseUser.reload().addOnCompleteListener(task -> {
                     if (!firebaseUser.isEmailVerified()) {
                         loadVerificationActivity();

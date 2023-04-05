@@ -51,6 +51,7 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
         FirebaseTokenStorage tokenStorage = new FirebaseTokenStorage(currentUserId);
 
         tokenStorage.getRefreshToken(refreshToken -> {
+            
             if (refreshToken == null) {
                 invalidTokenCallback.onInvalidToken();
                 return;
@@ -59,6 +60,7 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
             loginApi.setRefreshToken(refreshToken);
             loginApi.authorizationCodePKCERefresh().build().executeAsync().handle((refreshResult, error) -> {
                 if (error != null) {
+                    Log.d(TAG, String.format("error %s", error.getMessage()));
                     invalidTokenCallback.onInvalidToken();
                     return null;
                 }
