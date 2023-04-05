@@ -26,8 +26,7 @@ import com.squareup.picasso.Picasso;
 
 import org.osmdroid.config.Configuration;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.text.DateFormat;
 import java.util.Date;
 
 /**
@@ -43,16 +42,12 @@ public class MusicMemoryFragment extends Fragment {
     private ImageView profilePictureView;
     private TextView usernameView;
     private TextView dateView;
-    private ImageView backButton;
-    private TextView songAuthorView;
-    private TextView songNameView;
-    private ImageView songPictureView;
     private SpotifyWidgetFragment spotifyWidget;
 
     // Details about the MusicMemory this fragment is for
     private String authorUid;
     private String musicMemoryUid;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,17 +84,15 @@ public class MusicMemoryFragment extends Fragment {
         this.profilePictureView = rootView.findViewById(R.id.profile_picture_view);
         this.dateView = rootView.findViewById(R.id.date_text_view);
         this.usernameView = rootView.findViewById(R.id.username_text_view);
-        this.backButton = rootView.findViewById(R.id.appbarBack);
-        System.out.println(getChildFragmentManager().getFragments());
-        //this.spotifyWidget = (SpotifyWidgetFragment) getChildFragmentManager().findFragmentByTag("SpotifyWidgetFragment");
-        Fragment firstBornChild = getChildFragmentManager().getFragments().get(0);
-            if (firstBornChild instanceof SpotifyWidgetFragment){
-                System.out.println("now i will sacrifice the first born child");
-                this.spotifyWidget = (SpotifyWidgetFragment) firstBornChild;
-            }
+        ImageView backButton = rootView.findViewById(R.id.appbarBack);
+
+        Fragment firstChild = getChildFragmentManager().getFragments().get(0);
+        if (firstChild instanceof SpotifyWidgetFragment) {
+            this.spotifyWidget = (SpotifyWidgetFragment) firstChild;
+        }
 
         /* Back button handling.*/
-        this.backButton.setOnClickListener(task -> activity.onBackPressed());
+        backButton.setOnClickListener(task -> activity.onBackPressed());
 
         // TODO maybe some sort of loading symbol before MusicMemory is loaded
 
@@ -131,8 +124,9 @@ public class MusicMemoryFragment extends Fragment {
                         .into(this.profilePictureView);
             });
             Date postedDate = musicMemory.getTimePosted();
-            DateTimeFormatter postedDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            this.dateView.setText("posted on " + postedDate.getDay() + "/" + postedDate.getMonth() + "/" + postedDate.getYear());
+
+            DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getContext());
+            this.dateView.setText(getString(R.string.posted_on, dateFormat.format(postedDate)));
             this.spotifyWidget.setSongName(musicMemory.getSong().getName());
             this.spotifyWidget.setArtistName(musicMemory.getSong().getSpotifyArtistId());
         });
