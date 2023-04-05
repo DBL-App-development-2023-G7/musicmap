@@ -37,6 +37,8 @@ import com.example.musicmap.util.spotify.SpotifyAuthActivity;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.example.musicmap.util.ui.ImageUtils;
 import com.example.musicmap.util.ui.Message;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.firestore.GeoPoint;
@@ -118,7 +120,14 @@ public class PostFragment extends MainFragment {
         this.currentActivity = requireActivity();
 
         locationPermission.forceRequest();
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.currentActivity);
+
+        if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(currentActivity)
+                == ConnectionResult.SUCCESS) {
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.currentActivity);
+        } else {
+            int response = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(currentActivity);
+            Log.e(TAG, "Google Play services availability response: " + response);
+        }
         fetchUserLocation();
 //        cameraPermission.request();
         getPermission();
@@ -173,6 +182,11 @@ public class PostFragment extends MainFragment {
 
     @SuppressLint("MissingPermission")
     private void fetchUserLocation() {
+        if (fusedLocationClient == null) {
+            Message.showFailureMessage(currentActivity, "Google Play services is required");
+            return;
+        }
+
         if (locationPermission.isCoarseGranted() && locationPermission.isFineGranted()) {
             fusedLocationClient.getLastLocation()
                     .addOnSuccessListener(this.currentActivity, location -> {
