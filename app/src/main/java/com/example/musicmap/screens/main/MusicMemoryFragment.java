@@ -86,10 +86,7 @@ public class MusicMemoryFragment extends Fragment {
         this.usernameView = rootView.findViewById(R.id.username_text_view);
         ImageView backButton = rootView.findViewById(R.id.appbarBack);
 
-        Fragment firstChild = getChildFragmentManager().getFragments().get(0);
-        if (firstChild instanceof SpotifyWidgetFragment) {
-            this.spotifyWidget = (SpotifyWidgetFragment) firstChild;
-        }
+        this.spotifyWidget = (SpotifyWidgetFragment) getChildFragmentManager().findFragmentById(R.id.spotify_widget);
 
         /* Back button handling.*/
         backButton.setOnClickListener(task -> activity.onBackPressed());
@@ -104,7 +101,9 @@ public class MusicMemoryFragment extends Fragment {
             }
             
             MusicMemory musicMemory = task.getResult();
-            spotifyWidget.setupFragment(musicMemory.getSong().getName(), musicMemory.getSong().getSpotifyArtistId(), musicMemory.getSong().getImageUri().toString());
+            spotifyWidget.setupFragment(musicMemory.getSong().getName(),
+                    musicMemory.getSong().getSpotifyArtistId(),
+                    musicMemory.getSong().getImageUri().toString());
             Picasso.get().load(musicMemory.getPhoto()).into(imageView);
 
             AuthSystem.getUserData(musicMemory.getAuthorUid()).addOnCompleteListener(userDataTask -> {
