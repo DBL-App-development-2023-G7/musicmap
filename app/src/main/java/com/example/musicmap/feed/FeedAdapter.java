@@ -1,6 +1,7 @@
 package com.example.musicmap.feed;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.musicmap.R;
+import com.example.musicmap.user.User;
+import com.example.musicmap.util.firebase.AuthSystem;
+import com.example.musicmap.util.ui.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -22,6 +26,7 @@ import java.util.List;
 public class FeedAdapter extends ArrayAdapter<MusicMemory> {
 
     private final Activity activityContext;
+    private static final String TAG = "FeedAdapter";
 
     public FeedAdapter(@NonNull Activity activityContext, int resource, @NonNull List<MusicMemory> feedItems) {
         super(activityContext, resource, feedItems);
@@ -51,10 +56,20 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
 
         MusicMemory musicMemory = getItem(position);
         if (musicMemory != null) {
-            // TODO: more user-friendly display
+            AuthSystem.getUser(musicMemory.getAuthorUid()).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    User musicMemoryAuthor = task.getResult();
+                    Picasso.get().load(musicMemoryAuthor.getData().getProfilePictureUri())
+                            .transform(new CircleTransform()).into(userImage);
+                } else {
+                    Log.e(TAG, "Could not fetch author of the music memory", task.getException());
+                }
+            });
+
             songName.setText(musicMemory.getSong().getName());
-            songDetails.setText(String.format("%s %s", musicMemory.getAuthorUid(), musicMemory.getLocation()));
             Picasso.get().load(musicMemory.getPhoto()).into(memoryImage);
+            Picasso.get().load(musicMemory.getSong().getImageUri())
+                    .transform(new CircleTransform()).into(songImage);
         }
 
         return row;
