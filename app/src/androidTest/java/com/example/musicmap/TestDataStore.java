@@ -19,14 +19,14 @@ public class TestDataStore {
     public static MusicMemory getValidMusicMemory() {
         return new MusicMemory("author-uid", new Date(),
                 new GeoPoint(10, 10), "https://imgur.com/photo", new Song(
-                "song", "1234", null, "https://imgur.com/photo-3", "https://spotify.com/preview"
+                "song", "1234", "https://imgur.com/photo-3", "https://spotify.com/preview"
         ));
     }
 
     public static MusicMemory getValidMusicMemory(String authorId, String songName) {
         return new MusicMemory(authorId, new Date(),
                 new GeoPoint(10, 10), "https://imgur.com/photo", new Song(
-                songName, "1234", null, "https://imgur.com/photo-3", "https://spotify.com/preview"
+                songName, "1234", "https://imgur.com/photo-3", "https://spotify.com/preview"
         ));
     }
 

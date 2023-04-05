@@ -1,5 +1,6 @@
 <resources>
     <!--navbar strings start-->
+    <string name="navbar_artist_data">Data</string>
     <string name="navbar_post">Post</string>
     <string name="navbar_feed">Feed</string>
     <string name="navbar_map">Map</string>
@@ -86,5 +87,10 @@
     <string name="spotify">Spotify</string>
     <string name="spotify_description">Link your Spotify account.</string>
     <!--link spotify end -->
+
+    <string name="album_cover">Album Cover</string>
+    <string name="play_button_description">Play/Stop preview of the song.</string>
+    <string name="preview">Preview</string>
+    <string name="song">Song</string>
     
 </resources>
