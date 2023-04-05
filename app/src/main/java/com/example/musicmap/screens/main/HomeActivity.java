@@ -2,9 +2,9 @@ package com.example.musicmap.screens.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
@@ -147,26 +147,32 @@ public class HomeActivity extends SpotifyAuthActivity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         FragmentManager fragmentManager = this.getFragmentManagerFromActivity();
         Fragment currentFragment = fragmentManager.findFragmentById(R.id.fragment_view);
 
-        if (currentFragment instanceof MusicMemoryFragment){
-
+        if (currentFragment instanceof MusicMemoryFragment) {
             FragmentUtil.replaceFragment(fragmentManager, R.id.fragment_view, FeedFragment.class);
+
             showBottomNav();
             showTopNav();
-
         }
     }
 
-    public void showTopNav(){this.appBarView.setVisibility(View.VISIBLE);}
-    public void hideTopNav(){this.appBarView.setVisibility(View.INVISIBLE);}
-    public void showBottomNav(){
+    public void showTopNav() {
+        this.appBarView.setVisibility(View.VISIBLE);
+    }
+
+    public void hideTopNav() {
+        this.appBarView.setVisibility(View.INVISIBLE);
+    }
+
+    public void showBottomNav() {
         this.bottomNavigationView.setVisibility(View.VISIBLE);
     }
 
-    public void hideBottomNav(){
+    public void hideBottomNav() {
         this.bottomNavigationView.setVisibility(View.INVISIBLE);
     }
+
 }
