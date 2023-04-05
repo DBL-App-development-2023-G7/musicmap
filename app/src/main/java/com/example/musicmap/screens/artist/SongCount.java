@@ -7,8 +7,8 @@ import com.example.musicmap.feed.Song;
  */
 public class SongCount {
 
-    private Song song;
-    private Long count;
+    private final Song song;
+    private final Long count;
 
     public SongCount(Song song, Long count) {
         this.song = song;
@@ -22,4 +22,5 @@ public class SongCount {
     public long getCount() {
         return count;
     }
+
 }

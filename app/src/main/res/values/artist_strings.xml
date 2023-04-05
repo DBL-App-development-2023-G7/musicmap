@@ -4,7 +4,6 @@
     <string name="artist_data_page">Artist Data Page</string>
     <string name="map_label">Where is your music mostly streamed?</string>
     <string name="top_streams_label">Top played songs:</string>
-    <string name="welcome_data_page">Welcome to your data page!</string>
     <string name="referenced">Referenced %d times in music memories</string>
     <!--artist data strings end-->
 </resources>
