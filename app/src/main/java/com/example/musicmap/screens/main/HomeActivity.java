@@ -65,6 +65,7 @@ public class HomeActivity extends SpotifyAuthActivity {
 
     @Override
     public void onSessionStateChanged() {
+        super.onSessionStateChanged();
         User currentUser = Session.getInstance().getCurrentUser();
         updateNavbar(currentUser);
         setupProfileButton(currentUser);

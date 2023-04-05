@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
+import androidx.annotation.CallSuper;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,6 +16,8 @@ import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
 import com.example.musicmap.util.Constants;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public abstract class SessionAndInternetListenerActivity extends AppCompatActivity implements Session.Listener {
 
@@ -49,14 +52,22 @@ public abstract class SessionAndInternetListenerActivity extends AppCompatActivi
     }
 
     @Override
+    @CallSuper
     public void onSessionStateChanged() {
         if (!session.isUserConnected()) {
             loadAuthActivity();
         }
         if (session.isUserLoaded()) {
             User currentUser = session.getCurrentUser();
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             if (currentUser.isArtist() && !((Artist) currentUser).isVerified()) {
                 loadVerificationActivity();
+            } else if (firebaseUser != null) {
+                firebaseUser.reload().addOnCompleteListener(task -> {
+                    if (!firebaseUser.isEmailVerified()) {
+                        loadVerificationActivity();
+                    }
+                });
             }
         }
     }
