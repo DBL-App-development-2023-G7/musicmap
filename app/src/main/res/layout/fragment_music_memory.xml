@@ -9,97 +9,66 @@
 
     <ImageView
         android:id="@+id/memoryImageView"
-        android:layout_width="361dp"
+        android:layout_width="340dp"
         android:layout_height="208dp"
-        app:layout_constraintBottom_toTopOf="@+id/song_bit_layout"
+        app:layout_constraintBottom_toTopOf="@+id/spotify_widget"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/song_bit_layout"
-        android:layout_width="361dp"
-        android:layout_height="70dp"
-        android:background="@drawable/primary_rounded"
-        app:layout_constraintBottom_toTopOf="@+id/post_map"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/spotify_widget"
+        android:name="com.example.musicmap.screens.main.SpotifyWidgetFragment"
+        android:layout_width="340dp"
+        android:layout="@layout/spotify_playback_widget_layout"
+        app:layout_constraintBottom_toTopOf="@+id/memoryImageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/memoryImageView">
+        app:layout_constraintTop_toBottomOf="@+id/music_memory_map"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="196dp"
+        tools:layout_editor_absoluteY="365dp" />
 
-        <ImageView
-            android:id="@+id/song_picture_view"
-            android:layout_width="57dp"
-            android:layout_height="52dp"
-            android:layout_marginStart="4dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.388"
-            tools:srcCompat="@tools:sample/avatars" />
-
-        <TextView
-            android:id="@+id/song_name_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="@color/off_white"
-            app:layout_constraintBottom_toTopOf="@+id/song_author_view"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.24"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/song_author_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="@color/off_white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.24"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/song_name_view" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/music_memory_map"
         android:name="com.example.musicmap.screens.map.MusicMemoryMapFragment"
-        android:layout_width="319dp"
+        android:layout_width="340dp"
         android:layout_height="226dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/song_bit_layout"
+        app:layout_constraintTop_toBottomOf="@+id/spotify_widget"
         tools:layout="@layout/fragment_map" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
-        android:layout_width="396dp"
+        android:layout_width="340dp"
         android:layout_height="74dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/post_map">
+        app:layout_constraintTop_toBottomOf="@+id/music_memory_map">
 
         <ImageView
             android:id="@+id/profile_picture_view"
-            android:layout_width="103dp"
-            android:layout_height="57dp"
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.529"
             tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
             android:id="@+id/username_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:text="TextView"
+            android:layout_marginStart="6dp"
+            android:text="@string/username"
             android:textColor="@color/off_white"
+            android:fontFamily="@font/inter_semibold"
+            android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/profile_picture_view"
             app:layout_constraintTop_toTopOf="parent"
@@ -111,7 +80,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:text="TextView"
+            android:fontFamily="@font/inter_regular"
+            android:textSize="11sp"
+            android:text="@string/unknown"
             android:textColor="@color/off_white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -161,5 +132,6 @@
 
 
     </com.google.android.material.appbar.AppBarLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

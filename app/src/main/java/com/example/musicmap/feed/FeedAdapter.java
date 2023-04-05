@@ -64,6 +64,9 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
 
             FragmentUtil.replaceFragment(homeActivity.getFragmentManagerFromActivity(), R.id.fragment_view,
                     MusicMemoryFragment.class, args);
+            homeActivity.hideBottomNav();
+            homeActivity.hideTopNav();
+
         });
 
         if (musicMemory != null) {

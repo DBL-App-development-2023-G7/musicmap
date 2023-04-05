@@ -19,11 +19,16 @@ import com.example.musicmap.screens.map.MusicMemoryMapFragment;
 import com.example.musicmap.user.UserData;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.firebase.Queries;
+import com.example.musicmap.util.ui.CircleTransform;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.example.musicmap.util.ui.Message;
 import com.squareup.picasso.Picasso;
 
 import org.osmdroid.config.Configuration;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  * A fragment displaying a single music memory.
@@ -42,6 +47,7 @@ public class MusicMemoryFragment extends Fragment {
     private TextView songAuthorView;
     private TextView songNameView;
     private ImageView songPictureView;
+    private SpotifyWidgetFragment spotifyWidget;
 
     // Details about the MusicMemory this fragment is for
     private String authorUid;
@@ -84,9 +90,13 @@ public class MusicMemoryFragment extends Fragment {
         this.dateView = rootView.findViewById(R.id.date_text_view);
         this.usernameView = rootView.findViewById(R.id.username_text_view);
         this.backButton = rootView.findViewById(R.id.appbarBack);
-        this.songAuthorView = rootView.findViewById(R.id.song_author_view);
-        this.songNameView = rootView.findViewById(R.id.song_name_view);
-        this.songPictureView = rootView.findViewById(R.id.song_picture_view);
+        System.out.println(getChildFragmentManager().getFragments());
+        //this.spotifyWidget = (SpotifyWidgetFragment) getChildFragmentManager().findFragmentByTag("SpotifyWidgetFragment");
+        Fragment firstBornChild = getChildFragmentManager().getFragments().get(0);
+            if (firstBornChild instanceof SpotifyWidgetFragment){
+                System.out.println("now i will sacrifice the first born child");
+                this.spotifyWidget = (SpotifyWidgetFragment) firstBornChild;
+            }
 
         /* Back button handling.*/
         this.backButton.setOnClickListener(task -> activity.onBackPressed());
@@ -101,11 +111,8 @@ public class MusicMemoryFragment extends Fragment {
             }
             
             MusicMemory musicMemory = task.getResult();
-
+            spotifyWidget.setupFragment(musicMemory.getSong().getName(), musicMemory.getSong().getSpotifyArtistId(), musicMemory.getSong().getImageUri().toString());
             Picasso.get().load(musicMemory.getPhoto()).into(imageView);
-            this.songAuthorView.setText(musicMemory.getSong().getSpotifyAristId());
-            this.songNameView.setText(musicMemory.getSong().getName());
-            System.out.println(musicMemory.getSong().getImageUri());
 
             AuthSystem.getUserData(musicMemory.getAuthorUid()).addOnCompleteListener(userDataTask -> {
                 if (!userDataTask.isSuccessful()) {
@@ -118,12 +125,16 @@ public class MusicMemoryFragment extends Fragment {
                 UserData data = userDataTask.getResult();
 
                 this.usernameView.setText(data.getUsername());
-                System.out.println(data.getProfilePicture() + "|| " + data.getProfilePictureUri());
 
-                Picasso.get().load(data.getProfilePictureUri()).into(this.profilePictureView);
-                Picasso.get().load(musicMemory.getSong().getImageUri()).into(this.songPictureView);
+                Picasso.get().load(data.getProfilePictureUri())
+                        .transform(new CircleTransform())
+                        .into(this.profilePictureView);
             });
-            this.dateView.setText(musicMemory.getTimePosted().toString());
+            Date postedDate = musicMemory.getTimePosted();
+            DateTimeFormatter postedDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            this.dateView.setText("posted on " + postedDate.getDay() + "/" + postedDate.getMonth() + "/" + postedDate.getYear());
+            this.spotifyWidget.setSongName(musicMemory.getSong().getName());
+            this.spotifyWidget.setArtistName(musicMemory.getSong().getSpotifyArtistId());
         });
 
         return rootView;
