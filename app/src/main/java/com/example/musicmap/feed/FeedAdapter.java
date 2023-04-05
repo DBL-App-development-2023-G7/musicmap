@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import com.example.musicmap.R;
 import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.user.User;
+import com.example.musicmap.util.Constants;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.ui.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -29,25 +30,31 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
 
     private final Activity activityContext;
     private static final String TAG = "FeedAdapter";
+    private boolean isUsedInFeed = true;
 
     public FeedAdapter(@NonNull Activity activityContext, int resource, @NonNull List<MusicMemory> feedItems) {
         super(activityContext, resource, feedItems);
         this.activityContext = activityContext;
     }
 
-    public FeedAdapter(@NonNull Activity activityContext, int resource) {
+    public FeedAdapter(@NonNull Activity activityContext, int resource, boolean isUsedInFeed) {
         super(activityContext, resource);
         this.activityContext = activityContext;
+        this.isUsedInFeed = isUsedInFeed;
     }
 
     @NonNull
     @Override
-    @SuppressWarnings("unused") // suppressing unused since not all details are set for a music memory yet
     public View getView(int position, @Nullable View convertView, ViewGroup parent) {
         View row = convertView;
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(activityContext);
             row = inflater.inflate(R.layout.single_post_layout_feed, parent, false);
+        }
+
+        MusicMemory musicMemory = getItem(position);
+        if (musicMemory == null) {
+            return row;
         }
 
         ImageView songImage = row.findViewById(R.id.song_art);
@@ -56,30 +63,30 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
         ImageView memoryImage = row.findViewById(R.id.memory_image);
         ImageView userImage = row.findViewById(R.id.user_profile_image);
 
-        MusicMemory musicMemory = getItem(position);
-        if (musicMemory != null) {
+        if (isUsedInFeed) {
             AuthSystem.getUser(musicMemory.getAuthorUid()).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     User musicMemoryAuthor = task.getResult();
                     Picasso.get().load(musicMemoryAuthor.getData().getProfilePictureUri())
                             .transform(new CircleTransform()).into(userImage);
 
+                    userImage.setVisibility(View.VISIBLE);
                     userImage.setOnClickListener(view -> {
                         Intent intent = new Intent(activityContext, ProfileActivity.class);
-                        intent.putExtra("user_uid", musicMemory.getAuthorUid());
+                        intent.putExtra(Constants.PROFILE_USER_UID_ARGUMENT, musicMemory.getAuthorUid());
                         activityContext.startActivity(intent);
                     });
                 } else {
                     Log.e(TAG, "Could not fetch author of the music memory", task.getException());
                 }
             });
-
-            songName.setText(musicMemory.getSong().getName());
-            Picasso.get().load(musicMemory.getPhoto()).into(memoryImage);
-            Picasso.get().load(musicMemory.getSong().getImageUri())
-                    .transform(new CircleTransform()).into(songImage);
+        } else {
+            userImage.setVisibility(View.INVISIBLE);
         }
 
+        songName.setText(musicMemory.getSong().getName());
+        Picasso.get().load(musicMemory.getPhoto()).into(memoryImage);
+        Picasso.get().load(musicMemory.getSong().getImageUri()).transform(new CircleTransform()).into(songImage);
         return row;
     }
 

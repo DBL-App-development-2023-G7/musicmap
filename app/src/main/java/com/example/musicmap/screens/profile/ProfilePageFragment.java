@@ -44,7 +44,7 @@ public class ProfilePageFragment extends Fragment {
         ListView profileListView = profileView.findViewById(R.id.mm_list);
 
         Activity activity = requireActivity();
-        feedAdapter = new FeedAdapter(activity, R.layout.single_post_layout_feed);
+        feedAdapter = new FeedAdapter(activity, R.layout.single_post_layout_feed, false);
         profileListView.setAdapter(feedAdapter);
 
         Bundle args = getArguments();
