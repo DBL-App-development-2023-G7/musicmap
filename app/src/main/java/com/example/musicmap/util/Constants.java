@@ -15,4 +15,6 @@ public final class Constants {
      */
     public static final String INTERNET_BROADCAST_BUNDLE_KEY = "available";
 
+    public static final String PROFILE_USER_UID_ARGUMENT = "user_uid";
+
 }
