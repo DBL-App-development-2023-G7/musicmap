@@ -71,6 +71,7 @@ public class PostFragment extends MainFragment {
     private Location currentLocation;
     private Button addLocationButton;
     private ImageView capturedImagePreview;
+    private Button postMemoryButton;
 
     private SpotifyAuthActivity parentActivity;
 
@@ -166,7 +167,7 @@ public class PostFragment extends MainFragment {
         addLocationButton = rootView.findViewById(R.id.addLocationButton);
         addLocationButton.setOnClickListener(view -> fetchUserLocation());
 
-        Button postMemoryButton = rootView.findViewById(R.id.postMemoryButton);
+        postMemoryButton = rootView.findViewById(R.id.postMemoryButton);
         postMemoryButton.setOnClickListener(view -> postMusicMemory());
         return rootView;
     }
@@ -263,6 +264,8 @@ public class PostFragment extends MainFragment {
             return;
         }
 
+        postMemoryButton.setEnabled(false);
+
         String authorID = this.currentSession.getCurrentUser().getUid();
         Date timePosted = Calendar.getInstance().getTime();
         GeoPoint geoPointLocation = new GeoPoint(
@@ -285,9 +288,10 @@ public class PostFragment extends MainFragment {
                     geoPointLocation,
                     imageUrl,
                     song
-            )).addOnFailureListener(e ->
-                    Message.showSuccessMessage(this.currentActivity, "Successfully created the music memory")
-            ).addOnCompleteListener(unused -> {
+            )).addOnFailureListener(e -> {
+                Message.showSuccessMessage(this.currentActivity, "Successfully created the music memory");
+                postMemoryButton.setEnabled(false);
+            }).addOnCompleteListener(unused -> {
                         clearData();
                         FragmentUtil.replaceFragment(
                                 requireActivity().getSupportFragmentManager(),
