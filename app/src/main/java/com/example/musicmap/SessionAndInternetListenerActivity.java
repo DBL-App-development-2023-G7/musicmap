@@ -50,6 +50,7 @@ public abstract class SessionAndInternetListenerActivity extends AppCompatActivi
     }
 
     @Override
+    @CallSuper
     public void onSessionStateChanged() {
         if (!session.isUserConnected()) {
             loadAuthActivity();
