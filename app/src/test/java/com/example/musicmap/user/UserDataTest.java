@@ -11,8 +11,7 @@ import org.junit.Test;
 
 import java.util.Date;
 
-public class
-UserDataTest {
+public class UserDataTest {
 
     private UserData userData;
 
