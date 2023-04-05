@@ -37,8 +37,7 @@ public class MusicMemoryMapFragment extends MapFragment {
         return false;
     }
 
-    // TODO after merge of https://github.com/DBL-App-development-2023-G7/musicmap/pull/59
-//    @Override
+    @Override
     protected boolean allowInteraction() {
         return false;
     }
