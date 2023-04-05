@@ -20,6 +20,7 @@ import com.example.musicmap.user.User;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.ui.ChangeEmailDialogFragment;
 import com.example.musicmap.util.ui.ChangePasswordDialogFragment;
+import com.example.musicmap.util.ui.ChangeUsernameDialogFragment;
 import com.example.musicmap.util.ui.DeleteAccountDialogFragment;
 import com.example.musicmap.util.ui.Message;
 
@@ -74,11 +75,12 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
         Preference preferenceFirstName = profileCategory.findPreference("firstName");
         Preference preferenceLastName = profileCategory.findPreference("lastName");
         Preference preferenceBirthdate = profileCategory.findPreference("birthdate");
+        Preference preferenceChangeUsername = profileCategory.findPreference("changeUsername");
         Preference preferenceChangeProfilePicture = profileCategory.findPreference("picture");
 
         if (preferenceUsername == null || preferenceEmail == null || preferenceFirstName == null
                 || preferenceLastName == null || preferenceBirthdate == null
-                || preferenceChangeProfilePicture == null) {
+                || preferenceChangeProfilePicture == null || preferenceChangeUsername == null) {
             throw new IllegalStateException("Could not find the children of the profile category.");
         }
 
@@ -92,6 +94,13 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
 
             DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getContext());
             preferenceBirthdate.setSummary(dateFormat.format(currentUser.getData().getBirthdate()));
+
+            preferenceChangeUsername.setOnPreferenceClickListener(view -> {
+                ChangeUsernameDialogFragment changeUsernameDialogFragment = new ChangeUsernameDialogFragment();
+                changeUsernameDialogFragment.show(activity.getSupportFragmentManager(), "ChangeUsernameDialog");
+
+                return false;
+            });
 
             preferenceChangeProfilePicture.setOnPreferenceClickListener(view -> {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);

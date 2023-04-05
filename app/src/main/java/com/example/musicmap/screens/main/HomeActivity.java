@@ -3,26 +3,32 @@ package com.example.musicmap.screens.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.musicmap.R;
-import com.example.musicmap.SessionAndInternetListenerActivity;
+import com.example.musicmap.screens.artist.ArtistDataFragment;
 import com.example.musicmap.screens.map.PostMapFragment;
 import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.user.Session;
+import com.example.musicmap.user.User;
+import com.example.musicmap.util.Constants;
 import com.example.musicmap.util.permissions.LocationPermission;
+import com.example.musicmap.util.spotify.SpotifyAuthActivity;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class HomeActivity extends SessionAndInternetListenerActivity {
+public class HomeActivity extends SpotifyAuthActivity {
 
     private Class<? extends Fragment> lastFragmentClass = FeedFragment.class;
     private int currentLayout = R.layout.activity_home;
 
     private BottomNavigationView bottomNavigationView;
+    private ImageView profileButton;
 
     @Override
     protected void updateLayout(boolean internetAvailable) {
@@ -55,18 +61,22 @@ public class HomeActivity extends SessionAndInternetListenerActivity {
         new LocationPermission(this).forceRequest();
     }
 
-    public void setupActivity() {
-        Session.getInstance();
+    @Override
+    public void onSessionStateChanged() {
+        User currentUser = Session.getInstance().getCurrentUser();
+        updateNavbar(currentUser);
+        setupProfileButton(currentUser);
+    }
 
+    private void setupActivity() {
+        User currentUser = Session.getInstance().getCurrentUser();
         FragmentUtil.initFragment(getSupportFragmentManager(), R.id.fragment_view, lastFragmentClass);
 
-        this.bottomNavigationView = findViewById(R.id.bottom_navigation);
-        ImageView profileButton = findViewById(R.id.appbarProfile);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        profileButton = findViewById(R.id.appbarProfile);
 
-        profileButton.setOnClickListener(view -> {
-            startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
-            finish();
-        });
+        updateNavbar(currentUser);
+        setupProfileButton(currentUser);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             // using ifs instead of switch as resource IDs will be non-final by default in
@@ -85,6 +95,13 @@ public class HomeActivity extends SessionAndInternetListenerActivity {
                 return true;
             }
 
+            if (item.getItemId() == R.id.navbaArtistData) {
+                FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.fragment_view,
+                        ArtistDataFragment.class);
+                lastFragmentClass = ArtistDataFragment.class;
+                return true;
+            }
+
             if (item.getItemId() == R.id.navbarMap) {
                 FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.fragment_view,
                         PostMapFragment.class);
@@ -93,6 +110,33 @@ public class HomeActivity extends SessionAndInternetListenerActivity {
             }
 
             return false;
+        });
+    }
+
+    private void updateNavbar(User currentUser) {
+        if (bottomNavigationView == null) {
+            return;
+        }
+
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem post = menu.findItem(R.id.navbarPost);
+        MenuItem artistData = menu.findItem(R.id.navbaArtistData);
+
+        boolean isArtist = currentUser != null && currentUser.isArtist();
+        post.setVisible(!isArtist);
+        artistData.setVisible(isArtist);
+    }
+
+    private void setupProfileButton(User currentUser) {
+        if (currentUser == null || profileButton == null) {
+            return;
+        }
+
+        profileButton.setOnClickListener(view -> {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra(Constants.PROFILE_USER_UID_ARGUMENT, currentUser.getUid());
+            startActivity(intent);
+            finish();
         });
     }
 

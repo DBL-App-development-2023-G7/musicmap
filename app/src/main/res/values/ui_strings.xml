@@ -1,5 +1,6 @@
 <resources>
     <!--navbar strings start-->
+    <string name="navbar_artist_data">Data</string>
     <string name="navbar_post">Post</string>
     <string name="navbar_feed">Feed</string>
     <string name="navbar_map">Map</string>
@@ -28,6 +29,14 @@
     <string name="feed_song_art">Image of song</string>
     <!--feed strings end-->
 
+    <!-- post fragment start-->
+    <string name="post_fragment_add_image_button_text">Add image</string>
+    <string name="post_fragment_add_song_button_text">Add Song</string>
+    <string name="post_fragment_get_location_button_text">Get location</string>
+    <!-- post fragment end-->
+
+    <string name="camera_fragment_post_button_text">Post</string>
+
     <!--general settings start-->
     <string name="account_settings">Account settings</string>
     <string name="account_settings_description">General account settings</string>
@@ -38,13 +47,19 @@
     <!--change password start-->
     <string name="change_password">Change password</string>
     <string name="password_dialog_description">Please enter your current password and a new one to change your password.</string>
-    <string name="new_password">New Password</string>
-    <string name="old_password">Old Password</string>
+    <string name="new_password">New password</string>
+    <string name="old_password">Old password</string>
     <!--change password end-->
+
+    <!-- change username start -->
+    <string name="change_username">Change username</string>
+    <string name="new_username">New username</string>
+    <string name="username_dialog_description">Please enter your new username.</string>
+    <!-- change username end -->
 
     <!--change email start-->
     <string name="change_email">Change email</string>
-    <string name="new_email">New Email</string>
+    <string name="new_email">New email</string>
     <string name="email_dialog_description">Please enter your new email and current password.</string>
     <!--change email end-->
 
@@ -54,11 +69,28 @@
     <string name="security">Security</string>
     <string name="other">Other</string>
     <!--profile settings end-->
-
+    
     <!--delete account start-->
     <string name="delete_account_dialog_title">Are you sure you want to delete your account?</string>
     <string name="delete_account_dialog_message">If you delete your account all of your data will be lost and you won\'t
         be able to get it back. Please enter your password to confirm that you want to delete your account.</string>
     <string name="cancel">Cancel</string>
     <!--delete account end-->
+
+    <!--connection settings start-->
+    <string name="connections">Connections</string>
+    <string name="connections_description">Connect your account with other platforms.</string>
+    <!--connection settings end-->
+
+
+    <!--link spotify start-->
+    <string name="spotify">Spotify</string>
+    <string name="spotify_description">Link your Spotify account.</string>
+    <!--link spotify end -->
+
+    <string name="album_cover">Album Cover</string>
+    <string name="play_button_description">Play/Stop preview of the song.</string>
+    <string name="preview">Preview</string>
+    <string name="song">Song</string>
+    
 </resources>

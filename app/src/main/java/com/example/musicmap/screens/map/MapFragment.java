@@ -1,5 +1,6 @@
 package com.example.musicmap.screens.map;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -20,6 +21,7 @@ import com.example.musicmap.util.permissions.LocationPermission;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.CustomZoomButtonsDisplay;
@@ -34,6 +36,10 @@ public abstract class MapFragment extends Fragment {
     private static final String SHARED_PREFERENCE_ZOOM = "zoom";
     private static final String SHARED_PREFERENCE_CENTER_LATITUDE = "center_latitude";
     private static final String SHARED_PREFERENCE_CENTER_LONGITUDE = "center_longitude";
+
+    private static final BoundingBox NETHERLANDS_BOUNDING_BOX = new BoundingBox(
+            53.5104033474, 7.2294516, 50.803721015, 3.31497114423
+    );
 
     private final LocationPermission locationPermission = new LocationPermission(this);
 
@@ -63,6 +69,7 @@ public abstract class MapFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -105,7 +112,16 @@ public abstract class MapFragment extends Fragment {
         // Add all overlays
         addOverlays();
 
-        if (sharedPreferences.contains("zoom")) {
+        boolean interactionAllowed = allowInteraction();
+
+        if (!interactionAllowed) {
+            mapView.getZoomController().setZoomInEnabled(false);
+            mapView.getZoomController().setZoomOutEnabled(false);
+            mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
+            mapView.setOnTouchListener((v, event) -> true);
+        }
+
+        if (sharedPreferences.contains("zoom") && interactionAllowed) {
             // Restore stored zoom level & map center
             mapView.getController().setZoom(Double.longBitsToDouble(
                     sharedPreferences.getLong(SHARED_PREFERENCE_ZOOM, 0)));
@@ -118,8 +134,8 @@ public abstract class MapFragment extends Fragment {
             mapView.getController().setCenter(center);
         } else {
             // Set initial view to map of Netherlands
-            mapView.getController().setZoom(8.0);
-            mapView.getController().setCenter(new GeoPoint(52.132303, 5.645042));
+            mapView.addOnFirstLayoutListener((v, left, top, right, bottom) ->
+                    mapView.zoomToBoundingBox(NETHERLANDS_BOUNDING_BOX, false, 16));
         }
 
         return rootView;
@@ -153,6 +169,15 @@ public abstract class MapFragment extends Fragment {
      * @return whether the current phone location should be displayed on the map.
      */
     protected boolean shouldDisplayCurrentLocation() {
+        return true;
+    }
+
+    /**
+     * Can be overridden to disable interaction with the map.
+     *
+     * @return whether the map can be interacted with.
+     */
+    protected boolean allowInteraction() {
         return true;
     }
 

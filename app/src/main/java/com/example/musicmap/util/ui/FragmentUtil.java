@@ -24,8 +24,23 @@ public class FragmentUtil {
     public static void initFragment(@NonNull FragmentManager fragmentManager,
                                     @IdRes int containerID,
                                     @NonNull Class<? extends Fragment> fragmentClass) {
+        initFragment(fragmentManager, containerID, fragmentClass, null);
+    }
+
+    /**
+     * This method initializes the given container with the given fragment class.
+     *
+     * @param fragmentManager the given Fragment Manager
+     * @param containerID     the id of the container
+     * @param fragmentClass   the class of the fragment
+     * @param args            the arguments for the fragment
+     */
+    public static void initFragment(@NonNull FragmentManager fragmentManager,
+                                    @IdRes int containerID,
+                                    @NonNull Class<? extends Fragment> fragmentClass,
+                                    @Nullable Bundle args) {
         fragmentManager.beginTransaction().setReorderingAllowed(true).add(containerID,
-                fragmentClass, null).commit();
+                fragmentClass, args).commit();
     }
 
     /**
