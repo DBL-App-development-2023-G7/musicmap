@@ -108,7 +108,7 @@ public class MusicMemoryFragment extends Fragment {
 
             AuthSystem.getUserData(musicMemory.getAuthorUid()).addOnCompleteListener(userDataTask -> {
                 if (!userDataTask.isSuccessful()) {
-                    Log.e(TAG, "MusicMemory could not be loaded in MusicMemoryFragment",
+                    Log.e(TAG, "MusicMemory author data could not be loaded in MusicMemoryFragment",
                             userDataTask.getException());
                     Message.showFailureMessage(container, "Music Memory author data could not be loaded");
                     return;
