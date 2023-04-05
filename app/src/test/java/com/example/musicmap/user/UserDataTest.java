@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.example.musicmap.util.Constants;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,7 +49,7 @@ UserDataTest {
 
     @Test
     public void testGetProfilePicture() {
-        assertEquals(userData.getProfilePicture(), "");
+        assertEquals(userData.getProfilePicture(), Constants.DEFAULT_USER_IMAGE_URI);
     }
 
     @Test
