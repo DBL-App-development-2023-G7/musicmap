@@ -57,10 +57,13 @@
 
             <TextView
                 android:id="@+id/userTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:fontFamily="@font/inter"
+                android:justificationMode="inter_word"
                 android:text="@string/awaiting_verification_text_user"
                 android:textAlignment="center"
                 android:textSize="16sp"
@@ -71,10 +74,13 @@
 
             <TextView
                 android:id="@+id/artistTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
                 android:fontFamily="@font/inter"
+                android:justificationMode="inter_word"
                 android:text="@string/awaiting_verification_text_artist"
                 android:textAlignment="center"
                 android:textSize="16sp"
