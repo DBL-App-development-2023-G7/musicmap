@@ -41,6 +41,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.google.firebase.firestore.GeoPoint;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -188,8 +189,13 @@ public class PostFragment extends MainFragment {
         }
 
         if (locationPermission.isCoarseGranted() && locationPermission.isFineGranted()) {
-            fusedLocationClient.getLastLocation()
+            fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
                     .addOnSuccessListener(this.currentActivity, location -> {
+                        if (location == null) {
+                            Log.i(TAG, "Location unknown");
+                            return;
+                        }
+
                         currentLocation = location;
                         String displayText = getLocationText(currentLocation);
                         addLocationButton.setText(displayText);
