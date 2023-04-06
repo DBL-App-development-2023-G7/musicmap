@@ -39,7 +39,7 @@ public class FeedFragment extends MainFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.viewGroup = container;
-        this.singleFetchSize = 4;
+        this.singleFetchSize = 7;
         this.fetchCount = 1;
         this.feedSize = 100;
 
