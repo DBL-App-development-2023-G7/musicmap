@@ -53,6 +53,7 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(activityContext);
             row = inflater.inflate(R.layout.single_post_layout_feed, parent, false);
+            row.findViewById(R.id.user_profile_image).setTag(position);
         }
 
         MusicMemory musicMemory = getItem(position);
@@ -72,7 +73,7 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
             String userImageUriFromMap = userImageByAuthorIdMap.get(musicMemory.getAuthorUid());
 
             if (userImageUriFromMap == null) {
-                fetchUserImage(musicMemory.getAuthorUid(), userImage);
+                fetchUserImage(musicMemory.getAuthorUid(), userImage, position);
             } else {
                 setUserImage(musicMemory.getAuthorUid(), userImageUriFromMap, userImage);
             }
@@ -84,12 +85,15 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
         return row;
     }
 
-    private void fetchUserImage(String authorId, ImageView userImage) {
+    private void fetchUserImage(String authorId, ImageView userImage, int position) {
         AuthSystem.getUser(authorId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 User musicMemoryAuthor = task.getResult();
                 String userImageUri = musicMemoryAuthor.getData().getProfilePictureUri().toString();
-                setUserImage(authorId, userImageUri, userImage);
+
+                if (userImage.getTag() != null && userImage.getTag().equals(position)) {
+                    setUserImage(authorId, userImageUri, userImage);
+                }
             } else {
                 Log.e(TAG, "Could not fetch author of the music memory", task.getException());
             }
