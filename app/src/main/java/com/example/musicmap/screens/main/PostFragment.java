@@ -34,6 +34,7 @@ import com.example.musicmap.util.firebase.Actions;
 import com.example.musicmap.util.permissions.CameraPermission;
 import com.example.musicmap.util.permissions.LocationPermission;
 import com.example.musicmap.util.spotify.SpotifyAuthActivity;
+import com.example.musicmap.util.spotify.SpotifyUtils;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.example.musicmap.util.ui.ImageUtils;
 import com.example.musicmap.util.ui.Message;
@@ -54,6 +55,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import se.michaelthelin.spotify.model_objects.specification.Track;
+
 public class PostFragment extends MainFragment {
 
     // needs to be static or data is lost
@@ -67,6 +70,9 @@ public class PostFragment extends MainFragment {
 
     private Session currentSession;
     private Activity currentActivity;
+
+    private ImageView songImageView;
+    private Button addSongButton;
 
     private Location currentLocation;
     private Button addLocationButton;
@@ -161,16 +167,29 @@ public class PostFragment extends MainFragment {
         Button addImageButton = rootView.findViewById(R.id.addImageButton);
         addImageButton.setOnClickListener(view -> goToCameraActivity());
 
-        Button addSongButton = rootView.findViewById(R.id.addSongButton);
+        addSongButton = rootView.findViewById(R.id.addSongButton);
         addSongButton.setOnClickListener(view -> goToSearchFragment());
 
-        ImageView songImageView = rootView.findViewById(R.id.songPreviewImage);
+        songImageView = rootView.findViewById(R.id.songPreviewImage);
 
-        // load the search result track if there is one
-        if (SearchFragment.getResultTrack() != null) {
-            songImageView.setVisibility(View.VISIBLE);
-            Picasso.get().load(SearchFragment.getResultTrack().getAlbum().getImages()[0].getUrl()).into(songImageView);
-            addSongButton.setText(SearchFragment.getResultTrack().getName());
+        // get current song if no song has been searched for
+        if (SearchFragment.getResultTrack() == null) {
+            SpotifyUtils.getWaitForTokenFuture().thenApply(
+                    unused -> {
+                        Track currentTrack = SpotifyUtils.getCurrentTrackFuture().join();
+                        return currentTrack;
+                    }
+            ).thenAcceptAsync(
+                    track -> {
+                        if (track != null) {
+                            SearchFragment.setResultTrack(track);
+                            setSelectedTrack(track);
+                        }
+                    },
+                    parentActivity.getMainExecutor()
+            );
+        } else {
+            setSelectedTrack(SearchFragment.getResultTrack());
         }
 
         addLocationButton = rootView.findViewById(R.id.addLocationButton);
@@ -179,6 +198,12 @@ public class PostFragment extends MainFragment {
         postMemoryButton = rootView.findViewById(R.id.postMemoryButton);
         postMemoryButton.setOnClickListener(view -> postMusicMemory());
         return rootView;
+    }
+
+    private void setSelectedTrack(Track track) {
+        songImageView.setVisibility(View.VISIBLE);
+        Picasso.get().load(track.getAlbum().getImages()[0].getUrl()).into(songImageView);
+        addSongButton.setText(track.getName());
     }
 
     private void goToSearchFragment() {
