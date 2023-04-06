@@ -19,11 +19,14 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AuthSystem {
@@ -179,7 +182,16 @@ public class AuthSystem {
      */
     private static Task<Void> removeUserFromFirestore(String uid) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        return firestore.collection("Users").document(uid).delete();
+        return firestore.collection("Users/" + uid + "/MusicMemories").get().onSuccessTask(memories -> {
+
+            List<Task<?>> deleteRequest = new ArrayList<>();
+
+            for (QueryDocumentSnapshot memory : memories) {
+                deleteRequest.add(memory.getReference().delete());
+            }
+            return Tasks.whenAll(deleteRequest).onSuccessTask(result ->
+                    firestore.collection("Users").document(uid).delete());
+        });
     }
 
     /**
