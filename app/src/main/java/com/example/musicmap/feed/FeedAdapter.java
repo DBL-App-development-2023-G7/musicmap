@@ -53,7 +53,9 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(activityContext);
             row = inflater.inflate(R.layout.single_post_layout_feed, parent, false);
-            row.findViewById(R.id.user_profile_image).setTag(position);
+            row.findViewById(R.id.user_profile_image).setTag(null);
+        } else {
+            Picasso.get().cancelRequest((ImageView) convertView.findViewById(R.id.user_profile_image));
         }
 
         MusicMemory musicMemory = getItem(position);
@@ -82,6 +84,7 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
         songName.setText(musicMemory.getSong().getName());
         Picasso.get().load(musicMemory.getPhoto()).into(memoryImage);
         Picasso.get().load(musicMemory.getSong().getImageUri()).transform(new CircleTransform()).into(songImage);
+        userImage.setTag(position);
         return row;
     }
 
