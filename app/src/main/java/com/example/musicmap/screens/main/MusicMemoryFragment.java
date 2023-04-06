@@ -108,7 +108,8 @@ public class MusicMemoryFragment extends Fragment {
             MusicMemory musicMemory = task.getResult();
             spotifyWidget.setupFragment(musicMemory.getSong().getName(),
                     musicMemory.getSong().getSpotifyArtistId(),
-                    musicMemory.getSong().getImageUri().toString());
+                    musicMemory.getSong().getImageUri().toString(),
+                    musicMemory.getSong().getMusicPreviewUri());
             Picasso.get().load(musicMemory.getPhoto()).into(imageView);
 
             AuthSystem.getUserData(musicMemory.getAuthorUid()).addOnCompleteListener(userDataTask -> {
