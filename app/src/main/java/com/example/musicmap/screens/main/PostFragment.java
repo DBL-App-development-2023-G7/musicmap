@@ -1,5 +1,7 @@
 package com.example.musicmap.screens.main;
 
+import static com.example.musicmap.util.spotify.SpotifyUtils.getCurrentTrackFuture;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -29,11 +31,13 @@ import androidx.core.content.ContextCompat;
 import com.example.musicmap.R;
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.feed.Song;
+import com.example.musicmap.screens.settings.SettingsActivity;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.util.firebase.Actions;
 import com.example.musicmap.util.permissions.CameraPermission;
 import com.example.musicmap.util.permissions.LocationPermission;
 import com.example.musicmap.util.spotify.SpotifyAuthActivity;
+import com.example.musicmap.util.spotify.SpotifyUtils;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.example.musicmap.util.ui.ImageUtils;
 import com.example.musicmap.util.ui.Message;
@@ -52,7 +56,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+
+import se.michaelthelin.spotify.model_objects.specification.Track;
 
 public class PostFragment extends MainFragment {
 
@@ -143,7 +150,6 @@ public class PostFragment extends MainFragment {
 //        cameraPermission.request();
         getPermission();
         parentActivity = (SpotifyAuthActivity) this.currentActivity;
-
         parentActivity.refreshToken(apiToken -> {}, () -> parentActivity.registerForSpotifyPKCE());
     }
 
@@ -166,8 +172,26 @@ public class PostFragment extends MainFragment {
 
         ImageView songImageView = rootView.findViewById(R.id.songPreviewImage);
 
-        // load the search result track if there is one
-        if (SearchFragment.getResultTrack() != null) {
+        // get current song if no song has been searched for
+        if (SearchFragment.getResultTrack() == null) {
+            SpotifyUtils.getWaitForTokenFuture().thenApply(
+                    unused -> {
+                        Track currentTrack = getCurrentTrackFuture().join();
+                        return currentTrack;
+                    }
+            ).thenAcceptAsync(
+                    track -> {
+                        // the if statement is useless since an exception will be thrown
+                        // but since the exception does not crash the program do we really care?
+                        if (track != null){
+                            songImageView.setVisibility(View.VISIBLE);
+                            Picasso.get().load(track.getAlbum().getImages()[0].getUrl()).into(songImageView);
+                            addSongButton.setText(track.getName());
+                        }
+                    },
+                    parentActivity.getMainExecutor()
+            );
+        } else {
             songImageView.setVisibility(View.VISIBLE);
             Picasso.get().load(SearchFragment.getResultTrack().getAlbum().getImages()[0].getUrl()).into(songImageView);
             addSongButton.setText(SearchFragment.getResultTrack().getName());
