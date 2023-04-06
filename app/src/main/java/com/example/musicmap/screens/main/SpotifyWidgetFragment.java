@@ -50,6 +50,7 @@ public class SpotifyWidgetFragment extends Fragment {
 
     public void setupFragment(String songName, String artistName, String photoURI, Uri previewUri) {
         this.songName.setText(songName);
+        this.songName.setSelected(true);
         this.artistName.setText(artistName);
         this.previewUri = previewUri;
 
