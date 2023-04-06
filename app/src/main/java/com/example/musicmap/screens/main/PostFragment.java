@@ -134,9 +134,12 @@ public class PostFragment extends MainFragment {
 //        cameraPermission.request();
         getPermission();
         parentActivity = (SpotifyAuthActivity) this.currentActivity;
-        parentActivity.refreshToken(apiToken -> {}, () -> Message.showFailureMessage(this.currentActivity, "We could not detect a connection to your Spotify account."));
-
-//        parentActivity.refreshToken(apiToken -> {}, () -> parentActivity.registerForSpotifyPKCE());
+        parentActivity.refreshToken(apiToken -> {
+            postMemoryButton.setEnabled(true);
+        }, () -> {
+            Message.showFailureMessage(this.currentActivity, getString(R.string.error_spotify_not_connected));
+            postMemoryButton.setEnabled(false);
+        });
     }
 
     @Override

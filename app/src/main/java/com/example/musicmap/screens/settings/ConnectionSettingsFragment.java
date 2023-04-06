@@ -7,6 +7,7 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.example.musicmap.R;
 import com.example.musicmap.util.spotify.SpotifyAuthActivity;
+import com.example.musicmap.util.ui.Message;
 
 public class ConnectionSettingsFragment extends PreferenceFragmentCompat {
 
@@ -25,7 +26,9 @@ public class ConnectionSettingsFragment extends PreferenceFragmentCompat {
         }
 
         spotifyPreference.setOnPreferenceClickListener(preference -> {
-            activity.refreshToken(apiToken -> {}, activity::registerForSpotifyPKCE);
+            activity.refreshToken(apiToken -> {
+                Message.showSuccessMessage(activity, getString(R.string.spotify_already_connected));
+            }, activity::registerForSpotifyPKCE);
             return true;
         });
     }
