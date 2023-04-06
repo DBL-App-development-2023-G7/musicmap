@@ -86,34 +86,43 @@ public class PostFragment extends MainFragment {
                         Log.w(TAG, "Activity result from CameraActivity is null");
                         return;
                     }
+                    Log.w(TAG, "Activity result is called");
 
                     Uri imageUri = resultIntent.getData();
-
+                    Log.w(TAG, "Data is fetched");
+                    Log.w(TAG, String.format("Data: %s", imageUri.toString()));
                     try {
                         Picasso.get().load(imageUri)
                                 .rotate(ImageUtils.getImageRotationFromEXIF(parentActivity, imageUri))
-                                .into(new Target() {
-                                    @Override
-                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                        capturedImage = bitmap;
-                                        capturedImagePreview.setImageBitmap(capturedImage);
-                                        capturedImagePreview.setVisibility(View.VISIBLE);
-                                    }
-
-                                    @Override
-                                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                                        Log.d(TAG, "Exception occurred while setting the image", e);
-                                    }
-
-                                    @Override
-                                    public void onPrepareLoad(Drawable placeHolderDrawable) {}
-                                });
+                                .into(cameraImageTarget);
                     } catch (IOException e) {
                         Log.d(TAG, "Exception occurred while setting the image", e);
                     }
                 }
             }
     );
+
+    // this is a Picasso target into which Picasso will load the image taken from the camera
+    // it is not an anonymous class to prevent it from being garbage collected
+    private Target cameraImageTarget = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            Log.d(TAG, "Bitmap Loaded");
+            capturedImage = bitmap;
+            capturedImagePreview.setImageBitmap(capturedImage);
+            capturedImagePreview.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+            Log.d(TAG, "Exception occurred while setting the image", e);
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+            Log.d(TAG, "Prepare Load");
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

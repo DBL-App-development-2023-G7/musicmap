@@ -116,11 +116,12 @@ public abstract class PostOverlay<P extends Post> extends IconOverlay {
      */
     protected void setImage(RequestCreator requestCreator) {
         // Transform into circle & resize image
+        ImageTarget mapPinTarget = new ImageTarget();
         requestCreator
                 .resize((int) (markerIcon.getIntrinsicWidth() * RATIO), (int) (markerIcon.getIntrinsicHeight() * RATIO))
                 .centerCrop()
                 .transform(new CircleTransform())
-                .into(new ImageTarget());
+                .into(mapPinTarget);
     }
 
     @Override
