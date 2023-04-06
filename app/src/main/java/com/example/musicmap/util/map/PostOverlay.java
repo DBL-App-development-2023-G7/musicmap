@@ -53,6 +53,11 @@ public abstract class PostOverlay<P extends Post> extends IconOverlay {
     private final Drawable markerIcon;
     private final P post;
 
+    // this is a Picasso target into which Picasso will load the image
+    // in a field so it won't be garbage collected
+    @SuppressWarnings("FieldCanBeLocal")
+    private ImageTarget imageTarget;
+
     /**
      * Creates a post overlay for the given map and post.
      *
@@ -116,11 +121,12 @@ public abstract class PostOverlay<P extends Post> extends IconOverlay {
      */
     protected void setImage(RequestCreator requestCreator) {
         // Transform into circle & resize image
+        imageTarget = new ImageTarget();
         requestCreator
                 .resize((int) (markerIcon.getIntrinsicWidth() * RATIO), (int) (markerIcon.getIntrinsicHeight() * RATIO))
                 .centerCrop()
                 .transform(new CircleTransform())
-                .into(new ImageTarget());
+                .into(imageTarget);
     }
 
     @Override

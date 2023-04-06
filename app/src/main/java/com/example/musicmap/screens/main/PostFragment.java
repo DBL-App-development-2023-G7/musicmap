@@ -89,31 +89,40 @@ public class PostFragment extends MainFragment {
 
                     Uri imageUri = resultIntent.getData();
 
+                    Log.d(TAG, "Camera Activity result is called, URI: " + imageUri);
+
                     try {
                         Picasso.get().load(imageUri)
                                 .rotate(ImageUtils.getImageRotationFromEXIF(parentActivity, imageUri))
-                                .into(new Target() {
-                                    @Override
-                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                        capturedImage = bitmap;
-                                        capturedImagePreview.setImageBitmap(capturedImage);
-                                        capturedImagePreview.setVisibility(View.VISIBLE);
-                                    }
-
-                                    @Override
-                                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                                        Log.d(TAG, "Exception occurred while setting the image", e);
-                                    }
-
-                                    @Override
-                                    public void onPrepareLoad(Drawable placeHolderDrawable) {}
-                                });
+                                .into(cameraImageTarget);
                     } catch (IOException e) {
-                        Log.d(TAG, "Exception occurred while setting the image", e);
+                        Log.e(TAG, "Exception occurred while setting the image", e);
                     }
                 }
             }
     );
+
+    // this is a Picasso target into which Picasso will load the image taken from the camera
+    // in a field so it won't be garbage collected
+    private final Target cameraImageTarget = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            Log.d(TAG, "Camera Image Bitmap Loaded");
+            capturedImage = bitmap;
+            capturedImagePreview.setImageBitmap(capturedImage);
+            capturedImagePreview.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+            Log.e(TAG, "Exception occurred while setting the image", e);
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+            Log.d(TAG, "Prepare Camera Image Load");
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
