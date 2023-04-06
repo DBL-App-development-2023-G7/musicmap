@@ -145,12 +145,17 @@ public class PostFragment extends MainFragment {
             int response = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(currentActivity);
             Log.e(TAG, "Google Play services availability response: " + response);
         }
-        fetchUserLocation();
-//        cameraPermission.request();
-        getPermission();
-        parentActivity = (SpotifyAuthActivity) this.currentActivity;
 
-        parentActivity.refreshToken(apiToken -> {}, () -> parentActivity.registerForSpotifyPKCE());
+        fetchUserLocation();
+        getPermission();
+
+        parentActivity = (SpotifyAuthActivity) this.currentActivity;
+        parentActivity.refreshToken(apiToken -> {
+            postMemoryButton.setEnabled(true);
+        }, () -> {
+            Message.showFailureMessage(this.currentActivity, getString(R.string.error_spotify_not_connected));
+            postMemoryButton.setEnabled(false);
+        });
     }
 
     @Override
@@ -280,8 +285,6 @@ public class PostFragment extends MainFragment {
         }
     }
 
-    // TODO Make this monster prettier
-    // Below is some questionable code
     private void postMusicMemory() {
         if (SearchFragment.getResultTrack() == null) {
             Message.showFailureMessage(this.currentActivity, "A track is required to post a music memory!");
