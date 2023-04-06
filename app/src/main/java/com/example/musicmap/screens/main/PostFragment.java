@@ -289,8 +289,8 @@ public class PostFragment extends MainFragment {
                     imageUrl,
                     song
             )).addOnFailureListener(e -> {
-                Message.showSuccessMessage(this.currentActivity, "Successfully created the music memory");
-                postMemoryButton.setEnabled(false);
+                Message.showFailureMessage(this.currentActivity, "Could not create the music memory");
+                postMemoryButton.setEnabled(true);
             }).addOnCompleteListener(unused -> {
                         clearData();
                         FragmentUtil.replaceFragment(
