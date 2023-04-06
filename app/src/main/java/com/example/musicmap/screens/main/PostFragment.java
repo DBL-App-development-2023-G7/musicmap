@@ -178,9 +178,8 @@ public class PostFragment extends MainFragment {
                     }
             ).thenAcceptAsync(
                     track -> {
-                        // the if statement is useless since an exception will be thrown
-                        // but since the exception does not crash the program do we really care?
                         if (track != null){
+                            SearchFragment.setResultTrack(track);
                             songImageView.setVisibility(View.VISIBLE);
                             Picasso.get().load(track.getAlbum().getImages()[0].getUrl()).into(songImageView);
                             addSongButton.setText(track.getName());
