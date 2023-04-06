@@ -37,8 +37,11 @@ import com.example.musicmap.util.spotify.SpotifyAuthActivity;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.example.musicmap.util.ui.ImageUtils;
 import com.example.musicmap.util.ui.Message;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.google.firebase.firestore.GeoPoint;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -68,6 +71,7 @@ public class PostFragment extends MainFragment {
     private Location currentLocation;
     private Button addLocationButton;
     private ImageView capturedImagePreview;
+    private Button postMemoryButton;
 
     private SpotifyAuthActivity parentActivity;
 
@@ -118,7 +122,14 @@ public class PostFragment extends MainFragment {
         this.currentActivity = requireActivity();
 
         locationPermission.forceRequest();
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.currentActivity);
+
+        if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(currentActivity)
+                == ConnectionResult.SUCCESS) {
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.currentActivity);
+        } else {
+            int response = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(currentActivity);
+            Log.e(TAG, "Google Play services availability response: " + response);
+        }
         fetchUserLocation();
 //        cameraPermission.request();
         getPermission();
@@ -156,7 +167,7 @@ public class PostFragment extends MainFragment {
         addLocationButton = rootView.findViewById(R.id.addLocationButton);
         addLocationButton.setOnClickListener(view -> fetchUserLocation());
 
-        Button postMemoryButton = rootView.findViewById(R.id.postMemoryButton);
+        postMemoryButton = rootView.findViewById(R.id.postMemoryButton);
         postMemoryButton.setOnClickListener(view -> postMusicMemory());
         return rootView;
     }
@@ -173,9 +184,19 @@ public class PostFragment extends MainFragment {
 
     @SuppressLint("MissingPermission")
     private void fetchUserLocation() {
+        if (fusedLocationClient == null) {
+            Message.showFailureMessage(currentActivity, "Google Play services is required");
+            return;
+        }
+
         if (locationPermission.isCoarseGranted() && locationPermission.isFineGranted()) {
-            fusedLocationClient.getLastLocation()
+            fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
                     .addOnSuccessListener(this.currentActivity, location -> {
+                        if (location == null) {
+                            Log.i(TAG, "Location unknown");
+                            return;
+                        }
+
                         currentLocation = location;
                         String displayText = getLocationText(currentLocation);
                         addLocationButton.setText(displayText);
@@ -243,6 +264,8 @@ public class PostFragment extends MainFragment {
             return;
         }
 
+        postMemoryButton.setEnabled(false);
+
         String authorID = this.currentSession.getCurrentUser().getUid();
         Date timePosted = Calendar.getInstance().getTime();
         GeoPoint geoPointLocation = new GeoPoint(
@@ -265,9 +288,10 @@ public class PostFragment extends MainFragment {
                     geoPointLocation,
                     imageUrl,
                     song
-            )).addOnFailureListener(e ->
-                    Message.showSuccessMessage(this.currentActivity, "Successfully created the music memory")
-            ).addOnCompleteListener(unused -> {
+            )).addOnFailureListener(e -> {
+                Message.showFailureMessage(this.currentActivity, "Could not create the music memory");
+                postMemoryButton.setEnabled(true);
+            }).addOnCompleteListener(unused -> {
                         clearData();
                         FragmentUtil.replaceFragment(
                                 requireActivity().getSupportFragmentManager(),
