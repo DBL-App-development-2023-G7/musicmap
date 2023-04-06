@@ -8,5 +8,6 @@
         android:id="@+id/music_memory_fragment_view"
         android:name="com.example.musicmap.screens.main.MusicMemoryFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_music_memory"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
