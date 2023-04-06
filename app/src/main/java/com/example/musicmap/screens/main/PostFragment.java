@@ -134,8 +134,9 @@ public class PostFragment extends MainFragment {
 //        cameraPermission.request();
         getPermission();
         parentActivity = (SpotifyAuthActivity) this.currentActivity;
+        parentActivity.refreshToken(apiToken -> {}, () -> Message.showFailureMessage(this.currentActivity, "We could not detect a connection to your Spotify account."));
 
-        parentActivity.refreshToken(apiToken -> {}, () -> parentActivity.registerForSpotifyPKCE());
+//        parentActivity.refreshToken(apiToken -> {}, () -> parentActivity.registerForSpotifyPKCE());
     }
 
     @Override
@@ -246,8 +247,6 @@ public class PostFragment extends MainFragment {
         }
     }
 
-    // TODO Make this monster prettier
-    // Below is some questionable code
     private void postMusicMemory() {
         if (SearchFragment.getResultTrack() == null) {
             Message.showFailureMessage(this.currentActivity, "A track is required to post a music memory!");
