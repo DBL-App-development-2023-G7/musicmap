@@ -71,6 +71,9 @@ public class PostFragment extends MainFragment {
     private Session currentSession;
     private Activity currentActivity;
 
+    private ImageView songImageView;
+    private Button addSongButton;
+
     private Location currentLocation;
     private Button addLocationButton;
     private ImageView capturedImagePreview;
@@ -164,10 +167,10 @@ public class PostFragment extends MainFragment {
         Button addImageButton = rootView.findViewById(R.id.addImageButton);
         addImageButton.setOnClickListener(view -> goToCameraActivity());
 
-        Button addSongButton = rootView.findViewById(R.id.addSongButton);
+        addSongButton = rootView.findViewById(R.id.addSongButton);
         addSongButton.setOnClickListener(view -> goToSearchFragment());
 
-        ImageView songImageView = rootView.findViewById(R.id.songPreviewImage);
+        songImageView = rootView.findViewById(R.id.songPreviewImage);
 
         // get current song if no song has been searched for
         if (SearchFragment.getResultTrack() == null) {
@@ -178,19 +181,15 @@ public class PostFragment extends MainFragment {
                     }
             ).thenAcceptAsync(
                     track -> {
-                        if (track != null){
+                        if (track != null) {
                             SearchFragment.setResultTrack(track);
-                            songImageView.setVisibility(View.VISIBLE);
-                            Picasso.get().load(track.getAlbum().getImages()[0].getUrl()).into(songImageView);
-                            addSongButton.setText(track.getName());
+                            setSelectedTrack(track);
                         }
                     },
                     parentActivity.getMainExecutor()
             );
         } else {
-            songImageView.setVisibility(View.VISIBLE);
-            Picasso.get().load(SearchFragment.getResultTrack().getAlbum().getImages()[0].getUrl()).into(songImageView);
-            addSongButton.setText(SearchFragment.getResultTrack().getName());
+            setSelectedTrack(SearchFragment.getResultTrack());
         }
 
         addLocationButton = rootView.findViewById(R.id.addLocationButton);
@@ -199,6 +198,12 @@ public class PostFragment extends MainFragment {
         postMemoryButton = rootView.findViewById(R.id.postMemoryButton);
         postMemoryButton.setOnClickListener(view -> postMusicMemory());
         return rootView;
+    }
+
+    private void setSelectedTrack(Track track) {
+        songImageView.setVisibility(View.VISIBLE);
+        Picasso.get().load(track.getAlbum().getImages()[0].getUrl()).into(songImageView);
+        addSongButton.setText(track.getName());
     }
 
     private void goToSearchFragment() {
