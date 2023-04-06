@@ -130,9 +130,10 @@ public class PostFragment extends MainFragment {
             int response = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(currentActivity);
             Log.e(TAG, "Google Play services availability response: " + response);
         }
+
         fetchUserLocation();
-//        cameraPermission.request();
         getPermission();
+
         parentActivity = (SpotifyAuthActivity) this.currentActivity;
         parentActivity.refreshToken(apiToken -> {
             postMemoryButton.setEnabled(true);
