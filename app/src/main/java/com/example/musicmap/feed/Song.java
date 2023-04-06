@@ -3,6 +3,7 @@ package com.example.musicmap.feed;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.Objects;
 
@@ -13,6 +14,7 @@ public class Song {
     private String spotifyArtistId;
 
     private String imageUri;
+    @Nullable
     private String musicPreviewUri;
 
     @SuppressWarnings("unused")
@@ -21,7 +23,7 @@ public class Song {
     public Song(String name,
                 String spotifyArtistId,
                 String imageUri,
-                String musicPreviewUri) {
+                @Nullable String musicPreviewUri) {
         this.name = name;
         this.spotifyArtistId = spotifyArtistId;
         this.imageUri = imageUri;
@@ -40,7 +42,12 @@ public class Song {
         return Uri.parse(imageUri);
     }
 
+    @Nullable
     public Uri getMusicPreviewUri() {
+        if (musicPreviewUri == null) {
+            return null;
+        }
+
         return Uri.parse(musicPreviewUri);
     }
 

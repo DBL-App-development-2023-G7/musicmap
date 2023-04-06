@@ -10,14 +10,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.musicmap.R;
+import com.example.musicmap.util.ui.Message;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
 public class SpotifyWidgetFragment extends Fragment {
+
+    private ViewGroup viewGroup;
 
     private TextView artistName;
     private TextView songName;
@@ -25,11 +29,14 @@ public class SpotifyWidgetFragment extends Fragment {
     private MediaPlayer mediaPlayer;
 
     private ImageView playImageView;
+    @Nullable
     private Uri previewUri;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View widgetView = inflater.inflate(R.layout.spotify_playback_widget_layout, container, false);
+
+        this.viewGroup = container;
 
         this.artistName = widgetView.findViewById(R.id.artist_name);
         this.songName = widgetView.findViewById(R.id.song_name);
@@ -48,7 +55,7 @@ public class SpotifyWidgetFragment extends Fragment {
         }
     }
 
-    public void setupFragment(String songName, String artistName, String photoURI, Uri previewUri) {
+    public void setupFragment(String songName, String artistName, String photoURI, @Nullable Uri previewUri) {
         this.songName.setText(songName);
         this.songName.setSelected(true);
         this.artistName.setText(artistName);
@@ -59,6 +66,12 @@ public class SpotifyWidgetFragment extends Fragment {
         setupMediaPlayer();
 
         playImageView.setOnClickListener(view -> {
+            if (previewUri == null) {
+                Message.showFailureMessage(viewGroup, "This song does not allow for a playback preview");
+
+                return;
+            }
+
             if (mediaPlayer.isPlaying()) {
                 pauseAudio();
             } else {
@@ -74,6 +87,10 @@ public class SpotifyWidgetFragment extends Fragment {
 
         mediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build());
+
+        if (previewUri == null) {
+            return;
+        }
 
         try {
             mediaPlayer.setDataSource(this.getContext(), previewUri);
@@ -100,4 +117,5 @@ public class SpotifyWidgetFragment extends Fragment {
         mediaPlayer.pause();
         playImageView.setImageResource(R.drawable.play_icon);
     }
+
 }
