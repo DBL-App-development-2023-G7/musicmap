@@ -13,9 +13,11 @@ import java.io.IOException;
 
 public class ImageUtils {
     private static final String TAG = "ImageUtils";
+
     public static float getImageRotationFromEXIF(Activity activity, Uri imageUri) throws IOException {
-        Log.w(TAG, String.format("Start: %s", imageUri.toString()));
         float rotation = 0f;
+        Log.d(TAG, "Getting rotation of " + imageUri.toString());
+
         ExifInterface exifInterface = new ExifInterface(activity.getContentResolver().openInputStream(imageUri));
         int orientation = exifInterface.getAttributeInt(TAG_ORIENTATION, ORIENTATION_NORMAL);
 
@@ -35,8 +37,9 @@ public class ImageUtils {
             default:
                 break;
         }
-        Log.w(TAG, String.format("End: %s", imageUri.toString()));
-        Log.w(TAG, String.format("End: .2%f", rotation));
+
+        Log.d(TAG, String.format("End: .2%f", rotation));
+
         return rotation;
     }
 }

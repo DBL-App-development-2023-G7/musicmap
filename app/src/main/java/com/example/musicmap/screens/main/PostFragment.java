@@ -1,7 +1,5 @@
 package com.example.musicmap.screens.main;
 
-import static com.example.musicmap.util.spotify.SpotifyUtils.getCurrentTrackFuture;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -31,7 +29,6 @@ import androidx.core.content.ContextCompat;
 import com.example.musicmap.R;
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.feed.Song;
-import com.example.musicmap.screens.settings.SettingsActivity;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.util.firebase.Actions;
 import com.example.musicmap.util.permissions.CameraPermission;
@@ -56,7 +53,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import se.michaelthelin.spotify.model_objects.specification.Track;
@@ -93,28 +89,28 @@ public class PostFragment extends MainFragment {
                         Log.w(TAG, "Activity result from CameraActivity is null");
                         return;
                     }
-                    Log.w(TAG, "Activity result is called");
 
                     Uri imageUri = resultIntent.getData();
-                    Log.w(TAG, "Data is fetched");
-                    Log.w(TAG, String.format("Data: %s", imageUri.toString()));
+
+                    Log.d(TAG, "Camera Activity result is called, URI: " + imageUri);
+
                     try {
                         Picasso.get().load(imageUri)
                                 .rotate(ImageUtils.getImageRotationFromEXIF(parentActivity, imageUri))
                                 .into(cameraImageTarget);
                     } catch (IOException e) {
-                        Log.d(TAG, "Exception occurred while setting the image", e);
+                        Log.e(TAG, "Exception occurred while setting the image", e);
                     }
                 }
             }
     );
 
     // this is a Picasso target into which Picasso will load the image taken from the camera
-    // it is not an anonymous class to prevent it from being garbage collected
-    private Target cameraImageTarget = new Target() {
+    // in a field so it won't be garbage collected
+    private final Target cameraImageTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            Log.d(TAG, "Bitmap Loaded");
+            Log.d(TAG, "Camera Image Bitmap Loaded");
             capturedImage = bitmap;
             capturedImagePreview.setImageBitmap(capturedImage);
             capturedImagePreview.setVisibility(View.VISIBLE);
@@ -122,12 +118,12 @@ public class PostFragment extends MainFragment {
 
         @Override
         public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-            Log.d(TAG, "Exception occurred while setting the image", e);
+            Log.e(TAG, "Exception occurred while setting the image", e);
         }
 
         @Override
         public void onPrepareLoad(Drawable placeHolderDrawable) {
-            Log.d(TAG, "Prepare Load");
+            Log.d(TAG, "Prepare Camera Image Load");
         }
     };
 
@@ -150,6 +146,7 @@ public class PostFragment extends MainFragment {
 //        cameraPermission.request();
         getPermission();
         parentActivity = (SpotifyAuthActivity) this.currentActivity;
+
         parentActivity.refreshToken(apiToken -> {}, () -> parentActivity.registerForSpotifyPKCE());
     }
 
@@ -176,7 +173,7 @@ public class PostFragment extends MainFragment {
         if (SearchFragment.getResultTrack() == null) {
             SpotifyUtils.getWaitForTokenFuture().thenApply(
                     unused -> {
-                        Track currentTrack = getCurrentTrackFuture().join();
+                        Track currentTrack = SpotifyUtils.getCurrentTrackFuture().join();
                         return currentTrack;
                     }
             ).thenAcceptAsync(
