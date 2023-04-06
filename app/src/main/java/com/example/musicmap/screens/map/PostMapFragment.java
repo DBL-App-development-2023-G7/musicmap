@@ -46,6 +46,11 @@ public class PostMapFragment extends MapFragment {
 
         // Start fetching music memories
         Queries.getAllMusicMemoriesInLastTwentyFourHours().addOnCompleteListener(completedTask -> {
+            if (postsFolder.getItems() == null) {
+                // View no longer active
+                return;
+            }
+
             if (completedTask.isSuccessful()) {
                 // Add all retrieved music memories to map
                 completedTask.getResult().stream()
