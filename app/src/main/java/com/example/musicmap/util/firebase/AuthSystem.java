@@ -52,15 +52,15 @@ public class AuthSystem {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String email = userData.getEmail();
 
-
-        Task<AuthResult> registerAccount = auth.createUserWithEmailAndPassword(email, password);
         return Queries.getUsersWithUsername(userData.getUsername()).onSuccessTask(results -> {
             TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
             if (!results.isEmpty()) {
-                tcs.setException(new FirebaseFirestoreException("The username already exists",
+                tcs.setException(new FirebaseFirestoreException("The username already exist!",
                         FirebaseFirestoreException.Code.ALREADY_EXISTS));
                 return tcs.getTask();
             }
+
+            Task<AuthResult> registerAccount = auth.createUserWithEmailAndPassword(email, password);
 
             return registerAccount.onSuccessTask(result -> {
 
