@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.musicmap.R;
+import com.example.musicmap.screens.main.MusicMemoryActivity;
 import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.user.User;
 import com.example.musicmap.util.Constants;
@@ -47,6 +48,7 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
     @Override
     public View getView(int position, @Nullable View convertView, ViewGroup parent) {
         View row = convertView;
+
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(activityContext);
             row = inflater.inflate(R.layout.single_post_layout_feed, parent, false);
@@ -62,6 +64,14 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
         TextView songDetails = row.findViewById(R.id.song_details);
         ImageView memoryImage = row.findViewById(R.id.memory_image);
         ImageView userImage = row.findViewById(R.id.user_profile_image);
+
+        row.setOnClickListener(v -> {
+            Intent intent = new Intent(activityContext, MusicMemoryActivity.class);
+            intent.putExtra(Constants.AUTHOR_UID_ARGUMENT_KEY, musicMemory.getAuthorUid());
+            intent.putExtra(Constants.MUSIC_MEMORY_UID_ARGUMENT_KEY, musicMemory.getUid());
+
+            activityContext.startActivity(intent);
+        });
 
         if (isUsedInFeed) {
             AuthSystem.getUser(musicMemory.getAuthorUid()).addOnCompleteListener(task -> {

@@ -18,6 +18,7 @@ import com.example.musicmap.util.Constants;
 import com.example.musicmap.util.permissions.LocationPermission;
 import com.example.musicmap.util.spotify.SpotifyAuthActivity;
 import com.example.musicmap.util.ui.FragmentUtil;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends SpotifyAuthActivity {
@@ -27,6 +28,7 @@ public class HomeActivity extends SpotifyAuthActivity {
 
     private BottomNavigationView bottomNavigationView;
     private ImageView profileButton;
+    private AppBarLayout appBarView;
 
     @Override
     protected void updateLayout(boolean internetAvailable) {
@@ -73,7 +75,7 @@ public class HomeActivity extends SpotifyAuthActivity {
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         profileButton = findViewById(R.id.appbarProfile);
-
+        appBarView = findViewById(R.id.appBarLayout);
         updateNavbar(currentUser);
         setupProfileButton(currentUser);
 
