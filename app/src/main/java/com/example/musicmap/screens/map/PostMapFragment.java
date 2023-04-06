@@ -47,7 +47,7 @@ public class PostMapFragment extends MapFragment {
         // Start fetching music memories
         Queries.getAllMusicMemoriesInLastTwentyFourHours().addOnCompleteListener(completedTask -> {
             if (postsFolder.getItems() == null) {
-                // View no longer active
+                // Overlay got detached
                 return;
             }
 
