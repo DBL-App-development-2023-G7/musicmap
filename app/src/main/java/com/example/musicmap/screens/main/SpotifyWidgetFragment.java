@@ -43,7 +43,7 @@ public class SpotifyWidgetFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (mediaPlayer.isPlaying()) {
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             pauseAudio();
         }
     }
