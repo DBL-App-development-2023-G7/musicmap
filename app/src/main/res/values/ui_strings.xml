@@ -92,7 +92,7 @@
     <string name="play_button_description">Play/Stop preview of the song.</string>
     <string name="preview">Preview</string>
     <string name="song">Song</string>
+    <string name="posted_on">posted on %s</string>
     <string name="feed_song_name">Song Name</string>
     <string name="feed_song_details">Song Details</string>
-
 </resources>

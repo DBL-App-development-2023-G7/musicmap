@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.musicmap.R;
+import com.example.musicmap.screens.main.MusicMemoryActivity;
 import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.user.User;
 import com.example.musicmap.util.Constants;
@@ -62,6 +63,14 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
         if (musicMemory == null) {
             return row;
         }
+
+        row.setOnClickListener(v -> {
+            Intent intent = new Intent(activityContext, MusicMemoryActivity.class);
+            intent.putExtra(Constants.AUTHOR_UID_ARGUMENT_KEY, musicMemory.getAuthorUid());
+            intent.putExtra(Constants.MUSIC_MEMORY_UID_ARGUMENT_KEY, musicMemory.getUid());
+
+            activityContext.startActivity(intent);
+        });
 
         ImageView songImage = row.findViewById(R.id.song_art);
         TextView songName = row.findViewById(R.id.song_name);
