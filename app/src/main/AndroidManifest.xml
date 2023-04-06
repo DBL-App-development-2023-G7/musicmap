@@ -41,6 +41,11 @@
             android:theme="@style/Theme.MusicMap.NoActionBar"
             />
         <activity
+            android:name=".screens.main.MusicMemoryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MusicMap.NoActionBar"
+            />
+        <activity
             android:name=".screens.main.HomeActivity"
             android:exported="true"
             android:label="MusicMap"

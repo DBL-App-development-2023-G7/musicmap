@@ -55,7 +55,7 @@ public class MusicMemoryFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args == null) {
-            throw new IllegalArgumentException("No arguments provided to MusicMemoryFragment");
+            return;
         }
 
         musicMemoryUid = args.getString(Constants.MUSIC_MEMORY_UID_ARGUMENT_KEY);
@@ -71,6 +71,10 @@ public class MusicMemoryFragment extends Fragment {
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_music_memory, container, false);
+
+        if (authorUid == null) {
+            return rootView; // no args provided
+        }
 
         // Give arguments to map
         Bundle mapArgs = new Bundle();
