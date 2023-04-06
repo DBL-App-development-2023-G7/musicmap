@@ -72,8 +72,12 @@ public class FeedFragment extends MainFragment {
     private void getFeed(int size, OnFeedDataLoadedListener listener) {
         Queries.getAllMusicMemoriesInLastTwentyFourHours().addOnCompleteListener(completedTask -> {
             if (completedTask.isSuccessful()) {
-                List<MusicMemory> feed = completedTask.getResult().
-                        subList(0, Math.min(completedTask.getResult().size(), size));
+                List<MusicMemory> feed = completedTask.getResult();
+
+                if (size > 0 && feed.size() > 0) {
+                    feed = feed.subList(0, Math.min(completedTask.getResult().size(), size));
+                }
+
                 listener.onFeedDataLoaded(feed);
             } else {
                 Log.e(TAG, "Exception occurred while getting feed music memories", completedTask.getException());
