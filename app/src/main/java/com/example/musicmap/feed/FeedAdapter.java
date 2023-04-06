@@ -71,8 +71,8 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
 
         row.setOnClickListener(v -> {
             Bundle args = new Bundle();
-            args.putString("author_uid", musicMemory.getAuthorUid());
-            args.putString("music_memory_uid", musicMemory.getUid());
+            args.putString(Constants.AUTHOR_UID_ARGUMENT_KEY, musicMemory.getAuthorUid());
+            args.putString(Constants.MUSIC_MEMORY_UID_ARGUMENT_KEY, musicMemory.getUid());
 
             FragmentUtil.replaceFragment(homeActivity.getFragmentManagerFromActivity(), R.id.fragment_view,
                     MusicMemoryFragment.class, args);

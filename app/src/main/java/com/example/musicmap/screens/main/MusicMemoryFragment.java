@@ -17,6 +17,7 @@ import com.example.musicmap.R;
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.screens.map.MusicMemoryMapFragment;
 import com.example.musicmap.user.UserData;
+import com.example.musicmap.util.Constants;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.firebase.Queries;
 import com.example.musicmap.util.ui.CircleTransform;
@@ -57,8 +58,8 @@ public class MusicMemoryFragment extends Fragment {
             throw new IllegalArgumentException("No arguments provided to MusicMemoryFragment");
         }
 
-        musicMemoryUid = args.getString("music_memory_uid");
-        authorUid = args.getString("author_uid");
+        musicMemoryUid = args.getString(Constants.MUSIC_MEMORY_UID_ARGUMENT_KEY);
+        authorUid = args.getString(Constants.AUTHOR_UID_ARGUMENT_KEY);
     }
 
     @Override
@@ -73,8 +74,8 @@ public class MusicMemoryFragment extends Fragment {
 
         // Give arguments to map
         Bundle mapArgs = new Bundle();
-        mapArgs.putString("music_memory_uid", musicMemoryUid);
-        mapArgs.putString("author_uid", authorUid);
+        mapArgs.putString(Constants.MUSIC_MEMORY_UID_ARGUMENT_KEY, musicMemoryUid);
+        mapArgs.putString(Constants.AUTHOR_UID_ARGUMENT_KEY, authorUid);
 
         FragmentUtil.replaceFragment(getChildFragmentManager(), R.id.music_memory_map,
                 MusicMemoryMapFragment.class, mapArgs);

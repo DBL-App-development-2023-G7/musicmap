@@ -2,6 +2,7 @@ package com.example.musicmap.screens.map;
 
 import android.os.Bundle;
 
+import com.example.musicmap.util.Constants;
 import com.example.musicmap.util.firebase.Queries;
 import com.example.musicmap.util.map.MusicMemoryOverlay;
 
@@ -22,8 +23,8 @@ public class MusicMemoryMapFragment extends MapFragment {
             return;
         }
 
-        String authorUid = args.getString("author_uid");
-        String musicMemoryUid = args.getString("music_memory_uid");
+        String authorUid = args.getString(Constants.AUTHOR_UID_ARGUMENT_KEY);
+        String musicMemoryUid = args.getString(Constants.MUSIC_MEMORY_UID_ARGUMENT_KEY);
 
         // Get MusicMemory from UIDs
         // TODO MusicMemoryOverlay or just a marker?

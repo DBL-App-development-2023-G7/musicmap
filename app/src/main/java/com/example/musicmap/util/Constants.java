@@ -17,6 +17,10 @@ public final class Constants {
 
     public static final String PROFILE_USER_UID_ARGUMENT = "user_uid";
 
+    public static final String AUTHOR_UID_ARGUMENT_KEY = "author_uid";
+
+    public static final String MUSIC_MEMORY_UID_ARGUMENT_KEY = "music_memory_uid";
+
     public static final String DEFAULT_USER_IMAGE_URI = "https://i.imgur.com/GvsgVco.jpeg";
 
 }
