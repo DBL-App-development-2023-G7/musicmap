@@ -20,4 +20,6 @@
     <string name="auth_error_failed_registration">Could not register, please try again later!</string>
     <string name="feed_error_loading">Could not load feed</string>
     <string name="no_internet_error">Oops! MusicMap requires an active internet connection to function. We\'re tying to find a connection</string>
+    <string name="error_spotify_not_connected">We could not detect a connection to your Spotify account.</string>
+    <string name="spotify_already_connected">Your spotify account is already connected!</string>
 </resources>

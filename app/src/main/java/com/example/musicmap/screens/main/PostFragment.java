@@ -34,6 +34,7 @@ import com.example.musicmap.util.firebase.Actions;
 import com.example.musicmap.util.permissions.CameraPermission;
 import com.example.musicmap.util.permissions.LocationPermission;
 import com.example.musicmap.util.spotify.SpotifyAuthActivity;
+import com.example.musicmap.util.spotify.SpotifyUtils;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.example.musicmap.util.ui.ImageUtils;
 import com.example.musicmap.util.ui.Message;
@@ -54,6 +55,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import se.michaelthelin.spotify.model_objects.specification.Track;
+
 public class PostFragment extends MainFragment {
 
     // needs to be static or data is lost
@@ -67,6 +70,9 @@ public class PostFragment extends MainFragment {
 
     private Session currentSession;
     private Activity currentActivity;
+
+    private ImageView songImageView;
+    private Button addSongButton;
 
     private Location currentLocation;
     private Button addLocationButton;
@@ -89,31 +95,40 @@ public class PostFragment extends MainFragment {
 
                     Uri imageUri = resultIntent.getData();
 
+                    Log.d(TAG, "Camera Activity result is called, URI: " + imageUri);
+
                     try {
                         Picasso.get().load(imageUri)
                                 .rotate(ImageUtils.getImageRotationFromEXIF(parentActivity, imageUri))
-                                .into(new Target() {
-                                    @Override
-                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                        capturedImage = bitmap;
-                                        capturedImagePreview.setImageBitmap(capturedImage);
-                                        capturedImagePreview.setVisibility(View.VISIBLE);
-                                    }
-
-                                    @Override
-                                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                                        Log.d(TAG, "Exception occurred while setting the image", e);
-                                    }
-
-                                    @Override
-                                    public void onPrepareLoad(Drawable placeHolderDrawable) {}
-                                });
+                                .into(cameraImageTarget);
                     } catch (IOException e) {
-                        Log.d(TAG, "Exception occurred while setting the image", e);
+                        Log.e(TAG, "Exception occurred while setting the image", e);
                     }
                 }
             }
     );
+
+    // this is a Picasso target into which Picasso will load the image taken from the camera
+    // in a field so it won't be garbage collected
+    private final Target cameraImageTarget = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            Log.d(TAG, "Camera Image Bitmap Loaded");
+            capturedImage = bitmap;
+            capturedImagePreview.setImageBitmap(capturedImage);
+            capturedImagePreview.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+            Log.e(TAG, "Exception occurred while setting the image", e);
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+            Log.d(TAG, "Prepare Camera Image Load");
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,12 +145,17 @@ public class PostFragment extends MainFragment {
             int response = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(currentActivity);
             Log.e(TAG, "Google Play services availability response: " + response);
         }
-        fetchUserLocation();
-//        cameraPermission.request();
-        getPermission();
-        parentActivity = (SpotifyAuthActivity) this.currentActivity;
 
-        parentActivity.refreshToken(apiToken -> {}, () -> parentActivity.registerForSpotifyPKCE());
+        fetchUserLocation();
+        getPermission();
+
+        parentActivity = (SpotifyAuthActivity) this.currentActivity;
+        parentActivity.refreshToken(apiToken -> {
+            postMemoryButton.setEnabled(true);
+        }, () -> {
+            Message.showFailureMessage(this.currentActivity, getString(R.string.error_spotify_not_connected));
+            postMemoryButton.setEnabled(false);
+        });
     }
 
     @Override
@@ -152,16 +172,29 @@ public class PostFragment extends MainFragment {
         Button addImageButton = rootView.findViewById(R.id.addImageButton);
         addImageButton.setOnClickListener(view -> goToCameraActivity());
 
-        Button addSongButton = rootView.findViewById(R.id.addSongButton);
+        addSongButton = rootView.findViewById(R.id.addSongButton);
         addSongButton.setOnClickListener(view -> goToSearchFragment());
 
-        ImageView songImageView = rootView.findViewById(R.id.songPreviewImage);
+        songImageView = rootView.findViewById(R.id.songPreviewImage);
 
-        // load the search result track if there is one
-        if (SearchFragment.getResultTrack() != null) {
-            songImageView.setVisibility(View.VISIBLE);
-            Picasso.get().load(SearchFragment.getResultTrack().getAlbum().getImages()[0].getUrl()).into(songImageView);
-            addSongButton.setText(SearchFragment.getResultTrack().getName());
+        // get current song if no song has been searched for
+        if (SearchFragment.getResultTrack() == null) {
+            SpotifyUtils.getWaitForTokenFuture().thenApply(
+                    unused -> {
+                        Track currentTrack = SpotifyUtils.getCurrentTrackFuture().join();
+                        return currentTrack;
+                    }
+            ).thenAcceptAsync(
+                    track -> {
+                        if (track != null) {
+                            SearchFragment.setResultTrack(track);
+                            setSelectedTrack(track);
+                        }
+                    },
+                    parentActivity.getMainExecutor()
+            );
+        } else {
+            setSelectedTrack(SearchFragment.getResultTrack());
         }
 
         addLocationButton = rootView.findViewById(R.id.addLocationButton);
@@ -170,6 +203,12 @@ public class PostFragment extends MainFragment {
         postMemoryButton = rootView.findViewById(R.id.postMemoryButton);
         postMemoryButton.setOnClickListener(view -> postMusicMemory());
         return rootView;
+    }
+
+    private void setSelectedTrack(Track track) {
+        songImageView.setVisibility(View.VISIBLE);
+        Picasso.get().load(track.getAlbum().getImages()[0].getUrl()).into(songImageView);
+        addSongButton.setText(track.getName());
     }
 
     private void goToSearchFragment() {
@@ -246,8 +285,6 @@ public class PostFragment extends MainFragment {
         }
     }
 
-    // TODO Make this monster prettier
-    // Below is some questionable code
     private void postMusicMemory() {
         if (SearchFragment.getResultTrack() == null) {
             Message.showFailureMessage(this.currentActivity, "A track is required to post a music memory!");
