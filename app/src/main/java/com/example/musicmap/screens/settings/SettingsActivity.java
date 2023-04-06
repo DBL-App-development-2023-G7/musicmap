@@ -51,7 +51,8 @@ public class SettingsActivity extends SpotifyAuthActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment currentFragment = fragmentManager.findFragmentById(R.id.fragmentSettings);
 
-        if (currentFragment instanceof AccountSettingsFragment) {
+        if (currentFragment instanceof AccountSettingsFragment
+                || currentFragment instanceof  ConnectionSettingsFragment) {
             fragmentManager.popBackStack();
         } else {
             super.onBackPressed();
