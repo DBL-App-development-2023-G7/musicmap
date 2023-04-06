@@ -86,28 +86,28 @@ public class PostFragment extends MainFragment {
                         Log.w(TAG, "Activity result from CameraActivity is null");
                         return;
                     }
-                    Log.w(TAG, "Activity result is called");
 
                     Uri imageUri = resultIntent.getData();
-                    Log.w(TAG, "Data is fetched");
-                    Log.w(TAG, String.format("Data: %s", imageUri.toString()));
+
+                    Log.d(TAG, "Camera Activity result is called, URI: " + imageUri);
+
                     try {
                         Picasso.get().load(imageUri)
                                 .rotate(ImageUtils.getImageRotationFromEXIF(parentActivity, imageUri))
                                 .into(cameraImageTarget);
                     } catch (IOException e) {
-                        Log.d(TAG, "Exception occurred while setting the image", e);
+                        Log.e(TAG, "Exception occurred while setting the image", e);
                     }
                 }
             }
     );
 
     // this is a Picasso target into which Picasso will load the image taken from the camera
-    // it is not an anonymous class to prevent it from being garbage collected
-    private Target cameraImageTarget = new Target() {
+    // in a field so it won't be garbage collected
+    private final Target cameraImageTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            Log.d(TAG, "Bitmap Loaded");
+            Log.d(TAG, "Camera Image Bitmap Loaded");
             capturedImage = bitmap;
             capturedImagePreview.setImageBitmap(capturedImage);
             capturedImagePreview.setVisibility(View.VISIBLE);
@@ -115,12 +115,12 @@ public class PostFragment extends MainFragment {
 
         @Override
         public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-            Log.d(TAG, "Exception occurred while setting the image", e);
+            Log.e(TAG, "Exception occurred while setting the image", e);
         }
 
         @Override
         public void onPrepareLoad(Drawable placeHolderDrawable) {
-            Log.d(TAG, "Prepare Load");
+            Log.d(TAG, "Prepare Camera Image Load");
         }
     };
 
