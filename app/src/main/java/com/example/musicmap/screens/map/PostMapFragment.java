@@ -45,7 +45,12 @@ public class PostMapFragment extends MapFragment {
         }
 
         // Start fetching music memories
-        Queries.getAllMusicMemories().addOnCompleteListener(completedTask -> {
+        Queries.getAllMusicMemoriesInLastTwentyFourHours().addOnCompleteListener(completedTask -> {
+            if (postsFolder.getItems() == null) {
+                // Overlay got detached
+                return;
+            }
+
             if (completedTask.isSuccessful()) {
                 // Add all retrieved music memories to map
                 completedTask.getResult().stream()

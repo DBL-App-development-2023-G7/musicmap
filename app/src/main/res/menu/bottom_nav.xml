@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:title="@string/navbar_post"
         android:id="@+id/navbarPost"
-        android:icon="@drawable/add_post_icon"
-        android:title="@string/navbar_post" />
+        android:icon="@drawable/add_post_icon" />
+    <item
+        android:title="@string/navbar_artist_data"
+        android:id="@+id/navbaArtistData"
+        android:icon="@drawable/baseline_data_exploration_24" />
     <item
         android:title="@string/navbar_feed"
         android:id="@+id/navbarFeed"

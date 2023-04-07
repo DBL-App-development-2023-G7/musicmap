@@ -1,9 +1,10 @@
 package com.example.musicmap.user;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import com.example.musicmap.util.Constants;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -47,12 +48,7 @@ public class UserDataTest {
 
     @Test
     public void testGetProfilePicture() {
-        assertEquals(userData.getProfilePicture(), "");
-    }
-
-    @Test
-    public void testHasProfilePicture() {
-        assertFalse(userData.hasProfilePicture());
+        assertEquals(userData.getProfilePicture(), Constants.DEFAULT_USER_IMAGE_URI);
     }
 
     @Test

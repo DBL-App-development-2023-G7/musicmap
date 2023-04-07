@@ -2,15 +2,22 @@ package com.example.musicmap.util.firebase;
 
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.feed.Post;
+import com.example.musicmap.feed.Song;
+import com.example.musicmap.screens.artist.SongCount;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class Queries {
@@ -99,9 +106,39 @@ public class Queries {
     }
 
     /**
-     * Fetches all the music memories (used for the feed).
+     * Fetches all the music memories created in the last 24 hours.
      *
-     * @return feed
+     * @return music memories in last 24 hours.
+     */
+    public static Task<List<MusicMemory>> getAllMusicMemoriesInLastTwentyFourHours() {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        long timestamp24HoursAgo = System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24);
+
+        return firestore.collectionGroup("MusicMemories")
+                .whereGreaterThan("timePosted", new Date(timestamp24HoursAgo))
+                .get().continueWithTask(task -> {
+                    TaskCompletionSource<List<MusicMemory>> taskCompletionSource = new TaskCompletionSource<>();
+
+                    if (task.isSuccessful()) {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+
+                        List<MusicMemory> musicMemories = documents.stream()
+                                .map(document -> deserialize(document, MusicMemory.class))
+                                .collect(Collectors.toList());
+
+                        taskCompletionSource.setResult(musicMemories);
+                    } else {
+                        taskCompletionSource.setException(task.getException());
+                    }
+                    return taskCompletionSource.getTask();
+                });
+    }
+
+    /**
+     * Fetches all the music memories.
+     *
+     * @return all music emmories
      */
     public static Task<List<MusicMemory>> getAllMusicMemories() {
         // TODO: update the implementation based on how we decide to limit the feed
@@ -124,6 +161,38 @@ public class Queries {
             }
             return taskCompletionSource.getTask();
         });
+    }
+
+    /**
+     * Fetches the most popular songs for an artist.
+     *
+     * @param artistId the id of the artist
+     * @param count the number of songs to return (or all, whichever less)
+     * @return {@code count} number of most popular songs for the artist
+     */
+    public static Task<List<SongCount>> getMostPopularSongsByArtist(String artistId, int count) {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+        return firestore.collectionGroup("MusicMemories")
+                .whereEqualTo("song.spotifyArtistId", artistId)
+                .get()
+                .continueWith(task -> {
+                    Map<Song, Long> songMap = new HashMap<>();
+
+                    for (QueryDocumentSnapshot musicMemorySnapshot : task.getResult()) {
+                        Song song = deserialize(musicMemorySnapshot, MusicMemory.class).getSong();
+
+                        if (song != null) {
+                            songMap.put(song, songMap.getOrDefault(song, 0l) + 1);
+                        }
+                    }
+
+                    return songMap.entrySet().stream()
+                            .sorted(Map.Entry.<Song, Long>comparingByValue().reversed())
+                            .limit(count)
+                            .map(entry -> new SongCount(entry.getKey(), entry.getValue()))
+                            .collect(Collectors.toList());
+                });
     }
 
     /**
