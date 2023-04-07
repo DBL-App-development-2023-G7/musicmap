@@ -36,6 +36,7 @@ public class PopularSongsAdapter extends ArrayAdapter<SongCount> {
         }
 
         ImageView songImage = row.findViewById(R.id.spotify_album_cover);
+        ImageView playSong = row.findViewById(R.id.play_imageView);
         TextView songName = row.findViewById(R.id.song_name);
         TextView streamDetails = row.findViewById(R.id.artist_name);
 
@@ -44,6 +45,7 @@ public class PopularSongsAdapter extends ArrayAdapter<SongCount> {
             Song song = songCount.getSong();
             Long count = songCount.getCount();
 
+            playSong.setVisibility(View.INVISIBLE);
             songName.setText(song.getName());
             songName.setSelected(true);
             streamDetails.setText(String.format(activityContext.getString(R.string.referenced), count));
