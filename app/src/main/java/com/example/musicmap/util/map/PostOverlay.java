@@ -7,7 +7,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
-import android.view.MotionEvent;
 
 import androidx.core.content.ContextCompat;
 
@@ -21,7 +20,7 @@ import com.squareup.picasso.Target;
 
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.IconOverlay;
+import org.osmdroid.views.overlay.ClickableIconOverlay;
 
 /**
  * A overlay containing a {@link Post}.
@@ -30,7 +29,7 @@ import org.osmdroid.views.overlay.IconOverlay;
  *
  * @see MusicMemoryOverlay
  */
-public abstract class PostOverlay<P extends Post> extends IconOverlay {
+public abstract class PostOverlay<P extends Post> extends ClickableIconOverlay<P> {
 
     private static final String TAG = "PostOverlay";
 
@@ -68,6 +67,8 @@ public abstract class PostOverlay<P extends Post> extends IconOverlay {
      * @param post the post.
      */
     protected PostOverlay(MapView mapView, P post) {
+        super(post);
+
         this.mapView = mapView;
         this.post = post;
 
@@ -127,12 +128,6 @@ public abstract class PostOverlay<P extends Post> extends IconOverlay {
                 .centerCrop()
                 .transform(new CircleTransform())
                 .into(imageTarget);
-    }
-
-    @Override
-    public boolean onSingleTapConfirmed(MotionEvent e, MapView mapView) {
-        // TODO open post screen
-        return true;
     }
 
     /**
