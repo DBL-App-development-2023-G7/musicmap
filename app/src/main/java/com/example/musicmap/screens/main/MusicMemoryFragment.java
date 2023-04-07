@@ -133,7 +133,7 @@ public class MusicMemoryFragment extends Fragment {
             DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getContext());
             this.dateView.setText(getString(R.string.posted_on, dateFormat.format(postedDate)));
             this.spotifyWidget.setSongName(musicMemory.getSong().getName());
-            this.spotifyWidget.setArtistName(musicMemory.getSong().getSpotifyArtistId());
+            this.spotifyWidget.setArtistName(musicMemory.getSong().getArtistName());
         });
 
         return rootView;
