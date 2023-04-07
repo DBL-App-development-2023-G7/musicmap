@@ -55,24 +55,19 @@ public class VerificationActivity extends SessionAndInternetListenerActivity {
             return;
         }
 
-        if (currentUser instanceof Artist) {
-            Artist currentArtist = (Artist) currentUser;
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-            if (currentArtist.isVerified()) {
-                redirectUser();
-            }
-        } else {
-            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-            if (firebaseUser != null) {
-                firebaseUser.reload().addOnCompleteListener(task -> {
-                    if (firebaseUser.isEmailVerified()) {
-                        redirectUser();
+        if (firebaseUser != null) {
+            firebaseUser.reload().addOnCompleteListener(task -> {
+                if (firebaseUser.isEmailVerified()) {
+                    if (currentUser instanceof Artist && !((Artist) currentUser).isVerified()) {
+                        return;
                     }
-                });
-            }
-        }
 
+                    redirectUser();
+                }
+            });
+        }
     }
 
     private void setupLayout() {
@@ -83,6 +78,7 @@ public class VerificationActivity extends SessionAndInternetListenerActivity {
         
         if (currentUser instanceof Artist) {
             artistMsg.setVisibility(View.VISIBLE);
+            userMsg.setVisibility(View.VISIBLE);
         } else {
             userMsg.setVisibility(View.VISIBLE);
         }
