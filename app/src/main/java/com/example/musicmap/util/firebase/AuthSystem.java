@@ -52,18 +52,28 @@ public class AuthSystem {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String email = userData.getEmail();
 
-        Task<AuthResult> registerAccount = auth.createUserWithEmailAndPassword(email, password);
-        return registerAccount.onSuccessTask(result -> {
+        return Queries.getUsersWithUsername(userData.getUsername()).onSuccessTask(results -> {
             TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
-            FirebaseUser firebaseUser = result.getUser();
-
-            if (firebaseUser != null) {
-                Task<Void> sendEmail = firebaseUser.sendEmailVerification();
-                Task<Void> addUser = addUserToFirestore(new User(userData, firebaseUser.getUid()));
-                return Tasks.whenAll(sendEmail, addUser);
+            if (!results.isEmpty()) {
+                tcs.setException(new FirebaseFirestoreException("The username already exist!",
+                        FirebaseFirestoreException.Code.ALREADY_EXISTS));
+                return tcs.getTask();
             }
-            tcs.setException(new IllegalStateException("The firebaseUser is null."));
-            return tcs.getTask();
+
+            Task<AuthResult> registerAccount = auth.createUserWithEmailAndPassword(email, password);
+
+            return registerAccount.onSuccessTask(result -> {
+
+                FirebaseUser firebaseUser = result.getUser();
+
+                if (firebaseUser != null) {
+                    Task<Void> sendEmail = firebaseUser.sendEmailVerification();
+                    Task<Void> addUser = addUserToFirestore(new User(userData, firebaseUser.getUid()));
+                    return Tasks.whenAll(sendEmail, addUser);
+                }
+                tcs.setException(new IllegalStateException("The firebaseUser is null."));
+                return tcs.getTask();
+            });
         });
     }
 
