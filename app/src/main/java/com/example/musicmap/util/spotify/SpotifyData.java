@@ -24,7 +24,7 @@ public class SpotifyData {
                 .setAccessToken(token)
                 .build();
 
-        Log.d("debug", String.format("[poop] token recieved %s", token));
+        Log.d("debug", String.format("token recieved %s", token));
     }
 
     public static String getToken() {

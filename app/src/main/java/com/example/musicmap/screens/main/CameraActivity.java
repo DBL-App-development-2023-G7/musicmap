@@ -75,7 +75,7 @@ public class CameraActivity extends AppCompatActivity {
                 new ImageCapture.OnImageSavedCallback() {
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        Log.d("debug", "[poop] Image captured");
+                        Log.d("debug", "Image captured");
                         // return to post screen activity
                         Intent result = new Intent("com.example.RESULT_ACTION", outputFileResults.getSavedUri());
                         setResult(Activity.RESULT_OK, result);

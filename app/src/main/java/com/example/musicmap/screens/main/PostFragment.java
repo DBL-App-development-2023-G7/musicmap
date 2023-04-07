@@ -78,7 +78,7 @@ public class PostFragment extends MainFragment {
     private Button addLocationButton;
     private ImageView capturedImagePreview;
     private Button postMemoryButton;
-    private boolean shouldClearData =true;
+    private boolean shouldClearData = true;
     private SpotifyAuthActivity parentActivity;
 
     // a launcher that launches the camera activity and handles the result
@@ -180,10 +180,7 @@ public class PostFragment extends MainFragment {
         // get current song if no song has been searched for
         if (SearchFragment.getResultTrack() == null) {
             SpotifyUtils.getWaitForTokenFuture().thenApply(
-                    unused -> {
-                        Track currentTrack = SpotifyUtils.getCurrentTrackFuture().join();
-                        return currentTrack;
-                    }
+                    unused -> SpotifyUtils.getCurrentTrackFuture().join()
             ).thenAcceptAsync(
                     track -> {
                         if (track != null) {
@@ -206,9 +203,12 @@ public class PostFragment extends MainFragment {
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
-        if (shouldClearData) clearData();
+        if (shouldClearData) {
+            clearData();
+        }
+
         shouldClearData = true;
     }
 
