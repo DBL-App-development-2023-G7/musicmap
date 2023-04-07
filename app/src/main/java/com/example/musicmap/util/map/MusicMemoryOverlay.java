@@ -26,6 +26,7 @@ public class MusicMemoryOverlay extends PostOverlay<MusicMemory> {
         Intent intent = new Intent(context, MusicMemoryActivity.class);
         intent.putExtra(Constants.AUTHOR_UID_ARGUMENT_KEY, getPost().getAuthorUid());
         intent.putExtra(Constants.MUSIC_MEMORY_UID_ARGUMENT_KEY, getPost().getUid());
+        intent.putExtra(Constants.IS_SENT_FROM_FEED_ARGUMENT_KEY, true);
 
         context.startActivity(intent);
 
