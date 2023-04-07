@@ -48,6 +48,7 @@ public class ProfilePageFragment extends Fragment {
         profileListView.setAdapter(feedAdapter);
 
         Bundle args = getArguments();
+        System.out.println("->" + args.getString(Constants.PROFILE_USER_UID_ARGUMENT));
         if (args == null || args.getString(Constants.PROFILE_USER_UID_ARGUMENT) == null) {
             displayData(Session.getInstance().getCurrentUser());
         } else {
