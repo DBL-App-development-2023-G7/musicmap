@@ -23,4 +23,6 @@ public final class Constants {
 
     public static final String DEFAULT_USER_IMAGE_URI = "https://i.imgur.com/GvsgVco.jpeg";
 
+    public static final String IS_SENT_FROM_FEED_ARGUMENT_KEY = "sent_from_feed";
+
 }

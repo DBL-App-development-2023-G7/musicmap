@@ -68,8 +68,10 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
             Intent intent = new Intent(activityContext, MusicMemoryActivity.class);
             intent.putExtra(Constants.AUTHOR_UID_ARGUMENT_KEY, musicMemory.getAuthorUid());
             intent.putExtra(Constants.MUSIC_MEMORY_UID_ARGUMENT_KEY, musicMemory.getUid());
+            intent.putExtra(Constants.IS_SENT_FROM_FEED_ARGUMENT_KEY, isUsedInFeed);
 
             activityContext.startActivity(intent);
+            activityContext.finish();
         });
 
         ImageView songImage = row.findViewById(R.id.song_art);

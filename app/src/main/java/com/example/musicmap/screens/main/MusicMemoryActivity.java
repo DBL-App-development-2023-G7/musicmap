@@ -1,11 +1,14 @@
 package com.example.musicmap.screens.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
 import com.example.musicmap.R;
 import com.example.musicmap.SessionAndInternetListenerActivity;
+import com.example.musicmap.screens.profile.ProfileActivity;
+import com.example.musicmap.util.Constants;
 import com.example.musicmap.util.ui.FragmentUtil;
 
 public class MusicMemoryActivity extends SessionAndInternetListenerActivity {
@@ -28,6 +31,24 @@ public class MusicMemoryActivity extends SessionAndInternetListenerActivity {
             setContentView(R.layout.activity_music_memory);
             currentLayout = R.layout.activity_music_memory;
             setupActivity();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // TODO: improve back handling with single activity stack
+        Bundle bundle = getIntent().getExtras();
+        boolean isSentFromFeed = bundle.getBoolean(Constants.IS_SENT_FROM_FEED_ARGUMENT_KEY);
+
+        if (isSentFromFeed) {
+            startActivity(new Intent(this, HomeActivity.class));
+            finish();
+        } else {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra(Constants.PROFILE_USER_UID_ARGUMENT, bundle.getString(Constants.AUTHOR_UID_ARGUMENT_KEY));
+            startActivity(intent);
+            finish();
         }
     }
 
