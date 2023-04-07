@@ -93,6 +93,7 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
         songName.setText(musicMemory.getSong().getName());
         Picasso.get().load(musicMemory.getPhoto()).into(memoryImage);
         Picasso.get().load(musicMemory.getSong().getImageUri()).transform(new CircleTransform()).into(songImage);
+        songDetails.setText(musicMemory.getSong().getArtistName());
         userImage.setTag(position);
         return row;
     }
