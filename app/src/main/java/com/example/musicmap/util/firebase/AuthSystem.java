@@ -25,9 +25,7 @@ import com.google.firebase.internal.api.FirebaseNoSignedInUserException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class AuthSystem {
@@ -188,7 +186,7 @@ public class AuthSystem {
             for (QueryDocumentSnapshot memory : memories) {
                 batch.delete(memory.getReference());
             }
-            
+
             return batch.commit().addOnSuccessListener(result ->
                     firestore.collection("Users").document(uid).delete());
         });
