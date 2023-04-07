@@ -1,5 +1,6 @@
 package com.example.musicmap.screens.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -29,6 +30,13 @@ public class MusicMemoryActivity extends SessionAndInternetListenerActivity {
             currentLayout = R.layout.activity_music_memory;
             setupActivity();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(this, HomeActivity.class));
+        finish();
     }
 
     @Override

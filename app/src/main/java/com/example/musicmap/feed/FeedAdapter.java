@@ -70,6 +70,7 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
             intent.putExtra(Constants.MUSIC_MEMORY_UID_ARGUMENT_KEY, musicMemory.getUid());
 
             activityContext.startActivity(intent);
+            activityContext.finish();
         });
 
         ImageView songImage = row.findViewById(R.id.song_art);
