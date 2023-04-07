@@ -124,7 +124,7 @@ public class RegisterFragment extends AuthFragment {
                 & InputChecker.checkLastName(lastName, lastNameInput)
                 & InputChecker.checkEmail(email, emailInput)
                 & InputChecker.checkPassword(password, passwordInput)
-                & InputChecker.checkRepeatPassword(repeatPassword, password, passwordInput)
+                & InputChecker.checkRepeatPassword(repeatPassword, password, repeatPasswordInput)
                 & checkBirthdate(birthdate);
     }
 
