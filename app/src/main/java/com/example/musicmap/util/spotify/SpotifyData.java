@@ -24,10 +24,12 @@ public class SpotifyData {
         spotifyApi = new SpotifyApi.Builder()
                 .setAccessToken(token)
                 .build();
+
+        Log.d("debug", String.format("token recieved %s", token));
+
         final int EARLIER_REFRESH_TIME_SECONDS = 300;
         long expiryTimeMillis = (expiryTimeSeconds - EARLIER_REFRESH_TIME_SECONDS) * 1000;
         tokenExpiryTimeStampMillis = System.currentTimeMillis() +  expiryTimeMillis;
-        Log.d("debug", String.format("[poop] token recieved %s", token));
     }
 
     public static boolean tokenIsExpired() {

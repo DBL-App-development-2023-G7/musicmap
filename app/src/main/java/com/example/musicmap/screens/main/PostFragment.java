@@ -78,7 +78,7 @@ public class PostFragment extends MainFragment {
     private Button addLocationButton;
     private ImageView capturedImagePreview;
     private Button postMemoryButton;
-
+    private boolean shouldClearData = true;
     private SpotifyAuthActivity parentActivity;
 
     // a launcher that launches the camera activity and handles the result
@@ -180,10 +180,7 @@ public class PostFragment extends MainFragment {
         // get current song if no song has been searched for
         if (SearchFragment.getResultTrack() == null) {
             SpotifyUtils.getWaitForTokenFuture().thenApply(
-                    unused -> {
-                        Track currentTrack = SpotifyUtils.getCurrentTrackFuture().join();
-                        return currentTrack;
-                    }
+                    unused -> SpotifyUtils.getCurrentTrackFuture().join()
             ).thenAcceptAsync(
                     track -> {
                         if (track != null) {
@@ -205,6 +202,16 @@ public class PostFragment extends MainFragment {
         return rootView;
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (shouldClearData) {
+            clearData();
+        }
+
+        shouldClearData = true;
+    }
+
     private void setSelectedTrack(Track track) {
         songImageView.setVisibility(View.VISIBLE);
         Picasso.get().load(track.getAlbum().getImages()[0].getUrl()).into(songImageView);
@@ -212,11 +219,13 @@ public class PostFragment extends MainFragment {
     }
 
     private void goToSearchFragment() {
+        shouldClearData = false;
         FragmentUtil.replaceFragment(requireActivity().getSupportFragmentManager(), R.id.fragment_view,
                 SearchFragment.class);
     }
 
     private void goToCameraActivity() {
+        shouldClearData = false;
         Intent cameraIntent = new Intent(this.currentActivity, CameraActivity.class);
         cameraActivityResultLauncher.launch(cameraIntent);
     }
