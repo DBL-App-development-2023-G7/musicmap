@@ -23,7 +23,8 @@ public class MusicMemoryTest {
     public void setUp() {
         this.musicMemory = new MusicMemory("author-uid", new Date(),
                 new GeoPoint(10, 10), "https://imgur.com/photo", new Song(
-                        "song", "1234", "https://imgur.com/photo-3", "https://spotify.com/preview"
+                        "song", "artist", "1234",
+                "https://imgur.com/photo-3", "https://spotify.com/preview"
         ));
     }
 

@@ -107,7 +107,7 @@ public class MusicMemoryFragment extends Fragment {
             
             MusicMemory musicMemory = task.getResult();
             spotifyWidget.setupFragment(musicMemory.getSong().getName(),
-                    musicMemory.getSong().getSpotifyArtistId(),
+                    musicMemory.getSong().getArtistName(),
                     musicMemory.getSong().getImageUri().toString(),
                     musicMemory.getSong().getMusicPreviewUri());
             Picasso.get().load(musicMemory.getPhoto()).into(imageView);
@@ -133,7 +133,7 @@ public class MusicMemoryFragment extends Fragment {
             DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getContext());
             this.dateView.setText(getString(R.string.posted_on, dateFormat.format(postedDate)));
             this.spotifyWidget.setSongName(musicMemory.getSong().getName());
-            this.spotifyWidget.setArtistName(musicMemory.getSong().getSpotifyArtistId());
+            this.spotifyWidget.setArtistName(musicMemory.getSong().getArtistName());
         });
 
         return rootView;

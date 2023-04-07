@@ -11,6 +11,8 @@ public class Song {
 
     private String name;
 
+    private String artistName;
+
     private String spotifyArtistId;
 
     private String imageUri;
@@ -21,10 +23,12 @@ public class Song {
     public Song() { }
 
     public Song(String name,
+                String artistName,
                 String spotifyArtistId,
                 String imageUri,
                 @Nullable String musicPreviewUri) {
         this.name = name;
+        this.artistName = artistName;
         this.spotifyArtistId = spotifyArtistId;
         this.imageUri = imageUri;
         this.musicPreviewUri = musicPreviewUri;
@@ -42,6 +46,10 @@ public class Song {
         return Uri.parse(imageUri);
     }
 
+    public String getArtistName() {
+        return this.artistName;
+    }
+
     @Nullable
     public Uri getMusicPreviewUri() {
         if (musicPreviewUri == null) {
@@ -55,8 +63,8 @@ public class Song {
     @Override
     public String toString() {
         return String.format(
-                "Song{name='%s', spotifyArtistId='%s', imageUri='%s', musicPreviewUri='%s'}",
-                name, spotifyArtistId, imageUri, musicPreviewUri);
+                "Song{name='%s', artistName=%s, spotifyArtistId='%s', imageUri='%s', musicPreviewUri='%s'}",
+                name, artistName, spotifyArtistId, imageUri, musicPreviewUri);
     }
 
     @Override

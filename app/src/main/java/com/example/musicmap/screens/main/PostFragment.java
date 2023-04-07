@@ -320,6 +320,7 @@ public class PostFragment extends MainFragment {
         );
 
         Song song = new Song(
+                SearchFragment.getResultTrack().getArtists()[0].getName(),
                 SearchFragment.getResultTrack().getName(),
                 SearchFragment.getResultTrack().getArtists()[0].getId(),
                 SearchFragment.getResultTrack().getAlbum().getImages()[0].getUrl(),
