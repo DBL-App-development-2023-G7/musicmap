@@ -66,8 +66,6 @@ public class ArtistDataMapFragment extends MapFragment {
         String artistSpotifyId = artist.getArtistData().getSpotifyId();
 
         // Start fetching music memories
-        // TODO can become a large query with many music memories
-        //  add util method to use Firestore APIs filtering stuff
         Queries.getAllMusicMemoriesWithSpotifyArtistId(artistSpotifyId).addOnCompleteListener(completedTask -> {
             if (completedTask.isSuccessful()) {
                 // Add all retrieved music memories to map
