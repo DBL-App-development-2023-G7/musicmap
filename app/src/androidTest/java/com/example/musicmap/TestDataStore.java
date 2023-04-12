@@ -17,16 +17,13 @@ public class TestDataStore {
     }
 
     public static MusicMemory getValidMusicMemory() {
-        return new MusicMemory("author-uid", new Date(),
-                new GeoPoint(10, 10), "https://imgur.com/photo", new Song(
-                "song", "1234", "https://imgur.com/photo-3", "https://spotify.com/preview"
-        ));
+        return getValidMusicMemory("author-uid", "song");
     }
 
     public static MusicMemory getValidMusicMemory(String authorId, String songName) {
         return new MusicMemory(authorId, new Date(),
-                new GeoPoint(10, 10), "https://imgur.com/photo", new Song(
-                songName, "1234", "https://imgur.com/photo-3", "https://spotify.com/preview"
+                new GeoPoint(10, 10), "https://imgur.com/photo1", new Song(
+                songName, "MrMusic", "1234", "https://imgur.com/photo2", "https://spotify.com/preview"
         ));
     }
 
@@ -34,4 +31,5 @@ public class TestDataStore {
         return new ConcertMemory("author-uid", new Date(),
                 new GeoPoint(10, 10), "name", "https://youtube.com/video");
     }
+
 }
