@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class TestDataStore {
 
-    public static final String AUTHOR_UID_THAT_EXISTS_IN_FIREBASE = "9kPlvIKTVUQ3Tp2h9Mh0BpVKdwr1";
+    public static final String AUTHOR_UID_THAT_EXISTS_IN_FIREBASE = "42nWn01PbdQTuVrqEmrYrl6CXMp1";
 
     public static UserData getValidUserData() {
         return new UserData("username", "User", "Name", "user@example.com", new Date());

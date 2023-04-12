@@ -24,7 +24,7 @@ public class MusicMemoryTest {
 
     @Test
     public void testGetPhoto() {
-        assertEquals(this.musicMemory.getPhoto(), Uri.parse("https://imgur.com/photo"));
+        assertEquals(this.musicMemory.getPhoto(), Uri.parse("https://imgur.com/photo1"));
     }
 
     @Test

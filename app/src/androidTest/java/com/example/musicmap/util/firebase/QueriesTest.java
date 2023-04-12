@@ -20,7 +20,7 @@ public class QueriesTest {
 
     @Test
     public void testGetUsersByUsername_success_exists() throws ExecutionException, InterruptedException {
-        String userNameThatExistsInFirebase = "TjeerdRoks";
+        String userNameThatExistsInFirebase = "TPGamesNL";
         Task<QuerySnapshot> task = Queries.getUsersWithUsername(userNameThatExistsInFirebase);
         QuerySnapshot querySnapshot = Tasks.await(task);
         assertFalse(querySnapshot.isEmpty());
@@ -56,7 +56,7 @@ public class QueriesTest {
 
     @Test
     public void testGetMusicMemoryByAuthorIdAndId_success_exists() throws ExecutionException, InterruptedException {
-        String musicMemoryIdThatExistInFirebase = "NOqL72ibo1jHVPEZhQxs";
+        String musicMemoryIdThatExistInFirebase = "N4yBvYoo76MzL0WSLqhd";
         Task<MusicMemory> task = Queries.getMusicMemoryByAuthorIdAndId(TestDataStore.AUTHOR_UID_THAT_EXISTS_IN_FIREBASE,
                 musicMemoryIdThatExistInFirebase);
         MusicMemory musicMemory = Tasks.await(task);
