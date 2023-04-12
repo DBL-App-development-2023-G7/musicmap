@@ -7,7 +7,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
-import android.view.MotionEvent;
 
 import androidx.core.content.ContextCompat;
 
@@ -21,7 +20,7 @@ import com.squareup.picasso.Target;
 
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.IconOverlay;
+import org.osmdroid.views.overlay.ClickableIconOverlay;
 
 /**
  * A overlay containing a {@link Post}.
@@ -30,7 +29,7 @@ import org.osmdroid.views.overlay.IconOverlay;
  *
  * @see MusicMemoryOverlay
  */
-public abstract class PostOverlay<P extends Post> extends IconOverlay {
+public abstract class PostOverlay<P extends Post> extends ClickableIconOverlay<P> {
 
     private static final String TAG = "PostOverlay";
 
@@ -53,6 +52,11 @@ public abstract class PostOverlay<P extends Post> extends IconOverlay {
     private final Drawable markerIcon;
     private final P post;
 
+    // this is a Picasso target into which Picasso will load the image
+    // in a field so it won't be garbage collected
+    @SuppressWarnings("FieldCanBeLocal")
+    private ImageTarget imageTarget;
+
     /**
      * Creates a post overlay for the given map and post.
      *
@@ -63,6 +67,8 @@ public abstract class PostOverlay<P extends Post> extends IconOverlay {
      * @param post the post.
      */
     protected PostOverlay(MapView mapView, P post) {
+        super(post);
+
         this.mapView = mapView;
         this.post = post;
 
@@ -116,17 +122,12 @@ public abstract class PostOverlay<P extends Post> extends IconOverlay {
      */
     protected void setImage(RequestCreator requestCreator) {
         // Transform into circle & resize image
+        imageTarget = new ImageTarget();
         requestCreator
                 .resize((int) (markerIcon.getIntrinsicWidth() * RATIO), (int) (markerIcon.getIntrinsicHeight() * RATIO))
                 .centerCrop()
                 .transform(new CircleTransform())
-                .into(new ImageTarget());
-    }
-
-    @Override
-    public boolean onSingleTapConfirmed(MotionEvent e, MapView mapView) {
-        // TODO open post screen
-        return true;
+                .into(imageTarget);
     }
 
     /**

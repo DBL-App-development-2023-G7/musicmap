@@ -2,6 +2,7 @@ package com.example.musicmap.user;
 
 import android.net.Uri;
 
+import com.example.musicmap.util.Constants;
 import com.google.firebase.firestore.Exclude;
 
 import java.util.Date;
@@ -35,7 +36,7 @@ public class UserData {
         this.email = email;
         this.birthdate = birthdate;
         this.artist = artist;
-        this.profilePicture = "";
+        this.profilePicture = Constants.DEFAULT_USER_IMAGE_URI;
     }
 
     /**
@@ -99,16 +100,10 @@ public class UserData {
      */
     @Exclude
     public Uri getProfilePictureUri() {
+        if (profilePicture.isEmpty()) {
+            return Uri.parse(Constants.PROFILE_USER_UID_ARGUMENT);
+        }
         return Uri.parse(profilePicture);
-    }
-
-    /**
-     * This method checks if the user has a profile picture.
-     *
-     * @return true if the user has a profile picture
-     */
-    public boolean hasProfilePicture() {
-        return !profilePicture.isEmpty();
     }
 
     public boolean isArtist() {

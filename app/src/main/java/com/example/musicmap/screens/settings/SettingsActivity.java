@@ -8,11 +8,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.musicmap.R;
-import com.example.musicmap.SessionAndInternetListenerActivity;
 import com.example.musicmap.screens.profile.ProfileActivity;
+import com.example.musicmap.user.Session;
+import com.example.musicmap.user.User;
+import com.example.musicmap.util.Constants;
+import com.example.musicmap.util.spotify.SpotifyAuthActivity;
 import com.example.musicmap.util.ui.FragmentUtil;
 
-public class SettingsActivity extends SessionAndInternetListenerActivity {
+public class SettingsActivity extends SpotifyAuthActivity {
 
     private int currentLayout = R.layout.activity_settings;
 
@@ -48,11 +51,15 @@ public class SettingsActivity extends SessionAndInternetListenerActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment currentFragment = fragmentManager.findFragmentById(R.id.fragmentSettings);
 
-        if (currentFragment instanceof AccountSettingsFragment) {
+        if (currentFragment instanceof AccountSettingsFragment
+                || currentFragment instanceof  ConnectionSettingsFragment) {
             fragmentManager.popBackStack();
         } else {
             super.onBackPressed();
-            startActivity(new Intent(SettingsActivity.this, ProfileActivity.class));
+            User currentUser = Session.getInstance().getCurrentUser();
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra(Constants.PROFILE_USER_UID_ARGUMENT, currentUser.getUid());
+            startActivity(intent);
             finish();
         }
     }

@@ -34,11 +34,15 @@ import com.example.musicmap.util.firebase.Actions;
 import com.example.musicmap.util.permissions.CameraPermission;
 import com.example.musicmap.util.permissions.LocationPermission;
 import com.example.musicmap.util.spotify.SpotifyAuthActivity;
+import com.example.musicmap.util.spotify.SpotifyUtils;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.example.musicmap.util.ui.ImageUtils;
 import com.example.musicmap.util.ui.Message;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.google.firebase.firestore.GeoPoint;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -50,6 +54,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import se.michaelthelin.spotify.model_objects.specification.Track;
 
 public class PostFragment extends MainFragment {
 
@@ -65,10 +71,14 @@ public class PostFragment extends MainFragment {
     private Session currentSession;
     private Activity currentActivity;
 
+    private ImageView songImageView;
+    private Button addSongButton;
+
     private Location currentLocation;
     private Button addLocationButton;
     private ImageView capturedImagePreview;
-
+    private Button postMemoryButton;
+    private boolean shouldClearData = true;
     private SpotifyAuthActivity parentActivity;
 
     // a launcher that launches the camera activity and handles the result
@@ -85,31 +95,40 @@ public class PostFragment extends MainFragment {
 
                     Uri imageUri = resultIntent.getData();
 
+                    Log.d(TAG, "Camera Activity result is called, URI: " + imageUri);
+
                     try {
                         Picasso.get().load(imageUri)
                                 .rotate(ImageUtils.getImageRotationFromEXIF(parentActivity, imageUri))
-                                .into(new Target() {
-                                    @Override
-                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                        capturedImage = bitmap;
-                                        capturedImagePreview.setImageBitmap(capturedImage);
-                                        capturedImagePreview.setVisibility(View.VISIBLE);
-                                    }
-
-                                    @Override
-                                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                                        Log.d(TAG, "Exception occurred while setting the image", e);
-                                    }
-
-                                    @Override
-                                    public void onPrepareLoad(Drawable placeHolderDrawable) {}
-                                });
+                                .into(cameraImageTarget);
                     } catch (IOException e) {
-                        Log.d(TAG, "Exception occurred while setting the image", e);
+                        Log.e(TAG, "Exception occurred while setting the image", e);
                     }
                 }
             }
     );
+
+    // this is a Picasso target into which Picasso will load the image taken from the camera
+    // in a field so it won't be garbage collected
+    private final Target cameraImageTarget = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            Log.d(TAG, "Camera Image Bitmap Loaded");
+            capturedImage = bitmap;
+            capturedImagePreview.setImageBitmap(capturedImage);
+            capturedImagePreview.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+            Log.e(TAG, "Exception occurred while setting the image", e);
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+            Log.d(TAG, "Prepare Camera Image Load");
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,13 +137,25 @@ public class PostFragment extends MainFragment {
         this.currentActivity = requireActivity();
 
         locationPermission.forceRequest();
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.currentActivity);
-        fetchUserLocation();
-//        cameraPermission.request();
-        getPermission();
-        parentActivity = (SpotifyAuthActivity) this.currentActivity;
 
-        parentActivity.refreshToken(apiToken -> {}, () -> parentActivity.registerForSpotifyPKCE());
+        if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(currentActivity)
+                == ConnectionResult.SUCCESS) {
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.currentActivity);
+        } else {
+            int response = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(currentActivity);
+            Log.e(TAG, "Google Play services availability response: " + response);
+        }
+
+        fetchUserLocation();
+        getPermission();
+
+        parentActivity = (SpotifyAuthActivity) this.currentActivity;
+        parentActivity.refreshToken(apiToken -> {
+            postMemoryButton.setEnabled(true);
+        }, () -> {
+            Message.showFailureMessage(this.currentActivity, getString(R.string.error_spotify_not_connected));
+            postMemoryButton.setEnabled(false);
+        });
     }
 
     @Override
@@ -141,41 +172,79 @@ public class PostFragment extends MainFragment {
         Button addImageButton = rootView.findViewById(R.id.addImageButton);
         addImageButton.setOnClickListener(view -> goToCameraActivity());
 
-        Button addSongButton = rootView.findViewById(R.id.addSongButton);
+        addSongButton = rootView.findViewById(R.id.addSongButton);
         addSongButton.setOnClickListener(view -> goToSearchFragment());
 
-        ImageView songImageView = rootView.findViewById(R.id.songPreviewImage);
+        songImageView = rootView.findViewById(R.id.songPreviewImage);
 
-        // load the search result track if there is one
-        if (SearchFragment.getResultTrack() != null) {
-            songImageView.setVisibility(View.VISIBLE);
-            Picasso.get().load(SearchFragment.getResultTrack().getAlbum().getImages()[0].getUrl()).into(songImageView);
-            addSongButton.setText(SearchFragment.getResultTrack().getName());
+        // get current song if no song has been searched for
+        if (SearchFragment.getResultTrack() == null) {
+            SpotifyUtils.getWaitForTokenFuture().thenApply(
+                    unused -> SpotifyUtils.getCurrentTrackFuture().join()
+            ).thenAcceptAsync(
+                    track -> {
+                        if (track != null) {
+                            SearchFragment.setResultTrack(track);
+                            setSelectedTrack(track);
+                        }
+                    },
+                    parentActivity.getMainExecutor()
+            );
+        } else {
+            setSelectedTrack(SearchFragment.getResultTrack());
         }
 
         addLocationButton = rootView.findViewById(R.id.addLocationButton);
         addLocationButton.setOnClickListener(view -> fetchUserLocation());
 
-        Button postMemoryButton = rootView.findViewById(R.id.postMemoryButton);
+        postMemoryButton = rootView.findViewById(R.id.postMemoryButton);
         postMemoryButton.setOnClickListener(view -> postMusicMemory());
         return rootView;
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (shouldClearData) {
+            clearData();
+        }
+
+        shouldClearData = true;
+    }
+
+    private void setSelectedTrack(Track track) {
+        songImageView.setVisibility(View.VISIBLE);
+        Picasso.get().load(track.getAlbum().getImages()[0].getUrl()).into(songImageView);
+        addSongButton.setText(track.getName());
+    }
+
     private void goToSearchFragment() {
+        shouldClearData = false;
         FragmentUtil.replaceFragment(requireActivity().getSupportFragmentManager(), R.id.fragment_view,
                 SearchFragment.class);
     }
 
     private void goToCameraActivity() {
+        shouldClearData = false;
         Intent cameraIntent = new Intent(this.currentActivity, CameraActivity.class);
         cameraActivityResultLauncher.launch(cameraIntent);
     }
 
     @SuppressLint("MissingPermission")
     private void fetchUserLocation() {
+        if (fusedLocationClient == null) {
+            Message.showFailureMessage(currentActivity, "Google Play services is required");
+            return;
+        }
+
         if (locationPermission.isCoarseGranted() && locationPermission.isFineGranted()) {
-            fusedLocationClient.getLastLocation()
+            fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
                     .addOnSuccessListener(this.currentActivity, location -> {
+                        if (location == null) {
+                            Log.i(TAG, "Location unknown");
+                            return;
+                        }
+
                         currentLocation = location;
                         String displayText = getLocationText(currentLocation);
                         addLocationButton.setText(displayText);
@@ -225,8 +294,6 @@ public class PostFragment extends MainFragment {
         }
     }
 
-    // TODO Make this monster prettier
-    // Below is some questionable code
     private void postMusicMemory() {
         if (SearchFragment.getResultTrack() == null) {
             Message.showFailureMessage(this.currentActivity, "A track is required to post a music memory!");
@@ -243,6 +310,8 @@ public class PostFragment extends MainFragment {
             return;
         }
 
+        postMemoryButton.setEnabled(false);
+
         String authorID = this.currentSession.getCurrentUser().getUid();
         Date timePosted = Calendar.getInstance().getTime();
         GeoPoint geoPointLocation = new GeoPoint(
@@ -251,6 +320,7 @@ public class PostFragment extends MainFragment {
         );
 
         Song song = new Song(
+                SearchFragment.getResultTrack().getArtists()[0].getName(),
                 SearchFragment.getResultTrack().getName(),
                 SearchFragment.getResultTrack().getArtists()[0].getId(),
                 SearchFragment.getResultTrack().getAlbum().getImages()[0].getUrl(),
@@ -265,9 +335,10 @@ public class PostFragment extends MainFragment {
                     geoPointLocation,
                     imageUrl,
                     song
-            )).addOnFailureListener(e ->
-                    Message.showSuccessMessage(this.currentActivity, "Successfully created the music memory")
-            ).addOnCompleteListener(unused -> {
+            )).addOnFailureListener(e -> {
+                Message.showFailureMessage(this.currentActivity, "Could not create the music memory");
+                postMemoryButton.setEnabled(true);
+            }).addOnCompleteListener(unused -> {
                         clearData();
                         FragmentUtil.replaceFragment(
                                 requireActivity().getSupportFragmentManager(),

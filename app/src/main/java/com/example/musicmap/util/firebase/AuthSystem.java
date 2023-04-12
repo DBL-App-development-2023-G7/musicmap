@@ -19,6 +19,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -63,18 +65,28 @@ public class AuthSystem {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String email = userData.getEmail();
 
-        Task<AuthResult> registerAccount = auth.createUserWithEmailAndPassword(email, password);
-        return registerAccount.onSuccessTask(result -> {
+        return Queries.getUsersWithUsername(userData.getUsername()).onSuccessTask(results -> {
             TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
-            FirebaseUser firebaseUser = result.getUser();
-
-            if (firebaseUser != null) {
-                Task<Void> sendEmail = firebaseUser.sendEmailVerification();
-                Task<Void> addUser = addUserToFirestore(new User(userData, firebaseUser.getUid()));
-                return Tasks.whenAll(sendEmail, addUser);
+            if (!results.isEmpty()) {
+                tcs.setException(new FirebaseFirestoreException("The username already exist!",
+                        FirebaseFirestoreException.Code.ALREADY_EXISTS));
+                return tcs.getTask();
             }
-            tcs.setException(new IllegalStateException("The firebaseUser is null."));
-            return tcs.getTask();
+
+            Task<AuthResult> registerAccount = auth.createUserWithEmailAndPassword(email, password);
+
+            return registerAccount.onSuccessTask(result -> {
+
+                FirebaseUser firebaseUser = result.getUser();
+
+                if (firebaseUser != null) {
+                    Task<Void> sendEmail = firebaseUser.sendEmailVerification();
+                    Task<Void> addUser = addUserToFirestore(new User(userData, firebaseUser.getUid()));
+                    return Tasks.whenAll(sendEmail, addUser);
+                }
+                tcs.setException(new IllegalStateException("The firebaseUser is null."));
+                return tcs.getTask();
+            });
         });
     }
 
@@ -188,9 +200,17 @@ public class AuthSystem {
      * @param uid the uid of the user
      * @return the result of this task
      */
-    private static Task<Void> removeUserFromFirestore(String uid) {
+    private static Task<Void> removeUserDataFromFirestore(String uid) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        return firestore.collection("Users").document(uid).delete();
+        return firestore.collection("Users/" + uid + "/MusicMemories").get().onSuccessTask(memories -> {
+            WriteBatch batch = firestore.batch();
+            for (QueryDocumentSnapshot memory : memories) {
+                batch.delete(memory.getReference());
+            }
+
+            return batch.commit().addOnSuccessListener(result ->
+                    firestore.collection("Users").document(uid).delete());
+        });
     }
 
     /**
@@ -361,7 +381,7 @@ public class AuthSystem {
 
         AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), password);
         return firebaseUser.reauthenticate(credential).onSuccessTask(reauthTask ->
-                removeUserFromFirestore(firebaseUser.getUid()).onSuccessTask(task -> firebaseUser.delete()));
+                removeUserDataFromFirestore(firebaseUser.getUid()).onSuccessTask(task -> firebaseUser.delete()));
     }
 
     /**

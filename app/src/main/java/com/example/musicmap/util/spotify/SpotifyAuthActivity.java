@@ -46,32 +46,36 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
     }
 
     public void refreshToken(ValidTokenCallback validTokenCallback, InvalidTokenCallback invalidTokenCallback) {
+        if (SpotifyData.tokenIsExpired()) {
+            String currentUserId = Session.getInstance().getCurrentUser().getUid();
+            FirebaseTokenStorage tokenStorage = new FirebaseTokenStorage(currentUserId);
 
-        String currentUserId = Session.getInstance().getCurrentUser().getUid();
-        FirebaseTokenStorage tokenStorage = new FirebaseTokenStorage(currentUserId);
+            tokenStorage.getRefreshToken(refreshToken -> {
 
-        tokenStorage.getRefreshToken(refreshToken -> {
-            if (refreshToken == null) {
-                invalidTokenCallback.onInvalidToken();
-                return;
-            }
-
-            loginApi.setRefreshToken(refreshToken);
-            loginApi.authorizationCodePKCERefresh().build().executeAsync().handle((refreshResult, error) -> {
-                if (error != null) {
+                if (refreshToken == null) {
                     invalidTokenCallback.onInvalidToken();
-                    return null;
+                    return;
                 }
 
-                return refreshResult;
-            }).thenAccept(refreshResult -> {
-                Log.d(TAG, "The Spotify token was successfully refreshed!");
+                loginApi.setRefreshToken(refreshToken);
+                loginApi.authorizationCodePKCERefresh().build().executeAsync().handle((refreshResult, error) -> {
+                    if (error != null) {
+                        Log.d(TAG, String.format("error %s", error.getMessage()));
+                        invalidTokenCallback.onInvalidToken();
+                        return null;
+                    }
 
-                tokenStorage.storeRefreshToken(refreshResult.getRefreshToken());
-                SpotifyData.setToken(refreshResult.getAccessToken());
-                validTokenCallback.onValidToken(refreshResult.getAccessToken());
+                    return refreshResult;
+                }).thenAccept(refreshResult -> {
+                    Log.d(TAG, "The Spotify token was successfully refreshed!");
+                    Log.d(TAG, String.format("ExpiryDate: %d", refreshResult.getExpiresIn()));
+
+                    tokenStorage.storeRefreshToken(refreshResult.getRefreshToken());
+                    SpotifyData.setToken(refreshResult.getAccessToken(), refreshResult.getExpiresIn());
+                    validTokenCallback.onValidToken(refreshResult.getAccessToken());
+                });
             });
-        });
+        }
     }
 
     public void registerForSpotifyPKCE() {
@@ -140,10 +144,11 @@ public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActi
                         Log.d(TAG, String.format("Token type: %s", authCredentials.getTokenType()));
                         Log.d(TAG, String.format("RefreshToken: %s", authCredentials.getRefreshToken()));
 
-                        // TODO updateFirebase
                         String currentUserId = Session.getInstance().getCurrentUser().getUid();
                         FirebaseTokenStorage tokenStorage = new FirebaseTokenStorage(currentUserId);
                         tokenStorage.storeRefreshToken(authCredentials.getRefreshToken());
+                        SpotifyData.setToken(authCredentials.getAccessToken(), authCredentials.getExpiresIn());
+
                     }
             );
         }

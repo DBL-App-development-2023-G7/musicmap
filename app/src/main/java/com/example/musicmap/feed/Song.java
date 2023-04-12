@@ -3,6 +3,7 @@ package com.example.musicmap.feed;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.Objects;
 
@@ -10,19 +11,24 @@ public class Song {
 
     private String name;
 
+    private String artistName;
+
     private String spotifyArtistId;
 
     private String imageUri;
+    @Nullable
     private String musicPreviewUri;
 
     @SuppressWarnings("unused")
     public Song() { }
 
     public Song(String name,
+                String artistName,
                 String spotifyArtistId,
                 String imageUri,
-                String musicPreviewUri) {
+                @Nullable String musicPreviewUri) {
         this.name = name;
+        this.artistName = artistName;
         this.spotifyArtistId = spotifyArtistId;
         this.imageUri = imageUri;
         this.musicPreviewUri = musicPreviewUri;
@@ -40,7 +46,16 @@ public class Song {
         return Uri.parse(imageUri);
     }
 
+    public String getArtistName() {
+        return this.artistName;
+    }
+
+    @Nullable
     public Uri getMusicPreviewUri() {
+        if (musicPreviewUri == null) {
+            return null;
+        }
+
         return Uri.parse(musicPreviewUri);
     }
 
@@ -48,8 +63,8 @@ public class Song {
     @Override
     public String toString() {
         return String.format(
-                "Song{name='%s', spotifyArtistId='%s', imageUri='%s', musicPreviewUri='%s'}",
-                name, spotifyArtistId, imageUri, musicPreviewUri);
+                "Song{name='%s', artistName=%s, spotifyArtistId='%s', imageUri='%s', musicPreviewUri='%s'}",
+                name, artistName, spotifyArtistId, imageUri, musicPreviewUri);
     }
 
     @Override

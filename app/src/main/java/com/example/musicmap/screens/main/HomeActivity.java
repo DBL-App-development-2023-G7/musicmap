@@ -14,8 +14,9 @@ import com.example.musicmap.screens.map.PostMapFragment;
 import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;
-import com.example.musicmap.util.spotify.SpotifyAuthActivity;
+import com.example.musicmap.util.Constants;
 import com.example.musicmap.util.permissions.LocationPermission;
+import com.example.musicmap.util.spotify.SpotifyAuthActivity;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -25,6 +26,7 @@ public class HomeActivity extends SpotifyAuthActivity {
     private int currentLayout = R.layout.activity_home;
 
     private BottomNavigationView bottomNavigationView;
+    private ImageView profileButton;
 
     @Override
     protected void updateLayout(boolean internetAvailable) {
@@ -59,8 +61,10 @@ public class HomeActivity extends SpotifyAuthActivity {
 
     @Override
     public void onSessionStateChanged() {
+        super.onSessionStateChanged();
         User currentUser = Session.getInstance().getCurrentUser();
         updateNavbar(currentUser);
+        setupProfileButton(currentUser);
     }
 
     private void setupActivity() {
@@ -68,14 +72,9 @@ public class HomeActivity extends SpotifyAuthActivity {
         FragmentUtil.initFragment(getSupportFragmentManager(), R.id.fragment_view, lastFragmentClass);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        ImageView profileButton = findViewById(R.id.appbarProfile);
-
-        profileButton.setOnClickListener(view -> {
-            startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
-            finish();
-        });
-
+        profileButton = findViewById(R.id.appbarProfile);
         updateNavbar(currentUser);
+        setupProfileButton(currentUser);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             // using ifs instead of switch as resource IDs will be non-final by default in
@@ -124,6 +123,19 @@ public class HomeActivity extends SpotifyAuthActivity {
         boolean isArtist = currentUser != null && currentUser.isArtist();
         post.setVisible(!isArtist);
         artistData.setVisible(isArtist);
+    }
+
+    private void setupProfileButton(User currentUser) {
+        if (currentUser == null || profileButton == null) {
+            return;
+        }
+
+        profileButton.setOnClickListener(view -> {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra(Constants.PROFILE_USER_UID_ARGUMENT, currentUser.getUid());
+            startActivity(intent);
+            finish();
+        });
     }
 
 }

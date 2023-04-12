@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
@@ -22,9 +23,21 @@
 
         <activity
             android:name=".screens.settings.SettingsActivity"
-            android:exported="false"
+            android:exported="true"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.MusicMap.NoActionBar"/>
+            android:theme="@style/Theme.MusicMap.NoActionBar"
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTask">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="spotify-auth"
+                    android:scheme="musicmap"/>
+            </intent-filter>
+        </activity>
         <service android:name=".services.InternetCheckService" />
         <activity
             android:name=".screens.verification.VerificationActivity"
@@ -40,6 +53,12 @@
             android:theme="@style/Theme.MusicMap.NoActionBar"
             />
         <activity
+            android:name=".screens.main.MusicMemoryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MusicMap.NoActionBar"
+            android:configChanges="orientation|screenSize"
+            />
+        <activity
             android:name=".screens.main.HomeActivity"
             android:exported="true"
             android:label="MusicMap"
@@ -47,15 +66,6 @@
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustPan"
             android:launchMode="singleTask">
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="spotify-auth"
-                    android:scheme="musicmap"/>
-            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
