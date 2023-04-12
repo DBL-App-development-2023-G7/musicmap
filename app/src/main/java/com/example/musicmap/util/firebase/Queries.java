@@ -150,6 +150,7 @@ public class Queries {
         // TODO: update the implementation based on how we decide to limit the feed
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
+        //CSOFF: Indentation
         return firestore.collectionGroup("MusicMemories")
                 .where(filter)
                 .get()
@@ -175,6 +176,7 @@ public class Queries {
 
             return taskCompletionSource.getTask();
         });
+        //CSON: Indentation
     }
 
     /**
