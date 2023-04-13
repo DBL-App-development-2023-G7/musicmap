@@ -199,7 +199,7 @@ public class Queries {
      * Deserializes the given document into a post of the given class.
      *
      * @param document the document snapshot.
-     * @param postClass the class of the post, e.g. {@code MusicMemory.class} or {@code ConcertMemory.class}.
+     * @param postClass the class of the post, e.g. {@code MusicMemory.class}.
      * @return the deserialized post, or {@code null}
      * @param <P> the type of post, e.g. {@link MusicMemory}.
      */
