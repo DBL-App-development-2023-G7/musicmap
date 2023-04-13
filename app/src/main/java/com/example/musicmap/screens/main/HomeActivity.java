@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.musicmap.R;
 import com.example.musicmap.screens.main.artist.ArtistDataFragment;
-import com.example.musicmap.screens.main.feed.FeedFragment;
 import com.example.musicmap.screens.main.musicmemory.create.PostFragment;
 import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.firebase.Session;
