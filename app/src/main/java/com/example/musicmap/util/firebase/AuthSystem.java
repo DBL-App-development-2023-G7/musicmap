@@ -54,9 +54,9 @@ public class AuthSystem {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String email = userData.getEmail();
 
-        return Queries.getUsersWithUsername(userData.getUsername()).onSuccessTask(results -> {
+        return Queries.getUserWithUsername(userData.getUsername()).onSuccessTask(existingUser -> {
             TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
-            if (!results.isEmpty()) {
+            if (existingUser != null) {
                 tcs.setException(new FirebaseFirestoreException("The username already exist!",
                         FirebaseFirestoreException.Code.ALREADY_EXISTS));
                 return tcs.getTask();
@@ -88,30 +88,16 @@ public class AuthSystem {
      */
     public static Task<AuthResult> loginWithUsernameAndPassword(String username, String password) {
 
-        return Queries.getUsersWithUsername(username).onSuccessTask(docs -> {
+        return Queries.getUserWithUsername(username).onSuccessTask(user -> {
             TaskCompletionSource<AuthResult> tcs = new TaskCompletionSource<>();
 
-            if (docs.isEmpty()) {
+            if (user == null) {
                 tcs.setException(new FirebaseFirestoreException("Query did not return any docs.",
                         FirebaseFirestoreException.Code.NOT_FOUND));
                 return tcs.getTask();
             }
 
-            DocumentSnapshot doc = docs.getDocuments().get(0);
-
-            if (doc.getData() == null || doc.getData().isEmpty()) {
-                tcs.setException(new FirebaseFirestoreException("Document does not exist or is empty.",
-                        FirebaseFirestoreException.Code.NOT_FOUND));
-                return tcs.getTask();
-            }
-
-            Object emailFirebaseField = doc.getData().get("email");
-            if (!(emailFirebaseField instanceof String)) {
-                tcs.setException(new IllegalArgumentException("The email field of the user is null or invalid."));
-                return tcs.getTask();
-            }
-
-            String email = (String) emailFirebaseField;
+            String email = user.getData().getEmail();
             FirebaseAuth auth = FirebaseAuth.getInstance();
 
             return auth.signInWithEmailAndPassword(email, password);
@@ -226,8 +212,8 @@ public class AuthSystem {
         Map<String, Object> data = new HashMap<>();
         data.put("username", username);
 
-        return Queries.getUsersWithUsername(username).onSuccessTask(results -> {
-            if (!results.isEmpty()) {
+        return Queries.getUserWithUsername(username).onSuccessTask(user -> {
+            if (user != null) {
                 tcs.setException(new FirebaseFirestoreException("The username already exists",
                         FirebaseFirestoreException.Code.ALREADY_EXISTS));
                 return tcs.getTask();

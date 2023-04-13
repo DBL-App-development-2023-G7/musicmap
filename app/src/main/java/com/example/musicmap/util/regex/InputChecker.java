@@ -97,9 +97,9 @@ public class InputChecker {
                 usernameInput.setError(context.getString(R.string.input_error_valid_username));
                 return false;
             case VALID:
-                Queries.getUsersWithUsername(username).addOnCompleteListener(task -> {
+                Queries.getUserWithUsername(username).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        if (!task.getResult().isEmpty()) {
+                        if (task.getResult() != null) {
                             usernameInput.setError(context.getString(R.string.input_error_username_exists));
                         }
                     } else {
