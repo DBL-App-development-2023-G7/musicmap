@@ -1,4 +1,4 @@
-package com.example.musicmap.screens.artist;
+package com.example.musicmap.util.adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 
 import com.example.musicmap.R;
 import com.example.musicmap.feed.Song;
+import com.example.musicmap.screens.artist.SongCount;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 
 import com.example.musicmap.R;
+import com.example.musicmap.util.adapters.FeedAdapter;
 import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Before;

@@ -1,4 +1,4 @@
-package com.example.musicmap.util.spotify;
+package com.example.musicmap.util.adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;

@@ -1,4 +1,4 @@
-package com.example.musicmap.feed;
+package com.example.musicmap.util.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.musicmap.R;
+import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.screens.main.MusicMemoryActivity;
 import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.user.User;

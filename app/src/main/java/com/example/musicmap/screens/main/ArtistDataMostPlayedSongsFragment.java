@@ -11,7 +11,7 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 
 import com.example.musicmap.R;
-import com.example.musicmap.screens.artist.PopularSongsAdapter;
+import com.example.musicmap.util.adapters.PopularSongsAdapter;
 import com.example.musicmap.screens.artist.SongCount;
 import com.example.musicmap.user.Artist;
 import com.example.musicmap.user.Session;

@@ -13,7 +13,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.example.musicmap.R;
-import com.example.musicmap.util.spotify.SpotifySongAdapter;
+import com.example.musicmap.util.adapters.SpotifySongAdapter;
 import com.example.musicmap.util.spotify.SpotifyUtils;
 
 import java.util.ArrayList;

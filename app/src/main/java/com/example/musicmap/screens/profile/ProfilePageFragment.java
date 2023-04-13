@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.musicmap.R;
 import com.example.musicmap.R.id;
-import com.example.musicmap.feed.FeedAdapter;
+import com.example.musicmap.util.adapters.FeedAdapter;
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.user.Session;
 import com.example.musicmap.user.User;

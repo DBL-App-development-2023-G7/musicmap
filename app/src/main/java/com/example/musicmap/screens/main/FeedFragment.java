@@ -10,7 +10,7 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 
 import com.example.musicmap.R;
-import com.example.musicmap.feed.FeedAdapter;
+import com.example.musicmap.util.adapters.FeedAdapter;
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.util.firebase.Queries;
 
