@@ -1,4 +1,4 @@
-package com.example.musicmap.screens.artist;
+package com.example.musicmap.screens.main.artist;
 
 import android.os.Bundle;
 

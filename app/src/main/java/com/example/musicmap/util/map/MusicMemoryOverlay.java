@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.example.musicmap.models.MusicMemory;
-import com.example.musicmap.screens.main.MusicMemoryActivity;
+import com.example.musicmap.screens.main.musicmemory.MusicMemoryActivity;
 import com.example.musicmap.util.Constants;
 
 import org.osmdroid.api.IGeoPoint;

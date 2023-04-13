@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 
 import com.example.musicmap.R;
 import com.example.musicmap.models.Song;
-import com.example.musicmap.screens.artist.SongCount;
+import com.example.musicmap.models.SongCount;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

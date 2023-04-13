@@ -3,7 +3,7 @@ package com.example.musicmap.util.firebase;
 import com.example.musicmap.models.MusicMemory;
 import com.example.musicmap.models.Post;
 import com.example.musicmap.models.Song;
-import com.example.musicmap.screens.artist.SongCount;
+import com.example.musicmap.models.SongCount;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.firestore.DocumentReference;

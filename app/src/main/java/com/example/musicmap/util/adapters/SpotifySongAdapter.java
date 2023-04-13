@@ -13,8 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.musicmap.R;
-import com.example.musicmap.screens.main.PostFragment;
-import com.example.musicmap.screens.main.SearchFragment;
+import com.example.musicmap.screens.main.musicmemory.create.PostFragment;
+import com.example.musicmap.screens.main.musicmemory.create.SearchFragment;
 import com.example.musicmap.util.ui.FragmentUtil;
 import com.squareup.picasso.Picasso;
 

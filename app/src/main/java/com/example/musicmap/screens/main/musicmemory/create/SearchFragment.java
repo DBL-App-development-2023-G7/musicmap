@@ -1,4 +1,4 @@
-package com.example.musicmap.screens.main;
+package com.example.musicmap.screens.main.musicmemory.create;
 
 import static com.example.musicmap.util.spotify.SpotifyUtils.getCurrentTrackFuture;
 import static com.example.musicmap.util.spotify.SpotifyUtils.getRecentTracksFuture;
@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.example.musicmap.R;
+import com.example.musicmap.screens.main.MainFragment;
 import com.example.musicmap.util.adapters.SpotifySongAdapter;
 import com.example.musicmap.util.spotify.SpotifyUtils;
 

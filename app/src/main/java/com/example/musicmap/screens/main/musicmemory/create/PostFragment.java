@@ -1,4 +1,4 @@
-package com.example.musicmap.screens.main;
+package com.example.musicmap.screens.main.musicmemory.create;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -30,6 +30,8 @@ import com.example.musicmap.R;
 import com.example.musicmap.models.MusicMemory;
 import com.example.musicmap.models.Song;
 import com.example.musicmap.firebase.Session;
+import com.example.musicmap.screens.main.MainFragment;
+import com.example.musicmap.screens.main.feed.FeedFragment;
 import com.example.musicmap.util.firebase.Actions;
 import com.example.musicmap.util.permissions.CameraPermission;
 import com.example.musicmap.util.permissions.LocationPermission;

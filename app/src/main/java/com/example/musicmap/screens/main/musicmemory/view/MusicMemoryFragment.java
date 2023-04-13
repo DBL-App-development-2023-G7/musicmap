@@ -1,4 +1,4 @@
-package com.example.musicmap.screens.main;
+package com.example.musicmap.screens.main.musicmemory.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,8 +15,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.musicmap.R;
 import com.example.musicmap.models.MusicMemory;
-import com.example.musicmap.screens.map.MusicMemoryMapFragment;
 import com.example.musicmap.models.UserData;
+import com.example.musicmap.util.ui.SpotifyWidgetFragment;
 import com.example.musicmap.util.Constants;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.firebase.Queries;

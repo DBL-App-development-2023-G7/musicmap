@@ -1,4 +1,4 @@
-package com.example.musicmap.screens.main;
+package com.example.musicmap.util.ui;
 
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.musicmap.R;
-import com.example.musicmap.util.ui.Message;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;

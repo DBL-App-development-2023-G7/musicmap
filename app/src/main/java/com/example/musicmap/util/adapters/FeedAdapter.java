@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 
 import com.example.musicmap.R;
 import com.example.musicmap.models.MusicMemory;
-import com.example.musicmap.screens.main.MusicMemoryActivity;
+import com.example.musicmap.screens.main.musicmemory.MusicMemoryActivity;
 import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.models.User;
 import com.example.musicmap.util.Constants;

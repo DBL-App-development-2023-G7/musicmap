@@ -9,8 +9,9 @@ import android.widget.ImageView;
 import androidx.fragment.app.Fragment;
 
 import com.example.musicmap.R;
-import com.example.musicmap.screens.artist.ArtistDataFragment;
-import com.example.musicmap.screens.map.PostMapFragment;
+import com.example.musicmap.screens.main.artist.ArtistDataFragment;
+import com.example.musicmap.screens.main.feed.FeedFragment;
+import com.example.musicmap.screens.main.musicmemory.create.PostFragment;
 import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.firebase.Session;
 import com.example.musicmap.models.User;

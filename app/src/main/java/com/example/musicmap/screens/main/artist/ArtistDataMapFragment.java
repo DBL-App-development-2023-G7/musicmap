@@ -1,7 +1,11 @@
-package com.example.musicmap.screens.map;
+package com.example.musicmap.screens.main.artist;
 
 import android.util.Log;
 
+import com.example.musicmap.models.Artist;
+import com.example.musicmap.firebase.Session;
+import com.example.musicmap.models.User;
+import com.example.musicmap.screens.main.MapFragment;
 import com.example.musicmap.util.firebase.Queries;
 import com.example.musicmap.util.map.MusicMemoryOverlay;
 
@@ -11,10 +15,7 @@ import org.osmdroid.views.overlay.Overlay;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * A map showing posts (music memories etc).
- */
-public class PostMapFragment extends MapFragment {
+public class ArtistDataMapFragment extends MapFragment {
 
     private static final String TAG = "PostMapFragment";
 
@@ -24,8 +25,20 @@ public class PostMapFragment extends MapFragment {
     @Override
     protected void addOverlays() {
         super.addOverlays();
+
         addOverlay(postsFolder);
+
         updatePosts();
+    }
+
+    @Override
+    protected boolean shouldDisplayCurrentLocation() {
+        return false;
+    }
+
+    @Override
+    protected boolean allowInteraction() {
+        return false;
     }
 
     /**
@@ -44,16 +57,23 @@ public class PostMapFragment extends MapFragment {
             postsFolder.remove(overlay);
         }
 
-        // Start fetching music memories
-        Queries.getAllMusicMemoriesInLastTwentyFourHours().addOnCompleteListener(completedTask -> {
-            if (postsFolder.getItems() == null) {
-                // Overlay got detached
-                return;
-            }
+        User user = Session.getInstance().getCurrentUser();
 
+        if (!user.isArtist() || !((Artist) user).getArtistData().isVerified()) {
+            throw new IllegalStateException("ArtistDataMapFragment cannot be used for unverified artist");
+        }
+
+        Artist artist = (Artist) user;
+        String artistSpotifyId = artist.getArtistData().getSpotifyId();
+
+        // Start fetching music memories
+        // TODO can become a large query with many music memories
+        //  add util method to use Firestore APIs filtering stuff
+        Queries.getAllMusicMemories().addOnCompleteListener(completedTask -> {
             if (completedTask.isSuccessful()) {
                 // Add all retrieved music memories to map
                 completedTask.getResult().stream()
+                        .filter(musicMemory -> artistSpotifyId.equals(musicMemory.getSong().getSpotifyArtistId()))
                         .map(musicMemory -> new MusicMemoryOverlay(getMapView(), musicMemory))
                         .forEach(postsFolder::add);
 

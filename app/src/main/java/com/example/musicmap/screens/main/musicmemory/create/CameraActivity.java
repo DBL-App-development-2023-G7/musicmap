@@ -1,4 +1,4 @@
-package com.example.musicmap.screens.main;
+package com.example.musicmap.screens.main.musicmemory.create;
 
 import android.app.Activity;
 import android.content.ContentValues;

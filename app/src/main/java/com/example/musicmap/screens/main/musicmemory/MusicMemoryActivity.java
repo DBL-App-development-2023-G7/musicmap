@@ -1,4 +1,4 @@
-package com.example.musicmap.screens.main;
+package com.example.musicmap.screens.main.musicmemory;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import androidx.annotation.Nullable;
 
 import com.example.musicmap.R;
 import com.example.musicmap.SessionAndInternetListenerActivity;
+import com.example.musicmap.screens.main.HomeActivity;
+import com.example.musicmap.screens.main.musicmemory.view.MusicMemoryFragment;
 import com.example.musicmap.screens.profile.ProfileActivity;
 import com.example.musicmap.util.Constants;
 import com.example.musicmap.util.ui.FragmentUtil;

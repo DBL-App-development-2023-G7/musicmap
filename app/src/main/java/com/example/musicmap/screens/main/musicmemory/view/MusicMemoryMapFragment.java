@@ -1,7 +1,8 @@
-package com.example.musicmap.screens.map;
+package com.example.musicmap.screens.main.musicmemory.view;
 
 import android.os.Bundle;
 
+import com.example.musicmap.screens.main.MapFragment;
 import com.example.musicmap.util.Constants;
 import com.example.musicmap.util.firebase.Queries;
 import com.example.musicmap.util.map.MusicMemoryOverlay;

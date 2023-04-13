@@ -1,4 +1,4 @@
-package com.example.musicmap.screens.map;
+package com.example.musicmap.screens.main;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
