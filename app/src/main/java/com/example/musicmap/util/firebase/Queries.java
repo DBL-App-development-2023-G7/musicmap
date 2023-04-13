@@ -144,6 +144,34 @@ public class Queries {
     }
 
     /**
+     * Fetches the most popular songs for an artist.
+     *
+     * @param artistId the id of the artist
+     * @param count the number of songs to return (or all, whichever less)
+     * @return {@code count} number of most popular songs for the artist
+     */
+    public static Task<List<SongCount>> getMostPopularSongsByArtist(String artistId, int count) {
+        return getAllMusicMemoriesWithSpotifyArtistId(artistId)
+                .continueWith(task -> {
+                    Map<Song, Long> songMap = new HashMap<>();
+
+                    for (MusicMemory musicMemory : task.getResult()) {
+                        Song song = musicMemory.getSong();
+
+                        if (song != null) {
+                            songMap.put(song, songMap.getOrDefault(song, 0l) + 1);
+                        }
+                    }
+
+                    return songMap.entrySet().stream()
+                            .sorted(Map.Entry.<Song, Long>comparingByValue().reversed())
+                            .limit(count)
+                            .map(entry -> new SongCount(entry.getKey(), entry.getValue()))
+                            .collect(Collectors.toList());
+                });
+    }
+
+    /**
      * Fetches all the music memories matching a given filter.
      *
      * @param filter the filter to use for matching.
@@ -180,34 +208,6 @@ public class Queries {
             return taskCompletionSource.getTask();
         });
         //CSON: Indentation
-    }
-
-    /**
-     * Fetches the most popular songs for an artist.
-     *
-     * @param artistId the id of the artist
-     * @param count the number of songs to return (or all, whichever less)
-     * @return {@code count} number of most popular songs for the artist
-     */
-    public static Task<List<SongCount>> getMostPopularSongsByArtist(String artistId, int count) {
-        return getAllMusicMemoriesWithSpotifyArtistId(artistId)
-                .continueWith(task -> {
-                    Map<Song, Long> songMap = new HashMap<>();
-
-                    for (MusicMemory musicMemory : task.getResult()) {
-                        Song song = musicMemory.getSong();
-
-                        if (song != null) {
-                            songMap.put(song, songMap.getOrDefault(song, 0l) + 1);
-                        }
-                    }
-
-                    return songMap.entrySet().stream()
-                            .sorted(Map.Entry.<Song, Long>comparingByValue().reversed())
-                            .limit(count)
-                            .map(entry -> new SongCount(entry.getKey(), entry.getValue()))
-                            .collect(Collectors.toList());
-                });
     }
 
     /**
