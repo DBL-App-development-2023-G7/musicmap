@@ -1,4 +1,4 @@
-package com.example.musicmap.feed;
+package com.example.musicmap.util.adapters;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import com.example.musicmap.R;
 import com.example.musicmap.models.MusicMemory;
 import com.example.musicmap.models.Song;
-import com.example.musicmap.util.adapters.FeedAdapter;
 import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Before;

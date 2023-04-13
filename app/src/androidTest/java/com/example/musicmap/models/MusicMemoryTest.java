@@ -1,4 +1,4 @@
-package com.example.musicmap.feed;
+package com.example.musicmap.models;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,8 +6,6 @@ import android.net.Uri;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.example.musicmap.models.MusicMemory;
-import com.example.musicmap.models.Song;
 import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Before;
