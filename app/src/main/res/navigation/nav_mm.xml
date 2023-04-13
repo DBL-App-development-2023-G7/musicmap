@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/feedFragment"
-        android:name="com.example.musicmap.screens.main.FeedFragment"
+        android:name="com.groupseven.musicmap.screens.main.FeedFragment"
         android:label="Feed Fragment"
         tools:layout="@layout/fragment_feed">
 
@@ -14,7 +14,7 @@
 
     <fragment
         android:id="@+id/musicMemoryFragment"
-        android:name="com.example.musicmap.screens.main.musicmemory.view.MusicMemoryFragment"
+        android:name="com.groupseven.musicmap.screens.main.musicmemory.view.MusicMemoryFragment"
         android:label="Music Memory Fragment"
         tools:layout="@layout/fragment_music_memory" />
     <action

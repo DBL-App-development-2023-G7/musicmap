@@ -6,7 +6,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/music_memory_fragment_view"
-        android:name="com.example.musicmap.screens.main.musicmemory.view.MusicMemoryFragment"
+        android:name="com.groupseven.musicmap.screens.main.musicmemory.view.MusicMemoryFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_music_memory"/>

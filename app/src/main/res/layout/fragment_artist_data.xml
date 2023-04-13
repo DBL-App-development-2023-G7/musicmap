@@ -34,7 +34,7 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragmentContainerView"
-                android:name="com.example.musicmap.screens.main.artist.ArtistDataMapFragment"
+                android:name="com.groupseven.musicmap.screens.main.artist.ArtistDataMapFragment"
                 android:layout_width="match_parent"
                 android:padding="5dp"
                 android:layout_height="275dp"
@@ -68,7 +68,7 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragment_view_most_played"
-                android:name="com.example.musicmap.screens.main.artist.ArtistDataMostPlayedSongsFragment"
+                android:name="com.groupseven.musicmap.screens.main.artist.ArtistDataMostPlayedSongsFragment"
                 android:layout_width="match_parent"
                 android:layout_height="275dp"
                 android:layout_marginTop="8dp"
