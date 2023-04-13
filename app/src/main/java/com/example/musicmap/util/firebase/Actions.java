@@ -3,7 +3,7 @@ package com.example.musicmap.util.firebase;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.example.musicmap.feed.MusicMemory;
+import com.example.musicmap.models.MusicMemory;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;

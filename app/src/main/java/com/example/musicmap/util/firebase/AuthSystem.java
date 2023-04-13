@@ -4,9 +4,9 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
-import com.example.musicmap.user.ArtistData;
-import com.example.musicmap.user.User;
-import com.example.musicmap.user.UserData;
+import com.example.musicmap.models.ArtistData;
+import com.example.musicmap.models.User;
+import com.example.musicmap.models.UserData;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;

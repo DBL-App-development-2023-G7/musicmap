@@ -1,4 +1,4 @@
-package com.example.musicmap.user;
+package com.example.musicmap.models;
 
 /**
  * The artist data class.

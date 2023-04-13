@@ -11,7 +11,7 @@ import android.util.Log;
 import androidx.core.content.ContextCompat;
 
 import com.example.musicmap.R;
-import com.example.musicmap.feed.Post;
+import com.example.musicmap.models.Post;
 import com.example.musicmap.util.ui.CircleTransform;
 import com.google.firebase.firestore.GeoPoint;
 import com.squareup.picasso.Picasso;

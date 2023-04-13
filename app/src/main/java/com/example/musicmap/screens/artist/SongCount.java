@@ -1,6 +1,6 @@
 package com.example.musicmap.screens.artist;
 
-import com.example.musicmap.feed.Song;
+import com.example.musicmap.models.Song;
 
 /**
  * This class is used to group song and number of times it was referenced in music memories.

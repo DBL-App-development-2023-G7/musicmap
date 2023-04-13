@@ -5,8 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.musicmap.user.ArtistData;
-import com.example.musicmap.user.UserData;
+import com.example.musicmap.models.ArtistData;
+import com.example.musicmap.models.UserData;
 
 public class RegisterArtistFragment extends RegisterFragment {
 

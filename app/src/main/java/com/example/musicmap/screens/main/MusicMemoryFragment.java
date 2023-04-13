@@ -14,9 +14,9 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.example.musicmap.R;
-import com.example.musicmap.feed.MusicMemory;
+import com.example.musicmap.models.MusicMemory;
 import com.example.musicmap.screens.map.MusicMemoryMapFragment;
-import com.example.musicmap.user.UserData;
+import com.example.musicmap.models.UserData;
 import com.example.musicmap.util.Constants;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.firebase.Queries;

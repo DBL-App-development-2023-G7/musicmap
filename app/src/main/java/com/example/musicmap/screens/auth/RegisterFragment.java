@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.musicmap.R;
-import com.example.musicmap.user.UserData;
+import com.example.musicmap.models.UserData;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.regex.InputChecker;
 import com.example.musicmap.util.ui.BirthdatePickerDialog;

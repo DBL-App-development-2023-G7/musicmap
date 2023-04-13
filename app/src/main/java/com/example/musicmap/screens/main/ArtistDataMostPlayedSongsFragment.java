@@ -13,9 +13,9 @@ import androidx.annotation.NonNull;
 import com.example.musicmap.R;
 import com.example.musicmap.util.adapters.PopularSongsAdapter;
 import com.example.musicmap.screens.artist.SongCount;
-import com.example.musicmap.user.Artist;
-import com.example.musicmap.user.Session;
-import com.example.musicmap.user.User;
+import com.example.musicmap.models.Artist;
+import com.example.musicmap.firebase.Session;
+import com.example.musicmap.models.User;
 import com.example.musicmap.util.firebase.Queries;
 import com.example.musicmap.util.ui.Message;
 

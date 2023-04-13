@@ -12,9 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.musicmap.screens.auth.AuthActivity;
 import com.example.musicmap.screens.verification.VerificationActivity;
-import com.example.musicmap.user.Artist;
-import com.example.musicmap.user.Session;
-import com.example.musicmap.user.User;
+import com.example.musicmap.models.Artist;
+import com.example.musicmap.firebase.Session;
+import com.example.musicmap.models.User;
 import com.example.musicmap.util.Constants;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

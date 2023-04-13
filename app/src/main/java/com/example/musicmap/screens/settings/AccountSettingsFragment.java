@@ -15,8 +15,8 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 
 import com.example.musicmap.R;
-import com.example.musicmap.user.Session;
-import com.example.musicmap.user.User;
+import com.example.musicmap.firebase.Session;
+import com.example.musicmap.models.User;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.example.musicmap.util.ui.ChangeEmailDialogFragment;
 import com.example.musicmap.util.ui.ChangePasswordDialogFragment;

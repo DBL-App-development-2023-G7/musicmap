@@ -3,7 +3,7 @@ package com.example.musicmap.util.map;
 import android.content.Context;
 import android.content.Intent;
 
-import com.example.musicmap.feed.MusicMemory;
+import com.example.musicmap.models.MusicMemory;
 import com.example.musicmap.screens.main.MusicMemoryActivity;
 import com.example.musicmap.util.Constants;
 

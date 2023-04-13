@@ -9,8 +9,8 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.musicmap.R;
 import com.example.musicmap.screens.profile.ProfileActivity;
-import com.example.musicmap.user.Session;
-import com.example.musicmap.user.User;
+import com.example.musicmap.firebase.Session;
+import com.example.musicmap.models.User;
 import com.example.musicmap.util.Constants;
 import com.example.musicmap.util.spotify.SpotifyAuthActivity;
 import com.example.musicmap.util.ui.FragmentUtil;

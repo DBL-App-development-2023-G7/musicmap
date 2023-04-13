@@ -1,9 +1,10 @@
-package com.example.musicmap.user;
+package com.example.musicmap.firebase;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.musicmap.models.User;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

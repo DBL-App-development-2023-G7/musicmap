@@ -5,7 +5,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.example.musicmap.SessionAndInternetListenerActivity;
-import com.example.musicmap.user.Session;
+import com.example.musicmap.firebase.Session;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

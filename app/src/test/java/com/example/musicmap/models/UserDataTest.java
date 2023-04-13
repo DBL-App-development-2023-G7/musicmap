@@ -1,4 +1,4 @@
-package com.example.musicmap.user;
+package com.example.musicmap.models;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

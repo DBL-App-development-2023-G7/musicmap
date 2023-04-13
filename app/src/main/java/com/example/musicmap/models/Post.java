@@ -1,6 +1,5 @@
-package com.example.musicmap.feed;
+package com.example.musicmap.models;
 
-import com.example.musicmap.user.User;
 import com.example.musicmap.util.firebase.AuthSystem;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;

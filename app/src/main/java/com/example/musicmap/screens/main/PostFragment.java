@@ -27,9 +27,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.musicmap.R;
-import com.example.musicmap.feed.MusicMemory;
-import com.example.musicmap.feed.Song;
-import com.example.musicmap.user.Session;
+import com.example.musicmap.models.MusicMemory;
+import com.example.musicmap.models.Song;
+import com.example.musicmap.firebase.Session;
 import com.example.musicmap.util.firebase.Actions;
 import com.example.musicmap.util.permissions.CameraPermission;
 import com.example.musicmap.util.permissions.LocationPermission;

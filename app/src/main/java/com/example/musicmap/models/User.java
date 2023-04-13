@@ -1,4 +1,4 @@
-package com.example.musicmap.user;
+package com.example.musicmap.models;
 
 import androidx.annotation.NonNull;
 
