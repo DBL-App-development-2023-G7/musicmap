@@ -1,9 +1,12 @@
 package com.example.musicmap.util.firebase;
 
+import androidx.annotation.NonNull;
+
 import com.example.musicmap.feed.MusicMemory;
 import com.example.musicmap.feed.Post;
 import com.example.musicmap.feed.Song;
 import com.example.musicmap.screens.artist.SongCount;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.firestore.DocumentReference;
@@ -187,16 +190,12 @@ public class Queries {
      * @return {@code count} number of most popular songs for the artist
      */
     public static Task<List<SongCount>> getMostPopularSongsByArtist(String artistId, int count) {
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-
-        return firestore.collectionGroup("MusicMemories")
-                .whereEqualTo("song.spotifyArtistId", artistId)
-                .get()
+        return getAllMusicMemoriesWithSpotifyArtistId(artistId)
                 .continueWith(task -> {
                     Map<Song, Long> songMap = new HashMap<>();
 
-                    for (QueryDocumentSnapshot musicMemorySnapshot : task.getResult()) {
-                        Song song = deserialize(musicMemorySnapshot, MusicMemory.class).getSong();
+                    for (MusicMemory musicMemory : task.getResult()) {
+                        Song song = musicMemory.getSong();
 
                         if (song != null) {
                             songMap.put(song, songMap.getOrDefault(song, 0l) + 1);
