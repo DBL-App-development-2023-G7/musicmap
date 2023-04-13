@@ -40,18 +40,6 @@ public class Queries {
     }
 
     /**
-     * Fetches the user by email.
-     *
-     * @param email the email of the user
-     * @return the user
-     */
-    public static Task<QuerySnapshot> getUserWithEmail(String email) {
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        Query query = firestore.collection("Users").whereEqualTo("email", email);
-        return query.get();
-    }
-
-    /**
      * Fetches the music memory for an author by id.
      * Use only for the current user.
      *
