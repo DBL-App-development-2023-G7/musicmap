@@ -1,4 +1,4 @@
-package com.groupseven.musicmap.screens.main;
+package com.groupseven.musicmap.screens.main.feed;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 
 import com.groupseven.musicmap.R;
+import com.groupseven.musicmap.screens.main.MainFragment;
 import com.groupseven.musicmap.util.adapters.FeedAdapter;
 import com.groupseven.musicmap.models.MusicMemory;
 import com.groupseven.musicmap.util.firebase.Queries;

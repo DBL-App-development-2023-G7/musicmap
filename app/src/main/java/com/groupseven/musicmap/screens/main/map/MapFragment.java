@@ -1,4 +1,4 @@
-package com.groupseven.musicmap.screens.main;
+package com.groupseven.musicmap.screens.main.map;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

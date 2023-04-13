@@ -5,7 +5,7 @@ import android.util.Log;
 import com.groupseven.musicmap.models.Artist;
 import com.groupseven.musicmap.firebase.Session;
 import com.groupseven.musicmap.models.User;
-import com.groupseven.musicmap.screens.main.MapFragment;
+import com.groupseven.musicmap.screens.main.map.MapFragment;
 import com.groupseven.musicmap.util.firebase.Queries;
 import com.groupseven.musicmap.util.map.MusicMemoryOverlay;
 

@@ -2,7 +2,7 @@ package com.groupseven.musicmap.screens.main.musicmemory.view;
 
 import android.os.Bundle;
 
-import com.groupseven.musicmap.screens.main.MapFragment;
+import com.groupseven.musicmap.screens.main.map.MapFragment;
 import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.firebase.Queries;
 import com.groupseven.musicmap.util.map.MusicMemoryOverlay;

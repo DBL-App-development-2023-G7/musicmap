@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/feedFragment"
-        android:name="com.groupseven.musicmap.screens.main.FeedFragment"
+        android:name="com.groupseven.musicmap.screens.main.feed.FeedFragment"
         android:label="Feed Fragment"
         tools:layout="@layout/fragment_feed">
 
