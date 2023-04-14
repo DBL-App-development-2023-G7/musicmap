@@ -21,6 +21,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+/**
+ * Utility class for making queries to the Firestore database.
+ */
 public class Queries {
 
     /**
@@ -110,7 +113,7 @@ public class Queries {
      * @return all music memories
      */
     public static CompletableFuture<List<MusicMemory>> getAllMusicMemories() {
-        return getAllMusicMemories(Filter.or()); // empty to form a tautology
+        return getAllMusicMemories(Filter.or()); // empty 'or' to form a tautology
     }
 
     /**
@@ -133,6 +136,7 @@ public class Queries {
     public static CompletableFuture<List<SongCount>> getMostPopularSongsByArtist(String artistId, int count) {
         return getAllMusicMemoriesWithSpotifyArtistId(artistId)
                 .thenApply(musicMemories -> {
+                    // Keep track of how often each song occurs
                     Map<Song, Long> songMap = new HashMap<>();
 
                     for (MusicMemory musicMemory : musicMemories) {
@@ -144,6 +148,7 @@ public class Queries {
                         }
                     }
 
+                    // Sort by how often the songs occur, and turn them into SongCount
                     return songMap.entrySet().stream()
                             .sorted(Map.Entry.<Song, Long>comparingByValue().reversed())
                             .limit(count)
@@ -209,23 +214,27 @@ public class Queries {
     /**
      * Deserializes a document snapshot containing user data.
      *
-     * @param doc the document snapshot (which must {@link DocumentSnapshot#exists() exist}.
+     * @param document the document snapshot (which must {@link DocumentSnapshot#exists() exist}.
      * @return the user.
      */
-    private static User deserializeUser(DocumentSnapshot doc) throws IllegalStateException {
-        if (!doc.exists()) {
+    private static User deserializeUser(DocumentSnapshot document) throws IllegalStateException {
+        if (document == null) {
+            throw new NullPointerException("document");
+        }
+        if (!document.exists()) {
             throw new IllegalArgumentException("The given document does not exist");
         }
 
-        String uid = doc.getReference().getId();
-        UserData userData = doc.toObject(UserData.class);
+        String uid = document.getReference().getId();
+        UserData userData = document.toObject(UserData.class);
 
         if (userData == null) {
             throw new IllegalStateException("toObject returned null, but doc exists");
         }
 
+        // Re-parse as ArtistData in case it is the data of an artist
         if (userData.isArtist()) {
-            ArtistData artistData = doc.toObject(ArtistData.class);
+            ArtistData artistData = document.toObject(ArtistData.class);
 
             if (artistData == null) {
                 throw new IllegalStateException("toObject returned null, but doc exists");
