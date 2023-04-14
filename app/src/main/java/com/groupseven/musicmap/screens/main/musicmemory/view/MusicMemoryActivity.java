@@ -1,4 +1,4 @@
-package com.groupseven.musicmap.screens.main.musicmemory;
+package com.groupseven.musicmap.screens.main.musicmemory.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.SessionAndInternetListenerActivity;
 import com.groupseven.musicmap.screens.main.HomeActivity;
-import com.groupseven.musicmap.screens.main.musicmemory.view.MusicMemoryFragment;
 import com.groupseven.musicmap.screens.profile.ProfileActivity;
 import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.ui.FragmentUtil;

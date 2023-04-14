@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.models.MusicMemory;
-import com.groupseven.musicmap.screens.main.musicmemory.MusicMemoryActivity;
+import com.groupseven.musicmap.screens.main.musicmemory.view.MusicMemoryActivity;
 import com.groupseven.musicmap.screens.profile.ProfileActivity;
 import com.groupseven.musicmap.models.User;
 import com.groupseven.musicmap.util.Constants;

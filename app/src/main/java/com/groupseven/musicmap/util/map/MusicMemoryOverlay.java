@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.groupseven.musicmap.models.MusicMemory;
-import com.groupseven.musicmap.screens.main.musicmemory.MusicMemoryActivity;
+import com.groupseven.musicmap.screens.main.musicmemory.view.MusicMemoryActivity;
 import com.groupseven.musicmap.util.Constants;
 
 import org.osmdroid.api.IGeoPoint;

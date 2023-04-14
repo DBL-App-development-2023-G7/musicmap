@@ -53,7 +53,7 @@
             android:theme="@style/Theme.MusicMap.NoActionBar"
             />
         <activity
-            android:name=".screens.main.musicmemory.MusicMemoryActivity"
+            android:name=".screens.main.musicmemory.view.MusicMemoryActivity"
             android:exported="false"
             android:theme="@style/Theme.MusicMap.NoActionBar"
             android:configChanges="orientation|screenSize"
