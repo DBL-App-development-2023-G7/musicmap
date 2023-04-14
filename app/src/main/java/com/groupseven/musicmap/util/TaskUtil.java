@@ -1,5 +1,6 @@
 package com.groupseven.musicmap.util;
 
+import com.google.android.gms.tasks.CancellationTokenSource;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 
@@ -46,9 +47,14 @@ public class TaskUtil {
      * @param <T> the type of the future, and the type of the returned task.
      */
     public static <T> Task<T> getTask(CompletableFuture<T> future) {
-        TaskCompletionSource<T> tcs = new TaskCompletionSource<>();
+        CancellationTokenSource cts = new CancellationTokenSource();
+        TaskCompletionSource<T> tcs = new TaskCompletionSource<>(cts.getToken());
 
         future.handle((BiFunction<T, Throwable, Void>) (t, throwable) -> {
+            if (future.isCancelled()) {
+                cts.cancel();
+            }
+
             if (throwable != null) {
                 Exception exception;
                 if (throwable instanceof Exception) {
@@ -59,10 +65,8 @@ public class TaskUtil {
                 }
 
                 tcs.setException(exception);
-            } else if (t != null) {
-                tcs.setResult(t);
             } else {
-                throw new IllegalStateException("Handle called without exception or result");
+                tcs.setResult(t);
             }
 
             return null;
