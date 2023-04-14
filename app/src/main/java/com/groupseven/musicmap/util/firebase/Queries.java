@@ -155,6 +155,24 @@ public class Queries {
      * @param filter the filter to use for matching.
      * @return all music memories matching the given.
      */
+    private static CompletableFuture<List<MusicMemory>> getAllMusicMemories2(Filter filter) {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+        return TaskUtil.getFuture(firestore.collectionGroup("MusicMemories")
+                        .where(filter)
+                        .get())
+                .thenApply(querySnapshot -> querySnapshot.getDocuments()
+                        .stream()
+                        .map(document -> deserialize(document, MusicMemory.class))
+                        .collect(Collectors.toList()));
+    }
+
+    /**
+     * Fetches all the music memories matching a given filter.
+     *
+     * @param filter the filter to use for matching.
+     * @return all music memories matching the given.
+     */
     private static Task<List<MusicMemory>> getAllMusicMemories(Filter filter) {
         // TODO: update the implementation based on how we decide to limit the feed
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
