@@ -9,19 +9,18 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.groupseven.musicmap.R;
+import com.groupseven.musicmap.firebase.Session;
+import com.groupseven.musicmap.models.Artist;
+import com.groupseven.musicmap.models.User;
 import com.groupseven.musicmap.screens.main.MainFragment;
 import com.groupseven.musicmap.util.adapters.PopularSongsAdapter;
-import com.groupseven.musicmap.models.SongCount;
-import com.groupseven.musicmap.models.Artist;
-import com.groupseven.musicmap.firebase.Session;
-import com.groupseven.musicmap.models.User;
 import com.groupseven.musicmap.util.firebase.Queries;
 import com.groupseven.musicmap.util.ui.Message;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ArtistDataMostPlayedSongsFragment extends MainFragment {
 
@@ -46,16 +45,16 @@ public class ArtistDataMostPlayedSongsFragment extends MainFragment {
         Artist artist = (Artist) user;
         String spotifyArtistId = artist.getArtistData().getSpotifyId();
 
-        Queries.getMostPopularSongsByArtist(spotifyArtistId, NUMBER_OF_SONGS).addOnCompleteListener(completedTask -> {
-            if (completedTask.isSuccessful()) {
-                List<SongCount> topSongs = completedTask.getResult();
-                popularSongsAdapter.addAll(topSongs);
-                popularSongsAdapter.notifyDataSetChanged();
-            } else {
-                Log.e(TAG, "Exception occurred while getting most popular songs", completedTask.getException());
-                Message.showFailureMessage(requireActivity(), "Could not retrieve most popular songs");
-            }
-        });
+        Queries.getMostPopularSongsByArtist(spotifyArtistId, NUMBER_OF_SONGS)
+                .whenCompleteAsync((topSongs, throwable) -> {
+                    if (throwable == null) {
+                        popularSongsAdapter.addAll(topSongs);
+                        popularSongsAdapter.notifyDataSetChanged();
+                    } else {
+                        Log.e(TAG, "Exception occurred while getting most popular songs", throwable);
+                        Message.showFailureMessage(requireActivity(), "Could not retrieve most popular songs");
+                    }
+        }, ContextCompat.getMainExecutor(requireContext()));
 
         return mostPlayedSongsView;
     }
