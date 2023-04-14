@@ -76,35 +76,19 @@ public class Queries {
 
     /**
      * Fetches all the music memories for an author.
-     * Use only for the current user.
      *
-     * @param authorUid the id of the author
-     * @return all music-memories for the author
+     * @param authorUid the id of the author.
+     * @return a future containing all music memories of the author.
      */
-    public static Task<List<MusicMemory>> getMusicMemoriesByAuthorId(String authorUid) {
+    public static CompletableFuture<List<MusicMemory>> getMusicMemoriesByAuthorId(String authorUid) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        return firestore.collection("Users").document(authorUid)
-                .collection("MusicMemories").get().continueWithTask(task -> {
-                    TaskCompletionSource<List<MusicMemory>> taskCompletionSource = new TaskCompletionSource<>();
-
-                    if (task.isSuccessful()) {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        List<DocumentSnapshot> documents = querySnapshot.getDocuments();
-
-                        List<MusicMemory> musicMemories = documents.stream()
-                                .map(document -> deserialize(document, MusicMemory.class))
-                                .collect(Collectors.toList());
-
-                        taskCompletionSource.setResult(musicMemories);
-                    } else {
-                        if (task.getException() == null) {
-                            taskCompletionSource.setException(new RuntimeException("Could not fetch music memories"));
-                        } else {
-                            taskCompletionSource.setException(task.getException());
-                        }
-                    }
-                    return taskCompletionSource.getTask();
-                });
+        return TaskUtil.getFuture(firestore.collection("Users")
+                        .document(authorUid)
+                        .collection("MusicMemories").get())
+                .thenApply(querySnapshot -> querySnapshot.getDocuments()
+                        .stream()
+                        .map(document -> deserialize(document, MusicMemory.class))
+                        .collect(Collectors.toList()));
     }
 
     /**
