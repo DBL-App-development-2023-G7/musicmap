@@ -96,10 +96,10 @@ public class Queries {
      *
      * @return music memories in last 24 hours.
      */
-    public static Task<List<MusicMemory>> getAllMusicMemoriesInLastTwentyFourHours() {
+    public static CompletableFuture<List<MusicMemory>> getAllMusicMemoriesInLastTwentyFourHours() {
         long timestamp24HoursAgo = System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24);
 
-        return getAllMusicMemories(Filter.greaterThan("timePosted", new Date(timestamp24HoursAgo)));
+        return getAllMusicMemories2(Filter.greaterThan("timePosted", new Date(timestamp24HoursAgo)));
     }
 
     /**

@@ -1,7 +1,11 @@
 package com.groupseven.musicmap.screens.main.map;
 
+import android.os.Looper;
 import android.util.Log;
 
+import androidx.core.content.ContextCompat;
+
+import com.google.firebase.firestore.util.Executors;
 import com.groupseven.musicmap.util.firebase.Queries;
 import com.groupseven.musicmap.util.map.MusicMemoryOverlay;
 
@@ -45,24 +49,24 @@ public class PostMapFragment extends MapFragment {
         }
 
         // Start fetching music memories
-        Queries.getAllMusicMemoriesInLastTwentyFourHours().addOnCompleteListener(completedTask -> {
+        Queries.getAllMusicMemoriesInLastTwentyFourHours().whenCompleteAsync((musicMemories, throwable) -> {
             if (postsFolder.getItems() == null) {
                 // Overlay got detached
                 return;
             }
 
-            if (completedTask.isSuccessful()) {
+            if (throwable == null) {
                 // Add all retrieved music memories to map
-                completedTask.getResult().stream()
+                musicMemories.stream()
                         .map(musicMemory -> new MusicMemoryOverlay(getMapView(), musicMemory))
                         .forEach(postsFolder::add);
 
                 // Refresh map
                 getMapView().invalidate();
             } else {
-                Log.e(TAG, "Exception occurred while getting map music memories", completedTask.getException());
+                Log.e(TAG, "Exception occurred while getting map music memories", throwable);
             }
-        });
+        }, ContextCompat.getMainExecutor(requireContext()));
     }
 
 }
