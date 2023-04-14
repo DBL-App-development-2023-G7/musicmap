@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.groupseven.musicmap.R;
@@ -97,7 +98,7 @@ public class MusicMemoryFragment extends Fragment {
 
         // TODO maybe some sort of loading symbol before MusicMemory is loaded
 
-        Queries.getMusicMemoryByAuthorIdAndId(authorUid, musicMemoryUid).whenComplete((musicMemory, throwable) -> {
+        Queries.getMusicMemoryByAuthorIdAndId(authorUid, musicMemoryUid).whenCompleteAsync((musicMemory, throwable) -> {
             if (throwable != null) {
                 Log.e(TAG, "MusicMemory could not be loaded in MusicMemoryFragment", throwable);
                 Message.showFailureMessage(container, "Music Memory could not be loaded");
@@ -132,7 +133,7 @@ public class MusicMemoryFragment extends Fragment {
             this.dateView.setText(getString(R.string.posted_on, dateFormat.format(postedDate)));
             this.spotifyWidget.setSongName(musicMemory.getSong().getName());
             this.spotifyWidget.setArtistName(musicMemory.getSong().getArtistName());
-        });
+        }, ContextCompat.getMainExecutor(requireContext()));
 
         return rootView;
     }

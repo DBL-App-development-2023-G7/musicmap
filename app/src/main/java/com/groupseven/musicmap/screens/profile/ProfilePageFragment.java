@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.groupseven.musicmap.R;
@@ -73,14 +74,14 @@ public class ProfilePageFragment extends Fragment {
         Uri uri = user.getData().getProfilePictureUri();
         Picasso.get().load(uri).into(profilePicture);
 
-        Queries.getMusicMemoriesByAuthorId(user.getUid()).whenComplete((feed, throwable) -> {
+        Queries.getMusicMemoriesByAuthorId(user.getUid()).whenCompleteAsync((feed, throwable) -> {
             if (throwable == null) {
                 feedAdapter.addAll(feed);
                 feedAdapter.notifyDataSetChanged();
             } else {
                 Log.e(TAG, "Exception occurred while getting music memories from author", throwable);
             }
-        });
+        }, ContextCompat.getMainExecutor(requireContext()));
     }
 
 }

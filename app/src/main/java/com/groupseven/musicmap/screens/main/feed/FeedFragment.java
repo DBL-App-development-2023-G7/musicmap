@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
+import androidx.core.content.ContextCompat;
+
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.screens.main.MainFragment;
 import com.groupseven.musicmap.util.adapters.FeedAdapter;
@@ -71,7 +73,7 @@ public class FeedFragment extends MainFragment {
     }
 
     private void getFeed(int size, OnFeedDataLoadedListener listener) {
-        Queries.getAllMusicMemoriesInLastTwentyFourHours().whenComplete((feed, throwable) -> {
+        Queries.getAllMusicMemoriesInLastTwentyFourHours().whenCompleteAsync((feed, throwable) -> {
             if (throwable == null) {
                 if (size > 0 && feed.size() > 0) {
                     feed = feed.subList(0, Math.min(feed.size(), size));
@@ -82,7 +84,7 @@ public class FeedFragment extends MainFragment {
                 Log.e(TAG, "Exception occurred while getting feed music memories", throwable);
                 listener.onFeedDataLoadFailed();
             }
-        });
+        }, ContextCompat.getMainExecutor(requireContext()));
     }
 
     private AbsListView.OnScrollListener onScrollListener(FeedAdapter feedAdapter) {
