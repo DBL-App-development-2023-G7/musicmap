@@ -134,7 +134,8 @@ public class Queries {
                         Song song = musicMemory.getSong();
 
                         if (song != null) {
-                            songMap.put(song, songMap.getOrDefault(song, 0l) + 1);
+                            //noinspection ConstantConditions
+                            songMap.put(song, songMap.getOrDefault(song, 0L) + 1);
                         }
                     }
 
