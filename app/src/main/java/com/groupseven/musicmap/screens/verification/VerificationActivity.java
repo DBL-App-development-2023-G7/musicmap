@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.groupseven.musicmap.R;
-import com.groupseven.musicmap.listeners.SessionAndInternetListenerActivity;
+import com.groupseven.musicmap.listeners.SessionListenerActivity;
 import com.groupseven.musicmap.screens.main.HomeActivity;
 import com.groupseven.musicmap.models.Artist;
 import com.groupseven.musicmap.firebase.Session;
@@ -16,7 +16,7 @@ import com.groupseven.musicmap.util.firebase.AuthSystem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class VerificationActivity extends SessionAndInternetListenerActivity {
+public class VerificationActivity extends SessionListenerActivity {
 
     private int currentLayout = R.layout.activity_verification;
 

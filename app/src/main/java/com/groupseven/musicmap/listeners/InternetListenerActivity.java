@@ -11,6 +11,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.groupseven.musicmap.util.Constants;
 
+/**
+ * An abstract base class for activities that is extended by {@link SessionListenerActivity}.
+ *
+ * The class provides an implementation that listens for changes in internet availability by registering
+ * a BroadcastReceiver that listens for the action Constants.INTERNET_BROADCAST_ACTION.
+ * Whenever this BroadcastReceiver is triggered, it calls the abstract method {@link #updateLayout(boolean)}
+ * that must be implemented by the child activities. This method is responsible for updating the layout
+ * to reflect the current internet availability status.
+ */
 public abstract class InternetListenerActivity extends AppCompatActivity {
 
     private final BroadcastReceiver internetCheckReceiver = new BroadcastReceiver() {
@@ -31,6 +40,11 @@ public abstract class InternetListenerActivity extends AppCompatActivity {
      */
     protected abstract void updateLayout(boolean internetAvailable);
 
+    /**
+     * Called when the activity is created.
+     * Registers the BroadcastReceiver to listen for changes in internet availability.
+     * @param savedInstanceState the saved instance state.
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +53,10 @@ public abstract class InternetListenerActivity extends AppCompatActivity {
         registerReceiver(internetCheckReceiver, intentFilter);
     }
 
+    /**
+     * Called when the activity is destroyed.
+     * Unregisters the BroadcastReceiver.
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
