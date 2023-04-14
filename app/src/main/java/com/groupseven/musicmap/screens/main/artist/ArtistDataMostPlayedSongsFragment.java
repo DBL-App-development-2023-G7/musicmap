@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.screens.main.MainFragment;
@@ -46,16 +47,15 @@ public class ArtistDataMostPlayedSongsFragment extends MainFragment {
         Artist artist = (Artist) user;
         String spotifyArtistId = artist.getArtistData().getSpotifyId();
 
-        Queries.getMostPopularSongsByArtist(spotifyArtistId, NUMBER_OF_SONGS).addOnCompleteListener(completedTask -> {
-            if (completedTask.isSuccessful()) {
-                List<SongCount> topSongs = completedTask.getResult();
+        Queries.getMostPopularSongsByArtist(spotifyArtistId, NUMBER_OF_SONGS).whenCompleteAsync((topSongs, throwable) -> {
+            if (throwable == null) {
                 popularSongsAdapter.addAll(topSongs);
                 popularSongsAdapter.notifyDataSetChanged();
             } else {
-                Log.e(TAG, "Exception occurred while getting most popular songs", completedTask.getException());
+                Log.e(TAG, "Exception occurred while getting most popular songs", throwable);
                 Message.showFailureMessage(requireActivity(), "Could not retrieve most popular songs");
             }
-        });
+        }, ContextCompat.getMainExecutor(requireContext()));
 
         return mostPlayedSongsView;
     }

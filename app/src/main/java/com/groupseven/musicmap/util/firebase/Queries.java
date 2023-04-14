@@ -117,8 +117,8 @@ public class Queries {
      * @param spotifyArtistId the id of the Spotify artist.
      * @return all music memories with songs of the given artist.
      */
-    public static Task<List<MusicMemory>> getAllMusicMemoriesWithSpotifyArtistId(String spotifyArtistId) {
-        return getAllMusicMemories(Filter.equalTo("song.spotifyArtistId", spotifyArtistId));
+    public static CompletableFuture<List<MusicMemory>> getAllMusicMemoriesWithSpotifyArtistId(String spotifyArtistId) {
+        return getAllMusicMemories2(Filter.equalTo("song.spotifyArtistId", spotifyArtistId));
     }
 
     /**
@@ -128,12 +128,12 @@ public class Queries {
      * @param count the number of songs to return (or all, whichever less)
      * @return {@code count} number of most popular songs for the artist
      */
-    public static Task<List<SongCount>> getMostPopularSongsByArtist(String artistId, int count) {
+    public static CompletableFuture<List<SongCount>> getMostPopularSongsByArtist(String artistId, int count) {
         return getAllMusicMemoriesWithSpotifyArtistId(artistId)
-                .continueWith(task -> {
+                .thenApply(musicMemories -> {
                     Map<Song, Long> songMap = new HashMap<>();
 
-                    for (MusicMemory musicMemory : task.getResult()) {
+                    for (MusicMemory musicMemory : musicMemories) {
                         Song song = musicMemory.getSong();
 
                         if (song != null) {

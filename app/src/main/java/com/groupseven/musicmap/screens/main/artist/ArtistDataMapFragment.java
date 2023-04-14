@@ -2,6 +2,8 @@ package com.groupseven.musicmap.screens.main.artist;
 
 import android.util.Log;
 
+import androidx.core.content.ContextCompat;
+
 import com.groupseven.musicmap.models.Artist;
 import com.groupseven.musicmap.firebase.Session;
 import com.groupseven.musicmap.models.User;
@@ -67,19 +69,19 @@ public class ArtistDataMapFragment extends MapFragment {
         String artistSpotifyId = artist.getArtistData().getSpotifyId();
 
         // Start fetching music memories
-        Queries.getAllMusicMemoriesWithSpotifyArtistId(artistSpotifyId).addOnCompleteListener(completedTask -> {
-            if (completedTask.isSuccessful()) {
+        Queries.getAllMusicMemoriesWithSpotifyArtistId(artistSpotifyId).whenCompleteAsync((musicMemories, throwable) -> {
+            if (throwable == null) {
                 // Add all retrieved music memories to map
-                completedTask.getResult().stream()
+                musicMemories.stream()
                         .map(musicMemory -> new MusicMemoryOverlay(getMapView(), musicMemory))
                         .forEach(postsFolder::add);
 
                 // Refresh map
                 getMapView().invalidate();
             } else {
-                Log.e(TAG, "Exception occurred while getting map music memories", completedTask.getException());
+                Log.e(TAG, "Exception occurred while getting map music memories", throwable);
             }
-        });
+        }, ContextCompat.getMainExecutor(requireContext()));
     }
 
 }
