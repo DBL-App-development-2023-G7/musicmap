@@ -60,29 +60,18 @@ public class Queries {
      * Fetches the music memory for an author by id.
      * Use only for the current user.
      *
-     * @param authorUid the id of the author
-     * @param uid the id of the music-memory
-     * @return music-memory
+     * @param authorUid the id of the author.
+     * @param uid the id of the music memory.
+     * @return the future containing the music memory.
      */
-    public static Task<MusicMemory> getMusicMemoryByAuthorIdAndId(String authorUid, String uid) {
+    public static CompletableFuture<MusicMemory> getMusicMemoryByAuthorIdAndId(String authorUid, String uid) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        return firestore.collection("Users").document(authorUid)
-                .collection("MusicMemories").document(uid).get().continueWithTask(task -> {
-                    TaskCompletionSource<MusicMemory> taskCompletionSource = new TaskCompletionSource<>();
-
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        MusicMemory musicMemory = deserialize(document, MusicMemory.class);
-
-                        taskCompletionSource.setResult(musicMemory);
-                    } else {
-                        assert task.getException() != null;
-                        taskCompletionSource.setException(task.getException());
-
-                    }
-
-                    return taskCompletionSource.getTask();
-                });
+        return TaskUtil.getFuture(firestore.collection("Users")
+                        .document(authorUid)
+                        .collection("MusicMemories")
+                        .document(uid)
+                        .get())
+                .thenApply(documentSnapshot -> deserialize(documentSnapshot, MusicMemory.class));
     }
 
     /**

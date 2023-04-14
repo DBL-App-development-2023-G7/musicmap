@@ -14,7 +14,6 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.groupseven.musicmap.R;
-import com.groupseven.musicmap.models.MusicMemory;
 import com.groupseven.musicmap.models.UserData;
 import com.groupseven.musicmap.util.ui.SpotifyWidgetFragment;
 import com.groupseven.musicmap.util.Constants;
@@ -98,14 +97,13 @@ public class MusicMemoryFragment extends Fragment {
 
         // TODO maybe some sort of loading symbol before MusicMemory is loaded
 
-        Queries.getMusicMemoryByAuthorIdAndId(authorUid, musicMemoryUid).addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                Log.e(TAG, "MusicMemory could not be loaded in MusicMemoryFragment", task.getException());
+        Queries.getMusicMemoryByAuthorIdAndId(authorUid, musicMemoryUid).whenComplete((musicMemory, throwable) -> {
+            if (throwable != null) {
+                Log.e(TAG, "MusicMemory could not be loaded in MusicMemoryFragment", throwable);
                 Message.showFailureMessage(container, "Music Memory could not be loaded");
                 return;
             }
-            
-            MusicMemory musicMemory = task.getResult();
+
             spotifyWidget.setupFragment(musicMemory.getSong().getName(),
                     musicMemory.getSong().getArtistName(),
                     musicMemory.getSong().getImageUri().toString(),

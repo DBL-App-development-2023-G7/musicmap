@@ -30,7 +30,7 @@ public class MusicMemoryMapFragment extends MapFragment {
         // Get MusicMemory from UIDs
         // TODO MusicMemoryOverlay or just a marker?
         //  mb same marker but without image
-        Queries.getMusicMemoryByAuthorIdAndId(authorUid, musicMemoryUid).addOnSuccessListener(musicMemory ->
+        Queries.getMusicMemoryByAuthorIdAndId(authorUid, musicMemoryUid).thenAccept(musicMemory ->
                 addOverlay(new MusicMemoryOverlay(getMapView(), musicMemory)));
     }
 
