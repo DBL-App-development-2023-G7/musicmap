@@ -43,7 +43,7 @@ public class Queries {
                     // More than one user found
                     if (query.size() > 1) {
                         throw new IllegalStateException(
-                                "More than two user with username '" + username + "' exist");
+                                "More than one user with username '" + username + "' exist");
                     }
 
                     DocumentSnapshot doc = query.getDocuments().get(0);
@@ -173,7 +173,7 @@ public class Queries {
     /**
      * Deserializes the given document into a post of the given class.
      *
-     * @param document the document snapshot.
+     * @param document the document snapshot (which must {@link DocumentSnapshot#exists() exist}.
      * @param postClass the class of the post, e.g. {@code MusicMemory.class}.
      * @return the deserialized post, or {@code null}
      * @param <P> the type of post, e.g. {@link MusicMemory}.
@@ -182,6 +182,9 @@ public class Queries {
         if (document == null) {
             throw new NullPointerException("document");
         }
+        if (!document.exists()) {
+            throw new IllegalArgumentException("The given document does not exist");
+        }
         if (postClass == null) {
             throw new NullPointerException("postClass");
         }
@@ -189,7 +192,7 @@ public class Queries {
         P post = document.toObject(postClass);
 
         if (post == null) {
-            throw new IllegalArgumentException("The DocumentSnapshot contained a null document");
+            throw new IllegalStateException("toObject returned null, but doc exists");
         }
 
         DocumentReference authorDocumentReference = document.getReference().getParent().getParent();
@@ -206,12 +209,12 @@ public class Queries {
     /**
      * Deserializes a document snapshot containing user data.
      *
-     * @param doc the document snapshot.
+     * @param doc the document snapshot (which must {@link DocumentSnapshot#exists() exist}.
      * @return the user.
      */
     private static User deserializeUser(DocumentSnapshot doc) throws IllegalStateException {
         if (!doc.exists()) {
-            throw new IllegalStateException("Document does not exist");
+            throw new IllegalArgumentException("The given document does not exist");
         }
 
         String uid = doc.getReference().getId();
