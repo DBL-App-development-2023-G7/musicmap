@@ -1,5 +1,9 @@
 package com.groupseven.musicmap.util.firebase;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Filter;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.groupseven.musicmap.models.ArtistData;
 import com.groupseven.musicmap.models.MusicMemory;
 import com.groupseven.musicmap.models.Post;
@@ -7,13 +11,6 @@ import com.groupseven.musicmap.models.Song;
 import com.groupseven.musicmap.models.SongCount;
 import com.groupseven.musicmap.models.User;
 import com.groupseven.musicmap.models.UserData;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskCompletionSource;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.Filter;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.groupseven.musicmap.util.TaskUtil;
 
 import java.util.Date;
@@ -99,7 +96,7 @@ public class Queries {
     public static CompletableFuture<List<MusicMemory>> getAllMusicMemoriesInLastTwentyFourHours() {
         long timestamp24HoursAgo = System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24);
 
-        return getAllMusicMemories2(Filter.greaterThan("timePosted", new Date(timestamp24HoursAgo)));
+        return getAllMusicMemories(Filter.greaterThan("timePosted", new Date(timestamp24HoursAgo)));
     }
 
     /**
@@ -108,7 +105,7 @@ public class Queries {
      * @return all music memories
      */
     public static CompletableFuture<List<MusicMemory>> getAllMusicMemories() {
-        return getAllMusicMemories2(Filter.or()); // empty to form a tautology
+        return getAllMusicMemories(Filter.or()); // empty to form a tautology
     }
 
     /**
@@ -118,7 +115,7 @@ public class Queries {
      * @return all music memories with songs of the given artist.
      */
     public static CompletableFuture<List<MusicMemory>> getAllMusicMemoriesWithSpotifyArtistId(String spotifyArtistId) {
-        return getAllMusicMemories2(Filter.equalTo("song.spotifyArtistId", spotifyArtistId));
+        return getAllMusicMemories(Filter.equalTo("song.spotifyArtistId", spotifyArtistId));
     }
 
     /**
@@ -155,7 +152,7 @@ public class Queries {
      * @param filter the filter to use for matching.
      * @return all music memories matching the given.
      */
-    private static CompletableFuture<List<MusicMemory>> getAllMusicMemories2(Filter filter) {
+    private static CompletableFuture<List<MusicMemory>> getAllMusicMemories(Filter filter) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
         return TaskUtil.getFuture(firestore.collectionGroup("MusicMemories")
@@ -165,45 +162,6 @@ public class Queries {
                         .stream()
                         .map(document -> deserialize(document, MusicMemory.class))
                         .collect(Collectors.toList()));
-    }
-
-    /**
-     * Fetches all the music memories matching a given filter.
-     *
-     * @param filter the filter to use for matching.
-     * @return all music memories matching the given.
-     */
-    private static Task<List<MusicMemory>> getAllMusicMemories(Filter filter) {
-        // TODO: update the implementation based on how we decide to limit the feed
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-
-        //CSOFF: Indentation
-        return firestore.collectionGroup("MusicMemories")
-                .where(filter)
-                .get()
-                .continueWithTask(task -> {
-            TaskCompletionSource<List<MusicMemory>> taskCompletionSource = new TaskCompletionSource<>();
-
-            if (task.isSuccessful()) {
-                QuerySnapshot querySnapshot = task.getResult();
-                List<DocumentSnapshot> documents = querySnapshot.getDocuments();
-
-                List<MusicMemory> musicMemories = documents.stream()
-                        .map(document -> deserialize(document, MusicMemory.class))
-                        .collect(Collectors.toList());
-
-                taskCompletionSource.setResult(musicMemories);
-            } else {
-                if (task.getException() == null) {
-                    taskCompletionSource.setException(new RuntimeException("Could not fetch music memories"));
-                } else {
-                    taskCompletionSource.setException(task.getException());
-                }
-            }
-
-            return taskCompletionSource.getTask();
-        });
-        //CSON: Indentation
     }
 
     /**
