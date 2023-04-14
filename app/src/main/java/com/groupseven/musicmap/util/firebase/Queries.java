@@ -108,15 +108,6 @@ public class Queries {
     }
 
     /**
-     * Fetches all the music memories.
-     *
-     * @return all music memories
-     */
-    public static CompletableFuture<List<MusicMemory>> getAllMusicMemories() {
-        return getAllMusicMemories(Filter.or()); // empty 'or' to form a tautology
-    }
-
-    /**
      * Fetches all the music memories made with songs of a certain Spotify artist.
      *
      * @param spotifyArtistId the id of the Spotify artist.
