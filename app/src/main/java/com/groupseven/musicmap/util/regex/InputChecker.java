@@ -97,16 +97,17 @@ public class InputChecker {
                 usernameInput.setError(context.getString(R.string.input_error_valid_username));
                 return false;
             case VALID:
-                Queries.getUserWithUsername(username).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        if (task.getResult() != null) {
+                Queries.getUserWithUsername(username).whenComplete((user, throwable) -> {
+                    if (throwable == null) {
+                        if (user != null) {
                             usernameInput.setError(context.getString(R.string.input_error_username_exists));
                         }
                     } else {
                         usernameInput.setError("Cannot check username");
                     }
                 });
-                return true;
+                return true; // TODO return value cannot be known here, depends on result of query above,
+                             //  maybe make these methods return futures
             default:
                 usernameInput.setError(context.getString(R.string.input_error_unexpected));
                 return false;

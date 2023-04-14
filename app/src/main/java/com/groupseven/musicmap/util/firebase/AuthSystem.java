@@ -24,9 +24,11 @@ import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.groupseven.musicmap.util.TaskUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class AuthSystem {
 
@@ -54,29 +56,28 @@ public class AuthSystem {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String email = userData.getEmail();
 
-        return Queries.getUserWithUsername(userData.getUsername()).onSuccessTask(existingUser -> {
-            TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
-            if (existingUser != null) {
-                tcs.setException(new FirebaseFirestoreException("The username already exist!",
-                        FirebaseFirestoreException.Code.ALREADY_EXISTS));
-                return tcs.getTask();
-            }
+        return TaskUtil.getTask(Queries.getUserWithUsername(userData.getUsername())
+                .thenCompose(user -> {
+                    if (user != null) {
+                        throw new IllegalArgumentException("The username already exist!");
+                    }
 
-            Task<AuthResult> registerAccount = auth.createUserWithEmailAndPassword(email, password);
+                    CompletableFuture<AuthResult> registerAccount = TaskUtil.getFuture(
+                            auth.createUserWithEmailAndPassword(email, password));
 
-            return registerAccount.onSuccessTask(result -> {
+                    return registerAccount.thenCompose(result -> {
+                        FirebaseUser firebaseUser = result.getUser();
 
-                FirebaseUser firebaseUser = result.getUser();
+                        if (firebaseUser != null) {
+                            Task<Void> sendEmail = firebaseUser.sendEmailVerification();
+                            Task<Void> addUser = addUserToFirestore(new User(userData, firebaseUser.getUid()));
 
-                if (firebaseUser != null) {
-                    Task<Void> sendEmail = firebaseUser.sendEmailVerification();
-                    Task<Void> addUser = addUserToFirestore(new User(userData, firebaseUser.getUid()));
-                    return Tasks.whenAll(sendEmail, addUser);
-                }
-                tcs.setException(new IllegalStateException("The firebaseUser is null."));
-                return tcs.getTask();
-            });
-        });
+                            return TaskUtil.getFuture(Tasks.whenAll(sendEmail, addUser));
+                        }
+
+                        throw new IllegalStateException("The firebase user is null");
+                    });
+                }));
     }
 
     /**
@@ -88,20 +89,16 @@ public class AuthSystem {
      */
     public static Task<AuthResult> loginWithUsernameAndPassword(String username, String password) {
 
-        return Queries.getUserWithUsername(username).onSuccessTask(user -> {
-            TaskCompletionSource<AuthResult> tcs = new TaskCompletionSource<>();
-
+        return TaskUtil.getTask(Queries.getUserWithUsername(username).thenCompose(user -> {
             if (user == null) {
-                tcs.setException(new FirebaseFirestoreException("Query did not return any docs.",
-                        FirebaseFirestoreException.Code.NOT_FOUND));
-                return tcs.getTask();
+                throw new IllegalArgumentException("Username does not exist");
             }
 
             String email = user.getData().getEmail();
             FirebaseAuth auth = FirebaseAuth.getInstance();
 
-            return auth.signInWithEmailAndPassword(email, password);
-        });
+            return TaskUtil.getFuture(auth.signInWithEmailAndPassword(email, password));
+        }));
     }
 
     /**
@@ -212,14 +209,13 @@ public class AuthSystem {
         Map<String, Object> data = new HashMap<>();
         data.put("username", username);
 
-        return Queries.getUserWithUsername(username).onSuccessTask(user -> {
+        return TaskUtil.getTask(Queries.getUserWithUsername(username).thenCompose(user -> {
             if (user != null) {
-                tcs.setException(new FirebaseFirestoreException("The username already exists",
-                        FirebaseFirestoreException.Code.ALREADY_EXISTS));
-                return tcs.getTask();
+                throw new IllegalArgumentException("That username already exists");
             }
-            return documentReference.update(data);
-        });
+
+            return TaskUtil.getFuture(documentReference.update(data));
+        }));
     }
 
     /**

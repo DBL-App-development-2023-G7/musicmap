@@ -14,11 +14,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.groupseven.musicmap.util.TaskUtil;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -28,53 +30,29 @@ public class Queries {
      * Fetches the user with a given username.
      *
      * @param username the username of the user
-     * @return the user, or {@code null} if the user doesn't exist.
+     * @return the future containing the user, or {@code null} if the user doesn't exist.
      */
-    public static Task<User> getUserWithUsername(String username) {
+    public static CompletableFuture<User> getUserWithUsername(String username) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        return firestore.collection("Users")
+        return TaskUtil.getFuture(firestore.collection("Users")
                 .whereEqualTo("username", username)
-                .get()
-                .continueWithTask(task -> {
-                    TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
-
-                    if (!task.isSuccessful()) {
-                        if (task.getException() != null) {
-                            tcs.setException(task.getException());
-                        } else {
-                            tcs.setException(new RuntimeException("Could not get user from username"));
-                        }
-                        return tcs.getTask();
-                    }
-
-                    QuerySnapshot query = task.getResult();
-
+                .get())
+                .thenApply(query -> {
                     // No users found
                     if (query.isEmpty()) {
-                        tcs.setResult(null);
-                        return tcs.getTask();
+                        return null;
                     }
 
                     // More than one user found
                     if (query.size() > 1) {
-                        tcs.setException(new IllegalStateException(
-                                "More than two user with username '" + username + "' exist"));
-                        return tcs.getTask();
+                        throw new IllegalStateException(
+                                "More than two user with username '" + username + "' exist");
                     }
 
                     DocumentSnapshot doc = query.getDocuments().get(0);
 
                     // Deserialize user
-                    User user;
-                    try {
-                        user = deserializeUser(doc);
-                    } catch (Exception e) {
-                        tcs.setException(e);
-                        return tcs.getTask();
-                    }
-
-                    tcs.setResult(user);
-                    return tcs.getTask();
+                    return deserializeUser(doc);
                 });
     }
 
