@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/create_music_memory_backgound"
-    tools:context=".screens.main.PostFragment">
+    tools:context=".screens.main.musicmemory.create.PostFragment">
 
     <!-- GUIDILENS TO PREVENTY THE FRAGMENT CONTENTS TO OVERLAP WITH THE NAVBARS-->
     <androidx.constraintlayout.widget.Guideline

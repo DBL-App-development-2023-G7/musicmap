@@ -1,14 +1,14 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <Preference
-        app:fragment="com.example.musicmap.screens.settings.AccountSettingsFragment"
+        app:fragment="com.groupseven.musicmap.screens.settings.AccountSettingsFragment"
         app:title="@string/account_settings"
         app:icon="@drawable/person_icon"
         app:summary="@string/account_settings_description"
         app:key="account"/>
 
     <Preference
-        app:fragment="com.example.musicmap.screens.settings.ConnectionSettingsFragment"
+        app:fragment="com.groupseven.musicmap.screens.settings.ConnectionSettingsFragment"
         app:title="@string/connections"
         app:icon="@drawable/connect_icon"
         app:summary="@string/connections_description"
