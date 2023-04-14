@@ -107,8 +107,8 @@ public class Queries {
      *
      * @return all music memories
      */
-    public static Task<List<MusicMemory>> getAllMusicMemories() {
-        return getAllMusicMemories(Filter.or());
+    public static CompletableFuture<List<MusicMemory>> getAllMusicMemories() {
+        return getAllMusicMemories2(Filter.or()); // empty to form a tautology
     }
 
     /**
