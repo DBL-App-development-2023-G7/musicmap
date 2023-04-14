@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:name="com.example.musicmap.MusicMap"
+        android:name="com.groupseven.musicmap.MusicMap"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -48,12 +48,12 @@
             android:exported="false"
             android:theme="@style/Theme.MusicMap.NoActionBar" />
         <activity
-            android:name=".screens.main.CameraActivity"
+            android:name=".screens.main.musicmemory.create.CameraActivity"
             android:exported="false"
             android:theme="@style/Theme.MusicMap.NoActionBar"
             />
         <activity
-            android:name=".screens.main.MusicMemoryActivity"
+            android:name=".screens.main.musicmemory.view.MusicMemoryActivity"
             android:exported="false"
             android:theme="@style/Theme.MusicMap.NoActionBar"
             android:configChanges="orientation|screenSize"
