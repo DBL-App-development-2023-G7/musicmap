@@ -3,6 +3,7 @@ package com.groupseven.musicmap.util.spotify;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.groupseven.musicmap.util.spotify.SpotifyData;
 import com.squareup.picasso.Picasso;
 
 import org.apache.hc.core5.http.ParseException;
@@ -19,6 +20,7 @@ import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.enums.ModelObjectType;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.miscellaneous.CurrentlyPlaying;
+import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.model_objects.specification.PagingCursorbased;
 import se.michaelthelin.spotify.model_objects.specification.PlayHistory;
 import se.michaelthelin.spotify.model_objects.specification.Track;
@@ -26,7 +28,6 @@ import se.michaelthelin.spotify.model_objects.specification.TrackSimplified;
 import se.michaelthelin.spotify.requests.AbstractRequest;
 import se.michaelthelin.spotify.requests.data.player.GetCurrentUsersRecentlyPlayedTracksRequest;
 import se.michaelthelin.spotify.requests.data.player.GetUsersCurrentlyPlayingTrackRequest;
-import se.michaelthelin.spotify.requests.data.search.simplified.SearchTracksRequest;
 import se.michaelthelin.spotify.requests.data.tracks.GetTrackRequest;
 
 /**
@@ -34,12 +35,13 @@ import se.michaelthelin.spotify.requests.data.tracks.GetTrackRequest;
  * <p>
  * However there is a lot of spotify logic happening in activities so this class needs to be expanded.
  */
+// TODO REPLACE FUTURES WITH CLASSES
 public class SpotifyUtils {
 
     public static final String TAG = "SpotifyUtils";
 
     public static CompletableFuture<List<Track>> getRecentTracksFuture(int maxTracks) {
-        return CompletableFuture.supplyAsync(() -> {
+        return getWaitForTokenFuture().thenApply(unused -> {
             List<Track> recentTrackList = new ArrayList<>();
             try {
                 PagingCursorbased<PlayHistory> pageHistory =
@@ -71,8 +73,12 @@ public class SpotifyUtils {
         });
     }
 
+    /**
+     * Waits for spotify token and then returns the current track
+     * @return The current spotify track as a completaBLE FURTU
+     */
     public static CompletableFuture<Track> getCurrentTrackFuture() {
-        return CompletableFuture.supplyAsync(() -> {
+        return getWaitForTokenFuture().thenApply(unused -> {
             Track currentTrack = null;
             try {
                 CurrentlyPlaying currentSimpleTrack =
@@ -135,8 +141,8 @@ public class SpotifyUtils {
      * @param prompt the search prompt
      * @return the request object
      */
-    public static SearchTracksRequest getSearchTrackRequest(String prompt) {
-        return SpotifyData.getApi().searchTracks(prompt).build();
+    public static CompletableFuture<Paging<Track>> getSearchTrackFuture(String prompt) {
+        return SpotifyData.getApi().searchTracks(prompt).build().executeAsync();
     }
 
     /**

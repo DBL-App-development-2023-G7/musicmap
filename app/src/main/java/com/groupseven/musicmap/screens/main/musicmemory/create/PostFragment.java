@@ -26,12 +26,21 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
+import com.google.firebase.firestore.GeoPoint;
 import com.groupseven.musicmap.R;
+import com.groupseven.musicmap.firebase.Session;
 import com.groupseven.musicmap.models.MusicMemory;
 import com.groupseven.musicmap.models.Song;
-import com.groupseven.musicmap.firebase.Session;
 import com.groupseven.musicmap.screens.main.MainFragment;
 import com.groupseven.musicmap.screens.main.feed.FeedFragment;
+import com.groupseven.musicmap.screens.main.musicmemory.create.CameraActivity;
+import com.groupseven.musicmap.screens.main.musicmemory.create.SearchFragment;
 import com.groupseven.musicmap.util.firebase.Actions;
 import com.groupseven.musicmap.util.permissions.CameraPermission;
 import com.groupseven.musicmap.util.permissions.LocationPermission;
@@ -40,12 +49,6 @@ import com.groupseven.musicmap.util.spotify.SpotifyUtils;
 import com.groupseven.musicmap.util.ui.FragmentUtil;
 import com.groupseven.musicmap.util.ui.ImageUtils;
 import com.groupseven.musicmap.util.ui.Message;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.Priority;
-import com.google.firebase.firestore.GeoPoint;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -94,11 +97,8 @@ public class PostFragment extends MainFragment {
                         Log.w(TAG, "Activity result from CameraActivity is null");
                         return;
                     }
-
                     Uri imageUri = resultIntent.getData();
-
                     Log.d(TAG, "Camera Activity result is called, URI: " + imageUri);
-
                     try {
                         Picasso.get().load(imageUri)
                                 .rotate(ImageUtils.getImageRotationFromEXIF(parentActivity, imageUri))
@@ -109,6 +109,7 @@ public class PostFragment extends MainFragment {
                 }
             }
     );
+
 
     // this is a Picasso target into which Picasso will load the image taken from the camera
     // in a field so it won't be garbage collected
@@ -180,20 +181,19 @@ public class PostFragment extends MainFragment {
         songImageView = rootView.findViewById(R.id.songPreviewImage);
 
         // get current song if no song has been searched for
+        // TODO separate into function
         if (SearchFragment.getResultTrack() == null) {
-            SpotifyUtils.getWaitForTokenFuture().thenApply(
-                    unused -> SpotifyUtils.getCurrentTrackFuture().join()
-            ).thenAcceptAsync(
-                    track -> {
-                        if (track != null) {
-                            SearchFragment.setResultTrack(track);
-                            setSelectedTrack(track);
-                        }
-                    },
-                    parentActivity.getMainExecutor()
-            );
+            SpotifyUtils.getCurrentTrackFuture()
+                    .thenAcceptAsync(track -> {
+                                if (track != null) {
+                                    SearchFragment.setResultTrack(track);
+                                    showSelectedTrack(track);
+                                }
+                            },
+                            parentActivity.getMainExecutor()
+                    );
         } else {
-            setSelectedTrack(SearchFragment.getResultTrack());
+            showSelectedTrack(SearchFragment.getResultTrack());
         }
 
         addLocationButton = rootView.findViewById(R.id.addLocationButton);
@@ -214,7 +214,7 @@ public class PostFragment extends MainFragment {
         shouldClearData = true;
     }
 
-    private void setSelectedTrack(Track track) {
+    private void showSelectedTrack(Track track) {
         songImageView.setVisibility(View.VISIBLE);
         Picasso.get().load(track.getAlbum().getImages()[0].getUrl()).into(songImageView);
         addSongButton.setText(track.getName());
@@ -232,13 +232,13 @@ public class PostFragment extends MainFragment {
         cameraActivityResultLauncher.launch(cameraIntent);
     }
 
+    // TODO move to a utilities class
     @SuppressLint("MissingPermission")
     private void fetchUserLocation() {
         if (fusedLocationClient == null) {
             Message.showFailureMessage(currentActivity, "Google Play services is required");
             return;
         }
-
         if (locationPermission.isCoarseGranted() && locationPermission.isFineGranted()) {
             fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
                     .addOnSuccessListener(this.currentActivity, location -> {
@@ -260,6 +260,7 @@ public class PostFragment extends MainFragment {
     }
 
     // Takes a location and returns a human readable string to display on the search bar
+    // TODO move to a utilities class
     private String getLocationText(Location location){
         double lat = location.getLatitude();
         double lon = location.getLongitude();

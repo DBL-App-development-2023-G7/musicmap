@@ -1,7 +1,5 @@
 package com.groupseven.musicmap.screens.main.musicmemory.create;
 
-import static com.groupseven.musicmap.util.spotify.SpotifyUtils.getCurrentTrackFuture;
-import static com.groupseven.musicmap.util.spotify.SpotifyUtils.getRecentTracksFuture;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -20,6 +18,7 @@ import com.groupseven.musicmap.util.spotify.SpotifyUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import se.michaelthelin.spotify.model_objects.specification.Track;
 
@@ -29,6 +28,7 @@ import se.michaelthelin.spotify.model_objects.specification.Track;
 public class SearchFragment extends MainFragment {
 
     private static final int COUNTDOWN_DELAY = 400;
+    private static final String TAG = "SearchFragment" ;
 
     // temporary store used by post fragment to get search result (I am too lazy to use a Model)
     private static Track resultTrack;
@@ -52,42 +52,27 @@ public class SearchFragment extends MainFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragmen_search, container, false);
 
-        // If a spotify token is present
-        // get recent tracks and add them to the view.
-        SpotifyUtils.getWaitForTokenFuture()
-                .thenCompose(unused ->
-                        getRecentTracksFuture(2).thenAcceptBoth(
-                                getCurrentTrackFuture(),
-                                (trackList, currentTrack) -> {
-                                    Log.d("debug", String.format("track size: %d", trackList.size()));
-                                    if (currentTrack != null) {
-                                        recentTrackList.add(currentTrack);
-                                    }
-                                    recentTrackList.addAll(trackList);
-                                    Log.d("debug", String.format("track size2: %d", recentTrackList.size()));
-                                }
-                        )
-                ).thenAcceptAsync(
-                        unused -> {
-                            Log.d("debug", "Draw track");
-                            updateSongListView(recentTrackList);
-                        },
-                        requireActivity().getMainExecutor()
-                //CSOFF: Indentation
-                );
-        //CSON: Indentation
+        // add current track on the top of the track list
+        CompletableFuture<Void> currentTrackFuture = SpotifyUtils.getCurrentTrackFuture()
+                .thenAccept(track -> {
+                    if (track != null)  recentTrackList.add(0,track);
+                });
+        CompletableFuture<Void> recentTracksFuture = SpotifyUtils.getRecentTracksFuture(4)
+                .thenAccept(trackList -> recentTrackList.addAll(trackList));
+
+        CompletableFuture.allOf(currentTrackFuture,recentTracksFuture).thenAcceptAsync(unused -> {
+            updateSongListView(recentTrackList);
+        }, requireActivity().getMainExecutor());
 
         // setup search widget
         SearchView searchView = rootView.findViewById(R.id.spotify_search_view);
         searchView.setQueryHint("Search for a song...");
-
         searchView.setOnQueryTextListener(new SearchQueryTextListener());
 
         return rootView;
     }
 
-    // TODO find a more efficient method of rendering results
-    // currently we just destroy and rebuild the view
+
     private void updateSongListView(List<Track> trackList) {
         SpotifySongAdapter songAdapter = new SpotifySongAdapter(
                 requireActivity(),
@@ -120,7 +105,7 @@ public class SearchFragment extends MainFragment {
                     if (query.equals("")) {
                         updateSongListView(recentTrackList);
                     } else {
-                        SpotifyUtils.getSearchTrackRequest(query).executeAsync()
+                        SpotifyUtils.getSearchTrackFuture(query)
                                 .thenAcceptAsync(trackPaging -> {
                                     List<Track> trackList = Arrays.asList(trackPaging.getItems());
                                     updateSongListView(trackList);
