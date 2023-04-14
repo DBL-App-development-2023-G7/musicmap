@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.groupseven.musicmap.R;
-import com.groupseven.musicmap.SessionAndInternetListenerActivity;
+import com.groupseven.musicmap.listeners.SessionAndInternetListenerActivity;
 import com.groupseven.musicmap.screens.main.HomeActivity;
 import com.groupseven.musicmap.screens.settings.SettingsActivity;
 import com.groupseven.musicmap.firebase.Session;

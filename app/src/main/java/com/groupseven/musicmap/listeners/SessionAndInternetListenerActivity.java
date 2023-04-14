@@ -1,54 +1,28 @@
-package com.groupseven.musicmap;
+package com.groupseven.musicmap.listeners;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
-import com.groupseven.musicmap.screens.auth.AuthActivity;
-import com.groupseven.musicmap.screens.verification.VerificationActivity;
-import com.groupseven.musicmap.models.Artist;
-import com.groupseven.musicmap.firebase.Session;
-import com.groupseven.musicmap.models.User;
-import com.groupseven.musicmap.util.Constants;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.groupseven.musicmap.firebase.Session;
+import com.groupseven.musicmap.models.Artist;
+import com.groupseven.musicmap.models.User;
+import com.groupseven.musicmap.screens.auth.AuthActivity;
+import com.groupseven.musicmap.screens.verification.VerificationActivity;
 
-public abstract class SessionAndInternetListenerActivity extends AppCompatActivity implements Session.Listener {
+public abstract class SessionAndInternetListenerActivity extends InternetListenerActivity implements Session.Listener {
 
     private Session session;
-
-    private final BroadcastReceiver internetCheckReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Constants.INTERNET_BROADCAST_ACTION)) {
-                boolean internetAvailable = intent.getBooleanExtra(Constants.INTERNET_BROADCAST_BUNDLE_KEY, true);
-                updateLayout(internetAvailable);
-            }
-        }
-    };
-
-    /**
-     * Abstract method that the child activities must override, to dynamically switch the layout
-     * from the activity/fragment to layout for no internet.
-     *
-     * @param internetAvailable true if internet connection available, false otherwise.
-     */
-    protected abstract void updateLayout(boolean internetAvailable);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         session = Session.getInstance();
         session.addListener(this);
-
-        IntentFilter intentFilter = new IntentFilter(Constants.INTERNET_BROADCAST_ACTION);
-        registerReceiver(internetCheckReceiver, intentFilter);
     }
 
     @Override
@@ -108,7 +82,6 @@ public abstract class SessionAndInternetListenerActivity extends AppCompatActivi
     protected void onDestroy() {
         super.onDestroy();
         session.removeListener(this);
-        unregisterReceiver(internetCheckReceiver);
     }
 
 }

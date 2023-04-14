@@ -6,7 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import com.groupseven.musicmap.R;
-import com.groupseven.musicmap.SessionAndInternetListenerActivity;
+import com.groupseven.musicmap.listeners.SessionAndInternetListenerActivity;
 import com.groupseven.musicmap.screens.main.HomeActivity;
 import com.groupseven.musicmap.screens.profile.ProfileActivity;
 import com.groupseven.musicmap.util.Constants;

@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
-import com.groupseven.musicmap.SessionAndInternetListenerActivity;
+import com.groupseven.musicmap.listeners.SessionAndInternetListenerActivity;
 import com.groupseven.musicmap.firebase.Session;
 
 import java.nio.charset.StandardCharsets;
