@@ -4,8 +4,8 @@ import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
-import com.groupseven.musicmap.models.Artist;
 import com.groupseven.musicmap.firebase.Session;
+import com.groupseven.musicmap.models.Artist;
 import com.groupseven.musicmap.models.User;
 import com.groupseven.musicmap.screens.main.map.MapFragment;
 import com.groupseven.musicmap.util.firebase.Queries;
@@ -69,18 +69,19 @@ public class ArtistDataMapFragment extends MapFragment {
         String artistSpotifyId = artist.getArtistData().getSpotifyId();
 
         // Start fetching music memories
-        Queries.getAllMusicMemoriesWithSpotifyArtistId(artistSpotifyId).whenCompleteAsync((musicMemories, throwable) -> {
-            if (throwable == null) {
-                // Add all retrieved music memories to map
-                musicMemories.stream()
-                        .map(musicMemory -> new MusicMemoryOverlay(getMapView(), musicMemory))
-                        .forEach(postsFolder::add);
+        Queries.getAllMusicMemoriesWithSpotifyArtistId(artistSpotifyId)
+                .whenCompleteAsync((musicMemories, throwable) -> {
+                    if (throwable == null) {
+                        // Add all retrieved music memories to map
+                        musicMemories.stream()
+                                .map(musicMemory -> new MusicMemoryOverlay(getMapView(), musicMemory))
+                                .forEach(postsFolder::add);
 
-                // Refresh map
-                getMapView().invalidate();
-            } else {
-                Log.e(TAG, "Exception occurred while getting map music memories", throwable);
-            }
+                        // Refresh map
+                        getMapView().invalidate();
+                    } else {
+                        Log.e(TAG, "Exception occurred while getting map music memories", throwable);
+                    }
         }, ContextCompat.getMainExecutor(requireContext()));
     }
 

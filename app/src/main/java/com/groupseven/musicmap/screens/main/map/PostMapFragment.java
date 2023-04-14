@@ -1,11 +1,9 @@
 package com.groupseven.musicmap.screens.main.map;
 
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
-import com.google.firebase.firestore.util.Executors;
 import com.groupseven.musicmap.util.firebase.Queries;
 import com.groupseven.musicmap.util.map.MusicMemoryOverlay;
 
