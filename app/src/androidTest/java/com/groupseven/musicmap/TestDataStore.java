@@ -16,7 +16,8 @@ public class TestDataStore {
     public static final String USERNAME_THAT_EXISTS_IN_FIREBASE = "TPGamesNL";
 
     public static UserData getValidUserData() {
-        return new UserData("username", "User", "Name", "user@example.com", new Date());
+        return new UserData("testcase-username", "Test", "User",
+                "test-user@test.com", new Date());
     }
 
     public static User getValidUser() {
@@ -24,13 +25,13 @@ public class TestDataStore {
     }
 
     public static MusicMemory getValidMusicMemory() {
-        return getValidMusicMemory("author-uid", "song");
+        return getValidMusicMemory("test-author-uid", "song");
     }
 
     public static MusicMemory getValidMusicMemory(String authorId, String songName) {
         return new MusicMemory(authorId, new Date(),
                 new GeoPoint(10, 10), "https://imgur.com/photo1", new Song(
-                songName, "MrMusic", "1234", "https://imgur.com/photo2", "https://spotify.com/preview"
+                songName, "MrMusicTest", "TestArtistId", "https://imgur.com/photo2", "https://spotify.com/preview"
         ));
     }
 

@@ -87,7 +87,8 @@ public class QueriesTest {
         List<SongCount> songCounts = Tasks.await(task);
         AtomicLong currentCount = new AtomicLong(Long.MAX_VALUE);
         songCounts.forEach(songCount -> {
-            assertEquals(songCount.getSong().getSpotifyArtistId(), TestDataStore.SPOTIFY_ARTIST_ID_THAT_EXISTS_IN_FIREBASE);
+            assertEquals(songCount.getSong().getSpotifyArtistId(),
+                    TestDataStore.SPOTIFY_ARTIST_ID_THAT_EXISTS_IN_FIREBASE);
             assertTrue(songCount.getCount() < currentCount.get());
             currentCount.set(songCount.getCount());
         });
