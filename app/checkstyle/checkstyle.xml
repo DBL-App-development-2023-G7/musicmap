@@ -15,7 +15,6 @@
     </module>
     <module name="RegexpSingleline"/>
     <module name="TreeWalker">
-        <module name="Indentation"/>
         <module name="EmptyBlock"/>
         <module name="EmptyCatchBlock"/>
         <module name="EmptyStatement"/>

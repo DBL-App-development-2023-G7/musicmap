@@ -79,7 +79,7 @@
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/spotify_widget"
-                    android:name="com.example.musicmap.screens.main.SpotifyWidgetFragment"
+                    android:name="com.groupseven.musicmap.util.ui.SpotifyWidgetFragment"
                     android:layout_width="340dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"
@@ -91,7 +91,7 @@
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/music_memory_map"
-                    android:name="com.example.musicmap.screens.map.MusicMemoryMapFragment"
+                    android:name="com.groupseven.musicmap.screens.main.musicmemory.view.MusicMemoryMapFragment"
                     android:layout_width="340dp"
                     android:layout_height="226dp"
                     android:layout_marginTop="40dp"

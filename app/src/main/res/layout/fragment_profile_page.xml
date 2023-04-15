@@ -78,7 +78,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <com.example.musicmap.util.ui.NonScrollableListView
+                    <com.groupseven.musicmap.util.ui.NonScrollableListView
                         android:id="@+id/mm_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
