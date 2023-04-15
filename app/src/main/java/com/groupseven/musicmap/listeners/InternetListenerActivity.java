@@ -13,7 +13,7 @@ import com.groupseven.musicmap.util.Constants;
 
 /**
  * An abstract base class for activities that is extended by {@link SessionListenerActivity}.
- *
+ * <p>
  * The class provides an implementation that listens for changes in internet availability by registering
  * a BroadcastReceiver that listens for the action Constants.INTERNET_BROADCAST_ACTION.
  * Whenever this BroadcastReceiver is triggered, it calls the abstract method {@link #onInternetStateChange(boolean)}
@@ -22,6 +22,9 @@ import com.groupseven.musicmap.util.Constants;
  */
 public abstract class InternetListenerActivity extends AppCompatActivity {
 
+    /**
+     * A broadcast receiver that receives changes in the internet availability status.
+     */
     private final BroadcastReceiver internetCheckReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -62,4 +65,5 @@ public abstract class InternetListenerActivity extends AppCompatActivity {
         super.onDestroy();
         unregisterReceiver(internetCheckReceiver);
     }
+
 }
