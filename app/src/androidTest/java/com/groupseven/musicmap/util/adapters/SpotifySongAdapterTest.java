@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.TestDataStore;
-import com.groupseven.musicmap.models.SongCount;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -32,22 +32,59 @@ import java.util.Map;
  */
 public class FeedAdapter extends ArrayAdapter<MusicMemory> {
 
+    /**
+     * The context of the Activity where the adapter is being used.
+     */
     private final Activity activityContext;
+
+    /**
+     * The tag used to log errors or warnings from this class.
+     */
     private static final String TAG = "FeedAdapter";
+
+    /**
+     * The flag to check if the adapter is being used in feed or profile view.
+     */
     private boolean isUsedInFeed = true;
+
+    /**
+     * The object to map user image to author id for improving user image setting.
+     */
     private final Map<String, String> userImageByAuthorIdMap = new HashMap<>();
 
+    /**
+     * Constructor for creating the FeedAdapter object.
+     *
+     * @param activityContext The context of the Activity where the adapter is being used.
+     * @param resource The resource ID for the layout file containing the layout for each list item.
+     * @param feedItems The list of music memories to be displayed in the list.
+     */
     public FeedAdapter(@NonNull Activity activityContext, int resource, @NonNull List<MusicMemory> feedItems) {
         super(activityContext, resource, feedItems);
         this.activityContext = activityContext;
     }
 
+    /**
+     * Constructor for creating the FeedAdapter object.
+     *
+     * @param activityContext The context of the Activity where the adapter is being used.
+     * @param resource The resource ID for the layout file containing the layout for each list item.
+     * @param isUsedInFeed The flag used to check if adapter is being used in feed or profile view.
+     */
     public FeedAdapter(@NonNull Activity activityContext, int resource, boolean isUsedInFeed) {
         super(activityContext, resource);
         this.activityContext = activityContext;
         this.isUsedInFeed = isUsedInFeed;
     }
 
+    /**
+     * This method returns the view for each list item.
+     *
+     * @param position The position of the list item.
+     * @param convertView The old view to reuse, if possible.
+     * @param parent The parent view that this view will eventually be attached to.
+     * @return The view for each list item.
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, ViewGroup parent) {
@@ -101,6 +138,13 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
         return row;
     }
 
+    /**
+     * This method is used to fetch the user image of the music memory author.
+     *
+     * @param authorId The id of the author of the music memory.
+     * @param userImage The imageView to set the image to.
+     * @param position The position of the item in the current view.
+     */
     private void fetchUserImage(String authorId, ImageView userImage, int position) {
         AuthSystem.getUser(authorId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -116,6 +160,13 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
         });
     }
 
+    /**
+     * This method is used to set the user image of the music memory author.
+     *
+     * @param authorId The id of the author of the music memory.
+     * @param userImageUri The uri of the image.
+     * @param userImage The imageView to set the image to.
+     */
     private void setUserImage(String authorId, String userImageUri, ImageView userImage) {
         Picasso.get().load(userImageUri).transform(new CircleTransform()).into(userImage);
         userImageByAuthorIdMap.put(authorId, userImageUri);
