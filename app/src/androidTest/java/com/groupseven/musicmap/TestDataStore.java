@@ -8,6 +8,8 @@ import com.groupseven.musicmap.models.UserData;
 
 import java.util.Date;
 
+import se.michaelthelin.spotify.model_objects.specification.Track;
+
 public class TestDataStore {
 
     public static final String AUTHOR_UID_THAT_EXISTS_IN_FIREBASE = "42nWn01PbdQTuVrqEmrYrl6CXMp1";
@@ -28,11 +30,21 @@ public class TestDataStore {
         return getValidMusicMemory("test-author-uid", "song");
     }
 
+    public static Song getValidSong(String songName) {
+        return new Song(songName, "TestMusicArtist", "TestArtistId",
+                "https://imgur.com/photo2", "https://spotify.com/preview"
+        );
+    }
+
     public static MusicMemory getValidMusicMemory(String authorId, String songName) {
         return new MusicMemory(authorId, new Date(),
-                new GeoPoint(10, 10), "https://imgur.com/photo1", new Song(
-                songName, "MrMusicTest", "TestArtistId", "https://imgur.com/photo2", "https://spotify.com/preview"
-        ));
+                new GeoPoint(10, 10), "https://imgur.com/photo1", getValidSong(songName));
+    }
+
+    public static Track getValidSpotifyTrack() {
+        Track.Builder builder = new Track.Builder();
+        builder.setName("test-track-name");
+        return builder.build();
     }
 
 }
