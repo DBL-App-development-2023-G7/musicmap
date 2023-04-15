@@ -11,6 +11,9 @@ import java.util.Date;
 public class TestDataStore {
 
     public static final String AUTHOR_UID_THAT_EXISTS_IN_FIREBASE = "42nWn01PbdQTuVrqEmrYrl6CXMp1";
+    public static final String SPOTIFY_ARTIST_ID_THAT_EXISTS_IN_FIREBASE = "1dfeR4HaWDbWqFHLkxsg1d";
+    public static final String MUSIC_MEMORY_ID_THAT_EXISTS_IN_FIREBASE = "N4yBvYoo76MzL0WSLqhd";
+    public static final String USERNAME_THAT_EXISTS_IN_FIREBASE = "TPGamesNL";
 
     public static UserData getValidUserData() {
         return new UserData("username", "User", "Name", "user@example.com", new Date());
