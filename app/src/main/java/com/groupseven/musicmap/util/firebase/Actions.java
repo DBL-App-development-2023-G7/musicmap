@@ -6,21 +6,19 @@ import android.util.Log;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.groupseven.musicmap.models.MusicMemory;
 import com.groupseven.musicmap.util.TaskUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Supplier;
 
+/**
+ * Actions for interacting with the Firebase server.
+ */
 public class Actions {
 
     private static final String TAG = "Actions";
