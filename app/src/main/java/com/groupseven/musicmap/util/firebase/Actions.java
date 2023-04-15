@@ -23,9 +23,19 @@ public class Actions {
      * @param musicMemory the music-memory object
      */
     public static Task<?> postMusicMemory(MusicMemory musicMemory) {
+        return postMusicMemory(FirebaseFirestore.getInstance(), musicMemory);
+    }
+
+    /**
+     * Posts the music-memory for the {@code MusicMemory.authorUid}. This method
+     * exists to facilitate DI.
+     *
+     * @param firestore the firestore reference
+     * @param musicMemory the music-memory object
+     */
+    public static Task<?> postMusicMemory(FirebaseFirestore firestore, MusicMemory musicMemory) {
         String authorUid = musicMemory.getAuthorUid();
 
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         return firestore.collection("Users").document(authorUid)
                 .collection("MusicMemories").add(musicMemory).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
