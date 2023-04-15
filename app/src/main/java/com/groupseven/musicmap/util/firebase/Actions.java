@@ -6,12 +6,12 @@ import android.util.Log;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.groupseven.musicmap.models.MusicMemory;
 import com.groupseven.musicmap.util.TaskUtil;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -63,7 +63,6 @@ public class Actions {
         return CompletableFuture.supplyAsync(() -> {
             // Generate a path in the storage that does not exist already (avoid collisions)
             StorageReference imageRef;
-            boolean pathExists;
             do {
                 // Generate a random UUID and form the storage path with it
                 String uuid = UUID.randomUUID().toString();
@@ -71,30 +70,7 @@ public class Actions {
 
                 Log.d(TAG, "Checking if image '" + imageRef.getPath() + "' exists");
 
-                /*
-                Firebase storage doesn't have a way to check if a StorageReference exists, see
-                https://github.com/flutter/flutter/issues/18315
-
-                Therefore, try to get the download url and catch the exception if the path doesn't exist.
-
-                This will still print an exception to console each time it finds a path that doesn't exist,
-                but at least it avoids collisions.
-                 */
-                try {
-                    TaskUtil.getFuture(imageRef.getDownloadUrl()).join();
-
-                    pathExists = true;
-                } catch (CompletionException e) {
-                    // If we get an exception other than the expected one, we should still fail
-                    if (!(e.getCause() instanceof IOException)) {
-                        throw e;
-                    }
-
-                    Log.w(TAG, "You can ignore the exception above, this is expected behavior; "
-                            + "see Actions#uploadMusicMemoryImage");
-                    pathExists = false;
-                }
-            } while (pathExists);
+            } while (doesStorageReferenceExist(imageRef));
 
             // Start uploading and get download url
             Log.d(TAG, "Started uploading image (" + data.length + " bytes)");
@@ -105,4 +81,27 @@ public class Actions {
         });
     }
 
+    /**
+     * This method checks if the storage reference exists.
+     * Firebase storage doesn't have a way to check if a StorageReference exist
+     * Therefore, try to get the download url and catch the exception if the path doesn't exist.
+     *
+     * @param reference the StorageReference object.
+     * @return true if reference exists false otherwise.
+     */
+    private static boolean doesStorageReferenceExist(StorageReference reference) {
+        try {
+            TaskUtil.getFuture(reference.getDownloadUrl()).join();
+            return true;
+        } catch (CompletionException e) {
+            if (e.getCause() instanceof StorageException
+                    && ((StorageException) e.getCause()).getErrorCode()
+                    == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                return false;
+            } else {
+                throw e;
+            }
+        }
+    }
+    
 }
