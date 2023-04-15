@@ -16,7 +16,7 @@ import com.groupseven.musicmap.util.Constants;
  *
  * The class provides an implementation that listens for changes in internet availability by registering
  * a BroadcastReceiver that listens for the action Constants.INTERNET_BROADCAST_ACTION.
- * Whenever this BroadcastReceiver is triggered, it calls the abstract method {@link #updateLayout(boolean)}
+ * Whenever this BroadcastReceiver is triggered, it calls the abstract method {@link #onInternetStateChange(boolean)}
  * that must be implemented by the child activities. This method is responsible for updating the layout
  * to reflect the current internet availability status.
  */
@@ -27,7 +27,7 @@ public abstract class InternetListenerActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Constants.INTERNET_BROADCAST_ACTION)) {
                 boolean internetAvailable = intent.getBooleanExtra(Constants.INTERNET_BROADCAST_BUNDLE_KEY, true);
-                updateLayout(internetAvailable);
+                onInternetStateChange(internetAvailable);
             }
         }
     };
@@ -38,7 +38,7 @@ public abstract class InternetListenerActivity extends AppCompatActivity {
      *
      * @param internetAvailable true if internet connection available, false otherwise.
      */
-    protected abstract void updateLayout(boolean internetAvailable);
+    protected abstract void onInternetStateChange(boolean internetAvailable);
 
     /**
      * Called when the activity is created.

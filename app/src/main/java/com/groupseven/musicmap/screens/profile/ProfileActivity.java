@@ -19,7 +19,7 @@ public class ProfileActivity extends SessionListenerActivity {
     private Bundle currentBundle = null;
 
     @Override
-    protected void updateLayout(boolean internetAvailable) {
+    protected void onInternetStateChange(boolean internetAvailable) {
         if (!internetAvailable) {
             setContentView(R.layout.no_internet);
             currentLayout = R.layout.no_internet;

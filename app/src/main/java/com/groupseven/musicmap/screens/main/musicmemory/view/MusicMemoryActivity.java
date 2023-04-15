@@ -17,7 +17,7 @@ public class MusicMemoryActivity extends SessionListenerActivity {
     private int currentLayout = R.layout.activity_home;
 
     @Override
-    protected void updateLayout(boolean internetAvailable) {
+    protected void onInternetStateChange(boolean internetAvailable) {
         if (!internetAvailable) {
             setContentView(R.layout.no_internet);
             currentLayout = R.layout.no_internet;
