@@ -13,7 +13,8 @@ import com.groupseven.musicmap.util.Constants;
 
 /**
  * A service that runs in the background to check internet connection every fixed interval (5 seconds).
- * If internet connection is not available, it displays a Toast message.
+ * If internet connection is available a broadcast with {@link Constants#INTERNET_BROADCAST_BUNDLE_KEY}
+ * {@code true} is sent, and otherwise {@code false}.
  */
 public class InternetCheckService extends Service {
 
