@@ -337,19 +337,21 @@ public class PostFragment extends MainFragment {
                     geoPointLocation,
                     imageUrl,
                     song
-            )).addOnFailureListener(e -> {
-                Message.showFailureMessage(this.currentActivity, "Could not create the music memory");
-                postMemoryButton.setEnabled(true);
-            }).addOnCompleteListener(unused -> {
-                        clearData();
-                        FragmentUtil.replaceFragment(
-                                requireActivity().getSupportFragmentManager(),
-                                R.id.fragment_view,
-                                FeedFragment.class
-                        );
-                        Message.showSuccessMessage(this.currentActivity, "Successfully created the music memory");
-                    }
-            );
+            )).whenCompleteAsync((unused, throwable) -> {
+                if (throwable != null) {
+                    Log.e(TAG, "Could not create music memory", throwable);
+                    Message.showFailureMessage(this.currentActivity, "Could not create the music memory");
+                    postMemoryButton.setEnabled(true);
+                } else {
+                    clearData();
+                    FragmentUtil.replaceFragment(
+                            requireActivity().getSupportFragmentManager(),
+                            R.id.fragment_view,
+                            FeedFragment.class
+                    );
+                    Message.showSuccessMessage(this.currentActivity, "Successfully created the music memory");
+                }
+            }, ContextCompat.getMainExecutor(requireContext()));
         });
     }
 

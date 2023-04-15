@@ -9,29 +9,32 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.groupseven.musicmap.util.TaskUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class Actions {
 
     private static final String TAG = "Actions";
 
     /**
-     * Posts the music-memory for the {@code MusicMemory.authorUid}.
+     * Posts the given music memory to the database.
      *
-     * @param musicMemory the music-memory object
+     * @param musicMemory a future indicating when/if the music memory is posted.
      */
-    public static Task<?> postMusicMemory(MusicMemory musicMemory) {
+    public static CompletableFuture<?> postMusicMemory(MusicMemory musicMemory) {
         String authorUid = musicMemory.getAuthorUid();
 
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        return firestore.collection("Users").document(authorUid)
-                .collection("MusicMemories").add(musicMemory).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Log.i(TAG, "Successfully created music memory with ID " + task.getResult().getId());
+        return TaskUtil.getFuture(firestore.collection("Users").document(authorUid)
+                        .collection("MusicMemories").add(musicMemory))
+                .whenComplete((documentReference, throwable) -> {
+                    if (throwable == null) {
+                        Log.i(TAG, "Successfully created music memory with ID " + documentReference.getId());
                     } else {
-                        Log.e(TAG, "Could not create music memory", task.getException());
+                        Log.e(TAG, "Could not create music memory", throwable);
                     }
                 });
     }
