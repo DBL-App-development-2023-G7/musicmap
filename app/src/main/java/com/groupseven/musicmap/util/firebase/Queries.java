@@ -1,108 +1,99 @@
 package com.groupseven.musicmap.util.firebase;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Filter;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.groupseven.musicmap.models.ArtistData;
 import com.groupseven.musicmap.models.MusicMemory;
 import com.groupseven.musicmap.models.Post;
 import com.groupseven.musicmap.models.Song;
 import com.groupseven.musicmap.models.SongCount;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskCompletionSource;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.groupseven.musicmap.models.User;
+import com.groupseven.musicmap.models.UserData;
+import com.groupseven.musicmap.util.TaskUtil;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+/**
+ * Utility class for making queries to the Firestore database.
+ */
 public class Queries {
 
     /**
-     * Fetches all the user(s) by username.
+     * Fetches the user with a given username.
      *
      * @param username the username of the user
-     * @return the user
+     * @return the future containing the user, or {@code null} if the user doesn't exist.
      */
-    // TODO make this method and below return User instances
-    public static Task<QuerySnapshot> getUsersWithUsername(String username) {
+    public static CompletableFuture<User> getUserWithUsername(String username) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        Query query = firestore.collection("Users").whereEqualTo("username", username);
-        return query.get();
-    }
+        return TaskUtil.getFuture(firestore.collection("Users")
+                .whereEqualTo("username", username)
+                .get())
+                .thenApply(query -> {
+                    // No users found
+                    if (query.isEmpty()) {
+                        return null;
+                    }
 
-    /**
-     * Fetches the user by email.
-     *
-     * @param email the email of the user
-     * @return the user
-     */
-    public static Task<QuerySnapshot> getUserWithEmail(String email) {
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        Query query = firestore.collection("Users").whereEqualTo("email", email);
-        return query.get();
+                    // More than one user found
+                    if (query.size() > 1) {
+                        throw new IllegalStateException(
+                                "More than one user with username '" + username + "' exist");
+                    }
+
+                    DocumentSnapshot doc = query.getDocuments().get(0);
+
+                    // Deserialize user
+                    return deserializeUser(doc);
+                });
     }
 
     /**
      * Fetches the music memory for an author by id.
      * Use only for the current user.
      *
-     * @param authorUid the id of the author
-     * @param uid the id of the music-memory
-     * @return music-memory
+     * @param authorUid the id of the author.
+     * @param uid the id of the music memory.
+     * @return the future containing the music memory.
      */
-    public static Task<MusicMemory> getMusicMemoryByAuthorIdAndId(String authorUid, String uid) {
+    public static CompletableFuture<MusicMemory> getMusicMemoryByAuthorIdAndId(String authorUid, String uid) {
+        /*
+        Ideally we'd use the collection group MusicMemories here, which does not require providing the author uid,
+        but due to a Firestore bug (?) this cannot be done without additional modifications:
+        https://stackoverflow.com/questions/56149601/firestore-collection-group-query-on-documentid/58104104#58104104
+         */
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        return firestore.collection("Users").document(authorUid)
-                .collection("MusicMemories").document(uid).get().continueWithTask(task -> {
-                    TaskCompletionSource<MusicMemory> taskCompletionSource = new TaskCompletionSource<>();
-
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        MusicMemory musicMemory = deserialize(document, MusicMemory.class);
-
-                        taskCompletionSource.setResult(musicMemory);
-                    } else {
-                        assert task.getException() != null;
-                        taskCompletionSource.setException(task.getException());
-
-                    }
-
-                    return taskCompletionSource.getTask();
-                });
+        return TaskUtil.getFuture(firestore.collection("Users")
+                        .document(authorUid)
+                        .collection("MusicMemories")
+                        .document(uid)
+                        .get())
+                .thenApply(documentSnapshot -> deserialize(documentSnapshot, MusicMemory.class));
     }
 
     /**
      * Fetches all the music memories for an author.
-     * Use only for the current user.
      *
-     * @param authorUid the id of the author
-     * @return all music-memories for the author
+     * @param authorUid the id of the author.
+     * @return a future containing all music memories of the author.
      */
-    public static Task<List<MusicMemory>> getMusicMemoriesByAuthorId(String authorUid) {
+    public static CompletableFuture<List<MusicMemory>> getMusicMemoriesByAuthorId(String authorUid) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        return firestore.collection("Users").document(authorUid)
-                .collection("MusicMemories").get().continueWithTask(task -> {
-                    TaskCompletionSource<List<MusicMemory>> taskCompletionSource = new TaskCompletionSource<>();
-
-                    if (task.isSuccessful()) {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        List<DocumentSnapshot> documents = querySnapshot.getDocuments();
-
-                        List<MusicMemory> musicMemories = documents.stream()
-                                .map(document -> deserialize(document, MusicMemory.class))
-                                .collect(Collectors.toList());
-
-                        taskCompletionSource.setResult(musicMemories);
-                    } else {
-                        taskCompletionSource.setException(task.getException());
-                    }
-                    return taskCompletionSource.getTask();
-                });
+        return TaskUtil.getFuture(firestore.collection("Users")
+                        .document(authorUid)
+                        .collection("MusicMemories").get())
+                .thenApply(querySnapshot -> querySnapshot.getDocuments()
+                        .stream()
+                        .map(document -> deserialize(document, MusicMemory.class))
+                        .collect(Collectors.toList()));
     }
 
     /**
@@ -110,57 +101,20 @@ public class Queries {
      *
      * @return music memories in last 24 hours.
      */
-    public static Task<List<MusicMemory>> getAllMusicMemoriesInLastTwentyFourHours() {
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    public static CompletableFuture<List<MusicMemory>> getAllMusicMemoriesInLastTwentyFourHours() {
         long timestamp24HoursAgo = System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24);
 
-        return firestore.collectionGroup("MusicMemories")
-                .whereGreaterThan("timePosted", new Date(timestamp24HoursAgo))
-                .get().continueWithTask(task -> {
-                    TaskCompletionSource<List<MusicMemory>> taskCompletionSource = new TaskCompletionSource<>();
-
-                    if (task.isSuccessful()) {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        List<DocumentSnapshot> documents = querySnapshot.getDocuments();
-
-                        List<MusicMemory> musicMemories = documents.stream()
-                                .map(document -> deserialize(document, MusicMemory.class))
-                                .collect(Collectors.toList());
-
-                        taskCompletionSource.setResult(musicMemories);
-                    } else {
-                        taskCompletionSource.setException(task.getException());
-                    }
-                    return taskCompletionSource.getTask();
-                });
+        return getAllMusicMemories(Filter.greaterThan("timePosted", new Date(timestamp24HoursAgo)));
     }
 
     /**
-     * Fetches all the music memories.
+     * Fetches all the music memories made with songs of a certain Spotify artist.
      *
-     * @return all music emmories
+     * @param spotifyArtistId the id of the Spotify artist.
+     * @return all music memories with songs of the given artist.
      */
-    public static Task<List<MusicMemory>> getAllMusicMemories() {
-        // TODO: update the implementation based on how we decide to limit the feed
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-
-        return firestore.collectionGroup("MusicMemories").get().continueWithTask(task -> {
-            TaskCompletionSource<List<MusicMemory>> taskCompletionSource = new TaskCompletionSource<>();
-
-            if (task.isSuccessful()) {
-                QuerySnapshot querySnapshot = task.getResult();
-                List<DocumentSnapshot> documents = querySnapshot.getDocuments();
-
-                List<MusicMemory> musicMemories = documents.stream()
-                        .map(document -> deserialize(document, MusicMemory.class))
-                        .collect(Collectors.toList());
-
-                taskCompletionSource.setResult(musicMemories);
-            } else {
-                taskCompletionSource.setException(task.getException());
-            }
-            return taskCompletionSource.getTask();
-        });
+    public static CompletableFuture<List<MusicMemory>> getAllMusicMemoriesWithSpotifyArtistId(String spotifyArtistId) {
+        return getAllMusicMemories(Filter.equalTo("song.spotifyArtistId", spotifyArtistId));
     }
 
     /**
@@ -170,23 +124,22 @@ public class Queries {
      * @param count the number of songs to return (or all, whichever less)
      * @return {@code count} number of most popular songs for the artist
      */
-    public static Task<List<SongCount>> getMostPopularSongsByArtist(String artistId, int count) {
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-
-        return firestore.collectionGroup("MusicMemories")
-                .whereEqualTo("song.spotifyArtistId", artistId)
-                .get()
-                .continueWith(task -> {
+    public static CompletableFuture<List<SongCount>> getMostPopularSongsByArtist(String artistId, int count) {
+        return getAllMusicMemoriesWithSpotifyArtistId(artistId)
+                .thenApply(musicMemories -> {
+                    // Keep track of how often each song occurs
                     Map<Song, Long> songMap = new HashMap<>();
 
-                    for (QueryDocumentSnapshot musicMemorySnapshot : task.getResult()) {
-                        Song song = deserialize(musicMemorySnapshot, MusicMemory.class).getSong();
+                    for (MusicMemory musicMemory : musicMemories) {
+                        Song song = musicMemory.getSong();
 
                         if (song != null) {
-                            songMap.put(song, songMap.getOrDefault(song, 0l) + 1);
+                            //noinspection ConstantConditions
+                            songMap.put(song, songMap.getOrDefault(song, 0L) + 1);
                         }
                     }
 
+                    // Sort by how often the songs occur, and turn them into SongCount
                     return songMap.entrySet().stream()
                             .sorted(Map.Entry.<Song, Long>comparingByValue().reversed())
                             .limit(count)
@@ -196,9 +149,27 @@ public class Queries {
     }
 
     /**
+     * Fetches all the music memories matching a given filter.
+     *
+     * @param filter the filter to use for matching.
+     * @return all music memories matching the given.
+     */
+    private static CompletableFuture<List<MusicMemory>> getAllMusicMemories(Filter filter) {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+        return TaskUtil.getFuture(firestore.collectionGroup("MusicMemories")
+                        .where(filter)
+                        .get())
+                .thenApply(querySnapshot -> querySnapshot.getDocuments()
+                        .stream()
+                        .map(document -> deserialize(document, MusicMemory.class))
+                        .collect(Collectors.toList()));
+    }
+
+    /**
      * Deserializes the given document into a post of the given class.
      *
-     * @param document the document snapshot.
+     * @param document the document snapshot (which must {@link DocumentSnapshot#exists() exist}.
      * @param postClass the class of the post, e.g. {@code MusicMemory.class}.
      * @return the deserialized post, or {@code null}
      * @param <P> the type of post, e.g. {@link MusicMemory}.
@@ -207,6 +178,9 @@ public class Queries {
         if (document == null) {
             throw new NullPointerException("document");
         }
+        if (!document.exists()) {
+            throw new IllegalArgumentException("The given document does not exist");
+        }
         if (postClass == null) {
             throw new NullPointerException("postClass");
         }
@@ -214,7 +188,7 @@ public class Queries {
         P post = document.toObject(postClass);
 
         if (post == null) {
-            throw new IllegalArgumentException("The DocumentSnapshot contained a null document");
+            throw new IllegalStateException("toObject returned null, but doc exists");
         }
 
         DocumentReference authorDocumentReference = document.getReference().getParent().getParent();
@@ -226,6 +200,41 @@ public class Queries {
         post.setAuthorUid(authorId);
 
         return post;
+    }
+
+    /**
+     * Deserializes a document snapshot containing user data.
+     *
+     * @param document the document snapshot (which must {@link DocumentSnapshot#exists() exist}.
+     * @return the user.
+     */
+    private static User deserializeUser(DocumentSnapshot document) throws IllegalStateException {
+        if (document == null) {
+            throw new NullPointerException("document");
+        }
+        if (!document.exists()) {
+            throw new IllegalArgumentException("The given document does not exist");
+        }
+
+        String uid = document.getReference().getId();
+        UserData userData = document.toObject(UserData.class);
+
+        if (userData == null) {
+            throw new IllegalStateException("toObject returned null, but doc exists");
+        }
+
+        // Re-parse as ArtistData in case it is the data of an artist
+        if (userData.isArtist()) {
+            ArtistData artistData = document.toObject(ArtistData.class);
+
+            if (artistData == null) {
+                throw new IllegalStateException("toObject returned null, but doc exists");
+            }
+
+            return artistData.toUser(uid);
+        }
+
+        return userData.toUser(uid);
     }
 
 }

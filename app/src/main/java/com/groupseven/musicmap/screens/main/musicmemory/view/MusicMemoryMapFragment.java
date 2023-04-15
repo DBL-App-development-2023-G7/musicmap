@@ -2,6 +2,8 @@ package com.groupseven.musicmap.screens.main.musicmemory.view;
 
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
+
 import com.groupseven.musicmap.screens.main.map.MapFragment;
 import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.firebase.Queries;
@@ -30,8 +32,9 @@ public class MusicMemoryMapFragment extends MapFragment {
         // Get MusicMemory from UIDs
         // TODO MusicMemoryOverlay or just a marker?
         //  mb same marker but without image
-        Queries.getMusicMemoryByAuthorIdAndId(authorUid, musicMemoryUid).addOnSuccessListener(musicMemory ->
-                addOverlay(new MusicMemoryOverlay(getMapView(), musicMemory)));
+        Queries.getMusicMemoryByAuthorIdAndId(authorUid, musicMemoryUid).thenAcceptAsync(musicMemory ->
+                        addOverlay(new MusicMemoryOverlay(getMapView(), musicMemory)),
+                ContextCompat.getMainExecutor(requireContext()));
     }
 
     @Override

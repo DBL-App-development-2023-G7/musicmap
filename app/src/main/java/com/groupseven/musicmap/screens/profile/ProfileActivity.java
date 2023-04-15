@@ -6,20 +6,20 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.groupseven.musicmap.R;
-import com.groupseven.musicmap.SessionAndInternetListenerActivity;
+import com.groupseven.musicmap.listeners.SessionListenerActivity;
 import com.groupseven.musicmap.screens.main.HomeActivity;
 import com.groupseven.musicmap.screens.settings.SettingsActivity;
 import com.groupseven.musicmap.firebase.Session;
 import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.ui.FragmentUtil;
 
-public class ProfileActivity extends SessionAndInternetListenerActivity {
+public class ProfileActivity extends SessionListenerActivity {
 
     private int currentLayout = R.layout.activity_profile;
     private Bundle currentBundle = null;
 
     @Override
-    protected void updateLayout(boolean internetAvailable) {
+    protected void onInternetStateChange(boolean internetAvailable) {
         if (!internetAvailable) {
             setContentView(R.layout.no_internet);
             currentLayout = R.layout.no_internet;

@@ -236,7 +236,7 @@ public class PostFragment extends MainFragment {
     @SuppressLint("MissingPermission")
     private void fetchUserLocation() {
         if (fusedLocationClient == null) {
-            Message.showFailureMessage(currentActivity, "Google Play services is required");
+            Message.showFailureMessage(currentActivity, getString(R.string.gps_required));
             return;
         }
         if (locationPermission.isCoarseGranted() && locationPermission.isFineGranted()) {
@@ -255,7 +255,7 @@ public class PostFragment extends MainFragment {
                         Log.e(TAG, "Could not fetch user location", exception);
                     });
         } else {
-            Message.showFailureMessage(this.currentActivity, "Permission not granted for location");
+            Message.showFailureMessage(this.currentActivity, getString(R.string.location_permission_not_granted));
         }
     }
 
@@ -299,17 +299,17 @@ public class PostFragment extends MainFragment {
 
     private void postMusicMemory() {
         if (SearchFragment.getResultTrack() == null) {
-            Message.showFailureMessage(this.currentActivity, "A track is required to post a music memory!");
+            Message.showFailureMessage(this.currentActivity, getString(R.string.create_mm_track_required));
             return;
         }
 
         if (currentLocation == null) {
-            Message.showFailureMessage(this.currentActivity, "Location is required to post a music memory!");
+            Message.showFailureMessage(this.currentActivity, getString(R.string.create_mm_location_required));
             return;
         }
 
         if (capturedImage == null) {
-            Message.showFailureMessage(this.currentActivity, "An image is required to post a music memory!");
+            Message.showFailureMessage(this.currentActivity, getString(R.string.create_mm_image_required));
             return;
         }
 
@@ -330,27 +330,28 @@ public class PostFragment extends MainFragment {
                 SearchFragment.getResultTrack().getPreviewUrl()
         );
 
-        Actions.uploadMusicMemoryImage(capturedImage, authorID).addOnCompleteListener(task -> {
-            String imageUrl = task.getResult().toString();
+        Actions.uploadMusicMemoryImage(capturedImage, authorID).thenAccept(imageUrl -> {
             Actions.postMusicMemory(new MusicMemory(
                     authorID,
                     timePosted,
                     geoPointLocation,
-                    imageUrl,
+                    imageUrl.toString(),
                     song
-            )).addOnFailureListener(e -> {
-                Message.showFailureMessage(this.currentActivity, "Could not create the music memory");
-                postMemoryButton.setEnabled(true);
-            }).addOnCompleteListener(unused -> {
-                        clearData();
-                        FragmentUtil.replaceFragment(
-                                requireActivity().getSupportFragmentManager(),
-                                R.id.fragment_view,
-                                FeedFragment.class
-                        );
-                        Message.showSuccessMessage(this.currentActivity, "Successfully created the music memory");
-                    }
-            );
+            )).whenCompleteAsync((unused, throwable) -> {
+                if (throwable != null) {
+                    Log.e(TAG, "Could not create music memory", throwable);
+                    Message.showFailureMessage(this.currentActivity, getString(R.string.create_mm_failure));
+                    postMemoryButton.setEnabled(true);
+                } else {
+                    clearData();
+                    FragmentUtil.replaceFragment(
+                            requireActivity().getSupportFragmentManager(),
+                            R.id.fragment_view,
+                            FeedFragment.class
+                    );
+                    Message.showSuccessMessage(this.currentActivity, getString(R.string.create_mm_success));
+                }
+            }, ContextCompat.getMainExecutor(requireContext()));
         });
     }
 

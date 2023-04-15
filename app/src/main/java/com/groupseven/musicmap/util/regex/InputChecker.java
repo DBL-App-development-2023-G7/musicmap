@@ -3,6 +3,8 @@ package com.groupseven.musicmap.util.regex;
 import android.content.Context;
 import android.widget.EditText;
 
+import androidx.core.content.ContextCompat;
+
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.util.firebase.Queries;
 
@@ -97,16 +99,17 @@ public class InputChecker {
                 usernameInput.setError(context.getString(R.string.input_error_valid_username));
                 return false;
             case VALID:
-                Queries.getUsersWithUsername(username).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        if (!task.getResult().isEmpty()) {
+                Queries.getUserWithUsername(username).whenCompleteAsync((user, throwable) -> {
+                    if (throwable == null) {
+                        if (user != null) {
                             usernameInput.setError(context.getString(R.string.input_error_username_exists));
                         }
                     } else {
                         usernameInput.setError("Cannot check username");
                     }
-                });
-                return true;
+                }, ContextCompat.getMainExecutor(usernameInput.getContext()));
+                return true; // TODO return value cannot be known here, depends on result of query above,
+                             //  maybe make these methods return futures
             default:
                 usernameInput.setError(context.getString(R.string.input_error_unexpected));
                 return false;

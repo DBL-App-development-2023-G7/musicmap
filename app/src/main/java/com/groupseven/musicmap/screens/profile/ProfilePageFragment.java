@@ -11,12 +11,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.R.id;
 import com.groupseven.musicmap.util.adapters.FeedAdapter;
-import com.groupseven.musicmap.models.MusicMemory;
 import com.groupseven.musicmap.firebase.Session;
 import com.groupseven.musicmap.models.User;
 import com.groupseven.musicmap.util.Constants;
@@ -24,8 +24,6 @@ import com.groupseven.musicmap.util.firebase.AuthSystem;
 import com.groupseven.musicmap.util.firebase.Queries;
 import com.groupseven.musicmap.util.ui.Message;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 public class ProfilePageFragment extends Fragment {
 
@@ -76,16 +74,14 @@ public class ProfilePageFragment extends Fragment {
         Uri uri = user.getData().getProfilePictureUri();
         Picasso.get().load(uri).into(profilePicture);
 
-        Queries.getMusicMemoriesByAuthorId(user.getUid()).addOnCompleteListener(completedTask -> {
-            if (completedTask.isSuccessful()) {
-                List<MusicMemory> feed = completedTask.getResult();
+        Queries.getMusicMemoriesByAuthorId(user.getUid()).whenCompleteAsync((feed, throwable) -> {
+            if (throwable == null) {
                 feedAdapter.addAll(feed);
                 feedAdapter.notifyDataSetChanged();
             } else {
-                Log.e(TAG, "Exception occurred while getting music memories from author",
-                        completedTask.getException());
+                Log.e(TAG, "Exception occurred while getting music memories from author", throwable);
             }
-        });
+        }, ContextCompat.getMainExecutor(requireContext()));
     }
 
 }
