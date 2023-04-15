@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
-import com.groupseven.musicmap.SessionAndInternetListenerActivity;
+import com.groupseven.musicmap.listeners.SessionListenerActivity;
 import com.groupseven.musicmap.firebase.Session;
 
 import java.nio.charset.StandardCharsets;
@@ -24,7 +24,7 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
  * The problem is this extends auth activity which is not ideal.
  */
 // TODO INSTEAD OF EXTENDING ACTIVITY ADD A LISTENER
-public abstract class SpotifyAuthActivity extends SessionAndInternetListenerActivity {
+public abstract class SpotifyAuthActivity extends SessionListenerActivity {
 
     //TODO this has to be moved in another file
     private static final String TAG = "SpotifyAuthActivity";

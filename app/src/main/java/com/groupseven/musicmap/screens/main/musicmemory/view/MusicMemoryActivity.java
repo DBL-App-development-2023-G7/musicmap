@@ -6,18 +6,18 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import com.groupseven.musicmap.R;
-import com.groupseven.musicmap.SessionAndInternetListenerActivity;
+import com.groupseven.musicmap.listeners.SessionListenerActivity;
 import com.groupseven.musicmap.screens.main.HomeActivity;
 import com.groupseven.musicmap.screens.profile.ProfileActivity;
 import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.ui.FragmentUtil;
 
-public class MusicMemoryActivity extends SessionAndInternetListenerActivity {
+public class MusicMemoryActivity extends SessionListenerActivity {
 
     private int currentLayout = R.layout.activity_home;
 
     @Override
-    protected void updateLayout(boolean internetAvailable) {
+    protected void onInternetStateChange(boolean internetAvailable) {
         if (!internetAvailable) {
             setContentView(R.layout.no_internet);
             currentLayout = R.layout.no_internet;

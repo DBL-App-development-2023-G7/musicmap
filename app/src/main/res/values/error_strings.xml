@@ -22,4 +22,11 @@
     <string name="no_internet_error">Oops! MusicMap requires an active internet connection to function. We\'re tying to find a connection</string>
     <string name="error_spotify_not_connected">We could not detect a connection to your Spotify account.</string>
     <string name="spotify_already_connected">Your spotify account is already connected!</string>
+    <string name="location_permission_not_granted">Permission not granted for location</string>
+    <string name="gps_required">Google Play services is required</string>
+    <string name="create_mm_track_required">A track is required to post a music memory!</string>
+    <string name="create_mm_location_required">Location is required to post a music memory!</string>
+    <string name="create_mm_image_required">An image is required to post a music memory!</string>
+    <string name="create_mm_failure">Could not create the music memory</string>
+    <string name="create_mm_success">Successfully created the music memory</string>
 </resources>
