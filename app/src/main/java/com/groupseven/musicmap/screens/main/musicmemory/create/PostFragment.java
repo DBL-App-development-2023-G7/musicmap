@@ -329,13 +329,12 @@ public class PostFragment extends MainFragment {
                 SearchFragment.getResultTrack().getPreviewUrl()
         );
 
-        Actions.uploadMusicMemoryImage(capturedImage, authorID).addOnCompleteListener(task -> {
-            String imageUrl = task.getResult().toString();
+        Actions.uploadMusicMemoryImage(capturedImage, authorID).thenAccept(imageUrl -> {
             Actions.postMusicMemory(new MusicMemory(
                     authorID,
                     timePosted,
                     geoPointLocation,
-                    imageUrl,
+                    imageUrl.toString(),
                     song
             )).whenCompleteAsync((unused, throwable) -> {
                 if (throwable != null) {

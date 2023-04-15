@@ -1,6 +1,7 @@
 package com.groupseven.musicmap.util.firebase;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.Log;
 
 import com.groupseven.musicmap.models.MusicMemory;
@@ -42,26 +43,27 @@ public class Actions {
     /**
      * Uploads music memory image for the user.
      *
-     * @param capturedImage the bitmap of the captured image
-     * @param authorID the id of the author
+     * @param capturedImage the bitmap of the image to upload.
+     * @param authorUid the id of the author of the image.
+     * @return a future containing a {@link Uri} for downloading the image.
      */
-    public static Task<?> uploadMusicMemoryImage(Bitmap capturedImage, String authorID) {
+    public static CompletableFuture<Uri> uploadMusicMemoryImage(Bitmap capturedImage, String authorUid) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         capturedImage.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
         byte[] data = outputStream.toByteArray();
 
         StorageReference rootReference = FirebaseStorage.getInstance().getReference();
         String uuid = UUID.randomUUID().toString();
-        StorageReference imageRef = rootReference.child(String.format("users/%s/memories/%s.jpg", authorID, uuid));
+        StorageReference imageRef = rootReference.child(String.format("users/%s/memories/%s.jpg", authorUid, uuid));
         UploadTask uploadTask = imageRef.putBytes(data);
 
-        return uploadTask.continueWithTask(task -> {
-            if (!task.isSuccessful()) {
-                Log.e(TAG, "Could not upload the image", task.getException());
-            }
-
-            return imageRef.getDownloadUrl();
-        });
+        return TaskUtil.getFuture(uploadTask)
+                .thenCompose(unused -> TaskUtil.getFuture(imageRef.getDownloadUrl()))
+                .whenComplete((url, throwable) -> {
+                    if (throwable != null) {
+                        Log.e(TAG, "Could not upload the image", throwable);
+                    }
+                });
     }
 
 }
