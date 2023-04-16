@@ -3,6 +3,7 @@ package com.groupseven.musicmap.util.spotify;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.groupseven.musicmap.firebase.Session;
 import com.squareup.picasso.Picasso;
 
 import org.apache.hc.core5.http.ParseException;
@@ -16,6 +17,7 @@ import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 import se.michaelthelin.spotify.SpotifyApi;
+import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.enums.ModelObjectType;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.miscellaneous.CurrentlyPlaying;

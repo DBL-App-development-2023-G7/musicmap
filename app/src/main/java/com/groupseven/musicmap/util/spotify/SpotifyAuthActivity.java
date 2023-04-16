@@ -1,10 +1,16 @@
 package com.groupseven.musicmap.util.spotify;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
+import android.webkit.WebView;
 
-import com.groupseven.musicmap.listeners.SessionListenerActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.firebase.Session;
 
 import java.nio.charset.StandardCharsets;
@@ -24,7 +30,7 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
  * The problem is this extends auth activity which is not ideal.
  */
 // TODO INSTEAD OF EXTENDING ACTIVITY ADD A LISTENER
-public abstract class SpotifyAuthActivity extends SessionListenerActivity {
+public class SpotifyAuthActivity extends AppCompatActivity {
 
     //TODO this has to be moved in another file
     private static final String TAG = "SpotifyAuthActivity";
@@ -45,37 +51,11 @@ public abstract class SpotifyAuthActivity extends SessionListenerActivity {
         void onValidToken(String apiToken);
     }
 
-    public void refreshToken(ValidTokenCallback validTokenCallback, InvalidTokenCallback invalidTokenCallback) {
-        if (SpotifyData.tokenIsExpired()) {
-            String currentUserId = Session.getInstance().getCurrentUser().getUid();
-            FirebaseTokenStorage tokenStorage = new FirebaseTokenStorage(currentUserId);
-
-            tokenStorage.getRefreshToken(refreshToken -> {
-
-                if (refreshToken == null) {
-                    invalidTokenCallback.onInvalidToken();
-                    return;
-                }
-
-                loginApi.setRefreshToken(refreshToken);
-                loginApi.authorizationCodePKCERefresh().build().executeAsync().handle((refreshResult, error) -> {
-                    if (error != null) {
-                        Log.d(TAG, String.format("error %s", error.getMessage()));
-                        invalidTokenCallback.onInvalidToken();
-                        return null;
-                    }
-
-                    return refreshResult;
-                }).thenAccept(refreshResult -> {
-                    Log.d(TAG, "The Spotify token was successfully refreshed!");
-                    Log.d(TAG, String.format("ExpiryDate: %d", refreshResult.getExpiresIn()));
-
-                    tokenStorage.storeRefreshToken(refreshResult.getRefreshToken());
-                    SpotifyData.setToken(refreshResult.getAccessToken(), refreshResult.getExpiresIn());
-                    validTokenCallback.onValidToken(refreshResult.getAccessToken());
-                });
-            });
-        }
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_spotify_auth);
+        registerForSpotifyPKCE();
     }
 
     public void registerForSpotifyPKCE() {
@@ -134,6 +114,8 @@ public abstract class SpotifyAuthActivity extends SessionListenerActivity {
                     .handle((result, error) -> {
                         if (error != null) {
                             Log.d(TAG, String.format("Error: %s", error.getMessage()));
+                            setResult(Activity.RESULT_CANCELED);
+                            finish();
                         }
                         return result;
                     })
@@ -149,9 +131,13 @@ public abstract class SpotifyAuthActivity extends SessionListenerActivity {
                         tokenStorage.storeRefreshToken(authCredentials.getRefreshToken());
                         SpotifyData.setToken(authCredentials.getAccessToken(), authCredentials.getExpiresIn());
 
+                        setResult(Activity.RESULT_OK);
+                        finish();
                     }
             );
         }
+        setResult(Activity.RESULT_CANCELED);
+        finish();
     }
 
 }

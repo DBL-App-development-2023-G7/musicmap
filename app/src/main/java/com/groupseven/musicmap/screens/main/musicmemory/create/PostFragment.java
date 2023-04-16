@@ -27,6 +27,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.groupseven.musicmap.R;
+import com.groupseven.musicmap.listeners.SessionListenerActivity;
 import com.groupseven.musicmap.models.MusicMemory;
 import com.groupseven.musicmap.models.Song;
 import com.groupseven.musicmap.firebase.Session;
@@ -36,6 +37,7 @@ import com.groupseven.musicmap.util.firebase.Actions;
 import com.groupseven.musicmap.util.permissions.CameraPermission;
 import com.groupseven.musicmap.util.permissions.LocationPermission;
 import com.groupseven.musicmap.util.spotify.SpotifyAuthActivity;
+import com.groupseven.musicmap.util.spotify.SpotifyData;
 import com.groupseven.musicmap.util.spotify.SpotifyUtils;
 import com.groupseven.musicmap.util.ui.FragmentUtil;
 import com.groupseven.musicmap.util.ui.ImageUtils;
@@ -81,34 +83,7 @@ public class PostFragment extends MainFragment {
     private ImageView capturedImagePreview;
     private Button postMemoryButton;
     private boolean shouldClearData = true;
-    private SpotifyAuthActivity parentActivity;
-
-    // a launcher that launches the camera activity and handles the result
-    private final ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    Intent resultIntent = result.getData();
-                    if (resultIntent == null) {
-                        Log.w(TAG, "Activity result from CameraActivity is null");
-                        return;
-                    }
-
-                    Uri imageUri = resultIntent.getData();
-
-                    Log.d(TAG, "Camera Activity result is called, URI: " + imageUri);
-
-                    try {
-                        Picasso.get().load(imageUri)
-                                .rotate(ImageUtils.getImageRotationFromEXIF(parentActivity, imageUri))
-                                .into(cameraImageTarget);
-                    } catch (IOException e) {
-                        Log.e(TAG, "Exception occurred while setting the image", e);
-                    }
-                }
-            }
-    );
+    private SessionListenerActivity parentActivity;
 
     // this is a Picasso target into which Picasso will load the image taken from the camera
     // in a field so it won't be garbage collected
@@ -132,6 +107,30 @@ public class PostFragment extends MainFragment {
         }
     };
 
+    // a launcher that launches the camera activity and handles the result
+    private final ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                Intent resultIntent = result.getData();
+                if (resultIntent == null) {
+                    Log.w(TAG, "Activity result from CameraActivity is null");
+                    return;
+                }
+
+                Uri imageUri = resultIntent.getData();
+
+                Log.d(TAG, "Camera Activity result is called, URI: " + imageUri);
+
+                try {
+                    Picasso.get().load(imageUri)
+                            .rotate(ImageUtils.getImageRotationFromEXIF(parentActivity, imageUri))
+                            .into(cameraImageTarget);
+                } catch (IOException e) {
+                    Log.e(TAG, "Exception occurred while setting the image", e);
+                }
+            }
+    );
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,8 +150,7 @@ public class PostFragment extends MainFragment {
         fetchUserLocation();
         getPermission();
 
-        parentActivity = (SpotifyAuthActivity) this.currentActivity;
-        parentActivity.refreshToken(apiToken -> {
+        SpotifyData.refreshToken(apiToken -> {
             postMemoryButton.setEnabled(true);
         }, () -> {
             Message.showFailureMessage(this.currentActivity, getString(R.string.error_spotify_not_connected));

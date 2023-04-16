@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import androidx.fragment.app.Fragment;
 
 import com.groupseven.musicmap.R;
+import com.groupseven.musicmap.listeners.SessionListenerActivity;
 import com.groupseven.musicmap.screens.main.artist.ArtistDataFragment;
 import com.groupseven.musicmap.screens.main.feed.FeedFragment;
 import com.groupseven.musicmap.screens.main.map.PostMapFragment;
@@ -22,7 +23,7 @@ import com.groupseven.musicmap.util.spotify.SpotifyAuthActivity;
 import com.groupseven.musicmap.util.ui.FragmentUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class HomeActivity extends SpotifyAuthActivity {
+public class HomeActivity extends SessionListenerActivity {
 
     private Class<? extends Fragment> lastFragmentClass = FeedFragment.class;
     private int currentLayout = R.layout.activity_home;
