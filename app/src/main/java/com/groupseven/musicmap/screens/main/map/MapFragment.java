@@ -29,14 +29,19 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayManager;
 
+/**
+ * Fragment containing an osmdroid map.
+ */
 public abstract class MapFragment extends Fragment {
 
     private static final String MULTITOUCH_FEATURE = "android.hardware.touchscreen.multitouch";
 
+    // Keys for the map's shared preferences
     private static final String SHARED_PREFERENCE_ZOOM = "zoom";
     private static final String SHARED_PREFERENCE_CENTER_LATITUDE = "center_latitude";
     private static final String SHARED_PREFERENCE_CENTER_LONGITUDE = "center_longitude";
 
+    // A bounding box containing the Netherlands
     private static final BoundingBox NETHERLANDS_BOUNDING_BOX = new BoundingBox(
             53.5104033474, 7.2294516, 50.803721015, 3.31497114423
     );
@@ -62,11 +67,6 @@ public abstract class MapFragment extends Fragment {
      */
     protected MapView getMapView() {
         return mapView;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -121,16 +121,16 @@ public abstract class MapFragment extends Fragment {
             mapView.setOnTouchListener((v, event) -> true);
         }
 
-        if (sharedPreferences.contains("zoom") && interactionAllowed) {
-            // Restore stored zoom level & map center
-            mapView.getController().setZoom(Double.longBitsToDouble(
-                    sharedPreferences.getLong(SHARED_PREFERENCE_ZOOM, 0)));
+        if (sharedPreferences.contains(SHARED_PREFERENCE_ZOOM) && interactionAllowed) {
             // SharedPreferences cannot store double directly, use long instead
+            double zoom = Double.longBitsToDouble(sharedPreferences.getLong(SHARED_PREFERENCE_ZOOM, 0));
+            double longitude = Double.longBitsToDouble(sharedPreferences.getLong(SHARED_PREFERENCE_CENTER_LATITUDE, 0));
+            double latitude = Double.longBitsToDouble(sharedPreferences.getLong(SHARED_PREFERENCE_CENTER_LONGITUDE, 0));
 
-            IGeoPoint center = new GeoPoint(
-                    Double.longBitsToDouble(sharedPreferences.getLong(SHARED_PREFERENCE_CENTER_LATITUDE, 0)),
-                    Double.longBitsToDouble(sharedPreferences.getLong(SHARED_PREFERENCE_CENTER_LONGITUDE, 0))
-            );
+            // Restore stored zoom level & map center
+            mapView.getController().setZoom(zoom);
+
+            IGeoPoint center = new GeoPoint(longitude, latitude);
             mapView.getController().setCenter(center);
         } else {
             // Set initial view to map of Netherlands
@@ -182,16 +182,12 @@ public abstract class MapFragment extends Fragment {
     }
 
     /**
-     * A method that can be overridden to add overlays.
-     *
-     * If a subclass wants to add an overlay, it should do so by overriding this method,
-     * using {@link #addOverlay(Overlay)}.
+     * Can be overridden to add overlays.
+     * <p>
+     * If a subclass wants to add an overlay, it should do so by overriding this method
+     * and using {@link #addOverlay(Overlay)} with the overlay to add.
      */
     protected void addOverlays() {
-        if (!mapView.getOverlayManager().overlays().isEmpty()) {
-            throw new IllegalStateException("Attempted to add overlays twice");
-        }
-
         // Default overlay showing current location (only if needed)
         if (shouldDisplayCurrentLocation()) {
             CurrentLocationOverlay currentLocationOverlay = new CurrentLocationOverlay(mapView);

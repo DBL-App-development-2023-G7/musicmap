@@ -17,6 +17,9 @@ import org.osmdroid.views.overlay.Overlay;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * A {@link MapFragment} containing posts from songs by the current artist user.
+ */
 public class ArtistDataMapFragment extends MapFragment {
 
     private static final String TAG = "PostMapFragment";
@@ -61,6 +64,7 @@ public class ArtistDataMapFragment extends MapFragment {
 
         User user = Session.getInstance().getCurrentUser();
 
+        // Current user must be a verified artist
         if (!user.isArtist() || !((Artist) user).getArtistData().isVerified()) {
             throw new IllegalStateException("ArtistDataMapFragment cannot be used for unverified artist");
         }
