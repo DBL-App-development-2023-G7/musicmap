@@ -26,7 +26,8 @@ public class Actions {
     /**
      * Posts the given music memory to the database.
      *
-     * @param musicMemory a future indicating when/if the music memory is posted.
+     * @param musicMemory the music memory to post.
+     * @return a future indicating when/if the music memory is posted.
      */
     public static CompletableFuture<?> postMusicMemory(MusicMemory musicMemory) {
         return postMusicMemory(FirebaseFirestore.getInstance(), musicMemory);
@@ -36,7 +37,8 @@ public class Actions {
      * Posts the given music memory to the database. This method uses DI.
      *
      * @param firestore The FirebaseFirestore reference.
-     * @param musicMemory a future indicating when/if the music memory is posted.
+     * @param musicMemory the music memory to post.
+     * @return a future indicating when/if the music memory is posted.
      */
     public static CompletableFuture<?> postMusicMemory(FirebaseFirestore firestore, MusicMemory musicMemory) {
         String authorUid = musicMemory.getAuthorUid();

@@ -33,14 +33,14 @@ import java.util.Map;
 public class FeedAdapter extends ArrayAdapter<MusicMemory> {
 
     /**
-     * The context of the Activity where the adapter is being used.
-     */
-    private final Activity activityContext;
-
-    /**
      * The tag used to log errors or warnings from this class.
      */
     private static final String TAG = "FeedAdapter";
+
+    /**
+     * The context of the Activity where the adapter is being used.
+     */
+    private final Activity activityContext;
 
     /**
      * The flag to check if the adapter is being used in feed or profile view.
@@ -48,7 +48,8 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
     private boolean isUsedInFeed = true;
 
     /**
-     * The object to map user image to author id for improving user image setting.
+     * A simple cache for storing profile picture URLs by user UIDs,
+     * to avoid accessing the database for it.
      */
     private final Map<String, String> userImageByAuthorIdMap = new HashMap<>();
 
@@ -139,7 +140,8 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
     }
 
     /**
-     * This method is used to fetch the user image of the music memory author.
+     * Fetch the user image of the music memory author, and
+     * {@link #setUserImage(String, String, ImageView) set the image} afterwards.
      *
      * @param authorId The id of the author of the music memory.
      * @param userImage The imageView to set the image to.

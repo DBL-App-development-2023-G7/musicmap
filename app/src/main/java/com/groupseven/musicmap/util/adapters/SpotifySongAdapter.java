@@ -24,6 +24,7 @@ import se.michaelthelin.spotify.model_objects.specification.Track;
 
 /**
  * The adapter providing data for the spotify song search.
+ * <p>
  * Also note that this uses the Spotify WRAPPER Track class not the spotify SDK track class
  */
 public class SpotifySongAdapter extends ArrayAdapter<Track> {
@@ -80,7 +81,7 @@ public class SpotifySongAdapter extends ArrayAdapter<Track> {
     }
 
     /**
-     * This method is used to navigate to the PostFragment when a list item is clicked.
+     * This method is used to navigate back to the PostFragment when a song is selected.
      *
      * @param track The Track object for the selected list item.
      */
