@@ -1,9 +1,7 @@
 package com.groupseven.musicmap.screens.main.musicmemory.view;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +14,14 @@ import androidx.fragment.app.Fragment;
 
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.models.UserData;
-import com.groupseven.musicmap.util.ui.SpotifyWidgetFragment;
 import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.firebase.AuthSystem;
 import com.groupseven.musicmap.util.firebase.Queries;
 import com.groupseven.musicmap.util.ui.CircleTransform;
 import com.groupseven.musicmap.util.ui.FragmentUtil;
 import com.groupseven.musicmap.util.ui.Message;
+import com.groupseven.musicmap.util.ui.SpotifyWidgetFragment;
 import com.squareup.picasso.Picasso;
-
-import org.osmdroid.config.Configuration;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -67,8 +63,6 @@ public class MusicMemoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         Activity activity = requireActivity();
 
-        Context ctx = activity.getApplicationContext();
-        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_music_memory, container, false);
 
