@@ -61,7 +61,8 @@ public class QueriesTest {
 
     @Test
     public void testGetAllMusicMemoriesInLastTwentyFourHours_success() throws ExecutionException, InterruptedException {
-        long timestamp24HoursAgo = System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24);
+        long timestamp24HoursAgo = System.currentTimeMillis() - (TimeUnit.HOURS.toMillis(24)
+                + TimeUnit.SECONDS.toMillis(5)); // +5 seconds to account for fetching delays
         Task<List<MusicMemory>> task = TaskUtil.getTask(Queries.getAllMusicMemoriesInLastTwentyFourHours());
         List<MusicMemory> musicMemories = Tasks.await(task);
         musicMemories.forEach(musicMemory -> {
