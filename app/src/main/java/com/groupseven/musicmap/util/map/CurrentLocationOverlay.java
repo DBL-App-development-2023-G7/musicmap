@@ -12,7 +12,7 @@ import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 /**
- * A map overlay showing your current location, but without bearing.
+ * A map overlay showing your current location.
  */
 public class CurrentLocationOverlay extends MyLocationNewOverlay {
 
@@ -27,6 +27,7 @@ public class CurrentLocationOverlay extends MyLocationNewOverlay {
 
     @Override
     protected void drawMyLocation(Canvas canvas, Projection pj, Location lastFix) {
+        // Bearing causes a different image to be displayed, so remove bearing
         lastFix.removeBearing();
 
         super.drawMyLocation(canvas, pj, lastFix);
