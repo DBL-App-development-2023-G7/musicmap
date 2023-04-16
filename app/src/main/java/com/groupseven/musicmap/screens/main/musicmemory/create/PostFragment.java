@@ -26,7 +26,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -39,8 +38,6 @@ import com.groupseven.musicmap.models.MusicMemory;
 import com.groupseven.musicmap.models.Song;
 import com.groupseven.musicmap.screens.main.MainFragment;
 import com.groupseven.musicmap.screens.main.feed.FeedFragment;
-import com.groupseven.musicmap.screens.main.musicmemory.create.CameraActivity;
-import com.groupseven.musicmap.screens.main.musicmemory.create.SearchFragment;
 import com.groupseven.musicmap.util.firebase.Actions;
 import com.groupseven.musicmap.util.permissions.CameraPermission;
 import com.groupseven.musicmap.util.permissions.LocationPermission;
@@ -109,7 +106,6 @@ public class PostFragment extends MainFragment {
                 }
             }
     );
-
 
     // this is a Picasso target into which Picasso will load the image taken from the camera
     // in a field so it won't be garbage collected

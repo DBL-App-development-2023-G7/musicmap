@@ -3,7 +3,6 @@ package com.groupseven.musicmap.util.spotify;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.groupseven.musicmap.util.spotify.SpotifyData;
 import com.squareup.picasso.Picasso;
 
 import org.apache.hc.core5.http.ParseException;
@@ -74,7 +73,7 @@ public class SpotifyUtils {
     }
 
     /**
-     * Waits for spotify token and then returns the current track
+     * Waits for spotify token and then returns the current track.
      * @return The current spotify track as a completaBLE FURTU
      */
     public static CompletableFuture<Track> getCurrentTrackFuture() {

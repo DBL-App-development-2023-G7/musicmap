@@ -1,9 +1,7 @@
 package com.groupseven.musicmap.screens.main.musicmemory.create;
 
-
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +26,7 @@ import se.michaelthelin.spotify.model_objects.specification.Track;
 public class SearchFragment extends MainFragment {
 
     private static final int COUNTDOWN_DELAY = 400;
-    private static final String TAG = "SearchFragment" ;
+    private static final String TAG = "SearchFragment";
 
     // temporary store used by post fragment to get search result (I am too lazy to use a Model)
     private static Track resultTrack;
@@ -55,12 +53,12 @@ public class SearchFragment extends MainFragment {
         // add current track on the top of the track list
         CompletableFuture<Void> currentTrackFuture = SpotifyUtils.getCurrentTrackFuture()
                 .thenAccept(track -> {
-                    if (track != null)  recentTrackList.add(0,track);
+                    if (track != null)  recentTrackList.add(0, track);
                 });
         CompletableFuture<Void> recentTracksFuture = SpotifyUtils.getRecentTracksFuture(4)
                 .thenAccept(trackList -> recentTrackList.addAll(trackList));
 
-        CompletableFuture.allOf(currentTrackFuture,recentTracksFuture).thenAcceptAsync(unused -> {
+        CompletableFuture.allOf(currentTrackFuture, recentTracksFuture).thenAcceptAsync(unused -> {
             updateSongListView(recentTrackList);
         }, requireActivity().getMainExecutor());
 
@@ -71,7 +69,6 @@ public class SearchFragment extends MainFragment {
 
         return rootView;
     }
-
 
     private void updateSongListView(List<Track> trackList) {
         SpotifySongAdapter songAdapter = new SpotifySongAdapter(
