@@ -67,7 +67,7 @@ public class Queries {
     public static CompletableFuture<MusicMemory> getMusicMemoryByAuthorIdAndId(String authorUid, String uid) {
         /*
         Ideally we'd use the collection group MusicMemories here, which does not require providing the author uid,
-        but due to a Firestore bug (?) this cannot be done without additional modifications:
+        but due to a Firestore index usage this cannot be done without additional modifications:
         https://stackoverflow.com/questions/56149601/firestore-collection-group-query-on-documentid/58104104#58104104
          */
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();

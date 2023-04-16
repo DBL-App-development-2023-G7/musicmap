@@ -40,6 +40,17 @@ public class AuthSystem {
      */
     public static Task<Void> addUserToFirestore(@NonNull User user) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        return addUserToFirestore(firestore, user);
+    }
+
+    /**
+     * This overloaded method adds the user and its attributes to the Firebase Firestore database.
+     *
+     * @param firestore the FirebaseFirestore instance to use
+     * @param user the user to add to the Firestore database
+     * @return the task
+     */
+    public static Task<Void> addUserToFirestore(@NonNull FirebaseFirestore firestore, @NonNull User user) {
         return firestore.collection("Users").document(user.getUid()).set(user.getData());
     }
 

@@ -23,21 +23,37 @@ import java.util.List;
 import se.michaelthelin.spotify.model_objects.specification.Track;
 
 /**
- * This adapter has been stolen from the  MusicMemory adapter.
- *
+ * The adapter providing data for the spotify song search.
+ * <p>
  * Also note that this uses the Spotify WRAPPER Track class not the spotify SDK track class
  */
-// TODO change the adapter view
 public class SpotifySongAdapter extends ArrayAdapter<Track> {
 
+    /**
+     * The context of the Activity where the adapter is being used.
+     */
     private final Activity activityContext;
 
-    public SpotifySongAdapter(@NonNull Activity activityContext, int resource, @NonNull List<Track> feedItems) {
-        super(activityContext, resource, feedItems);
-
+    /**
+     * Constructor for creating the SpotifySongAdapter object.
+     *
+     * @param activityContext The context of the Activity where the adapter is being used.
+     * @param resource The resource ID for the layout file containing the layout for each list item.
+     * @param trackItems The list of tracks to be displayed in the list.
+     */
+    public SpotifySongAdapter(@NonNull Activity activityContext, int resource, @NonNull List<Track> trackItems) {
+        super(activityContext, resource, trackItems);
         this.activityContext = activityContext;
     }
 
+    /**
+     * This method returns the view for each list item.
+     *
+     * @param position The position of the list item.
+     * @param convertView The old view to reuse, if possible.
+     * @param parent The parent view that this view will eventually be attached to.
+     * @return The view for each list item.
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, ViewGroup parent) {
@@ -64,7 +80,11 @@ public class SpotifySongAdapter extends ArrayAdapter<Track> {
         return row;
     }
 
-    // a return back to the post and set the search result track
+    /**
+     * This method is used to navigate back to the PostFragment when a song is selected.
+     *
+     * @param track The Track object for the selected list item.
+     */
     private void goToPostFragment(Track track) {
         FragmentActivity fragmentActivity = (FragmentActivity) activityContext;
         SearchFragment.setResultTrack(track);

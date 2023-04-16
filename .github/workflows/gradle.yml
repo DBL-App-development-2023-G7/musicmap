@@ -79,3 +79,4 @@ jobs:
           name: test-reports
           retention-days: 3
           path: '*/build/reports/androidTests'
+

@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.TestDataStore;
-import com.groupseven.musicmap.models.MusicMemory;
+import com.groupseven.musicmap.models.SongCount;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
-public class FeedAdapterTest {
+public class PopularSongsAdapterTest {
 
     @Mock
     private Activity mockActivity;
@@ -29,28 +29,29 @@ public class FeedAdapterTest {
     @Mock
     private LayoutInflater mockLayoutInflater;
 
-    private FeedAdapter feedAdapter;
+    private PopularSongsAdapter popularSongsAdapter;
 
     @Before
     public void setUp() {
-        List<MusicMemory> feedItems = new ArrayList<>();
-        feedItems.add(TestDataStore.getValidMusicMemory("author-uid-1", "song-1"));
-        feedItems.add(TestDataStore.getValidMusicMemory("author-uid-2", "song-2"));
+        List<SongCount> songs = new ArrayList<>();
+        songs.add(new SongCount(TestDataStore.getValidSong("test-song-1"), 2L));
+        songs.add(new SongCount(TestDataStore.getValidSong("test-song-2"), 1L));
 
         when(mockActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).thenReturn(mockLayoutInflater);
-        feedAdapter = new FeedAdapter(mockActivity, R.layout.single_post_layout_feed, feedItems);
+        popularSongsAdapter = new PopularSongsAdapter(mockActivity, R.layout.song_layout_artist_data, songs);
     }
 
     @Test
     public void testGetCount() {
-        assertEquals(2, feedAdapter.getCount());
+        assertEquals(2, popularSongsAdapter.getCount());
     }
 
     @Test
     public void testGetItem() {
-        assertEquals("song-1", feedAdapter.getItem(0).getSong().getName());
-        assertEquals("song-2", feedAdapter.getItem(1).getSong().getName());
+        assertEquals("test-song-1", popularSongsAdapter.getItem(0).getSong().getName());
+        assertEquals(2L, popularSongsAdapter.getItem(0).getCount());
+        assertEquals("test-song-2", popularSongsAdapter.getItem(1).getSong().getName());
+        assertEquals(1L, popularSongsAdapter.getItem(1).getCount());
     }
 
 }
-
