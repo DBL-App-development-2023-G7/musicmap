@@ -11,7 +11,7 @@ import com.squareup.picasso.Transformation;
 /**
  * A transformation that cuts of the corners of the input image,
  * turning it into a circle.
- *
+ * <p>
  * Sourced from <a href="https://stackoverflow.com/a/26112408">Stack Overflow</a>.
  */
 public class CircleTransform implements Transformation {
