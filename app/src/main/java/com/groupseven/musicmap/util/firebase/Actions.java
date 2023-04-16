@@ -103,7 +103,6 @@ public class Actions {
         });
     }
 
-
     /**
      * This method checks if the storage reference exists.
      * Firebase storage doesn't have a way to check if a StorageReference exist
