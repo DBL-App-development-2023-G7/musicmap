@@ -30,4 +30,8 @@ public final class Constants {
     public static final Pattern USERNAME_PATTERN = Pattern.compile("\\w{3,25}");
     public static final Pattern PASSWORD_PATTERN = Pattern.compile(".{6,}");
 
+    public static final String SPOTIFY_CLIENT_ID = "56ab7fed83514a7a96a7b735737280d8";
+
+    public static final String SPOTIFY_REDIRECT_URI = "musicmap://spotify-auth";
+
 }
