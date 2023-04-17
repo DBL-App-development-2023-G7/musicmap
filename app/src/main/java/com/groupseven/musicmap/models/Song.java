@@ -1,13 +1,18 @@
 package com.groupseven.musicmap.models;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Song {
+import se.michaelthelin.spotify.model_objects.specification.Track;
+
+public class Song implements Serializable {
 
     private String name;
 
@@ -32,6 +37,14 @@ public class Song {
         this.spotifyArtistId = spotifyArtistId;
         this.imageUri = imageUri;
         this.musicPreviewUri = musicPreviewUri;
+    }
+
+    public Song(Track spotifyTrack) {
+        this.name = spotifyTrack.getName();
+        this.artistName = spotifyTrack.getArtists()[0].getName();
+        this.spotifyArtistId = spotifyTrack.getArtists()[0].getId();
+        this.imageUri = spotifyTrack.getAlbum().getImages()[0].getUrl();
+        this.musicPreviewUri = spotifyTrack.getPreviewUrl();
     }
 
     public String getName() {

@@ -1,6 +1,8 @@
 package com.groupseven.musicmap.util.adapters;
 
 import android.app.Activity;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import com.groupseven.musicmap.R;
+import com.groupseven.musicmap.models.Song;
 import com.groupseven.musicmap.screens.main.musicmemory.create.PostFragment;
 import com.groupseven.musicmap.screens.main.musicmemory.create.SearchFragment;
 import com.groupseven.musicmap.util.ui.FragmentUtil;
@@ -68,7 +71,10 @@ public class SpotifySongAdapter extends ArrayAdapter<Track> {
     private void goToPostFragment(Track track) {
         FragmentActivity fragmentActivity = (FragmentActivity) activityContext;
         SearchFragment.setResultTrack(track);
-
+        Bundle searchResult = new Bundle();
+        searchResult.putSerializable("song", new Song(track));
+        Log.d("SongAdapter", "result!");
+        fragmentActivity.getSupportFragmentManager().setFragmentResult(PostFragment.FRAGMENT_RESULT_KEY, searchResult);
         FragmentUtil.replaceFragment(fragmentActivity.getSupportFragmentManager(), R.id.fragment_view,
                 PostFragment.class);
     }

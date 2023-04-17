@@ -23,8 +23,10 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentResultListener;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -57,13 +59,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import se.michaelthelin.spotify.model_objects.specification.Track;
-
 public class PostFragment extends MainFragment {
 
+    public static final String FRAGMENT_RESULT_KEY = "searchSong";
     // needs to be static or data is lost
     // TODO find a better way of persisting data
     private static Bitmap capturedImage;
+    private static Song resultSong;
     private static final String TAG = "PostFragment";
 
     private final LocationPermission locationPermission = new LocationPermission(this);
@@ -148,6 +150,15 @@ public class PostFragment extends MainFragment {
         fetchUserLocation();
         getPermission();
 
+        getParentFragmentManager().setFragmentResultListener(
+                FRAGMENT_RESULT_KEY,
+                this,
+                (requestKey, bundle) -> {
+                    Log.d(TAG, "result!");
+                    resultSong = (Song) bundle.getSerializable("song");
+                    showSelectedSong(resultSong);
+        });
+
         parentActivity = (SpotifyAuthActivity) this.currentActivity;
         parentActivity.refreshToken(apiToken -> {
             postMemoryButton.setEnabled(true);
@@ -178,18 +189,18 @@ public class PostFragment extends MainFragment {
 
         // get current song if no song has been searched for
         // TODO separate into function
-        if (SearchFragment.getResultTrack() == null) {
+        if (resultSong == null) {
             SpotifyUtils.getCurrentTrackFuture()
                     .thenAcceptAsync(track -> {
                                 if (track != null) {
-                                    SearchFragment.setResultTrack(track);
-                                    showSelectedTrack(track);
+                                    resultSong = new Song(track);
+                                    showSelectedSong(resultSong);
                                 }
                             },
                             parentActivity.getMainExecutor()
                     );
         } else {
-            showSelectedTrack(SearchFragment.getResultTrack());
+            showSelectedSong(resultSong);
         }
 
         addLocationButton = rootView.findViewById(R.id.addLocationButton);
@@ -210,10 +221,10 @@ public class PostFragment extends MainFragment {
         shouldClearData = true;
     }
 
-    private void showSelectedTrack(Track track) {
+    private void showSelectedSong(Song song) {
         songImageView.setVisibility(View.VISIBLE);
-        Picasso.get().load(track.getAlbum().getImages()[0].getUrl()).into(songImageView);
-        addSongButton.setText(track.getName());
+        Picasso.get().load(song.getImageUri()).into(songImageView);
+        addSongButton.setText(song.getName());
     }
 
     private void goToSearchFragment() {
@@ -318,21 +329,13 @@ public class PostFragment extends MainFragment {
                 currentLocation.getLongitude()
         );
 
-        Song song = new Song(
-                SearchFragment.getResultTrack().getArtists()[0].getName(),
-                SearchFragment.getResultTrack().getName(),
-                SearchFragment.getResultTrack().getArtists()[0].getId(),
-                SearchFragment.getResultTrack().getAlbum().getImages()[0].getUrl(),
-                SearchFragment.getResultTrack().getPreviewUrl()
-        );
-
         Actions.uploadMusicMemoryImage(capturedImage, authorID).thenAccept(imageUrl -> {
             Actions.postMusicMemory(new MusicMemory(
                     authorID,
                     timePosted,
                     geoPointLocation,
                     imageUrl.toString(),
-                    song
+                    resultSong
             )).whenCompleteAsync((unused, throwable) -> {
                 if (throwable != null) {
                     Log.e(TAG, "Could not create music memory", throwable);
@@ -354,7 +357,7 @@ public class PostFragment extends MainFragment {
     private void clearData() {
         currentLocation = null;
         capturedImage = null;
-        SearchFragment.setResultTrack(null);
+        resultSong = null;
     }
 
     private void getPermission() {
