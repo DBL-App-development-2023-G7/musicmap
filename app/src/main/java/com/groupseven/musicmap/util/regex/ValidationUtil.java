@@ -2,6 +2,8 @@ package com.groupseven.musicmap.util.regex;
 
 import android.util.Patterns;
 
+import com.groupseven.musicmap.util.Constants;
+
 public class ValidationUtil {
 
     public enum Result {
@@ -21,7 +23,7 @@ public class ValidationUtil {
         if (username.isEmpty()) {
             return Result.EMPTY;
         }
-        if (!MMPatterns.USERNAME.matcher(username).matches()) {
+        if (!Constants.USERNAME_PATTERN.matcher(username).matches()) {
             return Result.FORMAT;
         }
         return Result.VALID;
@@ -32,7 +34,7 @@ public class ValidationUtil {
             return Result.EMPTY;
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(identifier).matches()
-                && !MMPatterns.USERNAME.matcher(identifier).matches()) {
+                && !Constants.USERNAME_PATTERN.matcher(identifier).matches()) {
             return Result.FORMAT;
         }
         return  Result.VALID;
@@ -52,8 +54,7 @@ public class ValidationUtil {
         if (password.isEmpty()) {
             return Result.EMPTY;
         }
-        //TODO discuss about the FORMAT error for passwords
-        if (!MMPatterns.PASSWORD.matcher(password).matches()) {
+        if (!Constants.PASSWORD_PATTERN.matcher(password).matches()) {
             return Result.FORMAT;
         }
         return Result.VALID;

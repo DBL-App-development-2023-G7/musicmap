@@ -82,8 +82,8 @@ public class InputCheckerTest {
         usernameInput.setText(TestDataStore.USERNAME_THAT_EXISTS_IN_FIREBASE);
         CompletableFuture<User> future = new CompletableFuture<>();
         future.complete(TestDataStore.getValidUser());
-        CompletableFuture<Boolean> result = InputChecker.checkUsername(TestDataStore.USERNAME_THAT_EXISTS_IN_FIREBASE,
-                usernameInput);
+        CompletableFuture<Boolean> result = InputChecker.checkUsername(
+                TestDataStore.USERNAME_THAT_EXISTS_IN_FIREBASE, usernameInput);
         boolean check = result.get();
         assertFalse(check);
         assertEquals(context.getString(R.string.input_error_username_exists), usernameInput.getError());
@@ -184,7 +184,8 @@ public class InputCheckerTest {
         String repeatPassword = "password456";
         EditText repeatPasswordInput = new EditText(context);
         assertFalse(InputChecker.checkRepeatPassword(repeatPassword, password, repeatPasswordInput));
-        assertEquals(context.getString(R.string.input_error_passwords_not_matching), repeatPasswordInput.getError().toString());
+        assertEquals(context.getString(R.string.input_error_passwords_not_matching),
+                repeatPasswordInput.getError().toString());
     }
 
 }

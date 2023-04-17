@@ -122,7 +122,6 @@ public class InputChecker {
         }
     }
 
-
     public static boolean checkRepeatPassword(String repeatPassword, String password, EditText repeatPasswordInput) {
         Context context = repeatPasswordInput.getContext();
         if (!repeatPassword.equals(password)) {
