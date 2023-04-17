@@ -5,7 +5,7 @@ import android.util.Log;
 import androidx.core.content.ContextCompat;
 
 import com.groupseven.musicmap.util.firebase.Queries;
-import com.groupseven.musicmap.util.map.MusicMemoryOverlay;
+import com.groupseven.musicmap.util.ui.map.MusicMemoryOverlay;
 
 import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.Overlay;

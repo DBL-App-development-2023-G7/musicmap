@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.groupseven.musicmap.MusicMap;
 import com.groupseven.musicmap.R;
-import com.groupseven.musicmap.util.map.CurrentLocationOverlay;
+import com.groupseven.musicmap.util.ui.map.CurrentLocationOverlay;
 import com.groupseven.musicmap.util.permissions.LocationPermission;
 
 import org.osmdroid.api.IGeoPoint;

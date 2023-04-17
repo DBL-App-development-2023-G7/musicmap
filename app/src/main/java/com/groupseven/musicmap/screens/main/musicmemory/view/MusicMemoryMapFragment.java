@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat;
 import com.groupseven.musicmap.screens.main.map.MapFragment;
 import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.firebase.Queries;
-import com.groupseven.musicmap.util.map.MusicMemoryOverlay;
+import com.groupseven.musicmap.util.ui.map.MusicMemoryOverlay;
 
 /**
  * A map fragment for displaying the location of a music memory.
