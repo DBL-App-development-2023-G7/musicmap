@@ -137,6 +137,7 @@ public abstract class SpotifyAuthActivity extends SessionListenerActivity {
 
     public interface TokenCallback {
         void onValidToken(String apiToken);
+
         void onInvalidToken();
     }
 
