@@ -23,17 +23,15 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentResultListener;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
-import com.google.firebase.firestore.GeoPoint;
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.firebase.Session;
 import com.groupseven.musicmap.models.MusicMemory;
@@ -44,7 +42,6 @@ import com.groupseven.musicmap.util.firebase.Actions;
 import com.groupseven.musicmap.util.permissions.CameraPermission;
 import com.groupseven.musicmap.util.permissions.LocationPermission;
 import com.groupseven.musicmap.util.spotify.SpotifyAuthActivity;
-import com.groupseven.musicmap.util.spotify.SpotifyUtils;
 import com.groupseven.musicmap.util.ui.FragmentUtil;
 import com.groupseven.musicmap.util.ui.ImageUtils;
 import com.groupseven.musicmap.util.ui.Message;
@@ -54,36 +51,31 @@ import com.squareup.picasso.Target;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class PostFragment extends MainFragment {
 
-    public static final String FRAGMENT_RESULT_KEY = "searchSong";
-    // needs to be static or data is lost
-    // TODO find a better way of persisting data
-    private static Bitmap capturedImage;
-    private static Song resultSong;
     private static final String TAG = "PostFragment";
 
     private final LocationPermission locationPermission = new LocationPermission(this);
     private final CameraPermission cameraPermission = new CameraPermission(this);
     private FusedLocationProviderClient fusedLocationClient;
+    public static final String FRAGMENT_RESULT_KEY = "searchSong";
 
     private Session currentSession;
     private Activity currentActivity;
+    private SpotifyAuthActivity parentActivity;
 
     private ImageView songImageView;
     private Button addSongButton;
-
-    private Location currentLocation;
     private Button addLocationButton;
     private ImageView capturedImagePreview;
     private Button postMemoryButton;
     private boolean shouldClearData = true;
-    private SpotifyAuthActivity parentActivity;
+
+    private PostSongViewModel model;
 
     // a launcher that launches the camera activity and handles the result
     private final ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
@@ -115,9 +107,7 @@ public class PostFragment extends MainFragment {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             Log.d(TAG, "Camera Image Bitmap Loaded");
-            capturedImage = bitmap;
-            capturedImagePreview.setImageBitmap(capturedImage);
-            capturedImagePreview.setVisibility(View.VISIBLE);
+            model.getCameraImage().setValue(bitmap);
         }
 
         @Override
@@ -136,6 +126,7 @@ public class PostFragment extends MainFragment {
         super.onCreate(savedInstanceState);
         this.currentSession = Session.getInstance();
         this.currentActivity = requireActivity();
+        parentActivity = (SpotifyAuthActivity) this.currentActivity;
 
         locationPermission.forceRequest();
 
@@ -147,19 +138,19 @@ public class PostFragment extends MainFragment {
             Log.e(TAG, "Google Play services availability response: " + response);
         }
 
+        model = new ViewModelProvider(parentActivity).get(PostSongViewModel.class);
         fetchUserLocation();
         getPermission();
 
         getParentFragmentManager().setFragmentResultListener(
-                FRAGMENT_RESULT_KEY,
+                "searchSong",
                 this,
                 (requestKey, bundle) -> {
                     Log.d(TAG, "result!");
-                    resultSong = (Song) bundle.getSerializable("song");
-                    showSelectedSong(resultSong);
+                    Song resultSong = (Song) bundle.getSerializable("song");
+                    model.getSelectedSong().setValue(resultSong);
         });
 
-        parentActivity = (SpotifyAuthActivity) this.currentActivity;
         parentActivity.refreshToken(apiToken -> {
             postMemoryButton.setEnabled(true);
         }, () -> {
@@ -174,57 +165,52 @@ public class PostFragment extends MainFragment {
         View rootView = inflater.inflate(R.layout.fragment_post, container, false);
 
         capturedImagePreview = rootView.findViewById(R.id.previewCapturedImage);
-        if (capturedImage != null) {
-            capturedImagePreview.setImageBitmap(capturedImage);
-            capturedImagePreview.setVisibility(View.VISIBLE);
-        }
-
+        model.getCameraImage().observe(this.getViewLifecycleOwner(), this::showCapturedImage);
         Button addImageButton = rootView.findViewById(R.id.addImageButton);
         addImageButton.setOnClickListener(view -> goToCameraActivity());
 
         addSongButton = rootView.findViewById(R.id.addSongButton);
         addSongButton.setOnClickListener(view -> goToSearchFragment());
-
         songImageView = rootView.findViewById(R.id.songPreviewImage);
-
-        // get current song if no song has been searched for
-        // TODO separate into function
-        if (resultSong == null) {
-            SpotifyUtils.getCurrentTrackFuture()
-                    .thenAcceptAsync(track -> {
-                                if (track != null) {
-                                    resultSong = new Song(track);
-                                    showSelectedSong(resultSong);
-                                }
-                            },
-                            parentActivity.getMainExecutor()
-                    );
-        } else {
-            showSelectedSong(resultSong);
-        }
+        model.getSelectedSong().observe(this.getViewLifecycleOwner(), this::showSelectedSong);
 
         addLocationButton = rootView.findViewById(R.id.addLocationButton);
         addLocationButton.setOnClickListener(view -> fetchUserLocation());
+        model.getUserLocation().observe(this.getViewLifecycleOwner(), this::showUserLocation);
 
         postMemoryButton = rootView.findViewById(R.id.postMemoryButton);
         postMemoryButton.setOnClickListener(view -> postMusicMemory());
         return rootView;
     }
 
+    private void showUserLocation(Location location){
+        if (location != null) {
+            String locationText = getLocationText(location);
+            addLocationButton.setText(locationText);
+        }
+    }
     @Override
     public void onStop() {
         super.onStop();
         if (shouldClearData) {
-            clearData();
+            model.clearData();
         }
 
         shouldClearData = true;
     }
 
+    private void showCapturedImage(Bitmap capturedImage){
+        if (capturedImage != null) {
+            capturedImagePreview.setImageBitmap(capturedImage);
+            capturedImagePreview.setVisibility(View.VISIBLE);
+        }
+    }
     private void showSelectedSong(Song song) {
-        songImageView.setVisibility(View.VISIBLE);
-        Picasso.get().load(song.getImageUri()).into(songImageView);
-        addSongButton.setText(song.getName());
+        if (song != null) {
+            songImageView.setVisibility(View.VISIBLE);
+            Picasso.get().load(song.getImageUri()).into(songImageView);
+            addSongButton.setText(song.getName());
+        }
     }
 
     private void goToSearchFragment() {
@@ -239,7 +225,7 @@ public class PostFragment extends MainFragment {
         cameraActivityResultLauncher.launch(cameraIntent);
     }
 
-    // TODO move to a utilities class
+    // TODO move to a utilities class (I tried but it is a huge pain please help)
     @SuppressLint("MissingPermission")
     private void fetchUserLocation() {
         if (fusedLocationClient == null) {
@@ -253,10 +239,7 @@ public class PostFragment extends MainFragment {
                             Log.i(TAG, "Location unknown");
                             return;
                         }
-
-                        currentLocation = location;
-                        String displayText = getLocationText(currentLocation);
-                        addLocationButton.setText(displayText);
+                        model.getUserLocation().setValue(location);
                     })
                     .addOnFailureListener(this.currentActivity, exception -> {
                         Log.e(TAG, "Could not fetch user location", exception);
@@ -273,8 +256,8 @@ public class PostFragment extends MainFragment {
         double lon = location.getLongitude();
 
         String resultString = String.format("Lat: %s \nLon: %s",
-                currentLocation.getLatitude(),
-                currentLocation.getLongitude()
+                location.getLatitude(),
+                location.getLongitude()
         );
         Geocoder geocoder = new Geocoder(this.currentActivity);
         try {
@@ -305,17 +288,17 @@ public class PostFragment extends MainFragment {
     }
 
     private void postMusicMemory() {
-        if (SearchFragment.getResultTrack() == null) {
+        if (model.isSongNull()) {
             Message.showFailureMessage(this.currentActivity, getString(R.string.create_mm_track_required));
             return;
         }
 
-        if (currentLocation == null) {
+        if (model.isLocationNull()) {
             Message.showFailureMessage(this.currentActivity, getString(R.string.create_mm_location_required));
             return;
         }
 
-        if (capturedImage == null) {
+        if (model.isImageNull()) {
             Message.showFailureMessage(this.currentActivity, getString(R.string.create_mm_image_required));
             return;
         }
@@ -323,41 +306,31 @@ public class PostFragment extends MainFragment {
         postMemoryButton.setEnabled(false);
 
         String authorID = this.currentSession.getCurrentUser().getUid();
-        Date timePosted = Calendar.getInstance().getTime();
-        GeoPoint geoPointLocation = new GeoPoint(
-                currentLocation.getLatitude(),
-                currentLocation.getLongitude()
-        );
+        Bitmap capturedImage = model.getCameraImage().getValue();
 
         Actions.uploadMusicMemoryImage(capturedImage, authorID).thenAccept(imageUrl -> {
             Actions.postMusicMemory(new MusicMemory(
                     authorID,
-                    timePosted,
-                    geoPointLocation,
+                    Calendar.getInstance().getTime(),
+                    model.getLocationAsGeoPoint(),
                     imageUrl.toString(),
-                    resultSong
+                    model.getSelectedSong().getValue()
             )).whenCompleteAsync((unused, throwable) -> {
                 if (throwable != null) {
                     Log.e(TAG, "Could not create music memory", throwable);
                     Message.showFailureMessage(this.currentActivity, getString(R.string.create_mm_failure));
                     postMemoryButton.setEnabled(true);
                 } else {
-                    clearData();
                     FragmentUtil.replaceFragment(
                             requireActivity().getSupportFragmentManager(),
                             R.id.fragment_view,
                             FeedFragment.class
                     );
+                    model.clearData();
                     Message.showSuccessMessage(this.currentActivity, getString(R.string.create_mm_success));
                 }
             }, ContextCompat.getMainExecutor(requireContext()));
         });
-    }
-
-    private void clearData() {
-        currentLocation = null;
-        capturedImage = null;
-        resultSong = null;
     }
 
     private void getPermission() {
