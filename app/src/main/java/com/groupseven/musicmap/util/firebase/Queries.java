@@ -11,7 +11,7 @@ import com.groupseven.musicmap.models.Song;
 import com.groupseven.musicmap.models.SongCount;
 import com.groupseven.musicmap.models.User;
 import com.groupseven.musicmap.models.UserData;
-import com.groupseven.musicmap.util.TaskUtil;
+import com.groupseven.musicmap.util.conversion.TaskUtil;
 
 import java.util.Date;
 import java.util.HashMap;

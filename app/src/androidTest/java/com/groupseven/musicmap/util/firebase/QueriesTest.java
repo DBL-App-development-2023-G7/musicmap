@@ -12,7 +12,7 @@ import com.groupseven.musicmap.TestDataStore;
 import com.groupseven.musicmap.models.MusicMemory;
 import com.groupseven.musicmap.models.SongCount;
 import com.groupseven.musicmap.models.User;
-import com.groupseven.musicmap.util.TaskUtil;
+import com.groupseven.musicmap.util.conversion.TaskUtil;
 
 import org.junit.Test;
 
