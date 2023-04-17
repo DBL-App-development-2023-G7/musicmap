@@ -8,6 +8,8 @@ import androidx.core.content.ContextCompat;
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.util.firebase.Queries;
 
+import java.util.concurrent.CompletableFuture;
+
 public class InputChecker {
 
     public static boolean checkEmail(String email, EditText emailInput) {
@@ -89,32 +91,37 @@ public class InputChecker {
         }
     }
 
-    public static boolean checkUsername(String username, EditText usernameInput) {
+    public static CompletableFuture<Boolean> checkUsername(String username, EditText usernameInput) {
         Context context = usernameInput.getContext();
         switch (ValidationUtil.isUsernameValid(username)) {
             case EMPTY:
                 usernameInput.setError(context.getString(R.string.input_error_enter_username));
-                return false;
+                return CompletableFuture.completedFuture(false);
             case FORMAT:
                 usernameInput.setError(context.getString(R.string.input_error_valid_username));
-                return false;
+                return CompletableFuture.completedFuture(false);
             case VALID:
+                CompletableFuture<Boolean> future = new CompletableFuture<>();
                 Queries.getUserWithUsername(username).whenCompleteAsync((user, throwable) -> {
                     if (throwable == null) {
                         if (user != null) {
                             usernameInput.setError(context.getString(R.string.input_error_username_exists));
+                            future.complete(false);
+                        } else {
+                            future.complete(true);
                         }
                     } else {
                         usernameInput.setError("Cannot check username");
+                        future.complete(false);
                     }
                 }, ContextCompat.getMainExecutor(usernameInput.getContext()));
-                return true; // TODO return value cannot be known here, depends on result of query above,
-                             //  maybe make these methods return futures
+                return future;
             default:
                 usernameInput.setError(context.getString(R.string.input_error_unexpected));
-                return false;
+                return CompletableFuture.completedFuture(false);
         }
     }
+
 
     public static boolean checkRepeatPassword(String repeatPassword, String password, EditText repeatPasswordInput) {
         Context context = repeatPasswordInput.getContext();
