@@ -1,4 +1,4 @@
-package com.groupseven.musicmap.util;
+package com.groupseven.musicmap.util.conversion;
 
 import com.google.android.gms.tasks.CancellationTokenSource;
 import com.google.android.gms.tasks.Task;

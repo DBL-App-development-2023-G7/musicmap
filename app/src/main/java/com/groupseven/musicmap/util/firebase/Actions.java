@@ -9,7 +9,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.groupseven.musicmap.models.MusicMemory;
-import com.groupseven.musicmap.util.TaskUtil;
+import com.groupseven.musicmap.util.conversion.TaskUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.util.UUID;
@@ -26,12 +26,23 @@ public class Actions {
     /**
      * Posts the given music memory to the database.
      *
-     * @param musicMemory a future indicating when/if the music memory is posted.
+     * @param musicMemory the music memory to post.
+     * @return a future indicating when/if the music memory is posted.
      */
     public static CompletableFuture<?> postMusicMemory(MusicMemory musicMemory) {
+        return postMusicMemory(FirebaseFirestore.getInstance(), musicMemory);
+    }
+
+    /**
+     * Posts the given music memory to the database. This method uses DI.
+     *
+     * @param firestore The FirebaseFirestore reference.
+     * @param musicMemory the music memory to post.
+     * @return a future indicating when/if the music memory is posted.
+     */
+    public static CompletableFuture<?> postMusicMemory(FirebaseFirestore firestore, MusicMemory musicMemory) {
         String authorUid = musicMemory.getAuthorUid();
 
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         return TaskUtil.getFuture(firestore.collection("Users").document(authorUid)
                         .collection("MusicMemories").add(musicMemory))
                 .whenComplete((documentReference, throwable) -> {
@@ -51,13 +62,26 @@ public class Actions {
      * @return a future containing a {@link Uri} for downloading the image.
      */
     public static CompletableFuture<Uri> uploadMusicMemoryImage(Bitmap capturedImage, String authorUid) {
+        return uploadMusicMemoryImage(FirebaseStorage.getInstance(), capturedImage, authorUid);
+    }
+
+    /**
+     * Uploads music memory image for the user. This method uses DI.
+     *
+     * @param firebaseStorage The FirebaseStorage reference.
+     * @param capturedImage the bitmap of the image to upload.
+     * @param authorUid the id of the author of the image.
+     * @return a future containing a {@link Uri} for downloading the image.
+     */
+    public static CompletableFuture<Uri> uploadMusicMemoryImage(
+            FirebaseStorage firebaseStorage, Bitmap capturedImage, String authorUid) {
         // Convert the image to JPEG
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         capturedImage.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
         byte[] data = outputStream.toByteArray();
 
         // Store the JPEG image under the author UID with a random UUID
-        StorageReference rootReference = FirebaseStorage.getInstance().getReference();
+        StorageReference rootReference = firebaseStorage.getReference();
 
         // Run the whole thing on a separate thread, so we can simply wait for a task to be done
         return CompletableFuture.supplyAsync(() -> {

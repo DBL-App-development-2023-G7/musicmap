@@ -10,9 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.groupseven.musicmap.R;
+import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.firebase.AuthSystem;
 import com.groupseven.musicmap.util.regex.InputChecker;
-import com.groupseven.musicmap.util.regex.MMPatterns;
 import com.groupseven.musicmap.util.ui.Message;
 
 public class LoginFragment extends AuthFragment {
@@ -64,7 +64,7 @@ public class LoginFragment extends AuthFragment {
                                 getString(R.string.auth_error_incorrect_email_password));
                     }
                 });
-            } else if (MMPatterns.USERNAME.matcher(identifier).matches()) {
+            } else if (Constants.USERNAME_PATTERN.matcher(identifier).matches()) {
                 AuthSystem.loginWithUsernameAndPassword(identifier, password).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "loginUser:success");

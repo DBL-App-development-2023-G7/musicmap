@@ -9,7 +9,7 @@ import com.groupseven.musicmap.models.Artist;
 import com.groupseven.musicmap.models.User;
 import com.groupseven.musicmap.screens.main.map.MapFragment;
 import com.groupseven.musicmap.util.firebase.Queries;
-import com.groupseven.musicmap.util.map.MusicMemoryOverlay;
+import com.groupseven.musicmap.util.ui.map.MusicMemoryOverlay;
 
 import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.Overlay;
@@ -17,6 +17,9 @@ import org.osmdroid.views.overlay.Overlay;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * A {@link MapFragment} containing posts from songs by the current artist user.
+ */
 public class ArtistDataMapFragment extends MapFragment {
 
     private static final String TAG = "PostMapFragment";
@@ -61,6 +64,7 @@ public class ArtistDataMapFragment extends MapFragment {
 
         User user = Session.getInstance().getCurrentUser();
 
+        // Current user must be a verified artist
         if (!user.isArtist() || !((Artist) user).getArtistData().isVerified()) {
             throw new IllegalStateException("ArtistDataMapFragment cannot be used for unverified artist");
         }
