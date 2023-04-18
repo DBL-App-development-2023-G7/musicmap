@@ -29,4 +29,5 @@
     <string name="create_mm_image_required">An image is required to post a music memory!</string>
     <string name="create_mm_failure">Could not create the music memory</string>
     <string name="create_mm_success">Successfully created the music memory</string>
+    <string name="username_does_not_exist">Username does not exist</string>
 </resources>

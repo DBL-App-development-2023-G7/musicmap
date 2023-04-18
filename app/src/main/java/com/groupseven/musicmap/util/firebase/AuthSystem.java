@@ -13,9 +13,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.WriteBatch;
-import com.google.firebase.internal.api.FirebaseNoSignedInUserException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.groupseven.musicmap.MusicMap;
+import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.models.ArtistData;
 import com.groupseven.musicmap.models.User;
 import com.groupseven.musicmap.models.UserData;
@@ -71,7 +72,8 @@ public class AuthSystem {
         return Queries.getUserWithUsername(userData.getUsername())
                 .thenCompose(user -> {
                     if (user != null) {
-                        throw new IllegalArgumentException("The username already exist!");
+                        throw new IllegalArgumentException(
+                                MusicMap.getAppResources().getString(R.string.input_error_username_exists));
                     }
 
                     return TaskUtil.getFuture(auth.createUserWithEmailAndPassword(email, password));
@@ -103,7 +105,8 @@ public class AuthSystem {
     public static CompletableFuture<Void> loginWithUsernameAndPassword(String username, String password) {
         return Queries.getUserWithUsername(username).thenCompose(user -> {
             if (user == null) {
-                throw new IllegalArgumentException("Username does not exist");
+                throw new IllegalArgumentException(
+                        MusicMap.getAppResources().getString(R.string.username_does_not_exist));
             }
 
             String email = user.getData().getEmail();
