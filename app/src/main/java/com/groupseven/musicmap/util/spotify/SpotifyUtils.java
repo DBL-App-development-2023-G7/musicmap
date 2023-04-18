@@ -35,14 +35,21 @@ import se.michaelthelin.spotify.requests.data.search.simplified.SearchTracksRequ
 import se.michaelthelin.spotify.requests.data.tracks.GetTrackRequest;
 
 /**
- * A utility class to reduce the amount of spotify related code in the main activities.
- * <p>
- * However there is a lot of spotify logic happening in activities so this class needs to be expanded.
+ * A utility class for Spotify API.
  */
 public class SpotifyUtils {
 
     public static final String TAG = "SpotifyUtils";
 
+    /**
+     * Returns a CompletableFuture that retrieves a list of the user's most recent tracks
+     * from the Spotify API.
+     *
+     * @param maxTracks The maximum number of tracks to retrieve.
+     * @param spotifyAccess The user's access token and the Spotify Web API object.
+     * @return A CompletableFuture that, when completed, returns a List of Track objects
+     * representing the user's most recent tracks.
+     */
     public static CompletableFuture<List<Track>> getRecentTracksFuture(int maxTracks, SpotifyAccess spotifyAccess) {
         return CompletableFuture.supplyAsync(() -> {
             List<Track> recentTrackList = new ArrayList<>();
@@ -72,6 +79,14 @@ public class SpotifyUtils {
         });
     }
 
+    /**
+     * Returns a CompletableFuture that retrieves the user's currently playing track
+     * from the Spotify Web API.
+     *
+     * @param spotifyAccess The user's access token and the Spotify Web API object.
+     * @return A CompletableFuture that, when completed, returns a Track object representing
+     * the user's currently playing track.
+     */
     public static CompletableFuture<Track> getCurrentTrackFuture(SpotifyAccess spotifyAccess) {
         return CompletableFuture.supplyAsync(() -> {
             Track currentTrack = null;
@@ -88,6 +103,13 @@ public class SpotifyUtils {
         });
     }
 
+    /**
+     * Returns a CompletableFuture that waits for the SpotifyAccess object to contain a
+     * non-null SpotifyDataApi object (i.e., a valid access token).
+     *
+     * @param spotifyAccess The user's access token and the Spotify Web API object.
+     * @return A CompletableFuture that completes when the access token is retrieved.
+     */
     public static CompletableFuture<Void> checkForSpotifyToken(SpotifyAccess spotifyAccess) {
         int pollIntervalMillis = 50;
         int timeoutSeconds = 30;
@@ -120,10 +142,20 @@ public class SpotifyUtils {
         });
     }
 
+    /**
+     * Returns a string containing the necessary Spotify permissions.
+     *
+     * @return A comma-separated string of Spotify permissions.
+     */
     public static String getSpotifyPermissions() {
         return "user-read-currently-playing,user-read-recently-played";
     }
 
+    /**
+     * Generates a random code verifier for use in the Spotify API authentication flow.
+     *
+     * @return A string containing the randomly generated code verifier.
+     */
     public static String generateCodeVerifier() {
         final int VERIFIER_LEN = 50;
         byte[] codeVerifier = new byte[VERIFIER_LEN];
@@ -134,6 +166,13 @@ public class SpotifyUtils {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(codeVerifier);
     }
 
+    /**
+     * Generates a code challenge for use in the Spotify API authentication flow,
+     * based on the provided code verifier.
+     *
+     * @param codeVerifier The code verifier to generate the code challenge from.
+     * @return A string containing the code challenge.
+     */
     public static String generateCodeChallenge(String codeVerifier) {
         try {
             byte[] bytes = codeVerifier.getBytes(StandardCharsets.US_ASCII);
@@ -150,6 +189,7 @@ public class SpotifyUtils {
     /**
      * Prepares a request object to get full track data.
      *
+     * @param spotifyAccess the spotifyAccess instance
      * @param trackId the id of the track
      * @return the request object
      */
@@ -160,6 +200,7 @@ public class SpotifyUtils {
     /**
      * Prepares a request object to retrieve a users listening history.
      *
+     * @param spotifyAccess the spotifyAccess instance
      * @return the request object
      */
     public static GetCurrentUsersRecentlyPlayedTracksRequest getGetRecentHistoryRequest(SpotifyAccess spotifyAccess) {
@@ -169,6 +210,7 @@ public class SpotifyUtils {
     /**
      * Prepares a request object to retrieve list of tracks based on a search query.
      *
+    * @param spotifyAccess the spotifyAccess instance
      * @param prompt the search prompt
      * @return the request object
      */
@@ -176,6 +218,12 @@ public class SpotifyUtils {
         return spotifyAccess.getSpotifyDataApi().searchTracks(prompt).build();
     }
 
+    /**
+     * Gets the Current playing track request to get the current playing track from Spotify.
+     *
+     * @param spotifyAccess the spotifyAccess instance
+     * @return the request object
+     */
     public static GetUsersCurrentlyPlayingTrackRequest getCurrentPlayingTrackRequest(SpotifyAccess spotifyAccess) {
         return spotifyAccess.getSpotifyDataApi().getUsersCurrentlyPlayingTrack().additionalTypes("track").build();
     }
