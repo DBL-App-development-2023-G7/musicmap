@@ -10,11 +10,14 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.util.firebase.AuthSystem;
 import com.groupseven.musicmap.util.regex.InputChecker;
+
+import java.util.concurrent.Executor;
 
 public class ChangeEmailDialogFragment extends DialogFragment {
 
@@ -64,7 +67,7 @@ public class ChangeEmailDialogFragment extends DialogFragment {
                     String message = throwable.getMessage();
                     newEmailInput.setError(message);
                 }
-            });
+            }, ContextCompat.getMainExecutor(requireContext()));
         }
     }
 }

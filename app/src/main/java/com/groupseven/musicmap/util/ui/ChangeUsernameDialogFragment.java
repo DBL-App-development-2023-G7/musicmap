@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.groupseven.musicmap.R;
@@ -66,7 +67,7 @@ public class ChangeUsernameDialogFragment extends DialogFragment {
                         String message = throwable.getMessage();
                         newUsernameInput.setError(message);
                     }
-                });
+                }, ContextCompat.getMainExecutor(requireContext()));
             }
         });
     }

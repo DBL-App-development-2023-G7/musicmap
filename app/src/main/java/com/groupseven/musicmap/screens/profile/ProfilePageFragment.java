@@ -51,7 +51,7 @@ public class ProfilePageFragment extends Fragment {
         } else {
             String userUid = args.getString(Constants.PROFILE_USER_UID_ARGUMENT);
             AuthSystem.getUser(userUid)
-                    .thenAccept(this::displayData)
+                    .thenAcceptAsync(this::displayData, ContextCompat.getMainExecutor(requireContext()))
                     .exceptionally(throwable -> {
                         Log.e(TAG, "Exception occurred while getting user data for profile", throwable);
                         Message.showFailureMessage(container, "Could not load user data");
