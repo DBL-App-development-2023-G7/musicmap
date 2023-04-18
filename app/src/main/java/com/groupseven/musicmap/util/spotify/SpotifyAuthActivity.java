@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.groupseven.musicmap.listeners.SessionListenerActivity;
 import com.groupseven.musicmap.firebase.Session;
+import com.groupseven.musicmap.util.Constants;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -26,26 +27,16 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
 // TODO INSTEAD OF EXTENDING ACTIVITY ADD A LISTENER
 public abstract class SpotifyAuthActivity extends SessionListenerActivity {
 
-    //TODO this has to be moved in another file
     private static final String TAG = "SpotifyAuthActivity";
-    private static final String CLIENT_ID = "56ab7fed83514a7a96a7b735737280d8";
-    private static final String REDIRECT_URI = "musicmap://spotify-auth";
-    private static final SpotifyApi loginApi = new SpotifyApi.Builder()
-            .setClientId(CLIENT_ID)
-            .setRedirectUri(SpotifyHttpManager.makeUri(REDIRECT_URI))
+
+    private static final SpotifyApi LOGIN_API = new SpotifyApi.Builder()
+            .setClientId(Constants.SPOTIFY_CLIENT_ID)
+            .setRedirectUri(SpotifyHttpManager.makeUri(Constants.SPOTIFY_REDIRECT_URI))
             .build();
 
     private static String codeVerifier = "w6iZIj99vHGtEx_NVl9u3sthTN646vvkiP8OMCGfPmo";
 
-    public interface InvalidTokenCallback {
-        void onInvalidToken();
-    }
-
-    public interface ValidTokenCallback {
-        void onValidToken(String apiToken);
-    }
-
-    public void refreshToken(ValidTokenCallback validTokenCallback, InvalidTokenCallback invalidTokenCallback) {
+    public void refreshToken(TokenCallback tokenCallback) {
         if (SpotifyData.tokenIsExpired()) {
             String currentUserId = Session.getInstance().getCurrentUser().getUid();
             FirebaseTokenStorage tokenStorage = new FirebaseTokenStorage(currentUserId);
@@ -53,15 +44,15 @@ public abstract class SpotifyAuthActivity extends SessionListenerActivity {
             tokenStorage.getRefreshToken(refreshToken -> {
 
                 if (refreshToken == null) {
-                    invalidTokenCallback.onInvalidToken();
+                    tokenCallback.onInvalidToken();
                     return;
                 }
 
-                loginApi.setRefreshToken(refreshToken);
-                loginApi.authorizationCodePKCERefresh().build().executeAsync().handle((refreshResult, error) -> {
+                LOGIN_API.setRefreshToken(refreshToken);
+                LOGIN_API.authorizationCodePKCERefresh().build().executeAsync().handle((refreshResult, error) -> {
                     if (error != null) {
-                        Log.d(TAG, String.format("error %s", error.getMessage()));
-                        invalidTokenCallback.onInvalidToken();
+                        Log.d(TAG, "error refreshing authorization code with PKCE", error);
+                        tokenCallback.onInvalidToken();
                         return null;
                     }
 
@@ -72,7 +63,7 @@ public abstract class SpotifyAuthActivity extends SessionListenerActivity {
 
                     tokenStorage.storeRefreshToken(refreshResult.getRefreshToken());
                     SpotifyData.setToken(refreshResult.getAccessToken(), refreshResult.getExpiresIn());
-                    validTokenCallback.onValidToken(refreshResult.getAccessToken());
+                    tokenCallback.onValidToken(refreshResult.getAccessToken());
                 });
             });
         }
@@ -82,10 +73,7 @@ public abstract class SpotifyAuthActivity extends SessionListenerActivity {
         codeVerifier = generateCodeVerifier();
         String codeChallenge = generateCodeChallenge(codeVerifier);
 
-        Log.d(TAG, String.format("Verifier: %s", codeVerifier));
-        Log.d(TAG, String.format("Challenge: %s", codeChallenge));
-
-        AuthorizationCodeUriRequest authorizationCodeUriRequest = loginApi.authorizationCodePKCEUri(codeChallenge)
+        AuthorizationCodeUriRequest authorizationCodeUriRequest = LOGIN_API.authorizationCodePKCEUri(codeChallenge)
                 .scope("user-read-currently-playing,user-read-recently-played").build();
 
         authorizationCodeUriRequest.executeAsync().thenAcceptAsync(uri -> {
@@ -121,37 +109,36 @@ public abstract class SpotifyAuthActivity extends SessionListenerActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
-        Log.d(TAG, String.format("Verifier: %s", codeVerifier));
         Uri uri = intent.getData();
 
         if (uri != null) {
             String authCode = uri.getQueryParameter("code");
             Log.d(TAG, uri.toString());
 
-            loginApi.authorizationCodePKCE(authCode, codeVerifier).build()
+            LOGIN_API.authorizationCodePKCE(authCode, codeVerifier).build()
                     .executeAsync()
                     .handle((result, error) -> {
                         if (error != null) {
-                            Log.d(TAG, String.format("Error: %s", error.getMessage()));
+                            Log.e(TAG, "Error granting Spotify authorization with PKCE", error);
                         }
                         return result;
                     })
                     .thenAccept(authCredentials -> {
                         Log.d(TAG, "Got Spotify authentication credentials.");
-                        Log.d(TAG, String.format("Token: %s", authCredentials.getAccessToken()));
-                        Log.d(TAG, String.format("ExpiryDate: %d", authCredentials.getExpiresIn()));
-                        Log.d(TAG, String.format("Token type: %s", authCredentials.getTokenType()));
-                        Log.d(TAG, String.format("RefreshToken: %s", authCredentials.getRefreshToken()));
 
                         String currentUserId = Session.getInstance().getCurrentUser().getUid();
                         FirebaseTokenStorage tokenStorage = new FirebaseTokenStorage(currentUserId);
                         tokenStorage.storeRefreshToken(authCredentials.getRefreshToken());
                         SpotifyData.setToken(authCredentials.getAccessToken(), authCredentials.getExpiresIn());
-
                     }
             );
         }
+    }
+
+    public interface TokenCallback {
+        void onValidToken(String apiToken);
+
+        void onInvalidToken();
     }
 
 }

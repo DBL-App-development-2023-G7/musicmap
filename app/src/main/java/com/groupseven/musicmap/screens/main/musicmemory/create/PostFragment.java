@@ -152,11 +152,17 @@ public class PostFragment extends MainFragment {
         getPermission();
 
         parentActivity = (SpotifyAuthActivity) this.currentActivity;
-        parentActivity.refreshToken(apiToken -> {
-            postMemoryButton.setEnabled(true);
-        }, () -> {
-            Message.showFailureMessage(this.currentActivity, getString(R.string.error_spotify_not_connected));
-            postMemoryButton.setEnabled(false);
+        parentActivity.refreshToken(new SpotifyAuthActivity.TokenCallback() {
+            @Override
+            public void onValidToken(String apiToken) {
+                postMemoryButton.setEnabled(true);
+            }
+
+            @Override
+            public void onInvalidToken() {
+                Message.showFailureMessage(currentActivity, getString(R.string.error_spotify_not_connected));
+                postMemoryButton.setEnabled(false);
+            }
         });
     }
 

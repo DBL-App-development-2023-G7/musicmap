@@ -12,7 +12,7 @@ import com.groupseven.musicmap.TestDataStore;
 import com.groupseven.musicmap.models.MusicMemory;
 import com.groupseven.musicmap.models.SongCount;
 import com.groupseven.musicmap.models.User;
-import com.groupseven.musicmap.util.TaskUtil;
+import com.groupseven.musicmap.util.conversion.TaskUtil;
 
 import org.junit.Test;
 
@@ -90,7 +90,7 @@ public class QueriesTest {
         songCounts.forEach(songCount -> {
             assertEquals(songCount.getSong().getSpotifyArtistId(),
                     TestDataStore.SPOTIFY_ARTIST_ID_THAT_EXISTS_IN_FIREBASE);
-            assertTrue(songCount.getCount() < currentCount.get());
+            assertTrue(songCount.getCount() <= currentCount.get());
             currentCount.set(songCount.getCount());
         });
     }

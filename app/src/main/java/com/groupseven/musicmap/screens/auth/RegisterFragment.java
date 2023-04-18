@@ -19,6 +19,8 @@ import com.groupseven.musicmap.util.ui.Message;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class RegisterFragment extends AuthFragment {
 
@@ -115,17 +117,29 @@ public class RegisterFragment extends AuthFragment {
 
     /**
      * Validates all {@link #updateFormValues() previously retrieved} form input values.
+     * <p>
+     * This method may block to validate the username.
      *
      * @return whether the form input is valid.
      */
     protected boolean validate() {
-        return InputChecker.checkUsername(username, usernameInput)
-                & InputChecker.checkFirstName(firstName, firstNameInput)
-                & InputChecker.checkLastName(lastName, lastNameInput)
-                & InputChecker.checkEmail(email, emailInput)
-                & InputChecker.checkPassword(password, passwordInput)
-                & InputChecker.checkRepeatPassword(repeatPassword, password, repeatPasswordInput)
-                & checkBirthdate(birthdate);
+        CompletableFuture<Boolean> future = InputChecker.checkUsername(username, usernameInput);
+
+        boolean valid = InputChecker.checkFirstName(firstName, firstNameInput);
+        valid &= InputChecker.checkLastName(lastName, lastNameInput);
+        valid &= InputChecker.checkEmail(email, emailInput);
+        valid &= InputChecker.checkPassword(password, passwordInput);
+        valid &= InputChecker.checkRepeatPassword(repeatPassword, password, repeatPasswordInput);
+        valid &= checkBirthdate(birthdate);
+
+        try {
+            valid &= future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            Log.e(TAG, "Exception occurred while checking username", e);
+            valid = false;
+        }
+
+        return valid;
     }
 
     /**
