@@ -4,9 +4,7 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,13 +25,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Utility for interacting with everything related to authentication and accounts.
+ */
 public class AuthSystem {
 
     /**
-     * This method adds the user and its attributes to the Firebase Firestore database.
+     * Adds the user and its attributes to the database.
      *
-     * @param user the user to add to the Firestore database
-     * @return the future
+     * @param user the user to add to the database.
+     * @return the future indicating when/if the user is added.
      */
     public static CompletableFuture<Void> addUserToFirestore(@NonNull User user) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -41,11 +42,11 @@ public class AuthSystem {
     }
 
     /**
-     * This overloaded method adds the user and its attributes to the Firebase Firestore database.
+     * Adds the user and its attributes to the database.
      *
-     * @param firestore the FirebaseFirestore instance to use
-     * @param user the user to add to the Firestore database
-     * @return the future
+     * @param firestore the FirebaseFirestore instance to use.
+     * @param user the user to add to the database.
+     * @return the future indicating when/if the user is added.
      */
     public static CompletableFuture<Void> addUserToFirestore(@NonNull FirebaseFirestore firestore, @NonNull User user) {
         return TaskUtil.getFuture(firestore.collection("Users")
@@ -55,13 +56,13 @@ public class AuthSystem {
     }
 
     /**
-     * This method registers a user using the Firebase Auth system. This method also add the date that is not contained
-     * in the profile of the user to the Firestore Database and sends a verification email to the given user's email
-     * address.
+     * Registers a user.
+     * <p>
+     * Sends a verification email to the given user's email address.
      *
      * @param userData the user to be registered
      * @param password the password of the user to be registered
-     * @return the result of this task
+     * @return the future indicating when/if the user is registered
      */
     public static CompletableFuture<Void> register(UserData userData, String password) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -73,34 +74,33 @@ public class AuthSystem {
                         throw new IllegalArgumentException("The username already exist!");
                     }
 
-                    CompletableFuture<AuthResult> registerAccount = TaskUtil.getFuture(
-                            auth.createUserWithEmailAndPassword(email, password));
+                    return TaskUtil.getFuture(auth.createUserWithEmailAndPassword(email, password));
+                })
+                .thenCompose(result -> {
+                    FirebaseUser firebaseUser = result.getUser();
 
-                    return registerAccount.thenCompose(result -> {
-                        FirebaseUser firebaseUser = result.getUser();
-
-                        if (firebaseUser != null) {
-                            CompletableFuture<Void> sendEmail =
-                                    TaskUtil.getFuture(firebaseUser.sendEmailVerification());
-                            CompletableFuture<Void> addUser =
-                                    addUserToFirestore(new User(userData, firebaseUser.getUid()));
-
-                            return CompletableFuture.allOf(sendEmail, addUser);
-                        }
-
+                    if (firebaseUser == null) {
                         throw new IllegalStateException("The firebase user is null");
-                    });
+                    }
+
+                    CompletableFuture<Void> sendEmail =
+                            TaskUtil.getFuture(firebaseUser.sendEmailVerification());
+                    CompletableFuture<Void> addUser =
+                            addUserToFirestore(new User(userData, firebaseUser.getUid()));
+
+                    return CompletableFuture.allOf(sendEmail, addUser);
+
                 });
     }
 
     /**
-     * This method logins a user using its username and password.
+     * Attempts to log in to a user.
      *
-     * @param username the username of the user
-     * @param password the password of the user
-     * @return the result of the task
+     * @param username the username of the user.
+     * @param password the password of the user.
+     * @return the future indicating when/if the login was successful.
      */
-    public static CompletableFuture<AuthResult> loginWithUsernameAndPassword(String username, String password) {
+    public static CompletableFuture<Void> loginWithUsernameAndPassword(String username, String password) {
         return Queries.getUserWithUsername(username).thenCompose(user -> {
             if (user == null) {
                 throw new IllegalArgumentException("Username does not exist");
@@ -109,19 +109,21 @@ public class AuthSystem {
             String email = user.getData().getEmail();
             FirebaseAuth auth = FirebaseAuth.getInstance();
 
-            return TaskUtil.getFuture(auth.signInWithEmailAndPassword(email, password));
+            return TaskUtil.getFuture(auth.signInWithEmailAndPassword(email, password))
+                    .thenApply(authResult -> null);
         });
     }
 
     /**
-     * This method tries to parse the given document as a UserData or ArtistData class.
+     * Parses the given document as an appropriate {@link UserData}.
+     * <p>
+     * This will return an {@link ArtistData} if the given document contains the data of an artist.
      *
-     * @param doc the given document from the firebase database
-     * @return the doc formatted as a UserData class
-     * @throws IllegalArgumentException if the given document does not exist
-     * @throws NullPointerException     if the given document does not have any data
+     * @param doc the given document from the database.
+     * @return the user data.
+     * @throws IllegalArgumentException if the given document {@link DocumentSnapshot#exists() does not exist}.
      */
-    public static UserData parseUserData(DocumentSnapshot doc) throws IllegalArgumentException, NullPointerException {
+    public static UserData parseUserData(DocumentSnapshot doc) throws IllegalArgumentException {
         if (!doc.exists()) {
             throw new IllegalArgumentException("Document does not exist.");
         }
@@ -129,7 +131,7 @@ public class AuthSystem {
         UserData userData = doc.toObject(UserData.class);
 
         if (userData == null) {
-            throw new NullPointerException("Document does not contain any data.");
+            throw new IllegalStateException("toObject returned null for existing document");
         }
 
         if (userData.isArtist()) {
@@ -140,10 +142,10 @@ public class AuthSystem {
     }
 
     /**
-     * Gets the user data of the user that has the given {@code uid}.
+     * Gets the user data of the user with the given uid.
      *
-     * @param uid the given uid of the user
-     * @return the result of the task
+     * @param uid the given uid of the user.
+     * @return the future with the user data.
      */
     public static CompletableFuture<UserData> getUserData(String uid) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -153,21 +155,20 @@ public class AuthSystem {
     }
 
     /**
-     * This method retrieves the user that has the given uid and their data.
+     * Retrieves the user with the given uid and their data.
      *
-     * @param uid the given uid of the user
-     * @return the result of this task
+     * @param uid the given uid of the user.
+     * @return the future with the user.
      */
     public static CompletableFuture<User> getUser(String uid) {
         return getUserData(uid).thenApply(userData -> userData.toUser(uid));
     }
 
     /**
-     * This method removes the data stored in the Firestore database of the user that has the given uid. This method
-     * is intentionally made private.
+     * Removes the data stored in the database of the user with the given uid.
      *
-     * @param uid the uid of the user
-     * @return the future indicating when/if the removal is complete
+     * @param uid the uid of the user.
+     * @return the future indicating when/if the user is removed.
      */
     private static CompletableFuture<Void> removeUserDataFromFirestore(String uid) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -185,10 +186,10 @@ public class AuthSystem {
     }
 
     /**
-     * This method updates the username of the with the one given in the {@code username} parameter.
+     * Updates the username of the currently connected user.
      *
-     * @param username the new username of the user
-     * @return the result of the task
+     * @param username the new username.
+     * @return the future indicating when/if the username is updated.
      */
     public static CompletableFuture<Void> updateUsername(String username) {
         CompletableFuture<Void> future = new CompletableFuture<>();
@@ -218,10 +219,10 @@ public class AuthSystem {
     }
 
     /**
-     * This method uploads the given photo as the profile picture of the currently connected user.
+     * Updates the profile picture of the currently connected user.
      *
-     * @param photoUri the local uri of the photo that needs to be uploaded
-     * @return the result of the task
+     * @param photoUri the local uri of the new profile picture.
+     * @return the future indicating when/if the profile picture is updated.
      */
     public static CompletableFuture<Void> updateProfilePicture(Uri photoUri) {
         CompletableFuture<Void> future = new CompletableFuture<>();
@@ -262,12 +263,15 @@ public class AuthSystem {
     }
 
     /**
-     * This method updates the email of the currently connected user and if successful it will send a new
-     * verification email.
+     * Updates the email of the currently connected user.
+     * <p>
+     * This will send a verification email as well, if successful.
+     * <p>
+     * Requires the password of the user for security purposes.
      *
-     * @param newEmail the new email
-     * @param password the password of the connected user
-     * @return the result of the task
+     * @param newEmail the new email.
+     * @param password the password.
+     * @return the future indicating when/if the email is updated.
      */
     public static CompletableFuture<Void> updateEmail(String newEmail, String password) {
         CompletableFuture<Void> future = new CompletableFuture<>();
@@ -289,31 +293,30 @@ public class AuthSystem {
         AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), password);
 
         return TaskUtil.getFuture(firebaseUser.reauthenticate(credential))
-                .thenCompose(unused ->
-                    TaskUtil.getFuture(firebaseUser.updateEmail(newEmail))
-                            .thenCompose(unused1 -> {
-                                DocumentReference documentReference =
-                                        firestore.collection("Users").document(firebaseUser.getUid());
-                                Map<String, Object> data = new HashMap<>();
-                                data.put("email", newEmail);
+                .thenCompose(unused -> TaskUtil.getFuture(firebaseUser.updateEmail(newEmail)))
+                .thenCompose(unused1 -> {
+                    DocumentReference documentReference =
+                            firestore.collection("Users").document(firebaseUser.getUid());
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("email", newEmail);
 
-                                CompletableFuture<Void> sendEmail = TaskUtil.getFuture(
-                                        firebaseUser.sendEmailVerification());
-                                CompletableFuture<Void> updateEmail = TaskUtil.getFuture(
-                                        documentReference.update(data));
+                    CompletableFuture<Void> sendEmail = TaskUtil.getFuture(
+                            firebaseUser.sendEmailVerification());
+                    CompletableFuture<Void> updateEmail = TaskUtil.getFuture(
+                            documentReference.update(data));
 
-                                return CompletableFuture.allOf(sendEmail, updateEmail);
-                            })
-                );
+                    return CompletableFuture.allOf(sendEmail, updateEmail);
+                });
         }
 
     /**
-     * This method updated the password of the currently connected user. It replaces the old password with the one
-     * provided in the parameter {@code oldPassword}.
+     * Updates the password of the currently connected user.
+     * <p>
+     * Replaces the old password, which must be provided as well for security purposes.
      *
-     * @param oldPassword the current password of the connected user
-     * @param newPassword the new password
-     * @return the result of the task
+     * @param oldPassword the current password.
+     * @param newPassword the new password.
+     * @return the future indicating when/if the password is updated.
      */
     public static CompletableFuture<Void> updatePassword(String oldPassword, String newPassword) {
         CompletableFuture<Void> future = new CompletableFuture<>();
@@ -337,9 +340,9 @@ public class AuthSystem {
     }
 
     /**
-     * This method deletes the connected user and their data from the Firestore database.
+     * Deletes the connected user and their data from the database.
      *
-     * @return the result of this task
+     * @return the future indicating when/if the user is deleted.
      */
     public static CompletableFuture<Void> deleteUser(String password) {
         CompletableFuture<Void> future = new CompletableFuture<>();
@@ -358,17 +361,20 @@ public class AuthSystem {
         }
 
         AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), password);
+
+        // First, re-authenticate
         return TaskUtil.getFuture(firebaseUser.reauthenticate(credential))
+                // Remove user data
                 .thenCompose(unused -> removeUserDataFromFirestore(firebaseUser.getUid()))
+                // Then delete user
                 .thenCompose(unused -> TaskUtil.getFuture(firebaseUser.delete()));
     }
 
     /**
-     * This method logs out the user.
+     * Logs out the user.
      */
     public static void logout() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.signOut();
+        FirebaseAuth.getInstance().signOut();
     }
 
 }
