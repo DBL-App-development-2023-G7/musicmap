@@ -70,6 +70,7 @@ public class AuthSystem {
         String email = userData.getEmail();
 
         return Queries.getUserWithUsername(userData.getUsername())
+                // First, create the user in the Firebase authentication
                 .thenCompose(user -> {
                     if (user != null) {
                         throw new IllegalArgumentException(
@@ -85,8 +86,10 @@ public class AuthSystem {
                         throw new IllegalStateException("The firebase user is null");
                     }
 
+                    // Then, send the verification email
                     CompletableFuture<Void> sendEmail =
                             TaskUtil.getFuture(firebaseUser.sendEmailVerification());
+                    // ... and adds the user to the Firestore
                     CompletableFuture<Void> addUser =
                             addUserToFirestore(new User(userData, firebaseUser.getUid()));
 
@@ -113,6 +116,7 @@ public class AuthSystem {
             FirebaseAuth auth = FirebaseAuth.getInstance();
 
             return TaskUtil.getFuture(auth.signInWithEmailAndPassword(email, password))
+                    // Hide the AuthResult, the internal API does not need to be exposed
                     .thenApply(authResult -> null);
         });
     }
@@ -161,14 +165,17 @@ public class AuthSystem {
         DocumentReference documentReference =
                 firestore.collection("Users").document(firebaseUser.getUid());
 
+        // Construct the new data for the user's document
         Map<String, Object> data = new HashMap<>();
         data.put("username", username);
 
         return Queries.getUserWithUsername(username).thenCompose(user -> {
+            // First, check if a user with that name exists
             if (user != null) {
                 throw new IllegalArgumentException("That username already exists");
             }
 
+            // If not, update the username with the previously created data
             return TaskUtil.getFuture(documentReference.update(data));
         });
     }
@@ -192,6 +199,7 @@ public class AuthSystem {
             return future;
         }
 
+        // Get some Firebase storage references
         StorageReference storageRef = storage.getReference("users/" + firebaseUser.getUid());
         StorageReference folderRef = storageRef.child("/profilePicture");
         StorageReference photoRef = folderRef.child(photoUri.getLastPathSegment());
@@ -205,8 +213,11 @@ public class AuthSystem {
                             .toArray(CompletableFuture[]::new)
                     );
                 })
+                // Then upload the new profile picture to the Firebase storage
                 .thenCompose(unused -> TaskUtil.getFuture(photoRef.putFile(photoUri)))
+                // Then get the download url of the newly uploaded profile picture
                 .thenCompose(unused -> TaskUtil.getFuture(photoRef.getDownloadUrl()))
+                // And update the profile document with the new profile picture url
                 .thenCompose(uri -> {
                     DocumentReference documentReference =
                             firestore.collection("Users").document(firebaseUser.getUid());
@@ -247,7 +258,9 @@ public class AuthSystem {
 
         AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), password);
 
+        // First, re-authenticate
         return TaskUtil.getFuture(firebaseUser.reauthenticate(credential))
+                // Then, update the email in the authentication
                 .thenCompose(unused -> TaskUtil.getFuture(firebaseUser.updateEmail(newEmail)))
                 .thenCompose(unused1 -> {
                     DocumentReference documentReference =
@@ -255,8 +268,11 @@ public class AuthSystem {
                     Map<String, Object> data = new HashMap<>();
                     data.put("email", newEmail);
 
+                    // Then, send a verification to the new email
                     CompletableFuture<Void> sendEmail = TaskUtil.getFuture(
                             firebaseUser.sendEmailVerification());
+
+                    // ... and update the email in the user document
                     CompletableFuture<Void> updateEmail = TaskUtil.getFuture(
                             documentReference.update(data));
 
@@ -289,8 +305,10 @@ public class AuthSystem {
             return future;
         }
 
+        // First, re-authenticate
         AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), oldPassword);
         return TaskUtil.getFuture(firebaseUser.reauthenticate(credential))
+                // Then update the password if successful
                 .thenCompose(unused -> TaskUtil.getFuture(firebaseUser.updatePassword(newPassword)));
     }
 
@@ -319,9 +337,9 @@ public class AuthSystem {
 
         // First, re-authenticate
         return TaskUtil.getFuture(firebaseUser.reauthenticate(credential))
-                // Remove user data
+                // Then, remove user data
                 .thenCompose(unused -> removeUserDataFromFirestore(firebaseUser.getUid()))
-                // Then delete user
+                // And finally delete the user
                 .thenCompose(unused -> TaskUtil.getFuture(firebaseUser.delete()));
     }
 
@@ -335,12 +353,14 @@ public class AuthSystem {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         return TaskUtil.getFuture(firestore.collection("Users/" + uid + "/MusicMemories").get())
                 .thenCompose(memories -> {
+                    // First, delete all music memories
                     WriteBatch batch = firestore.batch();
                     for (QueryDocumentSnapshot memory : memories) {
                         batch.delete(memory.getReference());
                     }
 
                     return TaskUtil.getFuture(batch.commit())
+                            // Then delete the user document itself
                             .thenCompose(unused -> TaskUtil.getFuture(
                                     firestore.collection("Users").document(uid).delete()));
                 });
@@ -367,12 +387,14 @@ public class AuthSystem {
             throw new IllegalArgumentException("Document does not exist.");
         }
 
+        // First, try parsing as UserData
         UserData userData = doc.toObject(UserData.class);
 
         if (userData == null) {
             throw new IllegalStateException("toObject returned null for existing document");
         }
 
+        // If it's an artist, re-parse as ArtistData
         if (userData.isArtist()) {
             return doc.toObject(ArtistData.class);
         }
