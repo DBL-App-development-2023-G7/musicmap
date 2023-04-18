@@ -17,14 +17,22 @@ import com.groupseven.musicmap.util.spotify.SpotifyUtils;
 
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 
-
+/**
+ * This class uses {@link SpotifyAccess} to setup Spotify and use the API and PKCE to authenticate.
+ */
 public class SpotifyAccessActivity extends AppCompatActivity {
 
     private static final String TAG = "SpotifyAccessActivity";
 
+    /**
+     * {@link SpotifyAccess} instance.
+     */
     private SpotifyAccess spotifyAccess;
 
-    private static String codeVerifier = Constants.SPOTIFY_DEFAULT_CODE_VERIFIER;
+    /**
+     * The code verifier used in Spotify authentication flow.
+     */
+    private String codeVerifier = Constants.SPOTIFY_DEFAULT_CODE_VERIFIER;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,11 +47,21 @@ public class SpotifyAccessActivity extends AppCompatActivity {
         this.setupSpotify();
     }
 
+    /**
+     * Initializes the {@link SpotifyAccess} instance, and authenticate with Spotify.
+     */
     private void setupSpotify() {
         this.spotifyAccess = SpotifyAccess.getSpotifyAccessInstance();
         registerForSpotifyPKCE();
     }
 
+    /**
+     * Registers for PKCE with Spotify and launches a browser intent to authenticate the user.
+     *
+     * <p>
+     * The browser internet asks the user to login only once if the user is a new user who hasn't
+     * setup the Spotify connection yet.
+     */
     public void registerForSpotifyPKCE() {
         codeVerifier = SpotifyUtils.generateCodeVerifier();
         String codeChallenge = SpotifyUtils.generateCodeChallenge(codeVerifier);
@@ -60,6 +78,11 @@ public class SpotifyAccessActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Handles the Spotify callback and exchanges the authorization code for a refresh token and access token.
+     *
+     * @param intent The intent containing the authorization code.
+     */
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -97,9 +120,21 @@ public class SpotifyAccessActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Interface used to be notified of the status of the Spotify access token.
+     */
     public interface TokenCallback {
+
+        /**
+         * Called when the Spotify access token is valid.
+         *
+         * @param apiToken The Spotify access token.
+         */
         void onValidToken(String apiToken);
 
+        /**
+         * Called when the Spotify access token is invalid or has expired.
+         */
         void onInvalidToken();
     }
 
