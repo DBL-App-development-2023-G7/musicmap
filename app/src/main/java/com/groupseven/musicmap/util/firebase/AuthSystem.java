@@ -4,12 +4,7 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
-import com.groupseven.musicmap.models.ArtistData;
-import com.groupseven.musicmap.models.User;
-import com.groupseven.musicmap.models.UserData;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskCompletionSource;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -18,12 +13,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.groupseven.musicmap.models.ArtistData;
+import com.groupseven.musicmap.models.User;
+import com.groupseven.musicmap.models.UserData;
 import com.groupseven.musicmap.util.TaskUtil;
 
 import java.util.HashMap;
@@ -36,9 +33,9 @@ public class AuthSystem {
      * This method adds the user and its attributes to the Firebase Firestore database.
      *
      * @param user the user to add to the Firestore database
-     * @return the task
+     * @return the future
      */
-    public static Task<Void> addUserToFirestore(@NonNull User user) {
+    public static CompletableFuture<Void> addUserToFirestore(@NonNull User user) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         return addUserToFirestore(firestore, user);
     }
@@ -48,10 +45,13 @@ public class AuthSystem {
      *
      * @param firestore the FirebaseFirestore instance to use
      * @param user the user to add to the Firestore database
-     * @return the task
+     * @return the future
      */
-    public static Task<Void> addUserToFirestore(@NonNull FirebaseFirestore firestore, @NonNull User user) {
-        return firestore.collection("Users").document(user.getUid()).set(user.getData());
+    public static CompletableFuture<Void> addUserToFirestore(@NonNull FirebaseFirestore firestore, @NonNull User user) {
+        return TaskUtil.getFuture(firestore.collection("Users")
+                .document(user.getUid())
+                .set(user.getData())
+        );
     }
 
     /**
@@ -63,11 +63,11 @@ public class AuthSystem {
      * @param password the password of the user to be registered
      * @return the result of this task
      */
-    public static Task<Void> register(UserData userData, String password) {
+    public static CompletableFuture<Void> register(UserData userData, String password) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String email = userData.getEmail();
 
-        return TaskUtil.getTask(Queries.getUserWithUsername(userData.getUsername())
+        return Queries.getUserWithUsername(userData.getUsername())
                 .thenCompose(user -> {
                     if (user != null) {
                         throw new IllegalArgumentException("The username already exist!");
@@ -80,15 +80,17 @@ public class AuthSystem {
                         FirebaseUser firebaseUser = result.getUser();
 
                         if (firebaseUser != null) {
-                            Task<Void> sendEmail = firebaseUser.sendEmailVerification();
-                            Task<Void> addUser = addUserToFirestore(new User(userData, firebaseUser.getUid()));
+                            CompletableFuture<Void> sendEmail =
+                                    TaskUtil.getFuture(firebaseUser.sendEmailVerification());
+                            CompletableFuture<Void> addUser =
+                                    addUserToFirestore(new User(userData, firebaseUser.getUid()));
 
-                            return TaskUtil.getFuture(Tasks.whenAll(sendEmail, addUser));
+                            return CompletableFuture.allOf(sendEmail, addUser);
                         }
 
                         throw new IllegalStateException("The firebase user is null");
                     });
-                }));
+                });
     }
 
     /**
@@ -98,9 +100,8 @@ public class AuthSystem {
      * @param password the password of the user
      * @return the result of the task
      */
-    public static Task<AuthResult> loginWithUsernameAndPassword(String username, String password) {
-
-        return TaskUtil.getTask(Queries.getUserWithUsername(username).thenCompose(user -> {
+    public static CompletableFuture<AuthResult> loginWithUsernameAndPassword(String username, String password) {
+        return Queries.getUserWithUsername(username).thenCompose(user -> {
             if (user == null) {
                 throw new IllegalArgumentException("Username does not exist");
             }
@@ -109,7 +110,7 @@ public class AuthSystem {
             FirebaseAuth auth = FirebaseAuth.getInstance();
 
             return TaskUtil.getFuture(auth.signInWithEmailAndPassword(email, password));
-        }));
+        });
     }
 
     /**
@@ -117,12 +118,12 @@ public class AuthSystem {
      *
      * @param doc the given document from the firebase database
      * @return the doc formatted as a UserData class
-     * @throws FirebaseFirestoreException if the given document does not exist
-     * @throws NullPointerException       if the given document does not have any data
+     * @throws IllegalArgumentException if the given document does not exist
+     * @throws NullPointerException     if the given document does not have any data
      */
-    public static UserData parseUserData(DocumentSnapshot doc) throws FirebaseFirestoreException, NullPointerException {
+    public static UserData parseUserData(DocumentSnapshot doc) throws IllegalArgumentException, NullPointerException {
         if (!doc.exists()) {
-            throw new FirebaseFirestoreException("Document does not exist.", FirebaseFirestoreException.Code.NOT_FOUND);
+            throw new IllegalArgumentException("Document does not exist.");
         }
 
         UserData userData = doc.toObject(UserData.class);
@@ -144,22 +145,11 @@ public class AuthSystem {
      * @param uid the given uid of the user
      * @return the result of the task
      */
-    public static Task<UserData> getUserData(String uid) {
+    public static CompletableFuture<UserData> getUserData(String uid) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
-        Task<DocumentSnapshot> getUserDataFirestore = firestore.collection("Users").document(uid).get();
-
-        return getUserDataFirestore.onSuccessTask(doc -> {
-            TaskCompletionSource<UserData> tcs = new TaskCompletionSource<>();
-
-            try {
-                tcs.setResult(parseUserData(doc));
-            } catch (Exception exception) {
-                tcs.setException(exception);
-            }
-
-            return tcs.getTask();
-        });
+        return TaskUtil.getFuture(firestore.collection("Users").document(uid).get())
+                .thenApply(AuthSystem::parseUserData);
     }
 
     /**
@@ -168,12 +158,8 @@ public class AuthSystem {
      * @param uid the given uid of the user
      * @return the result of this task
      */
-    public static Task<User> getUser(String uid) {
-        return getUserData(uid).onSuccessTask(userData -> {
-            TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
-            tcs.setResult(userData.toUser(uid));
-            return tcs.getTask();
-        });
+    public static CompletableFuture<User> getUser(String uid) {
+        return getUserData(uid).thenApply(userData -> userData.toUser(uid));
     }
 
     /**
@@ -181,19 +167,21 @@ public class AuthSystem {
      * is intentionally made private.
      *
      * @param uid the uid of the user
-     * @return the result of this task
+     * @return the future indicating when/if the removal is complete
      */
-    private static Task<Void> removeUserDataFromFirestore(String uid) {
+    private static CompletableFuture<Void> removeUserDataFromFirestore(String uid) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        return firestore.collection("Users/" + uid + "/MusicMemories").get().onSuccessTask(memories -> {
-            WriteBatch batch = firestore.batch();
-            for (QueryDocumentSnapshot memory : memories) {
-                batch.delete(memory.getReference());
-            }
+        return TaskUtil.getFuture(firestore.collection("Users/" + uid + "/MusicMemories").get())
+                .thenCompose(memories -> {
+                    WriteBatch batch = firestore.batch();
+                    for (QueryDocumentSnapshot memory : memories) {
+                        batch.delete(memory.getReference());
+                    }
 
-            return batch.commit().addOnSuccessListener(result ->
-                    firestore.collection("Users").document(uid).delete());
-        });
+                    return TaskUtil.getFuture(batch.commit())
+                            .thenCompose(unused -> TaskUtil.getFuture(
+                                    firestore.collection("Users").document(uid).delete()));
+                });
     }
 
     /**
@@ -202,16 +190,16 @@ public class AuthSystem {
      * @param username the new username of the user
      * @return the result of the task
      */
-    public static Task<Void> updateUsername(String username) {
-        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+    public static CompletableFuture<Void> updateUsername(String username) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
         if (firebaseUser == null) {
-            tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
-            return tcs.getTask();
+            future.completeExceptionally(new FirebaseNoSignedInUserException("There is no user connected!"));
+            return future;
         }
 
         DocumentReference documentReference =
@@ -220,13 +208,13 @@ public class AuthSystem {
         Map<String, Object> data = new HashMap<>();
         data.put("username", username);
 
-        return TaskUtil.getTask(Queries.getUserWithUsername(username).thenCompose(user -> {
+        return Queries.getUserWithUsername(username).thenCompose(user -> {
             if (user != null) {
                 throw new IllegalArgumentException("That username already exists");
             }
 
             return TaskUtil.getFuture(documentReference.update(data));
-        }));
+        });
     }
 
     /**
@@ -235,8 +223,8 @@ public class AuthSystem {
      * @param photoUri the local uri of the photo that needs to be uploaded
      * @return the result of the task
      */
-    public static Task<Void> updateProfilePicture(Uri photoUri) {
-        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+    public static CompletableFuture<Void> updateProfilePicture(Uri photoUri) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
@@ -244,30 +232,33 @@ public class AuthSystem {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
         if (firebaseUser == null) {
-            tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
-            return tcs.getTask();
+            future.completeExceptionally(new FirebaseNoSignedInUserException("There is no user connected!"));
+            return future;
         }
 
         StorageReference storageRef = storage.getReference("users/" + firebaseUser.getUid());
         StorageReference folderRef = storageRef.child("/profilePicture");
         StorageReference photoRef = folderRef.child(photoUri.getLastPathSegment());
 
-        return folderRef.listAll().onSuccessTask(results -> {
-            //Delete older photos
-            for (StorageReference item : results.getItems()) {
-                item.delete();
-            }
+        return TaskUtil.getFuture(folderRef.listAll())
+                .thenCompose(listResult -> {
+                    // Delete older photos
+                    return CompletableFuture.allOf(listResult.getItems().stream()
+                            .map(StorageReference::delete)
+                            .map(TaskUtil::getFuture)
+                            .toArray(CompletableFuture[]::new)
+                    );
+                })
+                .thenCompose(unused -> TaskUtil.getFuture(photoRef.putFile(photoUri)))
+                .thenCompose(unused -> TaskUtil.getFuture(photoRef.getDownloadUrl()))
+                .thenCompose(uri -> {
+                    DocumentReference documentReference =
+                            firestore.collection("Users").document(firebaseUser.getUid());
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("profilePicture", uri);
 
-            return photoRef.putFile(photoUri).onSuccessTask(taskSnapshot -> photoRef.getDownloadUrl()
-                    .onSuccessTask(uri -> {
-                        DocumentReference documentReference =
-                                firestore.collection("Users").document(firebaseUser.getUid());
-                        Map<String, Object> data = new HashMap<>();
-                        data.put("profilePicture", uri);
-
-                        return documentReference.update(data);
-                    }));
-        });
+                    return TaskUtil.getFuture(documentReference.update(data));
+                });
     }
 
     /**
@@ -278,38 +269,43 @@ public class AuthSystem {
      * @param password the password of the connected user
      * @return the result of the task
      */
-    public static Task<Void> updateEmail(String newEmail, String password) {
-        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+    public static CompletableFuture<Void> updateEmail(String newEmail, String password) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
         if (firebaseUser == null) {
-            tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
-            return tcs.getTask();
+            future.completeExceptionally(new FirebaseNoSignedInUserException("There is no user connected!"));
+            return future;
         }
 
         if (firebaseUser.getEmail() == null) {
-            tcs.setException(new IllegalStateException("The current user does not have an email address."));
-            return tcs.getTask();
+            future.completeExceptionally(new IllegalStateException("The current user does not have an email address."));
+            return future;
         }
 
         AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), password);
-        return firebaseUser.reauthenticate(credential).onSuccessTask(reauthTask ->
-                firebaseUser.updateEmail(newEmail).onSuccessTask(updateEmailTask ->
-                        firebaseUser.reload().onSuccessTask(reloadUserTask -> {
-                            DocumentReference documentReference =
-                                    firestore.collection("Users").document(firebaseUser.getUid());
-                            Map<String, Object> data = new HashMap<>();
-                            data.put("email", newEmail);
 
-                            Task<Void> sendEmail = firebaseUser.sendEmailVerification();
-                            Task<Void> updateEmail = documentReference.update(data);
+        return TaskUtil.getFuture(firebaseUser.reauthenticate(credential))
+                .thenCompose(unused ->
+                    TaskUtil.getFuture(firebaseUser.updateEmail(newEmail))
+                            .thenCompose(unused1 -> {
+                                DocumentReference documentReference =
+                                        firestore.collection("Users").document(firebaseUser.getUid());
+                                Map<String, Object> data = new HashMap<>();
+                                data.put("email", newEmail);
 
-                            return Tasks.whenAll(sendEmail, updateEmail);
-                        })));
-    }
+                                CompletableFuture<Void> sendEmail = TaskUtil.getFuture(
+                                        firebaseUser.sendEmailVerification());
+                                CompletableFuture<Void> updateEmail = TaskUtil.getFuture(
+                                        documentReference.update(data));
+
+                                return CompletableFuture.allOf(sendEmail, updateEmail);
+                            })
+                );
+        }
 
     /**
      * This method updated the password of the currently connected user. It replaces the old password with the one
@@ -319,25 +315,25 @@ public class AuthSystem {
      * @param newPassword the new password
      * @return the result of the task
      */
-    public static Task<Void> updatePassword(String oldPassword, String newPassword) {
-        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+    public static CompletableFuture<Void> updatePassword(String oldPassword, String newPassword) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
         if (firebaseUser == null) {
-            tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
-            return tcs.getTask();
+            future.completeExceptionally(new FirebaseNoSignedInUserException("There is no user connected!"));
+            return future;
         }
 
         if (firebaseUser.getEmail() == null) {
-            tcs.setException(new IllegalStateException("The current user does not have an email address."));
-            return tcs.getTask();
+            future.completeExceptionally(new IllegalStateException("The current user does not have an email address."));
+            return future;
         }
 
         AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), oldPassword);
-        return firebaseUser.reauthenticate(credential)
-                .onSuccessTask(reauthTask -> firebaseUser.updatePassword(newPassword));
+        return TaskUtil.getFuture(firebaseUser.reauthenticate(credential))
+                .thenCompose(unused -> TaskUtil.getFuture(firebaseUser.updatePassword(newPassword)));
     }
 
     /**
@@ -345,25 +341,26 @@ public class AuthSystem {
      *
      * @return the result of this task
      */
-    public static Task<Void> deleteUser(String password) {
-        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+    public static CompletableFuture<Void> deleteUser(String password) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
         if (firebaseUser == null) {
-            tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
-            return tcs.getTask();
+            future.completeExceptionally(new FirebaseNoSignedInUserException("There is no user connected!"));
+            return future;
         }
 
         if (firebaseUser.getEmail() == null) {
-            tcs.setException(new IllegalStateException("The current user does not have an email address."));
-            return tcs.getTask();
+            future.completeExceptionally(new IllegalStateException("The current user does not have an email address."));
+            return future;
         }
 
         AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), password);
-        return firebaseUser.reauthenticate(credential).onSuccessTask(reauthTask ->
-                removeUserDataFromFirestore(firebaseUser.getUid()).onSuccessTask(task -> firebaseUser.delete()));
+        return TaskUtil.getFuture(firebaseUser.reauthenticate(credential))
+                .thenCompose(unused -> removeUserDataFromFirestore(firebaseUser.getUid()))
+                .thenCompose(unused -> TaskUtil.getFuture(firebaseUser.delete()));
     }
 
     /**

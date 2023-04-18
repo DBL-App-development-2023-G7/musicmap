@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.models.MusicMemory;
@@ -148,18 +149,17 @@ public class FeedAdapter extends ArrayAdapter<MusicMemory> {
      * @param position The position of the item in the current view.
      */
     private void fetchUserImage(String authorId, ImageView userImage, int position) {
-        AuthSystem.getUser(authorId).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                User musicMemoryAuthor = task.getResult();
+        AuthSystem.getUser(authorId).whenCompleteAsync((musicMemoryAuthor, throwable) -> {
+            if (throwable == null) {
                 String userImageUri = musicMemoryAuthor.getData().getProfilePictureUri().toString();
 
                 if (userImage.getTag() != null && userImage.getTag().equals(position)) {
                     setUserImage(authorId, userImageUri, userImage);
                 }
             } else {
-                Log.e(TAG, "Could not fetch author of the music memory", task.getException());
+                Log.e(TAG, "Could not fetch author of the music memory", throwable);
             }
-        });
+        }, ContextCompat.getMainExecutor(userImage.getContext()));
     }
 
     /**

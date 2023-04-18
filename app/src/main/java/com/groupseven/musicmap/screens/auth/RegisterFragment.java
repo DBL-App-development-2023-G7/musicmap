@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.core.content.ContextCompat;
+
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.models.UserData;
 import com.groupseven.musicmap.util.firebase.AuthSystem;
@@ -152,21 +154,14 @@ public class RegisterFragment extends AuthFragment {
         }
 
         AuthSystem.register(createUserData(), password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
+                .whenCompleteAsync((unused, throwable) -> {
+                    if (throwable == null) {
                         this.getAuthActivity().loadHomeActivity();
                     } else {
-                        Exception exception = task.getException();
-                        if (exception != null) {
-                            Log.e(TAG, "Exception occurred during registration", exception);
-                            Message.showFailureMessage(getActivity(), exception.getMessage());
-                        } else {
-                            Log.e(TAG, "Could not register user");
-                            Message.showFailureMessage(getActivity(),
-                                    getString(R.string.auth_error_failed_registration));
-                        }
+                        Log.e(TAG, "Exception occurred during registration", throwable);
+                        Message.showFailureMessage(getActivity(), throwable.getMessage());
                     }
-                });
+                }, ContextCompat.getMainExecutor(requireContext()));
     }
 
     private void back() {

@@ -57,15 +57,12 @@ public class ChangeEmailDialogFragment extends DialogFragment {
         String password = passwordInput.getText().toString();
 
         if (InputChecker.checkEmail(newEmail, newEmailInput) | InputChecker.checkPassword(password, passwordInput)) {
-            AuthSystem.updateEmail(newEmail, password).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
+            AuthSystem.updateEmail(newEmail, password).whenCompleteAsync((unused, throwable) -> {
+                if (throwable == null) {
                     this.dismiss();
                 } else {
-                    Exception exception = task.getException();
-                    if (exception != null) {
-                        String message = exception.getMessage();
-                        newEmailInput.setError(message);
-                    }
+                    String message = throwable.getMessage();
+                    newEmailInput.setError(message);
                 }
             });
         }

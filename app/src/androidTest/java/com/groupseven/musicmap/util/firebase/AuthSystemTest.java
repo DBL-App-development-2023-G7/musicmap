@@ -27,7 +27,7 @@ public class AuthSystemTest {
         when(mockDocumentReference.set(any())).thenReturn(Tasks.forResult(null));
 
         User user = TestDataStore.getValidUser();
-        AuthSystem.addUserToFirestore(firestore, user);
+        AuthSystem.addUserToFirestore(firestore, user).join();
 
         verify(firestore).collection("Users");
         verify(firestore.collection("Users")).document(user.getUid());

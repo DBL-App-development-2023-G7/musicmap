@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.core.content.ContextCompat;
+
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.util.firebase.AuthSystem;
 import com.groupseven.musicmap.util.regex.InputChecker;
@@ -65,16 +67,16 @@ public class LoginFragment extends AuthFragment {
                     }
                 });
             } else if (MMPatterns.USERNAME.matcher(identifier).matches()) {
-                AuthSystem.loginWithUsernameAndPassword(identifier, password).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
+                AuthSystem.loginWithUsernameAndPassword(identifier, password).whenCompleteAsync((authResult, throwable) -> {
+                    if (throwable == null) {
                         Log.d(TAG, "loginUser:success");
                         this.getAuthActivity().loadHomeActivity();
                     } else {
-                        Log.d(TAG, "loginUser:fail", task.getException());
+                        Log.d(TAG, "loginUser:fail", throwable);
                         Message.showFailureMessage(viewGroup,
                                 getString(R.string.auth_error_incorrect_username_password));
                     }
-                });
+                }, ContextCompat.getMainExecutor(requireContext()));
             }
         } else {
             Message.showFailureMessage(viewGroup, getString(R.string.auth_error_invalid_values));
