@@ -51,7 +51,7 @@ public abstract class SpotifyAuthActivity extends SessionListenerActivity {
                 loginApi.setRefreshToken(refreshToken);
                 loginApi.authorizationCodePKCERefresh().build().executeAsync().handle((refreshResult, error) -> {
                     if (error != null) {
-                        Log.d(TAG, String.format("error %s", error.getMessage()));
+                        Log.d(TAG, "error refreshing authorization code with PKCE", error);
                         tokenCallback.onInvalidToken();
                         return null;
                     }
@@ -119,7 +119,7 @@ public abstract class SpotifyAuthActivity extends SessionListenerActivity {
                     .executeAsync()
                     .handle((result, error) -> {
                         if (error != null) {
-                            Log.e(TAG, String.format("Error with spotify auth: %s", error.getMessage()));
+                            Log.e(TAG, "Error granting Spotify authorization with PKCE", error);
                         }
                         return result;
                     })
