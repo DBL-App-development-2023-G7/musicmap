@@ -1,4 +1,4 @@
-package com.groupseven.musicmap.util.map;
+package com.groupseven.musicmap.util.ui.map;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +11,7 @@ import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.views.MapView;
 
 /**
- * A {@link PostOverlay} for music memories.
+ * A {@link PostOverlay} for an {@link MusicMemory}.
  */
 public class MusicMemoryOverlay extends PostOverlay<MusicMemory> {
 
@@ -23,6 +23,7 @@ public class MusicMemoryOverlay extends PostOverlay<MusicMemory> {
     protected boolean onMarkerClicked(MapView mapView, int markerId, IGeoPoint makerPosition, MusicMemory markerData) {
         Context context = mapView.getContext();
 
+        // Set arguments for the music memory activity
         Intent intent = new Intent(context, MusicMemoryActivity.class);
         intent.putExtra(Constants.AUTHOR_UID_ARGUMENT_KEY, getPost().getAuthorUid());
         intent.putExtra(Constants.MUSIC_MEMORY_UID_ARGUMENT_KEY, getPost().getUid());

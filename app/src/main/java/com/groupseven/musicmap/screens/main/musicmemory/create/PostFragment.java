@@ -148,11 +148,17 @@ public class PostFragment extends MainFragment {
         });
 
         // try to refresh spotify accesss token
-        parentActivity.refreshToken(apiToken -> {
-            postMemoryButton.setEnabled(true);
-        }, () -> {
-            Message.showFailureMessage(this.parentActivity, getString(R.string.error_spotify_not_connected));
-            postMemoryButton.setEnabled(false);
+        parentActivity.refreshToken(new SpotifyAuthActivity.TokenCallback() {
+            @Override
+            public void onValidToken(String apiToken) {
+                postMemoryButton.setEnabled(true);
+            }
+
+            @Override
+            public void onInvalidToken() {
+                Message.showFailureMessage(parentActivity, getString(R.string.error_spotify_not_connected));
+                postMemoryButton.setEnabled(false);
+            }
         });
     }
 

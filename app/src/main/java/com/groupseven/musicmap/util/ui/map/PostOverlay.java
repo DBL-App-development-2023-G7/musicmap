@@ -1,4 +1,4 @@
-package com.groupseven.musicmap.util.map;
+package com.groupseven.musicmap.util.ui.map;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -24,8 +24,8 @@ import org.osmdroid.views.overlay.ClickableIconOverlay;
 
 /**
  * A overlay containing a {@link Post}.
- *
- * Abstract class, since the image provided depends on the type of post.
+ * <p>
+ * This is an abstract class, since the image provided depends on the type of post.
  *
  * @see MusicMemoryOverlay
  */
@@ -53,13 +53,13 @@ public abstract class PostOverlay<P extends Post> extends ClickableIconOverlay<P
     private final P post;
 
     // this is a Picasso target into which Picasso will load the image
-    // in a field so it won't be garbage collected
+    // in a field so it won't be garbage collected (probably a Picasso bug)
     @SuppressWarnings("FieldCanBeLocal")
     private ImageTarget imageTarget;
 
     /**
      * Creates a post overlay for the given map and post.
-     *
+     * <p>
      * The marker will contain a default image, use {@link #setImage(RequestCreator)}
      * to change the displayed image.
      *
@@ -79,7 +79,7 @@ public abstract class PostOverlay<P extends Post> extends ClickableIconOverlay<P
 
         markerIcon = drawable;
 
-        // Get the GeoPoint from the right library
+        // Get the GeoPoint (from the right library)
         GeoPoint geoPoint = post.getLocation();
         IGeoPoint iGeoPoint = new org.osmdroid.util.GeoPoint(geoPoint.getLatitude(), geoPoint.getLongitude());
 
@@ -159,11 +159,10 @@ public abstract class PostOverlay<P extends Post> extends ClickableIconOverlay<P
             iconDrawable.setBounds(0, 0, width, height);
             iconDrawable.draw(canvas);
 
-            // Draw fetched image on BitMap
+            // Draw fetched image on BitMap (on top of map_post drawable)
             canvas.drawBitmap(bitmap, LEFT_MARGIN_RATIO * width, TOP_MARGIN_RATIO * height, new Paint());
 
             // Set image
-            // TODO run on UI thread?
             set(getPosition(), new BitmapDrawable(mapView.getResources(), finalBitmap));
 
             // Refresh overlay to display image

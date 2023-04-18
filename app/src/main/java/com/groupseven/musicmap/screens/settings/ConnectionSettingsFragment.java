@@ -26,9 +26,17 @@ public class ConnectionSettingsFragment extends PreferenceFragmentCompat {
         }
 
         spotifyPreference.setOnPreferenceClickListener(preference -> {
-            activity.refreshToken(apiToken -> {
-                Message.showSuccessMessage(activity, getString(R.string.spotify_already_connected));
-            }, activity::registerForSpotifyPKCE);
+            activity.refreshToken(new SpotifyAuthActivity.TokenCallback() {
+                @Override
+                public void onValidToken(String apiToken) {
+                    Message.showSuccessMessage(activity, getString(R.string.spotify_already_connected));
+                }
+
+                @Override
+                public void onInvalidToken() {
+                    activity.registerForSpotifyPKCE();
+                }
+            });
             return true;
         });
     }

@@ -18,15 +18,36 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+/**
+ * The adapter providing data for the popular song list.
+ */
 public class PopularSongsAdapter extends ArrayAdapter<SongCount> {
 
+    /**
+     * The context of the Activity where the adapter is being used.
+     */
     private final Activity activityContext;
 
-    public PopularSongsAdapter(@NonNull Activity activityContext, int resource, @NonNull List<SongCount> songs) {
-        super(activityContext, resource, songs);
+    /**
+     * Constructor for creating the PopularSongsAdapter object.
+     *
+     * @param activityContext The context of the Activity where the adapter is being used.
+     * @param resource The resource ID for the layout file containing the layout for each list item.
+     * @param songCounts The list of song counts to be displayed in the list.
+     */
+    public PopularSongsAdapter(@NonNull Activity activityContext, int resource, @NonNull List<SongCount> songCounts) {
+        super(activityContext, resource, songCounts);
         this.activityContext = activityContext;
     }
 
+    /**
+     * This method returns the view for each list item.
+     *
+     * @param position The position of the list item.
+     * @param convertView The old view to reuse, if possible.
+     * @param parent The parent view that this view will eventually be attached to.
+     * @return The view for each list item.
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, ViewGroup parent) {

@@ -11,7 +11,7 @@ import com.squareup.picasso.Transformation;
 /**
  * A transformation that cuts of the corners of the input image,
  * turning it into a circle.
- *
+ * <p>
  * Sourced from <a href="https://stackoverflow.com/a/26112408">Stack Overflow</a>.
  */
 public class CircleTransform implements Transformation {
@@ -24,11 +24,12 @@ public class CircleTransform implements Transformation {
         int y = (source.getHeight() - size) / 2;
 
         Bitmap squaredBitmap = Bitmap.createBitmap(source, x, y, size, size);
+
+        Bitmap bitmap = Bitmap.createBitmap(size, size, source.getConfig());
+
         if (squaredBitmap != source) {
             source.recycle();
         }
-
-        Bitmap bitmap = Bitmap.createBitmap(size, size, source.getConfig());
 
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint();
