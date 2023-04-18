@@ -56,17 +56,19 @@ public class ChangeUsernameDialogFragment extends DialogFragment {
     private void changeUsername() {
         String newUsername = newUsernameInput.getText().toString();
 
-        if (InputChecker.checkUsername(newUsername, newUsernameInput)) {
-            AuthSystem.updateUsername(newUsername).whenCompleteAsync((unused, throwable) -> {
-                if (throwable == null) {
-                    this.dismiss();
-                } else {
-                    Log.e(TAG, "Exception occurred while changing username", throwable);
-                    String message = throwable.getMessage();
-                    newUsernameInput.setError(message);
-                }
-            });
-        }
+        InputChecker.checkUsername(newUsername, newUsernameInput).thenAccept(valid -> {
+            if (valid) {
+                AuthSystem.updateUsername(newUsername).whenCompleteAsync((unused, throwable) -> {
+                    if (throwable == null) {
+                        this.dismiss();
+                    } else {
+                        Log.e(TAG, "Exception occurred while changing username", throwable);
+                        String message = throwable.getMessage();
+                        newUsernameInput.setError(message);
+                    }
+                });
+            }
+        });
     }
 
 }

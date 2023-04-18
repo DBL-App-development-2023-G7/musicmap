@@ -19,7 +19,7 @@ import com.google.firebase.storage.StorageReference;
 import com.groupseven.musicmap.models.ArtistData;
 import com.groupseven.musicmap.models.User;
 import com.groupseven.musicmap.models.UserData;
-import com.groupseven.musicmap.util.TaskUtil;
+import com.groupseven.musicmap.util.conversion.TaskUtil;
 
 import java.util.HashMap;
 import java.util.Map;

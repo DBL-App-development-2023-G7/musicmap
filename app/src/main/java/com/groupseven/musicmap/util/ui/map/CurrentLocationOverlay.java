@@ -1,4 +1,4 @@
-package com.groupseven.musicmap.util.map;
+package com.groupseven.musicmap.util.ui.map;
 
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
