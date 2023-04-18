@@ -44,12 +44,9 @@ public class ConnectionSettingsFragment extends PreferenceFragmentCompat {
         spotifyPreference.setOnPreferenceClickListener(preference -> {
             SpotifyData.refreshToken(apiToken -> {
                 Message.showSuccessMessage(activity, getString(R.string.spotify_already_connected));
-            }, new SpotifyAuthActivity.InvalidTokenCallback() {
-                @Override
-                public void onInvalidToken() {
-                    Intent spotifyAuthIntent = new Intent(ConnectionSettingsFragment.this.requireActivity(), SpotifyAuthActivity.class);
-                    spotifyAuthActivityResultLauncher.launch(spotifyAuthIntent);
-                }
+            }, () -> {
+                Intent spotifyAuthIntent = new Intent(ConnectionSettingsFragment.this.requireActivity(), SpotifyAuthActivity.class);
+                spotifyAuthActivityResultLauncher.launch(spotifyAuthIntent);
             });
             return true;
         });

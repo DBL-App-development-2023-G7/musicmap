@@ -83,7 +83,6 @@ public class PostFragment extends MainFragment {
     private ImageView capturedImagePreview;
     private Button postMemoryButton;
     private boolean shouldClearData = true;
-    private SessionListenerActivity parentActivity;
 
     // this is a Picasso target into which Picasso will load the image taken from the camera
     // in a field so it won't be garbage collected
@@ -107,7 +106,6 @@ public class PostFragment extends MainFragment {
         }
     };
 
-    // a launcher that launches the camera activity and handles the result
     private final ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -123,7 +121,7 @@ public class PostFragment extends MainFragment {
 
                 try {
                     Picasso.get().load(imageUri)
-                            .rotate(ImageUtils.getImageRotationFromEXIF(parentActivity, imageUri))
+                            .rotate(ImageUtils.getImageRotationFromEXIF(this.currentActivity, imageUri))
                             .into(cameraImageTarget);
                 } catch (IOException e) {
                     Log.e(TAG, "Exception occurred while setting the image", e);
@@ -188,7 +186,7 @@ public class PostFragment extends MainFragment {
                             setSelectedTrack(track);
                         }
                     },
-                    parentActivity.getMainExecutor()
+                    this.currentActivity.getMainExecutor()
             );
         } else {
             setSelectedTrack(SearchFragment.getResultTrack());

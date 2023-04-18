@@ -3,6 +3,7 @@ package com.groupseven.musicmap.util.spotify;
 import android.util.Log;
 
 import com.groupseven.musicmap.firebase.Session;
+import com.groupseven.musicmap.util.Constants;
 
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
@@ -16,8 +17,8 @@ public class SpotifyData {
     private static SpotifyApi spotifyApi;
 
     private static final SpotifyApi loginApi = new SpotifyApi.Builder()
-            .setClientId(CLIENT_ID)
-            .setRedirectUri(SpotifyHttpManager.makeUri(REDIRECT_URI))
+            .setClientId(Constants.SPOTIFY_CLIENT_ID)
+            .setRedirectUri(SpotifyHttpManager.makeUri(Constants.SPOTIFY_REDIRECT_URI))
             .build();
     private static long tokenExpiryTimeStampMillis = -1; // the time the token expires in milliseconds
     private static final String TAG = "SpotifyData";
@@ -47,20 +48,10 @@ public class SpotifyData {
         return spotifyApi;
     }
 
-    public static String getClientId() {
-        return CLIENT_ID;
-    }
-
-    public static String getRedirectUri() {
-        return REDIRECT_URI;
-    }
-
     public static void refreshToken(SpotifyAuthActivity.ValidTokenCallback validTokenCallback, SpotifyAuthActivity.InvalidTokenCallback invalidTokenCallback) {
         if (SpotifyData.tokenIsExpired()) {
             String currentUserId = Session.getInstance().getCurrentUser().getUid();
             FirebaseTokenStorage tokenStorage = new FirebaseTokenStorage(currentUserId);
-
-
 
             tokenStorage.getRefreshToken(refreshToken -> {
                 if (refreshToken == null) {
