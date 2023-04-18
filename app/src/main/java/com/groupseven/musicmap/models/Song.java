@@ -1,15 +1,10 @@
 package com.groupseven.musicmap.models;
 
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import java.io.Serializable;
 import java.util.Objects;
-
 import se.michaelthelin.spotify.model_objects.specification.Track;
 
 public class Song implements Serializable {

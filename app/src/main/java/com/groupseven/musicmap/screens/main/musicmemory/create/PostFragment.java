@@ -1,10 +1,7 @@
 package com.groupseven.musicmap.screens.main.musicmemory.create;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -23,7 +20,6 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -65,9 +61,7 @@ public class PostFragment extends MainFragment {
     public static final String FRAGMENT_RESULT_KEY = "searchSong";
 
     private Session currentSession;
-    private Activity currentActivity;
     private SpotifyAuthActivity parentActivity;
-
     private ImageView songImageView;
     private Button addSongButton;
     private Button addLocationButton;
@@ -125,23 +119,25 @@ public class PostFragment extends MainFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.currentSession = Session.getInstance();
-        this.currentActivity = requireActivity();
-        parentActivity = (SpotifyAuthActivity) this.currentActivity;
+        this.parentActivity = (SpotifyAuthActivity) requireActivity();
 
         locationPermission.forceRequest();
+        cameraPermission.forceRequest();
 
-        if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(currentActivity)
+        if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(parentActivity)
                 == ConnectionResult.SUCCESS) {
-            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.currentActivity);
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.parentActivity);
         } else {
-            int response = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(currentActivity);
+            int response = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(parentActivity);
             Log.e(TAG, "Google Play services availability response: " + response);
         }
 
         model = new ViewModelProvider(parentActivity).get(PostSongViewModel.class);
         fetchUserLocation();
-        getPermission();
 
+        model.setSongToCurrentUserSong();
+
+        // Setup callback from search result fragment
         getParentFragmentManager().setFragmentResultListener(
                 "searchSong",
                 this,
@@ -151,10 +147,11 @@ public class PostFragment extends MainFragment {
                     model.getSelectedSong().setValue(resultSong);
         });
 
+        // try to refresh spotify accesss token
         parentActivity.refreshToken(apiToken -> {
             postMemoryButton.setEnabled(true);
         }, () -> {
-            Message.showFailureMessage(this.currentActivity, getString(R.string.error_spotify_not_connected));
+            Message.showFailureMessage(this.parentActivity, getString(R.string.error_spotify_not_connected));
             postMemoryButton.setEnabled(false);
         });
     }
@@ -189,6 +186,7 @@ public class PostFragment extends MainFragment {
             addLocationButton.setText(locationText);
         }
     }
+
     @Override
     public void onStop() {
         super.onStop();
@@ -205,6 +203,7 @@ public class PostFragment extends MainFragment {
             capturedImagePreview.setVisibility(View.VISIBLE);
         }
     }
+
     private void showSelectedSong(Song song) {
         if (song != null) {
             songImageView.setVisibility(View.VISIBLE);
@@ -221,7 +220,7 @@ public class PostFragment extends MainFragment {
 
     private void goToCameraActivity() {
         shouldClearData = false;
-        Intent cameraIntent = new Intent(this.currentActivity, CameraActivity.class);
+        Intent cameraIntent = new Intent(this.parentActivity, CameraActivity.class);
         cameraActivityResultLauncher.launch(cameraIntent);
     }
 
@@ -229,28 +228,27 @@ public class PostFragment extends MainFragment {
     @SuppressLint("MissingPermission")
     private void fetchUserLocation() {
         if (fusedLocationClient == null) {
-            Message.showFailureMessage(currentActivity, getString(R.string.gps_required));
+            Message.showFailureMessage(parentActivity, getString(R.string.gps_required));
             return;
         }
         if (locationPermission.isCoarseGranted() && locationPermission.isFineGranted()) {
             fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
-                    .addOnSuccessListener(this.currentActivity, location -> {
+                    .addOnSuccessListener(this.parentActivity, location -> {
                         if (location == null) {
                             Log.i(TAG, "Location unknown");
                             return;
                         }
                         model.getUserLocation().setValue(location);
                     })
-                    .addOnFailureListener(this.currentActivity, exception -> {
+                    .addOnFailureListener(this.parentActivity, exception -> {
                         Log.e(TAG, "Could not fetch user location", exception);
                     });
         } else {
-            Message.showFailureMessage(this.currentActivity, getString(R.string.location_permission_not_granted));
+            Message.showFailureMessage(this.parentActivity, getString(R.string.location_permission_not_granted));
         }
     }
 
     // Takes a location and returns a human readable string to display on the search bar
-    // TODO move to a utilities class
     private String getLocationText(Location location){
         double lat = location.getLatitude();
         double lon = location.getLongitude();
@@ -259,7 +257,7 @@ public class PostFragment extends MainFragment {
                 location.getLatitude(),
                 location.getLongitude()
         );
-        Geocoder geocoder = new Geocoder(this.currentActivity);
+        Geocoder geocoder = new Geocoder(this.parentActivity);
         try {
             List<Address> addressList = geocoder.getFromLocation(lat, lon, 1);
             if (addressList.size() == 0) {
@@ -289,17 +287,17 @@ public class PostFragment extends MainFragment {
 
     private void postMusicMemory() {
         if (model.isSongNull()) {
-            Message.showFailureMessage(this.currentActivity, getString(R.string.create_mm_track_required));
+            Message.showFailureMessage(this.parentActivity, getString(R.string.create_mm_track_required));
             return;
         }
 
         if (model.isLocationNull()) {
-            Message.showFailureMessage(this.currentActivity, getString(R.string.create_mm_location_required));
+            Message.showFailureMessage(this.parentActivity, getString(R.string.create_mm_location_required));
             return;
         }
 
         if (model.isImageNull()) {
-            Message.showFailureMessage(this.currentActivity, getString(R.string.create_mm_image_required));
+            Message.showFailureMessage(this.parentActivity, getString(R.string.create_mm_image_required));
             return;
         }
 
@@ -318,7 +316,7 @@ public class PostFragment extends MainFragment {
             )).whenCompleteAsync((unused, throwable) -> {
                 if (throwable != null) {
                     Log.e(TAG, "Could not create music memory", throwable);
-                    Message.showFailureMessage(this.currentActivity, getString(R.string.create_mm_failure));
+                    Message.showFailureMessage(this.parentActivity, getString(R.string.create_mm_failure));
                     postMemoryButton.setEnabled(true);
                 } else {
                     FragmentUtil.replaceFragment(
@@ -327,22 +325,10 @@ public class PostFragment extends MainFragment {
                             FeedFragment.class
                     );
                     model.clearData();
-                    Message.showSuccessMessage(this.currentActivity, getString(R.string.create_mm_success));
+                    Message.showSuccessMessage(this.parentActivity, getString(R.string.create_mm_success));
                 }
             }, ContextCompat.getMainExecutor(requireContext()));
         });
-    }
-
-    private void getPermission() {
-        if (ContextCompat.checkSelfPermission(this.currentActivity, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                    this.currentActivity,
-                    new String[]{Manifest.permission.CAMERA},
-                    100
-            );
-        }
     }
 
 }
