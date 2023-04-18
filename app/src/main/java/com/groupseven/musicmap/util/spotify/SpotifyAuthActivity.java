@@ -29,7 +29,7 @@ public abstract class SpotifyAuthActivity extends SessionListenerActivity {
 
     private static final String TAG = "SpotifyAuthActivity";
 
-    private static final SpotifyApi loginApi = new SpotifyApi.Builder()
+    private static final SpotifyApi LOGIN_API = new SpotifyApi.Builder()
             .setClientId(Constants.SPOTIFY_CLIENT_ID)
             .setRedirectUri(SpotifyHttpManager.makeUri(Constants.SPOTIFY_REDIRECT_URI))
             .build();
@@ -48,8 +48,8 @@ public abstract class SpotifyAuthActivity extends SessionListenerActivity {
                     return;
                 }
 
-                loginApi.setRefreshToken(refreshToken);
-                loginApi.authorizationCodePKCERefresh().build().executeAsync().handle((refreshResult, error) -> {
+                LOGIN_API.setRefreshToken(refreshToken);
+                LOGIN_API.authorizationCodePKCERefresh().build().executeAsync().handle((refreshResult, error) -> {
                     if (error != null) {
                         Log.d(TAG, "error refreshing authorization code with PKCE", error);
                         tokenCallback.onInvalidToken();
@@ -73,7 +73,7 @@ public abstract class SpotifyAuthActivity extends SessionListenerActivity {
         codeVerifier = generateCodeVerifier();
         String codeChallenge = generateCodeChallenge(codeVerifier);
 
-        AuthorizationCodeUriRequest authorizationCodeUriRequest = loginApi.authorizationCodePKCEUri(codeChallenge)
+        AuthorizationCodeUriRequest authorizationCodeUriRequest = LOGIN_API.authorizationCodePKCEUri(codeChallenge)
                 .scope("user-read-currently-playing,user-read-recently-played").build();
 
         authorizationCodeUriRequest.executeAsync().thenAcceptAsync(uri -> {
@@ -115,7 +115,7 @@ public abstract class SpotifyAuthActivity extends SessionListenerActivity {
             String authCode = uri.getQueryParameter("code");
             Log.d(TAG, uri.toString());
 
-            loginApi.authorizationCodePKCE(authCode, codeVerifier).build()
+            LOGIN_API.authorizationCodePKCE(authCode, codeVerifier).build()
                     .executeAsync()
                     .handle((result, error) -> {
                         if (error != null) {
