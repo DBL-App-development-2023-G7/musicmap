@@ -115,33 +115,6 @@ public class AuthSystem {
     }
 
     /**
-     * Parses the given document as an appropriate {@link UserData}.
-     * <p>
-     * This will return an {@link ArtistData} if the given document contains the data of an artist.
-     *
-     * @param doc the given document from the database.
-     * @return the user data.
-     * @throws IllegalArgumentException if the given document {@link DocumentSnapshot#exists() does not exist}.
-     */
-    public static UserData parseUserData(DocumentSnapshot doc) throws IllegalArgumentException {
-        if (!doc.exists()) {
-            throw new IllegalArgumentException("Document does not exist.");
-        }
-
-        UserData userData = doc.toObject(UserData.class);
-
-        if (userData == null) {
-            throw new IllegalStateException("toObject returned null for existing document");
-        }
-
-        if (userData.isArtist()) {
-            return doc.toObject(ArtistData.class);
-        }
-
-        return userData;
-    }
-
-    /**
      * Gets the user data of the user with the given uid.
      *
      * @param uid the given uid of the user.
@@ -162,27 +135,6 @@ public class AuthSystem {
      */
     public static CompletableFuture<User> getUser(String uid) {
         return getUserData(uid).thenApply(userData -> userData.toUser(uid));
-    }
-
-    /**
-     * Removes the data stored in the database of the user with the given uid.
-     *
-     * @param uid the uid of the user.
-     * @return the future indicating when/if the user is removed.
-     */
-    private static CompletableFuture<Void> removeUserDataFromFirestore(String uid) {
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        return TaskUtil.getFuture(firestore.collection("Users/" + uid + "/MusicMemories").get())
-                .thenCompose(memories -> {
-                    WriteBatch batch = firestore.batch();
-                    for (QueryDocumentSnapshot memory : memories) {
-                        batch.delete(memory.getReference());
-                    }
-
-                    return TaskUtil.getFuture(batch.commit())
-                            .thenCompose(unused -> TaskUtil.getFuture(
-                                    firestore.collection("Users").document(uid).delete()));
-                });
     }
 
     /**
@@ -371,10 +323,58 @@ public class AuthSystem {
     }
 
     /**
+     * Removes the data stored in the database of the user with the given uid.
+     *
+     * @param uid the uid of the user.
+     * @return the future indicating when/if the user is removed.
+     */
+    private static CompletableFuture<Void> removeUserDataFromFirestore(String uid) {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        return TaskUtil.getFuture(firestore.collection("Users/" + uid + "/MusicMemories").get())
+                .thenCompose(memories -> {
+                    WriteBatch batch = firestore.batch();
+                    for (QueryDocumentSnapshot memory : memories) {
+                        batch.delete(memory.getReference());
+                    }
+
+                    return TaskUtil.getFuture(batch.commit())
+                            .thenCompose(unused -> TaskUtil.getFuture(
+                                    firestore.collection("Users").document(uid).delete()));
+                });
+    }
+
+    /**
      * Logs out the user.
      */
     public static void logout() {
         FirebaseAuth.getInstance().signOut();
+    }
+
+    /**
+     * Parses the given document as an appropriate {@link UserData}.
+     * <p>
+     * This will return an {@link ArtistData} if the given document contains the data of an artist.
+     *
+     * @param doc the given document from the database.
+     * @return the user data.
+     * @throws IllegalArgumentException if the given document {@link DocumentSnapshot#exists() does not exist}.
+     */
+    public static UserData parseUserData(DocumentSnapshot doc) throws IllegalArgumentException {
+        if (!doc.exists()) {
+            throw new IllegalArgumentException("Document does not exist.");
+        }
+
+        UserData userData = doc.toObject(UserData.class);
+
+        if (userData == null) {
+            throw new IllegalStateException("toObject returned null for existing document");
+        }
+
+        if (userData.isArtist()) {
+            return doc.toObject(ArtistData.class);
+        }
+
+        return userData;
     }
 
 }
