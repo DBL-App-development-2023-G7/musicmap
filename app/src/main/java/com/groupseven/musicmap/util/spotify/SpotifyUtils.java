@@ -97,7 +97,7 @@ public class SpotifyUtils {
 
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(() -> {
-            if (spotifyAccess.getSpotifyApi() != null) {
+            if (spotifyAccess.getSpotifyDataApi() != null) {
                 executor.shutdown();
                 latch.countDown();
                 Log.d(TAG, "Token found!");
@@ -154,7 +154,7 @@ public class SpotifyUtils {
      * @return the request object
      */
     public static GetTrackRequest getGetTrackRequest(SpotifyAccess spotifyAccess, String trackId) {
-        return spotifyAccess.getSpotifyApi().getTrack(trackId).build();
+        return spotifyAccess.getSpotifyDataApi().getTrack(trackId).build();
     }
 
     /**
@@ -163,7 +163,7 @@ public class SpotifyUtils {
      * @return the request object
      */
     public static GetCurrentUsersRecentlyPlayedTracksRequest getGetRecentHistoryRequest(SpotifyAccess spotifyAccess) {
-        return spotifyAccess.getSpotifyApi().getCurrentUsersRecentlyPlayedTracks().build();
+        return spotifyAccess.getSpotifyDataApi().getCurrentUsersRecentlyPlayedTracks().build();
     }
 
     /**
@@ -173,11 +173,11 @@ public class SpotifyUtils {
      * @return the request object
      */
     public static SearchTracksRequest getSearchTrackRequest(SpotifyAccess spotifyAccess, String prompt) {
-        return spotifyAccess.getSpotifyApi().searchTracks(prompt).build();
+        return spotifyAccess.getSpotifyDataApi().searchTracks(prompt).build();
     }
 
     public static GetUsersCurrentlyPlayingTrackRequest getCurrentPlayingTrackRequest(SpotifyAccess spotifyAccess) {
-        return spotifyAccess.getSpotifyApi().getUsersCurrentlyPlayingTrack().additionalTypes("track").build();
+        return spotifyAccess.getSpotifyDataApi().getUsersCurrentlyPlayingTrack().additionalTypes("track").build();
     }
 
 }
