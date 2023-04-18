@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
-import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
@@ -19,9 +18,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.groupseven.musicmap.TestDataStore;
 import com.groupseven.musicmap.models.MusicMemory;
-import com.groupseven.musicmap.util.TaskUtil;
 
 import org.junit.Test;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Test posting to the Firebase Firestore without actually posting to the live database,
@@ -42,9 +42,9 @@ public class ActionsTest {
         when(documentReferenceMock.collection(eq("MusicMemories"))).thenReturn(collectionReferenceMock);
         when(collectionReferenceMock.add(eq(musicMemory))).thenReturn(taskCompletionSource.getTask());
 
-        Task<?> task = TaskUtil.getTask(Actions.postMusicMemory(firestoreMock, musicMemory));
+        CompletableFuture<?> future = Actions.postMusicMemory(firestoreMock, musicMemory);
         taskCompletionSource.setResult(documentReferenceMock);
-        task.getResult();
+        future.join();
         verify(collectionReferenceMock).add(eq(musicMemory));
     }
 
