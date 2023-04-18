@@ -112,10 +112,8 @@ public final class Session implements FirebaseAuth.AuthStateListener {
             currentUser = AuthSystem.parseUserData(doc).toUser(doc.getId());
             Log.i(TAG, "User's data was refreshed.");
             updateListeners();
-        } catch (FirebaseFirestoreException firebaseFirestoreException) {
-            if (firebaseFirestoreException.getMessage() != null) {
-                Log.e(TAG, "Exception occurred while parsing retrieved user data", firebaseFirestoreException);
-            }
+        } catch (Exception e) {
+            Log.e(TAG, "Exception occurred while parsing retrieved user data", e);
         }
     }
 
