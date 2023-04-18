@@ -151,7 +151,7 @@ public class AuthSystem {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
         if (firebaseUser == null) {
-            future.completeExceptionally(new FirebaseNoSignedInUserException("There is no user connected!"));
+            future.completeExceptionally(new IllegalStateException("There is no user connected!"));
             return future;
         }
 
@@ -185,7 +185,7 @@ public class AuthSystem {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
         if (firebaseUser == null) {
-            future.completeExceptionally(new FirebaseNoSignedInUserException("There is no user connected!"));
+            future.completeExceptionally(new IllegalStateException("There is no user connected!"));
             return future;
         }
 
@@ -233,7 +233,7 @@ public class AuthSystem {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
         if (firebaseUser == null) {
-            future.completeExceptionally(new FirebaseNoSignedInUserException("There is no user connected!"));
+            future.completeExceptionally(new IllegalStateException("There is no user connected!"));
             return future;
         }
 
@@ -277,7 +277,7 @@ public class AuthSystem {
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
         if (firebaseUser == null) {
-            future.completeExceptionally(new FirebaseNoSignedInUserException("There is no user connected!"));
+            future.completeExceptionally(new IllegalStateException("There is no user connected!"));
             return future;
         }
 
@@ -303,7 +303,7 @@ public class AuthSystem {
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
         if (firebaseUser == null) {
-            future.completeExceptionally(new FirebaseNoSignedInUserException("There is no user connected!"));
+            future.completeExceptionally(new IllegalStateException("There is no user connected!"));
             return future;
         }
 
