@@ -130,23 +130,26 @@ public final class SpotifyAccess {
                 }
 
                 SPOTIFY_LOGIN_API.setRefreshToken(refreshToken);
-                SPOTIFY_LOGIN_API.authorizationCodePKCERefresh().build().executeAsync().handle((refreshResult, error) -> {
-                    if (error != null) {
-                        Log.d(TAG, String.format("error %s", error.getMessage()));
-                        tokenCallback.onInvalidToken();
-                        return null;
-                    }
+                SPOTIFY_LOGIN_API.authorizationCodePKCERefresh()
+                        .build()
+                        .executeAsync()
+                        .handle((refreshResult, error) -> {
+                            if (error != null) {
+                                Log.d(TAG, String.format("error %s", error.getMessage()));
+                                tokenCallback.onInvalidToken();
+                                return null;
+                            }
 
-                    return refreshResult;
-                }).thenAccept(refreshResult -> {
-                    Log.d(TAG, "The Spotify token was successfully refreshed!");
-                    Log.d(TAG, String.format("ExpiryDate: %d", refreshResult.getExpiresIn()));
+                            return refreshResult;
+                        }).thenAccept(refreshResult -> {
+                            Log.d(TAG, "The Spotify token was successfully refreshed!");
+                            Log.d(TAG, String.format("ExpiryDate: %d", refreshResult.getExpiresIn()));
 
-                    tokenStorage.storeRefreshToken(refreshResult.getRefreshToken());
-                    setToken(refreshResult.getAccessToken(), refreshResult.getExpiresIn());
-                    tokenCallback.onValidToken(refreshResult.getAccessToken());
+                            tokenStorage.storeRefreshToken(refreshResult.getRefreshToken());
+                            setToken(refreshResult.getAccessToken(), refreshResult.getExpiresIn());
+                            tokenCallback.onValidToken(refreshResult.getAccessToken());
+                        });
                 });
-            });
         }
     }
 

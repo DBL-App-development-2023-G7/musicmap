@@ -39,7 +39,7 @@ public class ConnectionSettingsFragment extends PreferenceFragmentCompat {
 
                 @Override
                 public void onInvalidToken() {
-                    Intent spotifyAuthIntent = new Intent(ConnectionSettingsFragment.this.requireActivity(), SpotifyAccessActivity.class);
+                    Intent spotifyAuthIntent = new Intent(activity, SpotifyAccessActivity.class);
                     spotifyAccessActivityResultLauncher.launch(spotifyAuthIntent);
                 }
             });
