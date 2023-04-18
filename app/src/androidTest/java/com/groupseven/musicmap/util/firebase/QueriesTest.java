@@ -90,7 +90,7 @@ public class QueriesTest {
         songCounts.forEach(songCount -> {
             assertEquals(songCount.getSong().getSpotifyArtistId(),
                     TestDataStore.SPOTIFY_ARTIST_ID_THAT_EXISTS_IN_FIREBASE);
-            assertTrue(songCount.getCount() < currentCount.get());
+            assertTrue(songCount.getCount() <= currentCount.get());
             currentCount.set(songCount.getCount());
         });
     }
