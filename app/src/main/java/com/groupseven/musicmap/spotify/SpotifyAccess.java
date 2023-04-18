@@ -31,7 +31,7 @@ public final class SpotifyAccess {
 
     public static SpotifyAccess getSpotifyAccessInstance() {
         if (instance == null) {
-            synchronized (Session.class) {
+            synchronized (SpotifyAccess.class) {
                 if (instance == null) {
                     Log.i(TAG, "Generating a spotify access instance.");
                     instance = new SpotifyAccess();
@@ -54,12 +54,8 @@ public final class SpotifyAccess {
         tokenExpiryTimeStampMillis = System.currentTimeMillis() +  expiryTimeMillis;
     }
 
-    public boolean tokenIsExpired() {
+    public boolean isTokenExpired() {
         return tokenExpiryTimeStampMillis < System.currentTimeMillis();
-    }
-
-    public String getToken() {
-        return token;
     }
 
     public SpotifyApi getSpotifyApi() {
@@ -71,7 +67,7 @@ public final class SpotifyAccess {
     }
 
     public void refreshToken(SpotifyAccessActivity.TokenCallback tokenCallback) {
-        if (tokenIsExpired()) {
+        if (isTokenExpired()) {
             String currentUserId = Session.getInstance().getCurrentUser().getUid();
             SpotifyTokenStorage tokenStorage = new SpotifyTokenStorage(currentUserId);
 

@@ -15,22 +15,9 @@ import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.firebase.SpotifyTokenStorage;
 import com.groupseven.musicmap.util.spotify.SpotifyUtils;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.Base64;
-
-import se.michaelthelin.spotify.SpotifyApi;
-import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 
-/**
- * Every activity that wants to do things with Spotify should extend this class.
- * <p>
- * This is because on start of this activity the spotify token is refreshed.
- * The problem is this extends auth activity which is not ideal.
- */
+
 public class SpotifyAccessActivity extends AppCompatActivity {
 
     private static final String TAG = "SpotifyAccessActivity";
@@ -43,6 +30,16 @@ public class SpotifyAccessActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spotify_auth);
+        this.setupSpotify();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.setupSpotify();
+    }
+
+    private void setupSpotify() {
         this.spotifyAccess = SpotifyAccess.getSpotifyAccessInstance();
         registerForSpotifyPKCE();
     }
