@@ -18,7 +18,6 @@ import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.models.MusicMemory;
 import com.groupseven.musicmap.screens.main.musicmemory.view.MusicMemoryActivity;
 import com.groupseven.musicmap.screens.profile.ProfileActivity;
-import com.groupseven.musicmap.models.User;
 import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.firebase.AuthSystem;
 import com.groupseven.musicmap.util.ui.CircleTransform;

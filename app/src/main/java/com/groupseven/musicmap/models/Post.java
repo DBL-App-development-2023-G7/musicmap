@@ -1,13 +1,11 @@
 package com.groupseven.musicmap.models;
 
-import com.groupseven.musicmap.util.firebase.AuthSystem;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.GeoPoint;
 
 import java.util.Date;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * A post that can be displayed on the feed or map.

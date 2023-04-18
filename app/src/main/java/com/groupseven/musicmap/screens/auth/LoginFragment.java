@@ -67,16 +67,17 @@ public class LoginFragment extends AuthFragment {
                     }
                 });
             } else if (Constants.USERNAME_PATTERN.matcher(identifier).matches()) {
-                AuthSystem.loginWithUsernameAndPassword(identifier, password).whenCompleteAsync((authResult, throwable) -> {
-                    if (throwable == null) {
-                        Log.d(TAG, "loginUser:success");
-                        this.getAuthActivity().loadHomeActivity();
-                    } else {
-                        Log.d(TAG, "loginUser:fail", throwable);
-                        Message.showFailureMessage(viewGroup,
-                                getString(R.string.auth_error_incorrect_username_password));
-                    }
-                }, ContextCompat.getMainExecutor(requireContext()));
+                AuthSystem.loginWithUsernameAndPassword(identifier, password)
+                        .whenCompleteAsync((authResult, throwable) -> {
+                            if (throwable == null) {
+                                Log.d(TAG, "loginUser:success");
+                                this.getAuthActivity().loadHomeActivity();
+                            } else {
+                                Log.d(TAG, "loginUser:fail", throwable);
+                                Message.showFailureMessage(viewGroup,
+                                        getString(R.string.auth_error_incorrect_username_password));
+                            }
+                        }, ContextCompat.getMainExecutor(requireContext()));
             }
         } else {
             Message.showFailureMessage(viewGroup, getString(R.string.auth_error_invalid_values));

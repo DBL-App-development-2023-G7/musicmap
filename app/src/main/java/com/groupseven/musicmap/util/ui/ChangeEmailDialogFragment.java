@@ -17,8 +17,6 @@ import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.util.firebase.AuthSystem;
 import com.groupseven.musicmap.util.regex.InputChecker;
 
-import java.util.concurrent.Executor;
-
 public class ChangeEmailDialogFragment extends DialogFragment {
 
     private EditText newEmailInput;
