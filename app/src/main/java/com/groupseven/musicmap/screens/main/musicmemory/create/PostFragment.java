@@ -81,6 +81,8 @@ public class PostFragment extends MainFragment {
     private Button postMemoryButton;
     private boolean shouldClearData = true;
 
+    private SpotifyAccess spotifyAccess;
+
     // this is a Picasso target into which Picasso will load the image taken from the camera
     // in a field so it won't be garbage collected
     private final Target cameraImageTarget = new Target() {
@@ -131,6 +133,7 @@ public class PostFragment extends MainFragment {
         super.onCreate(savedInstanceState);
         this.currentSession = Session.getInstance();
         this.currentActivity = requireActivity();
+        this.spotifyAccess = SpotifyAccess.getSpotifyAccessInstance();
 
         locationPermission.forceRequest();
 
@@ -145,7 +148,7 @@ public class PostFragment extends MainFragment {
         fetchUserLocation();
         getPermission();
 
-        SpotifyAccess.refreshToken(new SpotifyAccessActivity.TokenCallback() {
+        spotifyAccess.refreshToken(new SpotifyAccessActivity.TokenCallback() {
             @Override
             public void onValidToken(String apiToken) {
                 postMemoryButton.setEnabled(true);
@@ -180,8 +183,8 @@ public class PostFragment extends MainFragment {
 
         // get current song if no song has been searched for
         if (SearchFragment.getResultTrack() == null) {
-            SpotifyUtils.checkForSpotifyToken().thenApply(
-                    unused -> SpotifyUtils.getCurrentTrackFuture().join()
+            SpotifyUtils.checkForSpotifyToken(spotifyAccess).thenApply(
+                    unused -> SpotifyUtils.getCurrentTrackFuture(spotifyAccess).join()
             ).thenAcceptAsync(
                     track -> {
                         if (track != null) {

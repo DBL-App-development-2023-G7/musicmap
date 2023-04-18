@@ -33,12 +33,9 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
  */
 public class SpotifyAccessActivity extends AppCompatActivity {
 
-    private static final String TAG = "SpotifyAuthActivity";
+    private static final String TAG = "SpotifyAccessActivity";
 
-    private static final SpotifyApi LOGIN_API = new SpotifyApi.Builder()
-            .setClientId(Constants.SPOTIFY_CLIENT_ID)
-            .setRedirectUri(SpotifyHttpManager.makeUri(Constants.SPOTIFY_REDIRECT_URI))
-            .build();
+    private SpotifyAccess spotifyAccess;
 
     private static String codeVerifier = Constants.SPOTIFY_DEFAULT_CODE_VERIFIER;
 
@@ -46,6 +43,7 @@ public class SpotifyAccessActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spotify_auth);
+        this.spotifyAccess = SpotifyAccess.getSpotifyAccessInstance();
         registerForSpotifyPKCE();
     }
 
@@ -53,7 +51,7 @@ public class SpotifyAccessActivity extends AppCompatActivity {
         codeVerifier = SpotifyUtils.generateCodeVerifier();
         String codeChallenge = SpotifyUtils.generateCodeChallenge(codeVerifier);
 
-        AuthorizationCodeUriRequest authorizationCodeUriRequest = LOGIN_API
+        AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyAccess.getSpotifyLoginApi()
                 .authorizationCodePKCEUri(codeChallenge)
                 .scope(SpotifyUtils.getSpotifyPermissions())
                 .build();
@@ -74,7 +72,7 @@ public class SpotifyAccessActivity extends AppCompatActivity {
             String authCode = uri.getQueryParameter(Constants.SPOTIFY_QUERY_PARAM_KEY);
             Log.d(TAG, uri.toString());
 
-            LOGIN_API.authorizationCodePKCE(authCode, codeVerifier).build()
+            spotifyAccess.getSpotifyLoginApi().authorizationCodePKCE(authCode, codeVerifier).build()
                     .executeAsync()
                     .handle((result, error) -> {
                         if (error != null) {
@@ -90,7 +88,7 @@ public class SpotifyAccessActivity extends AppCompatActivity {
                         String currentUserId = Session.getInstance().getCurrentUser().getUid();
                         SpotifyTokenStorage tokenStorage = new SpotifyTokenStorage(currentUserId);
                         tokenStorage.storeRefreshToken(authCredentials.getRefreshToken());
-                        SpotifyAccess.setToken(authCredentials.getAccessToken(), authCredentials.getExpiresIn());
+                        spotifyAccess.setToken(authCredentials.getAccessToken(), authCredentials.getExpiresIn());
 
                         setResult(Activity.RESULT_OK);
                         finish();

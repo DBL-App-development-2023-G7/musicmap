@@ -14,6 +14,7 @@ import android.widget.SearchView;
 
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.screens.main.MainFragment;
+import com.groupseven.musicmap.spotify.SpotifyAccess;
 import com.groupseven.musicmap.util.adapters.SpotifySongAdapter;
 import com.groupseven.musicmap.util.spotify.SpotifyUtils;
 
@@ -51,13 +52,12 @@ public class SearchFragment extends MainFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragmen_search, container, false);
+        SpotifyAccess spotifyAccess = SpotifyAccess.getSpotifyAccessInstance();
 
-        // If a spotify token is present
-        // get recent tracks and add them to the view.
-        SpotifyUtils.checkForSpotifyToken()
+        SpotifyUtils.checkForSpotifyToken(spotifyAccess)
                 .thenCompose(unused ->
-                        getRecentTracksFuture(2).thenAcceptBoth(
-                                getCurrentTrackFuture(),
+                        getRecentTracksFuture(2, spotifyAccess).thenAcceptBoth(
+                                getCurrentTrackFuture(spotifyAccess),
                                 (trackList, currentTrack) -> {
                                     Log.d("debug", String.format("track size: %d", trackList.size()));
                                     if (currentTrack != null) {
@@ -120,7 +120,8 @@ public class SearchFragment extends MainFragment {
                     if (query.equals("")) {
                         updateSongListView(recentTrackList);
                     } else {
-                        SpotifyUtils.getSearchTrackRequest(query).executeAsync()
+                        SpotifyUtils.getSearchTrackRequest(SpotifyAccess.getSpotifyAccessInstance(), query)
+                                .executeAsync()
                                 .thenAcceptAsync(trackPaging -> {
                                     List<Track> trackList = Arrays.asList(trackPaging.getItems());
                                     updateSongListView(trackList);

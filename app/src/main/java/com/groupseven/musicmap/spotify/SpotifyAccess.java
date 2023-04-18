@@ -12,45 +12,66 @@ import se.michaelthelin.spotify.SpotifyHttpManager;
 /**
  * A storage class which stores some global variables.
  */
-public class SpotifyAccess {
+public final class SpotifyAccess {
 
-    private static String token = null;
-    private static SpotifyApi spotifyApi;
+    private static volatile SpotifyAccess instance;
+    private String token;
+    private SpotifyApi spotifyApi;
 
-    private static final SpotifyApi loginApi = new SpotifyApi.Builder()
+    private static final SpotifyApi SPOTIFY_LOGIN_API = new SpotifyApi.Builder()
             .setClientId(Constants.SPOTIFY_CLIENT_ID)
             .setRedirectUri(SpotifyHttpManager.makeUri(Constants.SPOTIFY_REDIRECT_URI))
             .build();
-    private static long tokenExpiryTimeStampMillis = -1; // the time the token expires in milliseconds
-    private static final String TAG = "SpotifyData";
+    private static long tokenExpiryTimeStampMillis;
+    private static final String TAG = "SpotifyAccess";
 
-    public static void setToken(String inputToken, long expiryTimeSeconds) {
+    private SpotifyAccess() {
+        this.token = null;
+    }
+
+    public static SpotifyAccess getSpotifyAccessInstance() {
+        if (instance == null) {
+            synchronized (Session.class) {
+                if (instance == null) {
+                    Log.i(TAG, "Generating a spotify access instance.");
+                    instance = new SpotifyAccess();
+                }
+            }
+        }
+        return instance;
+    }
+
+    public void setToken(String inputToken, long expiryTimeSeconds) {
         token = inputToken;
         spotifyApi = new SpotifyApi.Builder()
                 .setAccessToken(token)
                 .build();
 
-        Log.d("debug", String.format("token recieved %s", token));
+        Log.d(TAG, String.format("token received %s", token));
 
         final int EARLIER_REFRESH_TIME_SECONDS = 300;
         long expiryTimeMillis = (expiryTimeSeconds - EARLIER_REFRESH_TIME_SECONDS) * 1000;
         tokenExpiryTimeStampMillis = System.currentTimeMillis() +  expiryTimeMillis;
     }
 
-    public static boolean tokenIsExpired() {
+    public boolean tokenIsExpired() {
         return tokenExpiryTimeStampMillis < System.currentTimeMillis();
     }
 
-    public static String getToken() {
+    public String getToken() {
         return token;
     }
 
-    public static SpotifyApi getApi() {
+    public SpotifyApi getSpotifyApi() {
         return spotifyApi;
     }
 
-    public static void refreshToken(SpotifyAccessActivity.TokenCallback tokenCallback) {
-        if (SpotifyAccess.tokenIsExpired()) {
+    public SpotifyApi getSpotifyLoginApi() {
+        return SPOTIFY_LOGIN_API;
+    }
+
+    public void refreshToken(SpotifyAccessActivity.TokenCallback tokenCallback) {
+        if (tokenIsExpired()) {
             String currentUserId = Session.getInstance().getCurrentUser().getUid();
             SpotifyTokenStorage tokenStorage = new SpotifyTokenStorage(currentUserId);
 
@@ -60,8 +81,8 @@ public class SpotifyAccess {
                     return;
                 }
 
-                loginApi.setRefreshToken(refreshToken);
-                loginApi.authorizationCodePKCERefresh().build().executeAsync().handle((refreshResult, error) -> {
+                SPOTIFY_LOGIN_API.setRefreshToken(refreshToken);
+                SPOTIFY_LOGIN_API.authorizationCodePKCERefresh().build().executeAsync().handle((refreshResult, error) -> {
                     if (error != null) {
                         Log.d(TAG, String.format("error %s", error.getMessage()));
                         tokenCallback.onInvalidToken();
@@ -74,7 +95,7 @@ public class SpotifyAccess {
                     Log.d(TAG, String.format("ExpiryDate: %d", refreshResult.getExpiresIn()));
 
                     tokenStorage.storeRefreshToken(refreshResult.getRefreshToken());
-                    SpotifyAccess.setToken(refreshResult.getAccessToken(), refreshResult.getExpiresIn());
+                    setToken(refreshResult.getAccessToken(), refreshResult.getExpiresIn());
                     tokenCallback.onValidToken(refreshResult.getAccessToken());
                 });
             });
