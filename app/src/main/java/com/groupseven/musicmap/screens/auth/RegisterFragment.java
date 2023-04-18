@@ -117,6 +117,8 @@ public class RegisterFragment extends AuthFragment {
 
     /**
      * Validates all {@link #updateFormValues() previously retrieved} form input values.
+     * <p>
+     * This method may block to validate the username.
      *
      * @return whether the form input is valid.
      */
