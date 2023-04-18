@@ -1,9 +1,10 @@
-package com.groupseven.musicmap.util.spotify;
+package com.groupseven.musicmap.spotify;
 
 import android.util.Log;
 
 import com.groupseven.musicmap.firebase.Session;
 import com.groupseven.musicmap.util.Constants;
+import com.groupseven.musicmap.util.firebase.SpotifyTokenStorage;
 
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
@@ -11,7 +12,7 @@ import se.michaelthelin.spotify.SpotifyHttpManager;
 /**
  * A storage class which stores some global variables.
  */
-public class SpotifyData {
+public class SpotifyAccess {
 
     private static String token = null;
     private static SpotifyApi spotifyApi;
@@ -48,14 +49,14 @@ public class SpotifyData {
         return spotifyApi;
     }
 
-    public static void refreshToken(SpotifyAuthActivity.ValidTokenCallback validTokenCallback, SpotifyAuthActivity.InvalidTokenCallback invalidTokenCallback) {
-        if (SpotifyData.tokenIsExpired()) {
+    public static void refreshToken(SpotifyAccessActivity.TokenCallback tokenCallback) {
+        if (SpotifyAccess.tokenIsExpired()) {
             String currentUserId = Session.getInstance().getCurrentUser().getUid();
-            FirebaseTokenStorage tokenStorage = new FirebaseTokenStorage(currentUserId);
+            SpotifyTokenStorage tokenStorage = new SpotifyTokenStorage(currentUserId);
 
             tokenStorage.getRefreshToken(refreshToken -> {
                 if (refreshToken == null) {
-                    invalidTokenCallback.onInvalidToken();
+                    tokenCallback.onInvalidToken();
                     return;
                 }
 
@@ -63,7 +64,7 @@ public class SpotifyData {
                 loginApi.authorizationCodePKCERefresh().build().executeAsync().handle((refreshResult, error) -> {
                     if (error != null) {
                         Log.d(TAG, String.format("error %s", error.getMessage()));
-                        invalidTokenCallback.onInvalidToken();
+                        tokenCallback.onInvalidToken();
                         return null;
                     }
 
@@ -73,8 +74,8 @@ public class SpotifyData {
                     Log.d(TAG, String.format("ExpiryDate: %d", refreshResult.getExpiresIn()));
 
                     tokenStorage.storeRefreshToken(refreshResult.getRefreshToken());
-                    SpotifyData.setToken(refreshResult.getAccessToken(), refreshResult.getExpiresIn());
-                    validTokenCallback.onValidToken(refreshResult.getAccessToken());
+                    SpotifyAccess.setToken(refreshResult.getAccessToken(), refreshResult.getExpiresIn());
+                    tokenCallback.onValidToken(refreshResult.getAccessToken());
                 });
             });
         }

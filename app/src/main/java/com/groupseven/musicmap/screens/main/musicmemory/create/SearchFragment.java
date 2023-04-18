@@ -54,7 +54,7 @@ public class SearchFragment extends MainFragment {
 
         // If a spotify token is present
         // get recent tracks and add them to the view.
-        SpotifyUtils.getWaitForTokenFuture()
+        SpotifyUtils.checkForSpotifyToken()
                 .thenCompose(unused ->
                         getRecentTracksFuture(2).thenAcceptBoth(
                                 getCurrentTrackFuture(),

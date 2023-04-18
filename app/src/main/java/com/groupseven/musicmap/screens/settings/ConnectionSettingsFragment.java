@@ -11,10 +11,8 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.listeners.SessionListenerActivity;
-import com.groupseven.musicmap.screens.main.musicmemory.create.CameraActivity;
-import com.groupseven.musicmap.util.spotify.SpotifyAuthActivity;
-import com.groupseven.musicmap.util.spotify.SpotifyData;
-import com.groupseven.musicmap.util.spotify.SpotifyUtils;
+import com.groupseven.musicmap.spotify.SpotifyAccessActivity;
+import com.groupseven.musicmap.spotify.SpotifyAccess;
 import com.groupseven.musicmap.util.ui.Message;
 
 public class ConnectionSettingsFragment extends PreferenceFragmentCompat {
@@ -42,11 +40,17 @@ public class ConnectionSettingsFragment extends PreferenceFragmentCompat {
         }
 
         spotifyPreference.setOnPreferenceClickListener(preference -> {
-            SpotifyData.refreshToken(apiToken -> {
-                Message.showSuccessMessage(activity, getString(R.string.spotify_already_connected));
-            }, () -> {
-                Intent spotifyAuthIntent = new Intent(ConnectionSettingsFragment.this.requireActivity(), SpotifyAuthActivity.class);
-                spotifyAuthActivityResultLauncher.launch(spotifyAuthIntent);
+            SpotifyAccess.refreshToken(new SpotifyAccessActivity.TokenCallback() {
+                @Override
+                public void onValidToken(String apiToken) {
+                    Message.showSuccessMessage(activity, getString(R.string.spotify_already_connected));
+                }
+
+                @Override
+                public void onInvalidToken() {
+                    Intent spotifyAuthIntent = new Intent(ConnectionSettingsFragment.this.requireActivity(), SpotifyAccessActivity.class);
+                    spotifyAuthActivityResultLauncher.launch(spotifyAuthIntent);
+                }
             });
             return true;
         });

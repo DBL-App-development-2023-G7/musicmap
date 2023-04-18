@@ -1,18 +1,18 @@
-package com.groupseven.musicmap.util.spotify;
+package com.groupseven.musicmap.util.firebase;
 
 import android.util.Log;
 
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class FirebaseTokenStorage {
+public class SpotifyTokenStorage {
 
     private static final String TAG = "FirebaseTokenStorage";
     private static final String REFRESH_TOKEN_FIELD = "refreshToken";
 
     private final String userID;
 
-    public FirebaseTokenStorage(String userId) {
+    public SpotifyTokenStorage(String userId) {
         this.userID = userId;
     }
 

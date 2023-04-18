@@ -1,15 +1,9 @@
 package com.groupseven.musicmap.screens.settings;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -19,12 +13,7 @@ import com.groupseven.musicmap.screens.profile.ProfileActivity;
 import com.groupseven.musicmap.firebase.Session;
 import com.groupseven.musicmap.models.User;
 import com.groupseven.musicmap.util.Constants;
-import com.groupseven.musicmap.util.spotify.SpotifyAuthActivity;
 import com.groupseven.musicmap.util.ui.FragmentUtil;
-import com.groupseven.musicmap.util.ui.ImageUtils;
-import com.squareup.picasso.Picasso;
-
-import java.io.IOException;
 
 public class SettingsActivity extends SessionListenerActivity {
 

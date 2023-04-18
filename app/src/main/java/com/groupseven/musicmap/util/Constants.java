@@ -28,10 +28,15 @@ public final class Constants {
     public static final String IS_SENT_FROM_FEED_ARGUMENT_KEY = "sent_from_feed";
 
     public static final Pattern USERNAME_PATTERN = Pattern.compile("\\w{3,25}");
+
     public static final Pattern PASSWORD_PATTERN = Pattern.compile(".{6,}");
 
     public static final String SPOTIFY_CLIENT_ID = "56ab7fed83514a7a96a7b735737280d8";
 
     public static final String SPOTIFY_REDIRECT_URI = "musicmap://spotify-auth";
+
+    public static final String SPOTIFY_DEFAULT_CODE_VERIFIER = "w6iZIj99vHGtEx_NVl9u3sthTN646vvkiP8OMCGfPmo";
+
+    public static final String SPOTIFY_QUERY_PARAM_KEY = "code";
 
 }

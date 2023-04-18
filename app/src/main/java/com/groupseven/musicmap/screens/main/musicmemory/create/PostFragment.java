@@ -19,25 +19,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.groupseven.musicmap.R;
-import com.groupseven.musicmap.listeners.SessionListenerActivity;
 import com.groupseven.musicmap.models.MusicMemory;
 import com.groupseven.musicmap.models.Song;
 import com.groupseven.musicmap.firebase.Session;
 import com.groupseven.musicmap.screens.main.MainFragment;
 import com.groupseven.musicmap.screens.main.feed.FeedFragment;
+import com.groupseven.musicmap.spotify.SpotifyAccessActivity;
 import com.groupseven.musicmap.util.firebase.Actions;
 import com.groupseven.musicmap.util.permissions.CameraPermission;
 import com.groupseven.musicmap.util.permissions.LocationPermission;
-import com.groupseven.musicmap.util.spotify.SpotifyAuthActivity;
-import com.groupseven.musicmap.util.spotify.SpotifyData;
+import com.groupseven.musicmap.spotify.SpotifyAccess;
 import com.groupseven.musicmap.util.spotify.SpotifyUtils;
 import com.groupseven.musicmap.util.ui.FragmentUtil;
 import com.groupseven.musicmap.util.ui.ImageUtils;
@@ -148,11 +145,17 @@ public class PostFragment extends MainFragment {
         fetchUserLocation();
         getPermission();
 
-        SpotifyData.refreshToken(apiToken -> {
-            postMemoryButton.setEnabled(true);
-        }, () -> {
-            Message.showFailureMessage(this.currentActivity, getString(R.string.error_spotify_not_connected));
-            postMemoryButton.setEnabled(false);
+        SpotifyAccess.refreshToken(new SpotifyAccessActivity.TokenCallback() {
+            @Override
+            public void onValidToken(String apiToken) {
+                postMemoryButton.setEnabled(true);
+            }
+
+            @Override
+            public void onInvalidToken() {
+                Message.showFailureMessage(currentActivity, getString(R.string.error_spotify_not_connected));
+                postMemoryButton.setEnabled(false);
+            }
         });
     }
 
@@ -177,7 +180,7 @@ public class PostFragment extends MainFragment {
 
         // get current song if no song has been searched for
         if (SearchFragment.getResultTrack() == null) {
-            SpotifyUtils.getWaitForTokenFuture().thenApply(
+            SpotifyUtils.checkForSpotifyToken().thenApply(
                     unused -> SpotifyUtils.getCurrentTrackFuture().join()
             ).thenAcceptAsync(
                     track -> {

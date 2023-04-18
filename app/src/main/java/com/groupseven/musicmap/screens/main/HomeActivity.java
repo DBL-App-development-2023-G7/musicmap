@@ -19,7 +19,6 @@ import com.groupseven.musicmap.firebase.Session;
 import com.groupseven.musicmap.models.User;
 import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.permissions.LocationPermission;
-import com.groupseven.musicmap.util.spotify.SpotifyAuthActivity;
 import com.groupseven.musicmap.util.ui.FragmentUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
