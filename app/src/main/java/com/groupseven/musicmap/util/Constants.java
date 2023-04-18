@@ -73,4 +73,9 @@ public final class Constants {
      */
     public static final String SPOTIFY_QUERY_PARAM_KEY = "code";
 
+    /**
+     * The refresh token field for Spotify token storage.
+     */
+    public static final String SPOTIFY_REFRESH_TOKEN_FIELD = "refreshToken";
+
 }
