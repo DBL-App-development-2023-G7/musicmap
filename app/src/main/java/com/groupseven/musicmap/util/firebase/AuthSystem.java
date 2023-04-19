@@ -4,239 +4,191 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
-import com.groupseven.musicmap.models.ArtistData;
-import com.groupseven.musicmap.models.User;
-import com.groupseven.musicmap.models.UserData;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskCompletionSource;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.WriteBatch;
-import com.google.firebase.internal.api.FirebaseNoSignedInUserException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.groupseven.musicmap.MusicMap;
+import com.groupseven.musicmap.R;
+import com.groupseven.musicmap.models.ArtistData;
+import com.groupseven.musicmap.models.User;
+import com.groupseven.musicmap.models.UserData;
 import com.groupseven.musicmap.util.conversion.TaskUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Utility for interacting with everything related to authentication and accounts.
+ */
 public class AuthSystem {
 
     /**
-     * This method adds the user and its attributes to the Firebase Firestore database.
+     * Adds the user and its attributes to the database.
      *
-     * @param user the user to add to the Firestore database
-     * @return the task
+     * @param user the user to add to the database.
+     * @return the future indicating when/if the user is added.
      */
-    public static Task<Void> addUserToFirestore(@NonNull User user) {
+    public static CompletableFuture<Void> addUserToFirestore(@NonNull User user) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         return addUserToFirestore(firestore, user);
     }
 
     /**
-     * This overloaded method adds the user and its attributes to the Firebase Firestore database.
+     * Adds the user and its attributes to the database.
      *
-     * @param firestore the FirebaseFirestore instance to use
-     * @param user the user to add to the Firestore database
-     * @return the task
+     * @param firestore the FirebaseFirestore instance to use.
+     * @param user the user to add to the database.
+     * @return the future indicating when/if the user is added.
      */
-    public static Task<Void> addUserToFirestore(@NonNull FirebaseFirestore firestore, @NonNull User user) {
-        return firestore.collection("Users").document(user.getUid()).set(user.getData());
+    public static CompletableFuture<Void> addUserToFirestore(@NonNull FirebaseFirestore firestore, @NonNull User user) {
+        return TaskUtil.getFuture(firestore.collection("Users")
+                .document(user.getUid())
+                .set(user.getData())
+        );
     }
 
     /**
-     * This method registers a user using the Firebase Auth system. This method also add the date that is not contained
-     * in the profile of the user to the Firestore Database and sends a verification email to the given user's email
-     * address.
+     * Registers a user.
+     * <p>
+     * Sends a verification email to the given user's email address.
      *
      * @param userData the user to be registered
      * @param password the password of the user to be registered
-     * @return the result of this task
+     * @return the future indicating when/if the user is registered
      */
-    public static Task<Void> register(UserData userData, String password) {
+    public static CompletableFuture<Void> register(UserData userData, String password) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String email = userData.getEmail();
 
-        return TaskUtil.getTask(Queries.getUserWithUsername(userData.getUsername())
+        return Queries.getUserWithUsername(userData.getUsername())
+                // First, create the user in the Firebase authentication
                 .thenCompose(user -> {
                     if (user != null) {
-                        throw new IllegalArgumentException("The username already exist!");
+                        throw new IllegalArgumentException(
+                                MusicMap.getAppResources().getString(R.string.input_error_username_exists));
                     }
 
-                    CompletableFuture<AuthResult> registerAccount = TaskUtil.getFuture(
-                            auth.createUserWithEmailAndPassword(email, password));
+                    return TaskUtil.getFuture(auth.createUserWithEmailAndPassword(email, password));
+                })
+                .thenCompose(result -> {
+                    FirebaseUser firebaseUser = result.getUser();
 
-                    return registerAccount.thenCompose(result -> {
-                        FirebaseUser firebaseUser = result.getUser();
-
-                        if (firebaseUser != null) {
-                            Task<Void> sendEmail = firebaseUser.sendEmailVerification();
-                            Task<Void> addUser = addUserToFirestore(new User(userData, firebaseUser.getUid()));
-
-                            return TaskUtil.getFuture(Tasks.whenAll(sendEmail, addUser));
-                        }
-
+                    if (firebaseUser == null) {
                         throw new IllegalStateException("The firebase user is null");
-                    });
-                }));
+                    }
+
+                    // Then, send the verification email
+                    CompletableFuture<Void> sendEmail =
+                            TaskUtil.getFuture(firebaseUser.sendEmailVerification());
+                    // ... and adds the user to the Firestore
+                    CompletableFuture<Void> addUser =
+                            addUserToFirestore(new User(userData, firebaseUser.getUid()));
+
+                    return CompletableFuture.allOf(sendEmail, addUser);
+
+                });
     }
 
     /**
-     * This method logins a user using its username and password.
+     * Attempts to log in to a user.
      *
-     * @param username the username of the user
-     * @param password the password of the user
-     * @return the result of the task
+     * @param username the username of the user.
+     * @param password the password of the user.
+     * @return the future indicating when/if the login was successful.
      */
-    public static Task<AuthResult> loginWithUsernameAndPassword(String username, String password) {
-
-        return TaskUtil.getTask(Queries.getUserWithUsername(username).thenCompose(user -> {
+    public static CompletableFuture<Void> loginWithUsernameAndPassword(String username, String password) {
+        return Queries.getUserWithUsername(username).thenCompose(user -> {
             if (user == null) {
-                throw new IllegalArgumentException("Username does not exist");
+                throw new IllegalArgumentException(
+                        MusicMap.getAppResources().getString(R.string.username_does_not_exist));
             }
 
             String email = user.getData().getEmail();
             FirebaseAuth auth = FirebaseAuth.getInstance();
 
-            return TaskUtil.getFuture(auth.signInWithEmailAndPassword(email, password));
-        }));
+            return TaskUtil.getFuture(auth.signInWithEmailAndPassword(email, password))
+                    // Hide the AuthResult, the internal API does not need to be exposed
+                    .thenApply(authResult -> null);
+        });
     }
 
     /**
-     * This method tries to parse the given document as a UserData or ArtistData class.
+     * Gets the user data of the user with the given uid.
      *
-     * @param doc the given document from the firebase database
-     * @return the doc formatted as a UserData class
-     * @throws FirebaseFirestoreException if the given document does not exist
-     * @throws NullPointerException       if the given document does not have any data
+     * @param uid the given uid of the user.
+     * @return the future with the user data.
      */
-    public static UserData parseUserData(DocumentSnapshot doc) throws FirebaseFirestoreException, NullPointerException {
-        if (!doc.exists()) {
-            throw new FirebaseFirestoreException("Document does not exist.", FirebaseFirestoreException.Code.NOT_FOUND);
-        }
-
-        UserData userData = doc.toObject(UserData.class);
-
-        if (userData == null) {
-            throw new NullPointerException("Document does not contain any data.");
-        }
-
-        if (userData.isArtist()) {
-            return doc.toObject(ArtistData.class);
-        }
-
-        return userData;
-    }
-
-    /**
-     * Gets the user data of the user that has the given {@code uid}.
-     *
-     * @param uid the given uid of the user
-     * @return the result of the task
-     */
-    public static Task<UserData> getUserData(String uid) {
+    public static CompletableFuture<UserData> getUserData(String uid) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
-        Task<DocumentSnapshot> getUserDataFirestore = firestore.collection("Users").document(uid).get();
-
-        return getUserDataFirestore.onSuccessTask(doc -> {
-            TaskCompletionSource<UserData> tcs = new TaskCompletionSource<>();
-
-            try {
-                tcs.setResult(parseUserData(doc));
-            } catch (Exception exception) {
-                tcs.setException(exception);
-            }
-
-            return tcs.getTask();
-        });
+        return TaskUtil.getFuture(firestore.collection("Users").document(uid).get())
+                .thenApply(AuthSystem::parseUserData);
     }
 
     /**
-     * This method retrieves the user that has the given uid and their data.
+     * Retrieves the user with the given uid and their data.
      *
-     * @param uid the given uid of the user
-     * @return the result of this task
+     * @param uid the given uid of the user.
+     * @return the future with the user.
      */
-    public static Task<User> getUser(String uid) {
-        return getUserData(uid).onSuccessTask(userData -> {
-            TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
-            tcs.setResult(userData.toUser(uid));
-            return tcs.getTask();
-        });
+    public static CompletableFuture<User> getUser(String uid) {
+        return getUserData(uid).thenApply(userData -> userData.toUser(uid));
     }
 
     /**
-     * This method removes the data stored in the Firestore database of the user that has the given uid. This method
-     * is intentionally made private.
+     * Updates the username of the currently connected user.
      *
-     * @param uid the uid of the user
-     * @return the result of this task
+     * @param username the new username.
+     * @return the future indicating when/if the username is updated.
      */
-    private static Task<Void> removeUserDataFromFirestore(String uid) {
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        return firestore.collection("Users/" + uid + "/MusicMemories").get().onSuccessTask(memories -> {
-            WriteBatch batch = firestore.batch();
-            for (QueryDocumentSnapshot memory : memories) {
-                batch.delete(memory.getReference());
-            }
-
-            return batch.commit().addOnSuccessListener(result ->
-                    firestore.collection("Users").document(uid).delete());
-        });
-    }
-
-    /**
-     * This method updates the username of the with the one given in the {@code username} parameter.
-     *
-     * @param username the new username of the user
-     * @return the result of the task
-     */
-    public static Task<Void> updateUsername(String username) {
-        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+    public static CompletableFuture<Void> updateUsername(String username) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
         if (firebaseUser == null) {
-            tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
-            return tcs.getTask();
+            future.completeExceptionally(new IllegalStateException("There is no user connected!"));
+            return future;
         }
 
         DocumentReference documentReference =
                 firestore.collection("Users").document(firebaseUser.getUid());
 
+        // Construct the new data for the user's document
         Map<String, Object> data = new HashMap<>();
         data.put("username", username);
 
-        return TaskUtil.getTask(Queries.getUserWithUsername(username).thenCompose(user -> {
+        return Queries.getUserWithUsername(username).thenCompose(user -> {
+            // First, check if a user with that name exists
             if (user != null) {
-                throw new IllegalArgumentException("That username already exists");
+                throw new IllegalArgumentException(MusicMap.getAppResources()
+                        .getString(R.string.input_error_username_exists));
             }
 
+            // If not, update the username with the previously created data
             return TaskUtil.getFuture(documentReference.update(data));
-        }));
+        });
     }
 
     /**
-     * This method uploads the given photo as the profile picture of the currently connected user.
+     * Updates the profile picture of the currently connected user.
      *
-     * @param photoUri the local uri of the photo that needs to be uploaded
-     * @return the result of the task
+     * @param photoUri the local uri of the new profile picture.
+     * @return the future indicating when/if the profile picture is updated.
      */
-    public static Task<Void> updateProfilePicture(Uri photoUri) {
-        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+    public static CompletableFuture<Void> updateProfilePicture(Uri photoUri) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
@@ -244,134 +196,211 @@ public class AuthSystem {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
         if (firebaseUser == null) {
-            tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
-            return tcs.getTask();
+            future.completeExceptionally(new IllegalStateException("There is no user connected!"));
+            return future;
         }
 
+        // Get some Firebase storage references
         StorageReference storageRef = storage.getReference("users/" + firebaseUser.getUid());
         StorageReference folderRef = storageRef.child("/profilePicture");
         StorageReference photoRef = folderRef.child(photoUri.getLastPathSegment());
 
-        return folderRef.listAll().onSuccessTask(results -> {
-            //Delete older photos
-            for (StorageReference item : results.getItems()) {
-                item.delete();
-            }
+        return TaskUtil.getFuture(folderRef.listAll())
+                .thenCompose(listResult -> {
+                    // Delete older photos
+                    return CompletableFuture.allOf(listResult.getItems().stream()
+                            .map(StorageReference::delete)
+                            .map(TaskUtil::getFuture)
+                            .toArray(CompletableFuture[]::new)
+                    );
+                })
+                // Then upload the new profile picture to the Firebase storage
+                .thenCompose(unused -> TaskUtil.getFuture(photoRef.putFile(photoUri)))
+                // Then get the download url of the newly uploaded profile picture
+                .thenCompose(unused -> TaskUtil.getFuture(photoRef.getDownloadUrl()))
+                // And update the profile document with the new profile picture url
+                .thenCompose(uri -> {
+                    DocumentReference documentReference =
+                            firestore.collection("Users").document(firebaseUser.getUid());
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("profilePicture", uri);
 
-            return photoRef.putFile(photoUri).onSuccessTask(taskSnapshot -> photoRef.getDownloadUrl()
-                    .onSuccessTask(uri -> {
-                        DocumentReference documentReference =
-                                firestore.collection("Users").document(firebaseUser.getUid());
-                        Map<String, Object> data = new HashMap<>();
-                        data.put("profilePicture", uri);
-
-                        return documentReference.update(data);
-                    }));
-        });
+                    return TaskUtil.getFuture(documentReference.update(data));
+                });
     }
 
     /**
-     * This method updates the email of the currently connected user and if successful it will send a new
-     * verification email.
+     * Updates the email of the currently connected user.
+     * <p>
+     * This will send a verification email as well, if successful.
+     * <p>
+     * Requires the password of the user for security purposes.
      *
-     * @param newEmail the new email
-     * @param password the password of the connected user
-     * @return the result of the task
+     * @param newEmail the new email.
+     * @param password the password.
+     * @return the future indicating when/if the email is updated.
      */
-    public static Task<Void> updateEmail(String newEmail, String password) {
-        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+    public static CompletableFuture<Void> updateEmail(String newEmail, String password) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
         if (firebaseUser == null) {
-            tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
-            return tcs.getTask();
+            future.completeExceptionally(new IllegalStateException("There is no user connected!"));
+            return future;
         }
 
         if (firebaseUser.getEmail() == null) {
-            tcs.setException(new IllegalStateException("The current user does not have an email address."));
-            return tcs.getTask();
+            future.completeExceptionally(new IllegalStateException("The current user does not have an email address."));
+            return future;
         }
 
         AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), password);
-        return firebaseUser.reauthenticate(credential).onSuccessTask(reauthTask ->
-                firebaseUser.updateEmail(newEmail).onSuccessTask(updateEmailTask ->
-                        firebaseUser.reload().onSuccessTask(reloadUserTask -> {
-                            DocumentReference documentReference =
-                                    firestore.collection("Users").document(firebaseUser.getUid());
-                            Map<String, Object> data = new HashMap<>();
-                            data.put("email", newEmail);
 
-                            Task<Void> sendEmail = firebaseUser.sendEmailVerification();
-                            Task<Void> updateEmail = documentReference.update(data);
+        // First, re-authenticate
+        return TaskUtil.getFuture(firebaseUser.reauthenticate(credential))
+                // Then, update the email in the authentication
+                .thenCompose(unused -> TaskUtil.getFuture(firebaseUser.updateEmail(newEmail)))
+                .thenCompose(unused1 -> {
+                    DocumentReference documentReference =
+                            firestore.collection("Users").document(firebaseUser.getUid());
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("email", newEmail);
 
-                            return Tasks.whenAll(sendEmail, updateEmail);
-                        })));
-    }
+                    // Then, send a verification to the new email
+                    CompletableFuture<Void> sendEmail = TaskUtil.getFuture(
+                            firebaseUser.sendEmailVerification());
+
+                    // ... and update the email in the user document
+                    CompletableFuture<Void> updateEmail = TaskUtil.getFuture(
+                            documentReference.update(data));
+
+                    return CompletableFuture.allOf(sendEmail, updateEmail);
+                });
+        }
 
     /**
-     * This method updated the password of the currently connected user. It replaces the old password with the one
-     * provided in the parameter {@code oldPassword}.
+     * Updates the password of the currently connected user.
+     * <p>
+     * Replaces the old password, which must be provided as well for security purposes.
      *
-     * @param oldPassword the current password of the connected user
-     * @param newPassword the new password
-     * @return the result of the task
+     * @param oldPassword the current password.
+     * @param newPassword the new password.
+     * @return the future indicating when/if the password is updated.
      */
-    public static Task<Void> updatePassword(String oldPassword, String newPassword) {
-        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+    public static CompletableFuture<Void> updatePassword(String oldPassword, String newPassword) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
         if (firebaseUser == null) {
-            tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
-            return tcs.getTask();
+            future.completeExceptionally(new IllegalStateException("There is no user connected!"));
+            return future;
         }
 
         if (firebaseUser.getEmail() == null) {
-            tcs.setException(new IllegalStateException("The current user does not have an email address."));
-            return tcs.getTask();
+            future.completeExceptionally(new IllegalStateException("The current user does not have an email address."));
+            return future;
         }
 
+        // First, re-authenticate
         AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), oldPassword);
-        return firebaseUser.reauthenticate(credential)
-                .onSuccessTask(reauthTask -> firebaseUser.updatePassword(newPassword));
+        return TaskUtil.getFuture(firebaseUser.reauthenticate(credential))
+                // Then update the password if successful
+                .thenCompose(unused -> TaskUtil.getFuture(firebaseUser.updatePassword(newPassword)));
     }
 
     /**
-     * This method deletes the connected user and their data from the Firestore database.
+     * Deletes the connected user and their data from the database.
      *
-     * @return the result of this task
+     * @return the future indicating when/if the user is deleted.
      */
-    public static Task<Void> deleteUser(String password) {
-        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+    public static CompletableFuture<Void> deleteUser(String password) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
         if (firebaseUser == null) {
-            tcs.setException(new FirebaseNoSignedInUserException("There is no user connected!"));
-            return tcs.getTask();
+            future.completeExceptionally(new IllegalStateException("There is no user connected!"));
+            return future;
         }
 
         if (firebaseUser.getEmail() == null) {
-            tcs.setException(new IllegalStateException("The current user does not have an email address."));
-            return tcs.getTask();
+            future.completeExceptionally(new IllegalStateException("The current user does not have an email address."));
+            return future;
         }
 
         AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), password);
-        return firebaseUser.reauthenticate(credential).onSuccessTask(reauthTask ->
-                removeUserDataFromFirestore(firebaseUser.getUid()).onSuccessTask(task -> firebaseUser.delete()));
+
+        // First, re-authenticate
+        return TaskUtil.getFuture(firebaseUser.reauthenticate(credential))
+                // Then, remove user data
+                .thenCompose(unused -> removeUserDataFromFirestore(firebaseUser.getUid()))
+                // And finally delete the user
+                .thenCompose(unused -> TaskUtil.getFuture(firebaseUser.delete()));
     }
 
     /**
-     * This method logs out the user.
+     * Removes the data stored in the database of the user with the given uid.
+     *
+     * @param uid the uid of the user.
+     * @return the future indicating when/if the user is removed.
+     */
+    private static CompletableFuture<Void> removeUserDataFromFirestore(String uid) {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        return TaskUtil.getFuture(firestore.collection("Users/" + uid + "/MusicMemories").get())
+                .thenCompose(memories -> {
+                    // First, delete all music memories
+                    WriteBatch batch = firestore.batch();
+                    for (QueryDocumentSnapshot memory : memories) {
+                        batch.delete(memory.getReference());
+                    }
+
+                    return TaskUtil.getFuture(batch.commit())
+                            // Then delete the user document itself
+                            .thenCompose(unused -> TaskUtil.getFuture(
+                                    firestore.collection("Users").document(uid).delete()));
+                });
+    }
+
+    /**
+     * Logs out the user.
      */
     public static void logout() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.signOut();
+        FirebaseAuth.getInstance().signOut();
+    }
+
+    /**
+     * Parses the given document as an appropriate {@link UserData}.
+     * <p>
+     * This will return an {@link ArtistData} if the given document contains the data of an artist.
+     *
+     * @param doc the given document from the database.
+     * @return the user data.
+     * @throws IllegalArgumentException if the given document {@link DocumentSnapshot#exists() does not exist}.
+     */
+    public static UserData parseUserData(DocumentSnapshot doc) throws IllegalArgumentException {
+        if (!doc.exists()) {
+            throw new IllegalArgumentException("Document does not exist.");
+        }
+
+        // First, try parsing as UserData
+        UserData userData = doc.toObject(UserData.class);
+
+        if (userData == null) {
+            throw new IllegalStateException("toObject returned null for existing document");
+        }
+
+        // If it's an artist, re-parse as ArtistData
+        if (userData.isArtist()) {
+            return doc.toObject(ArtistData.class);
+        }
+
+        return userData;
     }
 
 }
