@@ -1,12 +1,13 @@
 package com.groupseven.musicmap.screens.settings;
 
+import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.spotify.SpotifyAccess;
+import com.groupseven.musicmap.spotify.SpotifyAccessActivity;
 import com.groupseven.musicmap.util.ui.Message;
 
 public class ConnectionSettingsFragment extends PreferenceFragmentCompat {
@@ -32,7 +33,8 @@ public class ConnectionSettingsFragment extends PreferenceFragmentCompat {
 
                 @Override
                 public void onInvalidToken() {
-                    activity.registerForSpotifyPKCE();
+                    Intent startSpotifyAccessIntent = new Intent(requireContext(), SpotifyAccessActivity.class);
+                    startActivity(startSpotifyAccessIntent);
                 }
             });
             return true;

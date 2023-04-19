@@ -9,13 +9,13 @@ import androidx.fragment.app.FragmentManager;
 
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.firebase.Session;
+import com.groupseven.musicmap.listeners.SessionListenerActivity;
 import com.groupseven.musicmap.models.User;
 import com.groupseven.musicmap.screens.profile.ProfileActivity;
-import com.groupseven.musicmap.spotify.SpotifyAccessActivity;
 import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.ui.FragmentUtil;
 
-public class SettingsActivity extends SpotifyAccessActivity {
+public class SettingsActivity extends SessionListenerActivity {
 
     private int currentLayout = R.layout.activity_settings;
 

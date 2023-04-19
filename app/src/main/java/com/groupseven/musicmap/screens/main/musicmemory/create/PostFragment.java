@@ -30,7 +30,6 @@ import com.groupseven.musicmap.models.Song;
 import com.groupseven.musicmap.firebase.Session;
 import com.groupseven.musicmap.screens.main.MainFragment;
 import com.groupseven.musicmap.screens.main.feed.FeedFragment;
-import com.groupseven.musicmap.spotify.SpotifyAccessActivity;
 import com.groupseven.musicmap.util.firebase.Actions;
 import com.groupseven.musicmap.util.permissions.CameraPermission;
 import com.groupseven.musicmap.util.permissions.LocationPermission;

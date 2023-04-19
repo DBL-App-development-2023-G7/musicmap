@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.firebase.Session;
-import com.groupseven.musicmap.listeners.SessionListenerActivity;
 import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.firebase.SpotifyTokenStorage;
 import com.groupseven.musicmap.util.spotify.SpotifyUtils;
@@ -21,7 +20,7 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
 /**
  * This class uses {@link SpotifyAccess} to setup Spotify and use the API and PKCE to authenticate.
  */
-public abstract class SpotifyAccessActivity extends SessionListenerActivity {
+public class SpotifyAccessActivity extends AppCompatActivity {
 
     private static final String TAG = "SpotifyAccessActivity";
 
@@ -40,6 +39,7 @@ public abstract class SpotifyAccessActivity extends SessionListenerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spotify_auth);
         this.setupSpotify();
+        registerForSpotifyPKCE();
     }
 
     @Override
@@ -62,7 +62,7 @@ public abstract class SpotifyAccessActivity extends SessionListenerActivity {
      * The browser internet asks the user to login only once if the user is a new user who hasn't
      * setup the Spotify connection yet.
      */
-    public void registerForSpotifyPKCE() {
+    private void registerForSpotifyPKCE() {
         codeVerifier = SpotifyUtils.generateCodeVerifier();
         String codeChallenge = SpotifyUtils.generateCodeChallenge(codeVerifier);
 
@@ -87,7 +87,7 @@ public abstract class SpotifyAccessActivity extends SessionListenerActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Uri uri = intent.getData();
-
+        Log.d(TAG, "POOP");
         if (uri != null) {
             String authCode = uri.getQueryParameter(Constants.SPOTIFY_QUERY_PARAM_KEY);
             Log.d(TAG, uri.toString());

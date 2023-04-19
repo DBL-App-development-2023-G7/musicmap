@@ -16,7 +16,7 @@ public class SpotifyTokenStorage {
     private static final String TAG = "FirebaseTokenStorage";
 
     /**
-     * The user id of the user to associate with this {@code SpotifyTokenStorage} instance;
+     * The user id of the user to associate with this {@code SpotifyTokenStorage} instance.
      */
     private final String userID;
 
