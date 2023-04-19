@@ -120,22 +120,4 @@ public class SpotifyAccessActivity extends AppCompatActivity {
         finish();
     }
 
-    /**
-     * Interface used to be notified of the status of the Spotify access token.
-     */
-    public interface TokenCallback {
-
-        /**
-         * Called when the Spotify access token is valid.
-         *
-         * @param apiToken The Spotify access token.
-         */
-        void onValidToken(String apiToken);
-
-        /**
-         * Called when the Spotify access token is invalid or has expired.
-         */
-        void onInvalidToken();
-    }
-
 }

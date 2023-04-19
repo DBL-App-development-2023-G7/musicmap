@@ -34,7 +34,7 @@ public class ConnectionSettingsFragment extends PreferenceFragmentCompat {
         SpotifyAccess spotifyAccess = SpotifyAccess.getSpotifyAccessInstance();
 
         spotifyPreference.setOnPreferenceClickListener(preference -> {
-            spotifyAccess.refreshToken(new SpotifyAccessActivity.TokenCallback() {
+            spotifyAccess.refreshToken(new SpotifyAccess.TokenCallback() {
                 @Override
                 public void onValidToken(String apiToken) {
                     Message.showSuccessMessage(activity, getString(R.string.spotify_already_connected));

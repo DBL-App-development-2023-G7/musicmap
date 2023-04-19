@@ -148,7 +148,7 @@ public class PostFragment extends MainFragment {
         fetchUserLocation();
         getPermission();
 
-        spotifyAccess.refreshToken(new SpotifyAccessActivity.TokenCallback() {
+        spotifyAccess.refreshToken(new SpotifyAccess.TokenCallback() {
             @Override
             public void onValidToken(String apiToken) {
                 postMemoryButton.setEnabled(true);

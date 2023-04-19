@@ -118,7 +118,7 @@ public final class SpotifyAccess {
      *
      * @param tokenCallback The token callback to be called when the token is refreshed.
      */
-    public void refreshToken(SpotifyAccessActivity.TokenCallback tokenCallback) {
+    public void refreshToken(TokenCallback tokenCallback) {
         if (isTokenExpired()) {
             String currentUserId = Session.getInstance().getCurrentUser().getUid();
             SpotifyTokenStorage tokenStorage = new SpotifyTokenStorage(currentUserId);
@@ -151,6 +151,24 @@ public final class SpotifyAccess {
                         });
                 });
         }
+    }
+
+    /**
+     * Interface used to be notified of the status of the Spotify access token.
+     */
+    public interface TokenCallback {
+
+        /**
+         * Called when the Spotify access token is valid.
+         *
+         * @param apiToken The Spotify access token.
+         */
+        void onValidToken(String apiToken);
+
+        /**
+         * Called when the Spotify access token is invalid or has expired.
+         */
+        void onInvalidToken();
     }
 
 }
