@@ -57,7 +57,7 @@ public class ChangeEmailDialogFragment extends DialogFragment {
         String newEmail = newEmailInput.getText().toString();
         String password = passwordInput.getText().toString();
 
-        if (InputChecker.checkEmail(newEmail, newEmailInput) | InputChecker.checkPassword(password, passwordInput)) {
+        if (InputChecker.checkEmail(newEmail, newEmailInput) || InputChecker.checkPassword(password, passwordInput)) {
             AuthSystem.updateEmail(newEmail, password).whenCompleteAsync((unused, throwable) -> {
                 if (throwable == null) {
                     this.dismiss();

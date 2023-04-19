@@ -54,7 +54,8 @@ public class ProfilePageFragment extends Fragment {
                     .thenAcceptAsync(this::displayData, ContextCompat.getMainExecutor(requireContext()))
                     .exceptionally(throwable -> {
                         Log.e(TAG, "Exception occurred while getting user data for profile", throwable);
-                        Message.showFailureMessage(container, "Could not load user data");
+                        Message.showFailureMessage(container,
+                                getString(R.string.profile_error_user_data_loading_failed));
                         return null;
                     });
         }
