@@ -29,12 +29,12 @@ public final class Session implements FirebaseAuth.AuthStateListener {
     private static final String TAG = "Session";
     private static volatile Session instance;
 
-    private final Set<Listener> listeners;
+    final Set<Listener> listeners;
 
     private User currentUser;
     private boolean userConnected;
 
-    private ListenerRegistration userListenerRegistration;
+    ListenerRegistration userListenerRegistration;
 
     private Session() {
         listeners = new HashSet<>();
@@ -101,7 +101,7 @@ public final class Session implements FirebaseAuth.AuthStateListener {
         }
     }
 
-    private void refreshUserData(DocumentSnapshot doc, FirebaseFirestoreException error) {
+    void refreshUserData(DocumentSnapshot doc, FirebaseFirestoreException error) {
         Log.i(TAG, "Trying to refresh user's data");
         if (error != null) {
             Log.e(TAG, "Exception occurred while refreshing user data", error);
@@ -146,7 +146,7 @@ public final class Session implements FirebaseAuth.AuthStateListener {
         listeners.remove(listener);
     }
 
-    private void updateListeners() {
+    void updateListeners() {
         Log.i(TAG, "Updating all session listeners.");
         for (Listener listener : listeners) {
             try {
