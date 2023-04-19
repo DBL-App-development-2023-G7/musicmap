@@ -1,25 +1,15 @@
 package com.groupseven.musicmap.screens.settings;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.groupseven.musicmap.R;
-import com.groupseven.musicmap.spotify.SpotifyAccessActivity;
 import com.groupseven.musicmap.spotify.SpotifyAccess;
 import com.groupseven.musicmap.util.ui.Message;
 
 public class ConnectionSettingsFragment extends PreferenceFragmentCompat {
-
-    private final ActivityResultLauncher<Intent> spotifyAccessActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> {
-                Log.d("TAG", result.getData() == null ? "null" : result.getData().toString());
-            });
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -42,8 +32,7 @@ public class ConnectionSettingsFragment extends PreferenceFragmentCompat {
 
                 @Override
                 public void onInvalidToken() {
-                    Intent spotifyAuthIntent = new Intent(activity, SpotifyAccessActivity.class);
-                    spotifyAccessActivityResultLauncher.launch(spotifyAuthIntent);
+                    activity.registerForSpotifyPKCE();
                 }
             });
             return true;

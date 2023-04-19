@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.firebase.Session;
+import com.groupseven.musicmap.listeners.SessionListenerActivity;
 import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.firebase.SpotifyTokenStorage;
 import com.groupseven.musicmap.util.spotify.SpotifyUtils;
@@ -20,7 +21,7 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
 /**
  * This class uses {@link SpotifyAccess} to setup Spotify and use the API and PKCE to authenticate.
  */
-public class SpotifyAccessActivity extends AppCompatActivity {
+public abstract class SpotifyAccessActivity extends SessionListenerActivity {
 
     private static final String TAG = "SpotifyAccessActivity";
 
@@ -52,7 +53,6 @@ public class SpotifyAccessActivity extends AppCompatActivity {
      */
     private void setupSpotify() {
         this.spotifyAccess = SpotifyAccess.getSpotifyAccessInstance();
-        registerForSpotifyPKCE();
     }
 
     /**
