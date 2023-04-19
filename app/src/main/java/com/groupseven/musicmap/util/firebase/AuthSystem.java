@@ -172,7 +172,8 @@ public class AuthSystem {
         return Queries.getUserWithUsername(username).thenCompose(user -> {
             // First, check if a user with that name exists
             if (user != null) {
-                throw new IllegalArgumentException("That username already exists");
+                throw new IllegalArgumentException(MusicMap.getAppResources()
+                        .getString(R.string.input_error_username_exists));
             }
 
             // If not, update the username with the previously created data

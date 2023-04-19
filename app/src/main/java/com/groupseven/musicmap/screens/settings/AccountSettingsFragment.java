@@ -47,7 +47,6 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
         setupOtherPreferences();
     }
 
-    //TODO idk where but move this somewhere
     private final ActivityResultLauncher<Intent> uploadPictureActivityResultLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
