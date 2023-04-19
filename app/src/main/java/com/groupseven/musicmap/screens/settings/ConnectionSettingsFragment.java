@@ -2,6 +2,7 @@ package com.groupseven.musicmap.screens.settings;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -16,7 +17,9 @@ import com.groupseven.musicmap.util.ui.Message;
 public class ConnectionSettingsFragment extends PreferenceFragmentCompat {
 
     private final ActivityResultLauncher<Intent> spotifyAccessActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> {});
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                Log.d("TAG", result.getData() == null ? "null" : result.getData().toString());
+            });
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {

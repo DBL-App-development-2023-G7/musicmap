@@ -40,6 +40,9 @@
         </activity>
         <service android:name=".services.InternetCheckService" />
         <activity
+            android:name=".spotify.SpotifyAccessActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.verification.VerificationActivity"
             android:exported="false"
             android:theme="@style/Theme.MusicMap.NoActionBar"/>
