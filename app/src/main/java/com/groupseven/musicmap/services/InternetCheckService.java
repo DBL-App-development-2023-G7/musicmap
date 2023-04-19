@@ -25,6 +25,10 @@ public class InternetCheckService extends Service {
     private Runnable runnable;
     private boolean isRunning = false;
 
+    public boolean isRunning() {
+        return this.isRunning;
+    }
+
     /**
      * Called when the service is created.
      * Initializes the handler and the runnable to check for internet connection.
@@ -92,7 +96,7 @@ public class InternetCheckService extends Service {
      * @param context The context to use for getting the system service.
      * @return true if internet connection is available, false otherwise.
      */
-    private boolean isInternetAvailable(Context context) {
+    protected boolean isInternetAvailable(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnected();
