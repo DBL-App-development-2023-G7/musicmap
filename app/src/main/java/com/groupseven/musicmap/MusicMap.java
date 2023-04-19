@@ -40,7 +40,7 @@ public class MusicMap extends Application {
 
         // Start internet check
         Intent intent = new Intent(this, InternetCheckService.class);
-//        startForegroundService(intent);
+        startService(intent);
     }
 
 }
