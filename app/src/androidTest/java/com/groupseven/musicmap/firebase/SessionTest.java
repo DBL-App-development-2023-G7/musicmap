@@ -2,6 +2,7 @@ package com.groupseven.musicmap.firebase;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -18,12 +19,32 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class SessionTest {
+
+    private FirebaseAuth firebaseAuth;
+
+    private FirebaseUser firebaseUser;
+
+    private FirebaseFirestore firestore;
+
+    private DocumentReference docRef;
+
+    private DocumentSnapshot docSnapshot;
+
+    @Before
+    public void setup() {
+        firebaseAuth = mock(FirebaseAuth.class);
+        firebaseUser = mock(FirebaseUser.class);
+        firestore = mock(FirebaseFirestore.class);
+        docRef = mock(DocumentReference.class);
+        docSnapshot = mock(DocumentSnapshot.class);
+    }
 
     @Test
     public void testSingletonInstance() {
@@ -55,39 +76,6 @@ public class SessionTest {
     }
 
     @Test
-    public void testOnAuthStateChanged() {
-        Session session = Session.getInstance();
-
-        FirebaseAuth firebaseAuth = mock(FirebaseAuth.class);
-        FirebaseUser firebaseUser = mock(FirebaseUser.class);
-        FirebaseFirestore firestore = mock(FirebaseFirestore.class);
-        DocumentReference docRef = mock(DocumentReference.class);
-        DocumentSnapshot docSnapshot = mock(DocumentSnapshot.class);
-
-        when(firebaseAuth.getCurrentUser()).thenReturn(firebaseUser);
-        when(firebaseUser.getUid()).thenReturn("test");
-        when(firestore.document(anyString())).thenReturn(docRef);
-        when(docRef.addSnapshotListener(any())).thenReturn(mock(ListenerRegistration.class));
-        when(docSnapshot.getId()).thenReturn("test");
-
-        // Test case where nothing is null
-        session.onAuthStateChanged(firebaseAuth);
-        assertTrue(session.isUserConnected());
-        assertNotNull(session.getCurrentUser());
-        assertNotNull(session.getUserListenerRegistration());
-
-        // Test case where firebaseUser is not null and userListenerRegistration is null
-        session.onAuthStateChanged(firebaseAuth);
-        assertTrue(session.isUserConnected());
-        assertNotNull(session.getUserListenerRegistration());
-
-        // Test case where firebaseUser is not null and userListenerRegistration is not null
-        session.onAuthStateChanged(firebaseAuth);
-        assertTrue(session.isUserConnected());
-        assertNotNull(session.getUserListenerRegistration());
-    }
-
-    @Test
     public void testUpdateListeners() {
         Session session = Session.getInstance();
 
@@ -102,6 +90,36 @@ public class SessionTest {
 
         verify(listener1, times(1)).onSessionStateChanged();
         verify(listener2, times(1)).onSessionStateChanged();
+    }
+
+    @Test
+    public void testOnAuthStateChanged_userConnected() {
+        Session session = Session.getInstance();
+
+        when(firebaseAuth.getCurrentUser()).thenReturn(firebaseUser);
+        when(firebaseUser.getUid()).thenReturn("test");
+        when(firestore.document(anyString())).thenReturn(docRef);
+        when(docRef.addSnapshotListener(any())).thenReturn(mock(ListenerRegistration.class));
+        when(docSnapshot.getId()).thenReturn("test");
+
+        session.onAuthStateChanged(firebaseAuth);
+        assertTrue(session.isUserConnected());
+        assertNotNull(session.getUserListenerRegistration());
+    }
+
+    @Test
+    public void testOnAuthStateChanged_userNotConnected() {
+        Session session = Session.getInstance();
+
+        when(firebaseAuth.getCurrentUser()).thenReturn(null);
+        when(firebaseUser.getUid()).thenReturn(null);
+        when(firestore.document(anyString())).thenReturn(docRef);
+        when(docRef.addSnapshotListener(any())).thenReturn(mock(ListenerRegistration.class));
+        when(docSnapshot.getId()).thenReturn("test");
+
+        session.onAuthStateChanged(firebaseAuth);
+        assertFalse(session.isUserConnected());
+        assertNull(session.getUserListenerRegistration());
     }
 
 }
