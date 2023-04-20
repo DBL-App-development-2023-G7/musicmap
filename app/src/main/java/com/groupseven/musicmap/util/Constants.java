@@ -78,4 +78,9 @@ public final class Constants {
      */
     public static final String SPOTIFY_REFRESH_TOKEN_FIELD = "refreshToken";
 
+    /**
+     * A comma-separated list of scopes required for our application to interact with Spotify.
+     */
+    public static final String SPOTIFY_SCOPES = "user-read-currently-playing,user-read-recently-played";
+
 }

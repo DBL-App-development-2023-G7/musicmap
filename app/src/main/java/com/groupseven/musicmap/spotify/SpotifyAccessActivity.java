@@ -62,7 +62,7 @@ public class SpotifyAccessActivity extends AppCompatActivity {
 
         AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyAccess.getSpotifyLoginApi()
                 .authorizationCodePKCEUri(codeChallenge)
-                .scope(SpotifyUtils.getSpotifyPermissions())
+                .scope(Constants.SPOTIFY_SCOPES)
                 .build();
 
         authorizationCodeUriRequest.executeAsync().thenAcceptAsync(uri -> {

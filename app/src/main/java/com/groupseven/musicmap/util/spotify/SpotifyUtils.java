@@ -143,15 +143,6 @@ public class SpotifyUtils {
     }
 
     /**
-     * Returns a string containing the necessary Spotify permissions.
-     *
-     * @return A comma-separated string of Spotify permissions.
-     */
-    public static String getSpotifyPermissions() {
-        return "user-read-currently-playing,user-read-recently-played";
-    }
-
-    /**
      * Generates a random code verifier for use in the Spotify API authentication flow.
      *
      * @return A string containing the randomly generated code verifier.
