@@ -34,7 +34,7 @@ public final class SpotifyAccess {
     /**
      * Time in milliseconds for the token to expire.
      */
-    private static long tokenExpiryTimeStampMillis;
+    private long tokenExpiryTimeStampMillis;
 
     /**
      * The Spotify token used to interact with Spotify API to request data.
