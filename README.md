@@ -20,11 +20,13 @@
 
 <h2>Features</h2>
 <h3>For users:</h3>
+
 - Post Music Memories
 - See the most recent Music Memories
 - Listen to the attached song in the Music Memories
 - Link your Spotify account
 <h3>For artists:</h3>
+
 - See how many and where people used your songs to create Music Memories.
 <h2>Dependencies</h2>
 We imported all our 3rd party dependencies using gradle.
