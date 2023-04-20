@@ -20,7 +20,7 @@ public class ArtistTest {
         UserData userData = new UserData("username", "User",
                 "Name", "user@email.com", new Date(), true);
         artistData = new ArtistData(userData, true, "spotify-id");
-        ArtistData unverifiedArtistData = new ArtistData(userData, true, "spotify-id");
+        ArtistData unverifiedArtistData = new ArtistData(userData, false, "spotify-id");
         artist = new Artist(artistData, "uid");
         unverifiedArtist = new Artist(unverifiedArtistData, "uid");
 
