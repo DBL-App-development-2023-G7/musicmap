@@ -18,9 +18,23 @@ public final class SpotifyAccess {
     private static final String TAG = "SpotifyAccess";
 
     /**
+     * The Spotify API for login with Spotify authentication.
+     */
+    private static final SpotifyApi SPOTIFY_LOGIN_API = new SpotifyApi.Builder()
+            .setClientId(Constants.SPOTIFY_CLIENT_ID)
+            .setRedirectUri(SpotifyHttpManager.makeUri(Constants.SPOTIFY_REDIRECT_URI))
+            .build();
+
+
+    /**
      * The {@link SpotifyAccess} instance.
      */
     private static volatile SpotifyAccess instance;
+
+    /**
+     * Time in milliseconds for the token to expire.
+     */
+    private static long tokenExpiryTimeStampMillis;
 
     /**
      * The Spotify token used to interact with Spotify API to request data.
@@ -31,19 +45,6 @@ public final class SpotifyAccess {
      * The Spotify API for fetching data.
      */
     private SpotifyApi spotifyDataApi;
-
-    /**
-     * The Spotify API for login with Spotify authentication.
-     */
-    private static final SpotifyApi SPOTIFY_LOGIN_API = new SpotifyApi.Builder()
-            .setClientId(Constants.SPOTIFY_CLIENT_ID)
-            .setRedirectUri(SpotifyHttpManager.makeUri(Constants.SPOTIFY_REDIRECT_URI))
-            .build();
-
-    /**
-     * Time in milliseconds for the token to expire.
-     */
-    private static long tokenExpiryTimeStampMillis;
 
     /**
      * Private constructor for Singleton class.
