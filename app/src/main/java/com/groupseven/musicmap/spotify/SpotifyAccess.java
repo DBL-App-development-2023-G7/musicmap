@@ -25,7 +25,6 @@ public final class SpotifyAccess {
             .setRedirectUri(SpotifyHttpManager.makeUri(Constants.SPOTIFY_REDIRECT_URI))
             .build();
 
-
     /**
      * The {@link SpotifyAccess} instance.
      */
