@@ -2,7 +2,6 @@ package com.groupseven.musicmap.listeners;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 
 import android.content.Context;
 import android.net.Network;
@@ -19,17 +18,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class NetworkChangeListenerTest {
 
     @Mock
-    private Context context;
-
-    @Mock
     private Network mockNetwork;
 
     private NetworkChangeListener networkChangeListener;
 
     @Before
     public void setUp() {
-        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        mockNetwork = mock(Network.class);
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         networkChangeListener = new NetworkChangeListener(context);
     }
 
