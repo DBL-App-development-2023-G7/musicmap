@@ -173,7 +173,7 @@ public class SpotifyUtils {
 
             return Base64.getUrlEncoder().withoutPadding().encodeToString(digest);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e); // SHA-256 support is required for every Java implementation
         }
     }
 
