@@ -14,7 +14,7 @@ import com.groupseven.musicmap.util.spotify.SpotifyUtils;
 /**
  * A {@link ViewModel} for data relating to posting a music memory.
  */
-public class PostSongViewModel extends ViewModel {
+public class PostViewModel extends ViewModel {
 
     private final MutableLiveData<Bitmap> cameraImage = new MutableLiveData<>(null);
     private final MutableLiveData<Song> selectedSong = new MutableLiveData<>(null);

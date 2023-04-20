@@ -70,7 +70,7 @@ public class PostFragment extends MainFragment {
     private Button postMemoryButton;
     private boolean shouldClearData = true;
 
-    private PostSongViewModel model;
+    private PostViewModel model;
 
     // a launcher that launches the camera activity and handles the result
     private final ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
@@ -136,7 +136,7 @@ public class PostFragment extends MainFragment {
             Log.e(TAG, "Google Play services availability response: " + response);
         }
 
-        model = new ViewModelProvider(parentActivity).get(PostSongViewModel.class);
+        model = new ViewModelProvider(parentActivity).get(PostViewModel.class);
 
         fetchUserLocation();
 
