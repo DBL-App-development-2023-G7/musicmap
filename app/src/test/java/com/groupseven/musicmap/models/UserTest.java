@@ -16,7 +16,7 @@ public class UserTest {
 
     @Before
     public void setUp() {
-        data = new UserData("username", "User","Name", "user@email.com", new Date());
+        data = new UserData("username", "User", "Name", "user@email.com", new Date());
         user = new User(data, "1234");
     }
 

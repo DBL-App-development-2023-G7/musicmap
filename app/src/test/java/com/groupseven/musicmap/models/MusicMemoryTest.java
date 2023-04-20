@@ -3,8 +3,6 @@ package com.groupseven.musicmap.models;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
-
-
 import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Before;
@@ -38,8 +36,10 @@ public class MusicMemoryTest {
 
     @Test
     public void testToString() {
-        String expectedString = "MusicMemory{photo='photoUri', song='Song{name='name', artistName=artistName, spotifyArtistId='spotifyArtistId', imageUri='imageUri', musicPreviewUri='musicPreviewUri'}'}";
-        String unexpectedString = "MusicMemory{photo='NOTPHOTOURL', song='Song{name='name', artistName=artistName, spotifyArtistId='spotifyArtistId', imageUri='imageUri', musicPreviewUri='musicPreviewUri'}'}";
+        String expectedString = "MusicMemory{photo='photoUri', song='Song{name='name', artistName=artistName, "
+         + "spotifyArtistId='spotifyArtistId', imageUri='imageUri', musicPreviewUri='musicPreviewUri'}'}";
+        String unexpectedString = "MusicMemory{photo='NOTPHOTOURL', song='Song{name='name', artistName=artistName,"
+        + " spotifyArtistId='spotifyArtistId', imageUri='imageUri', musicPreviewUri='musicPreviewUri'}'}";
 
         assertEquals(expectedString, musicMemory.toString());
         assertNotEquals(unexpectedString, musicMemory.toString());
