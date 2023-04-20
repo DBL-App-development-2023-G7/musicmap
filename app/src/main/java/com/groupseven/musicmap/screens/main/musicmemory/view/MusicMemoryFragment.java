@@ -50,7 +50,7 @@ public class MusicMemoryFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args == null) {
-            return;
+            throw new NullPointerException("No arguments provided to MusicMemoryMapFragment");
         }
 
         musicMemoryUid = args.getString(Constants.MUSIC_MEMORY_UID_ARGUMENT_KEY);
