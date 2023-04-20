@@ -117,7 +117,7 @@ public final class SpotifyAccess {
     /**
      * Refreshes the Spotify token if it is expired.
      *
-     * @param tokenCallback The token callback to be called when the token is refreshed.
+     * @param tokenCallback The token callback to be called when the token is refreshed (or did not need refreshing).
      */
     public void refreshToken(TokenCallback tokenCallback) {
         if (isTokenExpired()) {
@@ -151,6 +151,8 @@ public final class SpotifyAccess {
                             tokenCallback.onValidToken();
                         });
                 });
+        } else {
+            tokenCallback.onValidToken();
         }
     }
 
