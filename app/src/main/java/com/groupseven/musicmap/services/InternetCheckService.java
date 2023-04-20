@@ -19,15 +19,26 @@ import com.groupseven.musicmap.util.Constants;
 public class InternetCheckService extends Service {
 
     private static final String TAG = "InternetCheckService";
-    private static final int INTERVAL = 5000; // 5 seconds interval
 
+    /**
+     * The interval between each broadcast in milliseconds.
+     */
+    private static final int INTERVAL = 5000;
+
+    /**
+     * The Handler object used during internet check.
+     */
     private Handler handler;
-    private Runnable runnable;
-    private boolean isRunning = false;
 
-    public boolean isRunning() {
-        return this.isRunning;
-    }
+    /**
+     * The Runnable object used during internet check.
+     */
+    private Runnable runnable;
+
+    /**
+     * Boolean value to tell is the check is running or not.
+     */
+    private boolean isRunning = false;
 
     /**
      * Called when the service is created.
