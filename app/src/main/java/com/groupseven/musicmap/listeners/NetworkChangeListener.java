@@ -8,20 +8,20 @@ import android.net.Network;
 import com.groupseven.musicmap.util.Constants;
 
 /**
- * This class is responsible for monitoring the network connectivity changes and broadcasting
+ * Responsible for monitoring the network connectivity changes and broadcasting
  * the internet connectivity status to other components of the application.
  */
 public class NetworkChangeListener extends ConnectivityManager.NetworkCallback {
 
     /**
-     * Indicates whether the device is currently connected to the internet or not.
-     */
-    private boolean isConnected;
-
-    /**
      * The application context used to send broadcasts to other components of the application.
      */
     private final Context context;
+
+    /**
+     * Indicates whether the device is currently connected to the internet or not.
+     */
+    private boolean isConnected;
 
     /**
      * Creates a new instance of the NetworkChangeListener class with the specified context.
