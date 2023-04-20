@@ -39,13 +39,6 @@ public class SpotifyAccessActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spotify_auth);
         this.setupSpotify();
-        registerForSpotifyPKCE();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        this.setupSpotify();
     }
 
     /**
@@ -53,6 +46,7 @@ public class SpotifyAccessActivity extends AppCompatActivity {
      */
     private void setupSpotify() {
         this.spotifyAccess = SpotifyAccess.getSpotifyAccessInstance();
+        this.registerForSpotifyPKCE();
     }
 
     /**
@@ -87,7 +81,6 @@ public class SpotifyAccessActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Uri uri = intent.getData();
-        Log.d(TAG, "POOP");
         if (uri != null) {
             String authCode = uri.getQueryParameter(Constants.SPOTIFY_QUERY_PARAM_KEY);
             Log.d(TAG, uri.toString());
