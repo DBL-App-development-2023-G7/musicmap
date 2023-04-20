@@ -148,7 +148,7 @@ public final class SpotifyAccess {
 
                             tokenStorage.storeRefreshToken(refreshResult.getRefreshToken());
                             setToken(refreshResult.getAccessToken(), refreshResult.getExpiresIn());
-                            tokenCallback.onValidToken(refreshResult.getAccessToken());
+                            tokenCallback.onValidToken();
                         });
                 });
         }
@@ -160,10 +160,8 @@ public final class SpotifyAccess {
     public interface TokenCallback {
         /**
          * Called when the Spotify access token is valid.
-         *
-         * @param apiToken The Spotify access token.
          */
-        void onValidToken(String apiToken);
+        void onValidToken();
 
         /**
          * Called when the Spotify access token is invalid or has expired.
