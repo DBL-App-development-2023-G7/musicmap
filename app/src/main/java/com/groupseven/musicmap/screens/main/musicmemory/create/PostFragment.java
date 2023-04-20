@@ -146,19 +146,6 @@ public class PostFragment extends MainFragment {
 
         fetchUserLocation();
         getPermission();
-
-        spotifyAccess.refreshToken(new SpotifyAccess.TokenCallback() {
-            @Override
-            public void onValidToken() {
-                postMemoryButton.setEnabled(true);
-            }
-
-            @Override
-            public void onInvalidToken() {
-                Message.showFailureMessage(currentActivity, getString(R.string.error_spotify_not_connected));
-                postMemoryButton.setEnabled(false);
-            }
-        });
     }
 
     @Override
@@ -202,6 +189,19 @@ public class PostFragment extends MainFragment {
 
         postMemoryButton = rootView.findViewById(R.id.postMemoryButton);
         postMemoryButton.setOnClickListener(view -> postMusicMemory());
+        spotifyAccess.refreshToken(new SpotifyAccess.TokenCallback() {
+            @Override
+            public void onValidToken() {
+                postMemoryButton.setEnabled(true);
+            }
+
+            @Override
+            public void onInvalidToken() {
+                Message.showFailureMessage(currentActivity, getString(R.string.error_spotify_not_connected));
+                postMemoryButton.setEnabled(false);
+            }
+        });
+
         return rootView;
     }
 
