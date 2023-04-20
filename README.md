@@ -1,10 +1,9 @@
-
 <p align="center">
   <img width="250" height="250" src="https://user-images.githubusercontent.com/41565823/232768039-c77d40ed-deb8-44d3-9fac-5a239f1d7d4c.png">
 </p>
 
 <p align="center">
-  An Android app to discover music in a memorial way </a>
+  An Android app to discover music in a memorial way
 </p>
 
 <p align="center">
@@ -20,12 +19,18 @@
 </p>
 
 <h2>Features</h2>
+<h3>For users:</h3>
+- Post Music Memories
+- See the most recent Music Memories
+- Listen to the attached song in the Music Memories
+- Link your Spotify account
+<h3>For artists:</h3>
+- See how many and where people used your songs to create Music Memories.
+<h2>Dependencies</h2>
+We imported all our 3rd party dependencies using gradle.
 
+- <a href="https://github.com/spotify-web-api-java/spotify-web-api-java">Spotify Web API Java </a> (Spotify Authorization Library)
+- <a href="https://github.com/osmdroid/osmdroid">osmdroid </a> (Map service)
+- <a href="https://github.com/square/picasso">Picasso </a> (Image service)
 
-<h2>Dependencies (3rd party Java sources)</h2>
-
-- Spotify Android SDK (Spotify Authorization Library)
-- osmdroid (Map service)
-- Picasso (Image service)
-
-<h2></h2>
+<h2>Screenshots</h2>
