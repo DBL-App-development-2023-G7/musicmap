@@ -5,3 +5,15 @@
 <p align="center">
   An Android app to discover music in a memorial way </a>
 </p>
+
+<p align="center">
+<a href="" target="blank">
+<img src="https://img.shields.io/github/actions/workflow/status/DBL-App-development-2023-G7/musicmap/gradle.yml?style=flat-square" />
+</a>
+<a href="" target="blank">
+<img src="https://img.shields.io/github/issues/DBL-App-development-2023-G7/musicmap?style=flat-square" />
+</a>
+<a href="" target="blank">
+<img src="https://img.shields.io/github/issues-pr/DBL-App-development-2023-G7/musicmap?style=flat-square" />
+</a>
+</p>
