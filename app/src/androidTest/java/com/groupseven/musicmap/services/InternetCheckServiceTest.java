@@ -15,6 +15,8 @@ import android.os.IBinder;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("deprecated")
+// suppressing deprecated since NetworkInfo works in our service
 public class InternetCheckServiceTest {
 
     private InternetCheckService service;

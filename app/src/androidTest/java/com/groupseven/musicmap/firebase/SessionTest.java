@@ -40,7 +40,7 @@ public class SessionTest {
 
         session.addListener(listener);
 
-        assertTrue(session.listeners.contains(listener));
+        assertTrue(session.getListeners().contains(listener));
     }
 
     @Test
@@ -51,7 +51,7 @@ public class SessionTest {
         session.addListener(listener);
         session.removeListener(listener);
 
-        assertFalse(session.listeners.contains(listener));
+        assertFalse(session.getListeners().contains(listener));
     }
 
     @Test
@@ -74,17 +74,17 @@ public class SessionTest {
         session.onAuthStateChanged(firebaseAuth);
         assertTrue(session.isUserConnected());
         assertNotNull(session.getCurrentUser());
-        assertNotNull(session.userListenerRegistration);
+        assertNotNull(session.getUserListenerRegistration());
 
         // Test case where firebaseUser is not null and userListenerRegistration is null
         session.onAuthStateChanged(firebaseAuth);
         assertTrue(session.isUserConnected());
-        assertNotNull(session.userListenerRegistration);
+        assertNotNull(session.getUserListenerRegistration());
 
         // Test case where firebaseUser is not null and userListenerRegistration is not null
         session.onAuthStateChanged(firebaseAuth);
         assertTrue(session.isUserConnected());
-        assertNotNull(session.userListenerRegistration);
+        assertNotNull(session.getUserListenerRegistration());
     }
 
     @Test
@@ -96,7 +96,7 @@ public class SessionTest {
         Set<Session.Listener> listeners = new HashSet<>();
         listeners.add(listener1);
         listeners.add(listener2);
-        session.listeners.addAll(listeners);
+        session.getListeners().addAll(listeners);
 
         session.updateListeners();
 

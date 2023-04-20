@@ -29,18 +29,40 @@ public final class Session implements FirebaseAuth.AuthStateListener {
     private static final String TAG = "Session";
     private static volatile Session instance;
 
-    final Set<Listener> listeners;
+    private final Set<Listener> listeners;
 
     private User currentUser;
     private boolean userConnected;
 
-    ListenerRegistration userListenerRegistration;
+    private ListenerRegistration userListenerRegistration;
 
     private Session() {
         listeners = new HashSet<>();
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         firebaseAuth.addAuthStateListener(this);
         userConnected = firebaseAuth.getCurrentUser() != null;
+    }
+
+    /**
+     * Returns the listeners.
+     * <p>
+     * Mainly used for testing
+     *
+     * @return the session listeners
+     */
+    Set<Listener> getListeners() {
+        return this.listeners;
+    }
+
+    /**
+     * Retrieves the user listener registration.
+     * <p>
+     * Mainly used for testing
+     *
+     * @return the user listener registration object
+     */
+    ListenerRegistration getUserListenerRegistration() {
+        return this.userListenerRegistration;
     }
 
     /**
