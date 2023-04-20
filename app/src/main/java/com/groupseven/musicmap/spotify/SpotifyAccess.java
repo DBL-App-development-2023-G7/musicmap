@@ -158,7 +158,6 @@ public final class SpotifyAccess {
      * Interface used to be notified of the status of the Spotify access token.
      */
     public interface TokenCallback {
-
         /**
          * Called when the Spotify access token is valid.
          *

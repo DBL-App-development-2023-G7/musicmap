@@ -40,7 +40,6 @@ public class SpotifyTokenStorage {
         DocumentReference docRef = firestore.collection("Users").document(userID);
 
         docRef.get().addOnSuccessListener(document -> {
-
             if (!document.exists()) {
                 Log.d(TAG, "The user does not have a refresh token stored in the Firestore database.");
                 return;
