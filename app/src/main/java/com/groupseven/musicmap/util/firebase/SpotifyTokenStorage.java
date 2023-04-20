@@ -49,8 +49,7 @@ public class SpotifyTokenStorage {
             String refreshToken = document.getString(Constants.SPOTIFY_REFRESH_TOKEN_FIELD);
             tokenReceivedCallback.onComplete(refreshToken);
         }).addOnFailureListener(exception ->
-                Log.d(TAG, String.format("Firestore failed while trying to get the Spotify refresh token. %s",
-                        exception.getMessage())));
+                Log.d(TAG, "Firestore failed while trying to get the Spotify refresh token", exception));
     }
 
     /**
@@ -67,7 +66,8 @@ public class SpotifyTokenStorage {
                 .addOnSuccessListener(unused ->
                         Log.d(TAG, "Added refreshToken to the Firebase Firestore database."))
                 .addOnFailureListener(exception ->
-                        Log.d(TAG, String.format("Firebase fail: %s", exception.getMessage()))
+                        Log.d(TAG, "Exception occurred while attempting to store Spotify refresh token in database",
+                                exception)
         );
     }
 

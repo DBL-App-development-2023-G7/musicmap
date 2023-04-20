@@ -89,7 +89,7 @@ public class SpotifyAccessActivity extends AppCompatActivity {
                     .executeAsync()
                     .handle((result, error) -> {
                         if (error != null) {
-                            Log.d(TAG, String.format("Error: %s", error.getMessage()));
+                            Log.d(TAG, "Exception occurred while requesting Spotify authorization code", error);
                             setResult(Activity.RESULT_CANCELED);
                             finish();
                         }
