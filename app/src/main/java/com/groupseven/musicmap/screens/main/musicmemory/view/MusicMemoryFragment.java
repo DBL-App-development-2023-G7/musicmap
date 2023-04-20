@@ -27,7 +27,7 @@ import java.util.Date;
 
 /**
  * A fragment displaying a single music memory.
- *
+ * <p>
  * Requires two string arguments: author UID and post UID.
  */
 public class MusicMemoryFragment extends Fragment {
