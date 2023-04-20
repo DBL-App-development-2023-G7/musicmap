@@ -216,7 +216,10 @@ public class SpotifyUtils {
      * @return the request object
      */
     public static GetUsersCurrentlyPlayingTrackRequest getCurrentPlayingTrackRequest(SpotifyAccess spotifyAccess) {
-        return spotifyAccess.getSpotifyDataApi().getUsersCurrentlyPlayingTrack().additionalTypes("track").build();
+        return spotifyAccess.getSpotifyDataApi()
+                .getUsersCurrentlyPlayingTrack()
+                .additionalTypes("track")
+                .build();
     }
 
 }
