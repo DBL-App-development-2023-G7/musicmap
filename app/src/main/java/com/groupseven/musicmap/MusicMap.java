@@ -12,9 +12,19 @@ import com.groupseven.musicmap.listeners.NetworkChangeListener;
  */
 public class MusicMap extends Application {
 
+    /**
+     * This is the application instance.
+     */
     private static MusicMap instance;
+
+    /**
+     * This is instance for the app resources.
+     */
     private static Resources resources;
 
+    /**
+     * The {@link NetworkChangeListener} object to register internet check throughout the app.
+     */
     private NetworkChangeListener networkChangeListener;
 
     /**
@@ -49,6 +59,9 @@ public class MusicMap extends Application {
         unregisterNetworkCallback();
     }
 
+    /**
+     * Registers the network callback for {@link MusicMap#networkChangeListener}.
+     */
     private void registerNetworkCallback() {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -56,6 +69,9 @@ public class MusicMap extends Application {
         connectivityManager.registerDefaultNetworkCallback(networkChangeListener);
     }
 
+    /**
+     * Unregisters the network callback for {@link MusicMap#networkChangeListener}.
+     */
     private void unregisterNetworkCallback() {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
