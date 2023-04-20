@@ -1,10 +1,11 @@
 package com.groupseven.musicmap;
 
 import android.app.Application;
-import android.content.Intent;
+import android.content.Context;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
 
-import com.groupseven.musicmap.services.InternetCheckService;
+import com.groupseven.musicmap.listeners.NetworkChangeListener;
 
 /**
  * The main Application.
@@ -13,6 +14,8 @@ public class MusicMap extends Application {
 
     private static MusicMap instance;
     private static Resources resources;
+
+    private NetworkChangeListener networkChangeListener;
 
     /**
      * Gets the instance of this application.
@@ -37,10 +40,26 @@ public class MusicMap extends Application {
         super.onCreate();
         instance = this;
         resources = getResources();
+        registerNetworkCallback();
+    }
 
-        // Start internet check
-        Intent intent = new Intent(this, InternetCheckService.class);
-        startService(intent);
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        unregisterNetworkCallback();
+    }
+
+    private void registerNetworkCallback() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        networkChangeListener = new NetworkChangeListener(this);
+        connectivityManager.registerDefaultNetworkCallback(networkChangeListener);
+    }
+
+    private void unregisterNetworkCallback() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        connectivityManager.unregisterNetworkCallback(networkChangeListener);
     }
 
 }
