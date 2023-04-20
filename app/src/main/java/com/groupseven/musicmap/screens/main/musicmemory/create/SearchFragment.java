@@ -46,15 +46,19 @@ public class SearchFragment extends MainFragment {
         // add current track on the top of the track list
         CompletableFuture<Void> currentTrackFuture = SpotifyUtils.getCurrentTrackFuture(spotifyAccess)
                 .thenAccept(track -> {
-                    if (track != null)  recentTrackList.add(0, track);
+                    if (track != null) {
+                        recentTrackList.add(0, track);
+                    }
                 });
+
         CompletableFuture<Void> recentTracksFuture = SpotifyUtils.getRecentTracksFuture(4, spotifyAccess)
-                .thenAccept(trackList -> recentTrackList.addAll(trackList));
+                .thenAccept(recentTrackList::addAll);
 
         CompletableFuture.allOf(currentTrackFuture, recentTracksFuture).thenAcceptAsync(unused ->
-                updateSongListView(recentTrackList), requireActivity().getMainExecutor());
+                        updateSongListView(recentTrackList),
+                requireActivity().getMainExecutor());
 
-        // setup search widget
+        // Setup search widget
         SearchView searchView = rootView.findViewById(R.id.spotify_search_view);
         searchView.setQueryHint("Search for a song...");
         searchView.setOnQueryTextListener(new SearchQueryTextListener());
