@@ -175,7 +175,6 @@ public class PostFragment extends MainFragment {
 
         postMemoryButton = rootView.findViewById(R.id.postMemoryButton);
         postMemoryButton.setOnClickListener(view -> postMusicMemory());
-
         spotifyAccess.refreshToken(new SpotifyAccess.TokenCallback() {
             @Override
             public void onValidToken() {

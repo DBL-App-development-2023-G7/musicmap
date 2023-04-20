@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.listeners.SessionListenerActivity;
 import com.groupseven.musicmap.screens.main.artist.ArtistDataFragment;
@@ -17,10 +20,14 @@ import com.groupseven.musicmap.screens.main.musicmemory.create.PostFragment;
 import com.groupseven.musicmap.screens.profile.ProfileActivity;
 import com.groupseven.musicmap.firebase.Session;
 import com.groupseven.musicmap.models.User;
+import com.groupseven.musicmap.spotify.SpotifyAccess;
 import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.permissions.LocationPermission;
 import com.groupseven.musicmap.util.ui.FragmentUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.groupseven.musicmap.util.ui.Message;
+
+import java.util.concurrent.CompletableFuture;
 
 public class HomeActivity extends SessionListenerActivity {
 
@@ -29,6 +36,9 @@ public class HomeActivity extends SessionListenerActivity {
 
     private BottomNavigationView bottomNavigationView;
     private ImageView profileButton;
+
+    private boolean hasSpotifyConnection = false;
+    private boolean hasGooglePlayServices = false;
 
     @Override
     protected void onInternetStateChange(boolean internetAvailable) {
@@ -78,6 +88,12 @@ public class HomeActivity extends SessionListenerActivity {
         updateNavbar(currentUser);
         setupProfileButton(currentUser);
 
+        // Gray out post button as a default
+        View postButton = findViewById(R.id.navbarPost);
+        postButton.setAlpha(0.5F);
+
+        checkIsPostEnabled();
+
         bottomNavigationView.setOnItemSelectedListener(item -> {
             // using ifs instead of switch as resource IDs will be non-final by default in
             // Android Gradle Plugin version 8.0, therefore not to be used in switch
@@ -89,6 +105,14 @@ public class HomeActivity extends SessionListenerActivity {
             }
 
             if (item.getItemId() == R.id.navbarPost) {
+                if (!hasSpotifyConnection) {
+                    Message.showFailureMessage(this, getString(R.string.error_spotify_not_connected));
+                    return false;
+                } if (!hasGooglePlayServices) {
+                    Message.showFailureMessage(this, getString(R.string.error_play_services_not_connected));
+                    return false;
+                }
+
                 FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.fragment_view,
                         PostFragment.class);
                 lastFragmentClass = PostFragment.class;
@@ -110,6 +134,49 @@ public class HomeActivity extends SessionListenerActivity {
             }
 
             return false;
+        });
+    }
+
+    private void checkIsPostEnabled() {
+        SpotifyAccess spotifyAccess = SpotifyAccess.getSpotifyAccessInstance();
+        waitUserFuture().thenAcceptAsync(
+                unused -> spotifyAccess.refreshToken(new SpotifyAccess.TokenCallback() {
+                    @Override
+                    public void onValidToken() {
+                        hasSpotifyConnection = true;
+                        View postButton = findViewById(R.id.navbarPost);
+                        // Only enable postButton if both preconditions are true
+                        if (hasGooglePlayServices) {
+                            postButton.setAlpha(1);
+                        }
+                    }
+
+                    @Override
+                    public void onInvalidToken() {
+                        hasSpotifyConnection = false;
+                    }
+                }), this.getMainExecutor()
+        );
+
+        hasGooglePlayServices = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
+                == ConnectionResult.SUCCESS;
+
+    }
+
+    // TODO I NEED THIS OTHERWISE APP CRASHES
+    // IS THERE A BETTER SOLUTION?
+    private CompletableFuture<Void> waitUserFuture() {
+        Session session = Session.getInstance();
+        return CompletableFuture.supplyAsync(
+                () -> {
+                    while (!session.isUserLoaded()){
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    return null;
         });
     }
 
