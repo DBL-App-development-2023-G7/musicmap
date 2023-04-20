@@ -44,6 +44,28 @@ public final class Session implements FirebaseAuth.AuthStateListener {
     }
 
     /**
+     * Returns the listeners.
+     * <p>
+     * Mainly used for testing.
+     *
+     * @return the session listeners.
+     */
+    Set<Listener> getListeners() {
+        return this.listeners;
+    }
+
+    /**
+     * Retrieves the user listener registration.
+     * <p>
+     * Mainly used for testing.
+     *
+     * @return the user listener registration object.
+     */
+    ListenerRegistration getUserListenerRegistration() {
+        return this.userListenerRegistration;
+    }
+
+    /**
      * Retrieves the instance of the Session.
      *
      * @return the singleton instance of the Session class
@@ -63,16 +85,34 @@ public final class Session implements FirebaseAuth.AuthStateListener {
     /**
      * Retrieves the current connected user.
      *
-     * @return the current connected user, or {@code null} if no user is connected.
+     * @return the current connected user, or {@code null} if no user is loaded.
      */
     public User getCurrentUser() {
         return currentUser;
     }
 
+    /**
+     * Returns if the user is connected or not.
+     * <p>
+     * Beware that a user being connected does not guarantee their data to be loaded.
+     * For that, use {@link #isUserLoaded()}.
+     *
+     * @return true if user is connected, false otherwise.
+     */
     public boolean isUserConnected() {
         return userConnected;
     }
 
+    /**
+     * Returns if the user data is loaded.
+     * <p>
+     * If this method returns {@code true}, {@link #getCurrentUser()} is guaranteed to be non-null.
+     * <p>
+     * This differs from {@link #isUserConnected()}, because that method only checks if a user is connected,
+     * not whether their data is loaded.
+     *
+     * @return true if the user is loaded (non-null), false otherwise.
+     */
     @EnsuresNonNullIf(expression = {"this.currentUser", "this.getCurrentUser()"}, result = true)
     public boolean isUserLoaded() {
         return currentUser != null && isUserConnected();
@@ -101,7 +141,13 @@ public final class Session implements FirebaseAuth.AuthStateListener {
         }
     }
 
-    private void refreshUserData(DocumentSnapshot doc, FirebaseFirestoreException error) {
+    /**
+     * Refreshes the user data.
+     *
+     * @param doc the firestore document snapshot to read the user data from.
+     * @param error the firebase exception, if such an exception occurred, {@code null} otherwise.
+     */
+    void refreshUserData(DocumentSnapshot doc, FirebaseFirestoreException error) {
         Log.i(TAG, "Trying to refresh user's data");
         if (error != null) {
             Log.e(TAG, "Exception occurred while refreshing user data", error);
@@ -140,13 +186,18 @@ public final class Session implements FirebaseAuth.AuthStateListener {
     /**
      * Removes the given {@code sessionListener} from the set of listener to be notified by the Session class.
      *
-     * @param listener the listener object you want to remove from the set
+     * @param listener the listener object you want to remove from the set.
      */
     public void removeListener(@NonNull Listener listener) {
         listeners.remove(listener);
     }
 
-    private void updateListeners() {
+    /**
+     * Updates all the Session listeners.
+     *
+     * @see Listener#onSessionStateChanged()
+     */
+    void updateListeners() {
         Log.i(TAG, "Updating all session listeners.");
         for (Listener listener : listeners) {
             try {
