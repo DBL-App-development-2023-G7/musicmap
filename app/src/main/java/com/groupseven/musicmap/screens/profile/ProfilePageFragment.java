@@ -46,20 +46,18 @@ public class ProfilePageFragment extends Fragment {
         profileListView.setAdapter(feedAdapter);
 
         Bundle args = getArguments();
-        System.out.println("->" + args.getString(Constants.PROFILE_USER_UID_ARGUMENT));
         if (args == null || args.getString(Constants.PROFILE_USER_UID_ARGUMENT) == null) {
             displayData(Session.getInstance().getCurrentUser());
         } else {
             String userUid = args.getString(Constants.PROFILE_USER_UID_ARGUMENT);
-            AuthSystem.getUser(userUid).addOnCompleteListener(task -> {
-                if (!task.isSuccessful()) {
-                    Log.e(TAG, "Exception occurred while getting user data for profile", task.getException());
-                    Message.showFailureMessage(container, "Could not load user data");
-                    return;
-                }
-
-                displayData(task.getResult());
-            });
+            AuthSystem.getUser(userUid)
+                    .thenAcceptAsync(this::displayData, ContextCompat.getMainExecutor(requireContext()))
+                    .exceptionally(throwable -> {
+                        Log.e(TAG, "Exception occurred while getting user data for profile", throwable);
+                        Message.showFailureMessage(container,
+                                getString(R.string.profile_error_user_data_loading_failed));
+                        return null;
+                    });
         }
 
         return profileView;

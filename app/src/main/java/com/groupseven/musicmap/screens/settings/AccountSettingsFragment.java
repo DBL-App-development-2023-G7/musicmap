@@ -47,7 +47,6 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
         setupOtherPreferences();
     }
 
-    //TODO idk where but move this somewhere
     private final ActivityResultLauncher<Intent> uploadPictureActivityResultLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
@@ -57,9 +56,10 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
                     }
 
                     Uri photoUri = data.getData();
-                    AuthSystem.updateProfilePicture(photoUri).addOnFailureListener(exception ->
-                            Message.showFailureMessage(activity, exception.getMessage())
-                    );
+                    AuthSystem.updateProfilePicture(photoUri).exceptionally(throwable -> {
+                        Message.showFailureMessage(activity, throwable.getMessage());
+                        return null;
+                    });
                 }
             });
 

@@ -1,7 +1,5 @@
 package com.groupseven.musicmap.models;
 
-import com.groupseven.musicmap.util.firebase.AuthSystem;
-import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.Exclude;
@@ -22,7 +20,7 @@ public abstract class Post {
     private GeoPoint location;
 
     @Exclude
-    private final transient TaskCompletionSource<User> authorTask = new TaskCompletionSource<>();
+    private final transient TaskCompletionSource<User> authorFuture = new TaskCompletionSource<>();
 
     protected Post() { }
 
@@ -51,7 +49,7 @@ public abstract class Post {
 
     /**
      * Sets the author UID of this post.
-     *
+     * <p>
      * Don't use when the author is already initialized!
      *
      * @param authorUid the author UID.
@@ -63,29 +61,6 @@ public abstract class Post {
         }
 
         this.authorUid = authorUid;
-
-        // Start fetching User object (executor: run immediately)
-        AuthSystem.getUser(authorUid).addOnCompleteListener(Runnable::run, task -> {
-            if (task.isSuccessful()) {
-                authorTask.setResult(task.getResult());
-            } else {
-                Exception exception = task.getException();
-                assert exception != null;
-                authorTask.setException(exception);
-            }
-        });
-    }
-
-    /**
-     * Gets the {@link User} that is the author of this post.
-     *
-     * This does not make a request each time the method is called, feel free to call as often as you like.
-     *
-     * @return the task generating the {@link User} instance.
-     */
-    @Exclude
-    public Task<User> getAuthorTask() {
-        return authorTask.getTask();
     }
 
 }

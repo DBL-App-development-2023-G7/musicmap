@@ -2,6 +2,7 @@ package com.groupseven.musicmap.screens.main.musicmemory.create;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.SearchView;
 
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.screens.main.MainFragment;
+import com.groupseven.musicmap.spotify.SpotifyAccess;
 import com.groupseven.musicmap.util.adapters.SpotifySongAdapter;
 import com.groupseven.musicmap.util.spotify.SpotifyUtils;
 
@@ -26,10 +28,8 @@ import se.michaelthelin.spotify.model_objects.specification.Track;
 public class SearchFragment extends MainFragment {
 
     private static final int COUNTDOWN_DELAY = 400;
-    private static final String TAG = "SearchFragment";
 
     // temporary store used by post fragment to get search result (I am too lazy to use a Model)
-    private static Track resultTrack;
 
     // this list is computed only once at the start in order to avoid excessive calls to the API
     private final List<Track> recentTrackList = new ArrayList<>();
@@ -38,29 +38,21 @@ public class SearchFragment extends MainFragment {
     // a countdown timer for the search query to reduce API spam
     private CountDownTimer searchQueryCountdown;
 
-    public static Track getResultTrack() {
-        return resultTrack;
-    }
-
-    public static void setResultTrack(Track resultTrack) {
-        SearchFragment.resultTrack = resultTrack;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragmen_search, container, false);
+        SpotifyAccess spotifyAccess = SpotifyAccess.getSpotifyAccessInstance();
 
         // add current track on the top of the track list
-        CompletableFuture<Void> currentTrackFuture = SpotifyUtils.getCurrentTrackFuture()
+        CompletableFuture<Void> currentTrackFuture = SpotifyUtils.getCurrentTrackFuture(spotifyAccess)
                 .thenAccept(track -> {
                     if (track != null)  recentTrackList.add(0, track);
                 });
-        CompletableFuture<Void> recentTracksFuture = SpotifyUtils.getRecentTracksFuture(4)
+        CompletableFuture<Void> recentTracksFuture = SpotifyUtils.getRecentTracksFuture(4, spotifyAccess)
                 .thenAccept(trackList -> recentTrackList.addAll(trackList));
 
-        CompletableFuture.allOf(currentTrackFuture, recentTracksFuture).thenAcceptAsync(unused -> {
-            updateSongListView(recentTrackList);
-        }, requireActivity().getMainExecutor());
+        CompletableFuture.allOf(currentTrackFuture, recentTracksFuture).thenAcceptAsync(unused ->
+                updateSongListView(recentTrackList), requireActivity().getMainExecutor());
 
         // setup search widget
         SearchView searchView = rootView.findViewById(R.id.spotify_search_view);
@@ -71,6 +63,7 @@ public class SearchFragment extends MainFragment {
     }
 
     private void updateSongListView(List<Track> trackList) {
+        Log.d("poop", "updating view!");
         SpotifySongAdapter songAdapter = new SpotifySongAdapter(
                 requireActivity(),
                 R.layout.single_post_layout_feed,
@@ -100,13 +93,14 @@ public class SearchFragment extends MainFragment {
                 @Override
                 public void onFinish() {
                     if (query.equals("")) {
+                        Log.d("poop", "empty q");
                         updateSongListView(recentTrackList);
                     } else {
-                        SpotifyUtils.getSearchTrackFuture(query)
-                                .thenAcceptAsync(trackPaging -> {
-                                    List<Track> trackList = Arrays.asList(trackPaging.getItems());
-                                    updateSongListView(trackList);
-                                }, requireActivity().getMainExecutor());
+                        SpotifyUtils.getSearchTrackRequest(SpotifyAccess.getSpotifyAccessInstance(), query)
+                            .executeAsync().thenAcceptAsync(trackPaging -> {
+                                List<Track> searchedTrackList = Arrays.asList(trackPaging.getItems());
+                                updateSongListView(searchedTrackList);
+                            }, requireActivity().getMainExecutor());
                     }
                 }
             };

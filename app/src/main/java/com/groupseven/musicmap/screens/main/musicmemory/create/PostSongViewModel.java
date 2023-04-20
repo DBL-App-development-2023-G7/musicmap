@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.firestore.GeoPoint;
 import com.groupseven.musicmap.models.Song;
+import com.groupseven.musicmap.spotify.SpotifyAccess;
 import com.groupseven.musicmap.util.spotify.SpotifyUtils;
 
 public class PostSongViewModel extends ViewModel {
@@ -29,7 +30,7 @@ public class PostSongViewModel extends ViewModel {
 
     public void setSongToCurrentUserSong() {
         if (selectedSong.getValue() == null) {
-            SpotifyUtils.getCurrentTrackFuture()
+            SpotifyUtils.getCurrentTrackFuture(SpotifyAccess.getSpotifyAccessInstance())
                     .thenAcceptAsync(track -> {
                         if (track != null) {
                             selectedSong.setValue(new Song(track));
