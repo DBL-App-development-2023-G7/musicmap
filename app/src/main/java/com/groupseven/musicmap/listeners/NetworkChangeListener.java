@@ -20,17 +20,17 @@ public class NetworkChangeListener extends ConnectivityManager.NetworkCallback {
     public void onAvailable(Network network) {
         super.onAvailable(network);
         isConnected = true;
-        sendInternetBroadcastWithIsConnected(context);
+        sendInternetBroadcastWithIsConnected();
     }
 
     @Override
     public void onLost(Network network) {
         super.onLost(network);
         isConnected = false;
-        sendInternetBroadcastWithIsConnected(context);
+        sendInternetBroadcastWithIsConnected();
     }
 
-    private void sendInternetBroadcastWithIsConnected(Context context) {
+    private void sendInternetBroadcastWithIsConnected() {
         Intent broadcastIntent = new Intent(Constants.INTERNET_BROADCAST_ACTION);
         broadcastIntent.putExtra(Constants.INTERNET_BROADCAST_BUNDLE_KEY, isConnected);
         context.sendBroadcast(broadcastIntent);
