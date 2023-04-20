@@ -21,7 +21,6 @@ import com.groupseven.musicmap.R;
 
 import java.util.concurrent.Executor;
 
-// maybe it should be an activity.. maybe a fragment?
 public class CameraActivity extends AppCompatActivity {
 
     private LifecycleCameraController controller;
