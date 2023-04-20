@@ -33,7 +33,7 @@ public class PostSongViewModel extends ViewModel {
             SpotifyUtils.getCurrentTrackFuture(SpotifyAccess.getSpotifyAccessInstance())
                     .thenAcceptAsync(track -> {
                         if (track != null) {
-                            selectedSong.setValue(new Song(track));
+                            selectedSong.setValue(SpotifyUtils.createSongFromTrack(track));
                         }
                     });
         }

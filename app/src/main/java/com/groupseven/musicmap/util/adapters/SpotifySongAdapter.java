@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.models.Song;
 import com.groupseven.musicmap.screens.main.musicmemory.create.PostFragment;
+import com.groupseven.musicmap.util.spotify.SpotifyUtils;
 import com.groupseven.musicmap.util.ui.FragmentUtil;
 import com.squareup.picasso.Picasso;
 
@@ -90,7 +91,7 @@ public class SpotifySongAdapter extends ArrayAdapter<Track> {
     private void goToPostFragment(Track track) {
         FragmentActivity fragmentActivity = (FragmentActivity) activityContext;
         Bundle searchResult = new Bundle();
-        searchResult.putSerializable("song", new Song(track));
+        searchResult.putSerializable("song", SpotifyUtils.createSongFromTrack(track));
         Log.d("SongAdapter", "result!");
         fragmentActivity.getSupportFragmentManager().setFragmentResult(PostFragment.FRAGMENT_RESULT_KEY, searchResult);
         FragmentUtil.replaceFragment(fragmentActivity.getSupportFragmentManager(), R.id.fragment_view,

@@ -34,14 +34,6 @@ public class Song implements Serializable {
         this.musicPreviewUri = musicPreviewUri;
     }
 
-    public Song(Track spotifyTrack) {
-        this.name = spotifyTrack.getName();
-        this.artistName = spotifyTrack.getArtists()[0].getName();
-        this.spotifyArtistId = spotifyTrack.getArtists()[0].getId();
-        this.imageUri = spotifyTrack.getAlbum().getImages()[0].getUrl();
-        this.musicPreviewUri = spotifyTrack.getPreviewUrl();
-    }
-
     public String getName() {
         return name;
     }
@@ -86,13 +78,14 @@ public class Song implements Serializable {
         }
 
         Song song = (Song) o;
-        return Objects.equals(name, song.name) && Objects.equals(spotifyArtistId, song.spotifyArtistId)
-                && Objects.equals(imageUri, song.imageUri) && Objects.equals(musicPreviewUri, song.musicPreviewUri);
+        return Objects.equals(name, song.name) && Objects.equals(artistName, song.artistName)
+                && Objects.equals(spotifyArtistId, song.spotifyArtistId) && Objects.equals(imageUri, song.imageUri)
+                && Objects.equals(musicPreviewUri, song.musicPreviewUri);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, spotifyArtistId, imageUri, musicPreviewUri);
+        return Objects.hash(name, artistName, spotifyArtistId, imageUri, musicPreviewUri);
     }
 
 }
