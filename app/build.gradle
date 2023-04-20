@@ -7,6 +7,10 @@ android {
     namespace 'com.groupseven.musicmap'
     compileSdk 33
 
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
     defaultConfig {
         applicationId "com.groupseven.musicmap"
         minSdk 28

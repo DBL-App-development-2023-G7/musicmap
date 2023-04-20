@@ -19,9 +19,6 @@ public abstract class Post {
     private Date timePosted;
     private GeoPoint location;
 
-    @Exclude
-    private final transient TaskCompletionSource<User> authorFuture = new TaskCompletionSource<>();
-
     protected Post() { }
 
     public Post(String authorUid, Date timePosted, GeoPoint location) {
