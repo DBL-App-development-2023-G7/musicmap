@@ -24,6 +24,8 @@
 
 <h2>Dependencies (3rd party Java sources)</h2>
 
-- Spotify Android SDK (Authorization Library)
+- Spotify Android SDK (Spotify Authorization Library)
+- osmdroid (Map service)
+- Picasso (Image service)
 
 <h2></h2>
