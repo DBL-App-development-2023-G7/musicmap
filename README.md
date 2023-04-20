@@ -36,3 +36,7 @@ We imported all our 3rd party dependencies using gradle.
 - <a href="https://github.com/square/picasso">Picasso </a> (Image service)
 
 <h2>Screenshots</h2>
+
+|Map Screen|
+|-|
+| <img src="https://user-images.githubusercontent.com/30039677/233453045-2598dca0-8725-44f0-a521-d9cad87a5d4c.jpg" width="250" /> |
