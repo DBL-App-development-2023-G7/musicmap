@@ -11,7 +11,7 @@ import com.groupseven.musicmap.util.ui.map.MusicMemoryOverlay;
 
 /**
  * A map fragment for displaying the location of a music memory.
- *
+ * <p>
  * Requires two arguments: author UID and post UID.
  */
 public class MusicMemoryMapFragment extends MapFragment {
@@ -23,15 +23,13 @@ public class MusicMemoryMapFragment extends MapFragment {
         Bundle args = getArguments();
         if (args == null) {
             // No arguments provided, can't display a music memory
-            return;
+            throw new NullPointerException("No arguments provided to MusicMemoryMapFragment");
         }
 
         String authorUid = args.getString(Constants.AUTHOR_UID_ARGUMENT_KEY);
         String musicMemoryUid = args.getString(Constants.MUSIC_MEMORY_UID_ARGUMENT_KEY);
 
         // Get MusicMemory from UIDs
-        // TODO MusicMemoryOverlay or just a marker?
-        //  mb same marker but without image
         Queries.getMusicMemoryByAuthorIdAndId(authorUid, musicMemoryUid).thenAcceptAsync(musicMemory ->
                         addOverlay(new MusicMemoryOverlay(getMapView(), musicMemory)),
                 ContextCompat.getMainExecutor(requireContext()));

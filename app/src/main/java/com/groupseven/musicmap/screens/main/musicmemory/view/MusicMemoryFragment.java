@@ -27,7 +27,7 @@ import java.util.Date;
 
 /**
  * A fragment displaying a single music memory.
- *
+ * <p>
  * Requires two string arguments: author UID and post UID.
  */
 public class MusicMemoryFragment extends Fragment {
@@ -50,7 +50,7 @@ public class MusicMemoryFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args == null) {
-            return;
+            throw new NullPointerException("No arguments provided to MusicMemoryMapFragment");
         }
 
         musicMemoryUid = args.getString(Constants.MUSIC_MEMORY_UID_ARGUMENT_KEY);
