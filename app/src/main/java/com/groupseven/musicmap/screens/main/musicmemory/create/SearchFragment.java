@@ -40,7 +40,7 @@ public class SearchFragment extends MainFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragmen_search, container, false);
+        rootView = inflater.inflate(R.layout.fragment_search, container, false);
         SpotifyAccess spotifyAccess = SpotifyAccess.getSpotifyAccessInstance();
 
         // add current track on the top of the track list
