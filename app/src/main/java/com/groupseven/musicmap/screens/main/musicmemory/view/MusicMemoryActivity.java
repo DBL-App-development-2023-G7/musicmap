@@ -56,7 +56,6 @@ public class MusicMemoryActivity extends SessionListenerActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO better solution then first creating with args and then replacing with new version with args
         setContentView(R.layout.activity_music_memory);
 
         setupActivity();
