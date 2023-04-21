@@ -85,12 +85,12 @@ To build the application run the following command:
 <h3>Checkstyle</h3>
 
 ```
-Checkstyle: ./gradlew checkstyle
+./gradlew checkstyle
 ```
 
 <h3>Android tests</h3>
 
-| ! Make sure you have a valid emulator running or your phone connected (with USB debugging) to your machine before running these tests !|
+| ! Make sure you have a valid emulator running or a valid phone connected (with USB debugging) to your machine, before running the Android tests !|
 |-|
 
 ```
