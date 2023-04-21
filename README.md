@@ -108,7 +108,8 @@ We will describe the scenario of a user that does not have a MusicMap account an
 10. Other users should see their post.
 
 <h3>Enjoying MusicMemories</h3>
-We will describe the scenario of a user that does not have a MusicMap account and would really like to enjoy some MusicMemories. The user should be able to see all the MusicMemories that were posted in the past 24 hours. If the user does not see any posts it means that there were no posts made in that time period. The user is <b>NOT</b> required to have a Spotify account.
+
+We will describe the scenario of a user that does not have a MusicMap account and would really like to enjoy some MusicMemories. The user should be able to see all the MusicMemories that were posted in the past 24 hours. If the user does not see any posts it means that there were no posts made in that time period. The user is **NOT** required to have a Spotify account.
 
 1. The user installs the app on a valid phone. (if the app is not installed) (check ![requirements](#Requirements))
 2. The user creates a new account and checks their email address.
