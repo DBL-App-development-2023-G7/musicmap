@@ -26,7 +26,6 @@
 <b>MusicMap</b> is a unique <b>Android</b> application that facilitates music lovers in sharing their favorite tunes and discovering new ones by other users. Its functionality is based on MusicMemories, which are user-created posts that reveal what song they are listening to at their present location along with an attached picture. These MusicMemories can be viewed by the user on their feed or on a map. Furthermore, <b>MusicMap</b> not only benefits the users but also provides useful insights to the artists. It helps them gain valuable information about the number of listeners for their music and identifies the most popular locations where their music is being played. This data is available to artists on the app's data screen, assisting them in enhancing their music and reaching a broader audience. 
 </p>
 
-
 <h2>Features</h2>
 <h3>For users:</h3>
 
@@ -35,7 +34,7 @@
   - in a feed view
   - in a map view
 - Listen to the attached song in the MusicMemories
-- Link your Spotify account
+- Link your Spotify account (Spotify Premium <b>NOT</b> required)
 
 <h3>For artists:</h3>
 
@@ -56,7 +55,7 @@ To see all dependencies the app uses, please take a look at the ![build.gradle (
 
 <h2>Screenshots</h2>
 
-<h3>Main Screens</h3>!
+<h3>Main Screens</h3>
 
 | Post Screen | Feed Screen | Map Screen|
 |-|-|-|
@@ -69,4 +68,31 @@ To see all dependencies the app uses, please take a look at the ![build.gradle (
 | <img src="https://user-images.githubusercontent.com/30039677/233579698-4f8a8339-3144-46dc-8bba-0129024d3d02.jpg"  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233579801-ac56dbbc-f67a-4e90-bc0e-876e2cbba767.jpg"  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233580281-26c1484e-0633-4463-a64e-174357bbeecd.jpg" width="250"> |
 
 <h2>Building</h2>
+
+To build the application run the following command:
+```
+./gradlew build
+```
+
 <h2>Testing</h2>
+
+<h3>Java Unit Tests</h3>
+
+```
+./gradlew test
+```
+
+<h3>Checkstyle</h3>
+
+```
+Checkstyle: ./gradlew checkstyle
+```
+
+<h3>Android tests</h3>
+
+| ! Make sure you have a valid emulator running or your phone connected (with USB debugging) to your machine before running these tests !|
+|-|
+
+```
+./gradlew connectedCheck
+```
