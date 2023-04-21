@@ -15,7 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import com.groupseven.musicmap.R;
-import com.groupseven.musicmap.models.Song;
 import com.groupseven.musicmap.screens.main.musicmemory.create.PostFragment;
 import com.groupseven.musicmap.util.spotify.SpotifyUtils;
 import com.groupseven.musicmap.util.ui.FragmentUtil;
