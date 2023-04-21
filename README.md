@@ -32,6 +32,8 @@
 
 - Post MusicMemories
 - See the most recent MusicMemories
+  - in a feed view
+  - in a map view
 - Listen to the attached song in the MusicMemories
 - Link your Spotify account
 
@@ -41,7 +43,7 @@
 
 <h2>Requirements</h2>
 
-Android version: $\geq$ Android 9 (API 28)
+OS: $\geq$ Android 9 (API 28)
 
 <h2>Dependencies</h2>
 We imported all our 3rd party dependencies using gradle.
@@ -54,6 +56,17 @@ To see all dependencies the app uses, please take a look at the ![build.gradle (
 
 <h2>Screenshots</h2>
 
-|Map Screen|
-|-|
-| <img src="https://user-images.githubusercontent.com/30039677/233453045-2598dca0-8725-44f0-a521-d9cad87a5d4c.jpg" width="250" /> |
+<h3>Main Screens</h3>!
+
+| Post Screen | Feed Screen | Map Screen|
+|-|-|-|
+| | <img src="https://user-images.githubusercontent.com/30039677/233581090-064c9c08-3def-4b3f-955d-2cf7fc9c8486.jpg" width="250"> | <img src="https://user-images.githubusercontent.com/30039677/233453045-2598dca0-8725-44f0-a521-d9cad87a5d4c.jpg" width="250" /> |
+
+<h3>Settings Screens</h3>
+
+| Settings Screen | Account Settings | Connection Settings |
+|-|-|-|
+| <img src="https://user-images.githubusercontent.com/30039677/233579698-4f8a8339-3144-46dc-8bba-0129024d3d02.jpg"  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233579801-ac56dbbc-f67a-4e90-bc0e-876e2cbba767.jpg"  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233580281-26c1484e-0633-4463-a64e-174357bbeecd.jpg" width="250"> |
+
+<h2>Building</h2>
+<h2>Testing</h2>
