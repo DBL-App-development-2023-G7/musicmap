@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
+import android.os.Handler;
 
 import com.groupseven.musicmap.listeners.NetworkChangeListener;
 
@@ -65,7 +66,7 @@ public class MusicMap extends Application {
     private void registerNetworkCallback() {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        networkChangeListener = new NetworkChangeListener(this);
+        networkChangeListener = new NetworkChangeListener(this, new Handler());
         connectivityManager.registerDefaultNetworkCallback(networkChangeListener);
     }
 

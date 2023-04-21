@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.os.Handler;
-import android.util.Log;
 
 import com.groupseven.musicmap.util.ui.NetworkUtils;
 
@@ -28,10 +27,12 @@ public class NetworkChangeListener extends ConnectivityManager.NetworkCallback {
      * Creates a new instance of the NetworkChangeListener class with the specified context.
      *
      * @param context the context used to send broadcasts to other components of the application.
+     * @param handler for DI, and doing a non-blocking initial check for internet connection.
      */
-    public NetworkChangeListener(Context context) {
+    public NetworkChangeListener(Context context, Handler handler) {
         this.context = context.getApplicationContext();
-        new Handler().post(() -> {
+        // do a non-blocking initial check for internet connection
+        handler.post(() -> {
             isConnected = NetworkUtils.isInternetConnectionAvailable(context);
             NetworkUtils.sendInternetBroadcast(context, isConnected);
         });

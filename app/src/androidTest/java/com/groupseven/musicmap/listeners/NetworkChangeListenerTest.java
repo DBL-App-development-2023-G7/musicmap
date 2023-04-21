@@ -5,6 +5,8 @@ import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
 import android.net.Network;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -25,7 +27,8 @@ public class NetworkChangeListenerTest {
     @Before
     public void setUp() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        networkChangeListener = new NetworkChangeListener(context);
+        Handler handler = new Handler(Looper.getMainLooper());
+        networkChangeListener = new NetworkChangeListener(context, handler);
     }
 
     @Test

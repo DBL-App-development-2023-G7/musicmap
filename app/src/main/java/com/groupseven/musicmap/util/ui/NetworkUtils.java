@@ -19,9 +19,11 @@ public class NetworkUtils {
      * @return true if the device is connected to the internet, false otherwise.
      */
     public static boolean isInternetConnectionAvailable(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null) {
-            NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
+            NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(
+                    connectivityManager.getActiveNetwork());
             return capabilities != null
                     && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
                         || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR));
