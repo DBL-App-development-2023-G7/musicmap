@@ -25,8 +25,7 @@ public class NetworkUtils {
             NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(
                     connectivityManager.getActiveNetwork());
             return capabilities != null
-                    && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
-                        || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR));
+                    && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
         }
 
         return false;
