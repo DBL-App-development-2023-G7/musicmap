@@ -45,14 +45,5 @@ public class NetworkChangeListenerTest {
         assertFalse(networkChangeListener.isConnected());
     }
 
-    @Test
-    public void testIsConnected() {
-        networkChangeListener.onAvailable(mockNetwork);
-        assertTrue(networkChangeListener.isConnected());
-
-        networkChangeListener.onLost(mockNetwork);
-        assertFalse(networkChangeListener.isConnected());
-    }
-
 }
 

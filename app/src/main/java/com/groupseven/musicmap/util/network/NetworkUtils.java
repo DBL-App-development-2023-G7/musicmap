@@ -25,7 +25,8 @@ public class NetworkUtils {
             NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(
                     connectivityManager.getActiveNetwork());
             return capabilities != null
-                    && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
+                    && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                    && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED);
         }
 
         return false;
