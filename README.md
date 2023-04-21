@@ -85,20 +85,30 @@ To see all dependencies the app uses, please take a look at the ![build.gradle (
 |-|-|-|
 | <img src="https://user-images.githubusercontent.com/30039677/233595517-63a6a17d-5b64-46ae-ba51-21f51b2cf33f.jpg"  width="250" /> | <img src="https://user-images.githubusercontent.com/30039677/233597244-29571b59-7491-46f6-b957-5e039715fc7d.jpg"  width="250" /> | <img src="https://user-images.githubusercontent.com/30039677/233595512-b9f4e806-5d95-4447-b014-aabc71b76dd8.jpg" width="250" /> |
 
-<h2>User scenario</h2>
+<h2>User scenarios</h2>
 
-We will describe the scenario of a user that does not have an account and would like to share a MusicMemory for everyone to see it. The user will create a MusicMap that has a photo, location and a song attached to it.
+<h3>Creating a MusicMemory</h3>
+
+We will describe the scenario of a user that does not have a MusicMap account and would really like to share a MusicMemory. The user will create a MusicMap that has a photo, location and a song attached to it. The user is required to have a Spotify account.
 
 1. The user installs the app on a valid phone. (check ![requirements](#requirements))
 2. The user creates a new account.
-3. The user goes into the settings by clicking on the profile icon and then on the cog icon.
+3. The user navigates to the settings by clicking on the profile icon and then on the settings icon.
 4. The user links their Spotify account with the MusicMap profile.
-5. The user goes to the main screen.
-6. The user creates a MusicMemory.
-  6.1 The user takes a picture.
-  6.2 The user chooses a song
-  6.3 The user clicks on the post button.
-7.
+5. The user notifies an admin that he wants to use the Spotify features.
+  5.1 **REQUIRED** because the app is still in **DEV** mode, we would require to send a formal letter to Spotify to make all the features work without this step)
+  5.2 We have to add the user's Spotify email in the Spotify dashboard.
+6. The user goes to the main screen.
+7. The user navigates to the post screen using the bottom navigation bar.
+8. The user creates a MusicMemory.
+  8.1 The user takes a picture.
+  8.2 The user chooses a song.
+  8.3 The user clicks on the post button.
+9. The user should see the post they created on the both the feed and map screens.
+10. Other users should see their post.
+
+<h3>Enjoying MusicMemories</h3>
+We will describe the scenario of a user that does not have a MusicMap account and would really like to enjoy some MusicMemories. The user should be able to see all the MusicMemories that were posted in the past 24 hours. If the user does not see any posts it means that there were no posts made in that time period. The user is **NOT** required to have a Spotify account.
 
 <h2>Building</h2>
 
