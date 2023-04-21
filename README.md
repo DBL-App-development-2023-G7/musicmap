@@ -72,7 +72,7 @@ To see all dependencies the app uses, please take a look at the ![build.gradle (
 
 | Settings Screen | Account Settings | Connection Settings |
 |-|-|-|
-| <img src="https://user-images.githubusercontent.com/30039677/233579698-4f8a8339-3144-46dc-8bba-0129024d3d02.jpg"  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233579801-ac56dbbc-f67a-4e90-bc0e-876e2cbba767.jpg"  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233580281-26c1484e-0633-4463-a64e-174357bbeecd.jpg" width="250"> |
+| <img src="https://user-images.githubusercontent.com/30039677/233579698-4f8a8339-3144-46dc-8bba-0129024d3d02.jpg"  width="250"/> | <img src=""  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233580281-26c1484e-0633-4463-a64e-174357bbeecd.jpg" width="250"> |
 
 <h2>Building</h2>
 
