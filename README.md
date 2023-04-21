@@ -43,6 +43,7 @@
 <h2>Requirements</h2>
 
 OS: $\geq$ Android 9 (API 28)
+Other: Google Play Services (installed)
 
 <h2>Dependencies</h2>
 We imported all our 3rd party dependencies using gradle.
@@ -61,6 +62,11 @@ To see all dependencies the app uses, please take a look at the ![build.gradle (
 |-|-|-|
 | | <img src="https://user-images.githubusercontent.com/30039677/233581090-064c9c08-3def-4b3f-955d-2cf7fc9c8486.jpg" width="250"> | <img src="https://user-images.githubusercontent.com/30039677/233453045-2598dca0-8725-44f0-a521-d9cad87a5d4c.jpg" width="250" /> |
 
+<h3>Auth Screens</h3>
+
+| Login Screen | Register Screen | Verification Screen|
+|-|-|-|
+| <img src="https://user-images.githubusercontent.com/30039677/233587768-c2eaa259-ee28-48d4-8077-e8600e729ab4.jpg"  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233587780-f209ff56-3831-45a4-ba5f-fb7659c3318f.jpg"  width="250"/> | <img src=""  width="250"/> |
 <h3>Settings Screens</h3>
 
 | Settings Screen | Account Settings | Connection Settings |
