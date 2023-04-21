@@ -77,9 +77,9 @@ To see all dependencies the app uses, please take a look at the ![build.gradle (
 
 <h3>Other Screens</h3>
 
-| MusicMemory Screen | Profile Screen | Profile Screen |
+| MusicMemory Screen | Your Profile Screen | Profile Screen |
 |-|-|-|
-| <img src=""  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233595517-63a6a17d-5b64-46ae-ba51-21f51b2cf33f.jpg"  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233595512-b9f4e806-5d95-4447-b014-aabc71b76dd8.jpg" width="250"> |
+| <img src="https://user-images.githubusercontent.com/30039677/233595517-63a6a17d-5b64-46ae-ba51-21f51b2cf33f.jpg"  width="250"/> | <img src=""  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233595512-b9f4e806-5d95-4447-b014-aabc71b76dd8.jpg" width="250"> |
 
 <h2>Building</h2>
 
