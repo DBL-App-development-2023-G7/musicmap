@@ -66,7 +66,6 @@ public class SearchFragment extends MainFragment {
     }
 
     private void updateSongListView(List<Track> trackList) {
-        Log.d("poop", "updating view!");
         SpotifySongAdapter songAdapter = new SpotifySongAdapter(
                 requireActivity(),
                 R.layout.single_post_layout_feed,
