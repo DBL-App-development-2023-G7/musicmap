@@ -27,7 +27,7 @@
 
 <h2></h2>
 <p align="justify">
-<b>MusicMap</b> is a unique <b>Android</b> application that facilitates music lovers in sharing their favorite tunes and discovering new ones by other users. Its functionality is based on MusicMemories, which are user-created posts that reveal what song they are listening to at their present location along with an attached picture. These MusicMemories can be viewed by the user on their feed or on a map. Furthermore, <b>MusicMap</b> not only benefits the users but also provides useful insights to the artists. It helps them gain valuable information about the number of listeners for their music and identifies the most popular locations where their music is being played. This data is available to artists on the app's data screen, assisting them in enhancing their music and reaching a broader audience. 
+<b>MusicMap</b> is a unique <b>Android</b> application that facilitates music lovers in sharing their favorite tunes and discovering new ones from other users. Its functionality is based on MusicMemories, which are user-created posts that reveal what song they are listening to at their present location along with an attached picture. These MusicMemories can be viewed by the user on their feed or a map. Furthermore, <b>MusicMap</b> not only benefits the users but also provides useful insights to the artists. It helps them gain valuable information about the number of listeners to their music and identifies the most popular locations where their music is being played. This data is available to artists on the app's data screen, assisting them in enhancing their music and reaching a broader audience.
 </p>
 
 <h2>Features</h2>
