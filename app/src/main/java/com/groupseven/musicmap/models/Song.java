@@ -5,9 +5,10 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Song {
+public class Song implements Serializable {
 
     private String name;
 
@@ -78,13 +79,14 @@ public class Song {
         }
 
         Song song = (Song) o;
-        return Objects.equals(name, song.name) && Objects.equals(spotifyArtistId, song.spotifyArtistId)
-                && Objects.equals(imageUri, song.imageUri) && Objects.equals(musicPreviewUri, song.musicPreviewUri);
+        return Objects.equals(name, song.name) && Objects.equals(artistName, song.artistName)
+                && Objects.equals(spotifyArtistId, song.spotifyArtistId) && Objects.equals(imageUri, song.imageUri)
+                && Objects.equals(musicPreviewUri, song.musicPreviewUri);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, spotifyArtistId, imageUri, musicPreviewUri);
+        return Objects.hash(name, artistName, spotifyArtistId, imageUri, musicPreviewUri);
     }
 
 }

@@ -9,20 +9,20 @@ import android.widget.ImageView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.groupseven.musicmap.R;
+import com.groupseven.musicmap.firebase.Session;
 import com.groupseven.musicmap.listeners.SessionListenerActivity;
+import com.groupseven.musicmap.models.User;
 import com.groupseven.musicmap.screens.main.artist.ArtistDataFragment;
 import com.groupseven.musicmap.screens.main.feed.FeedFragment;
 import com.groupseven.musicmap.screens.main.map.PostMapFragment;
 import com.groupseven.musicmap.screens.main.musicmemory.create.PostFragment;
 import com.groupseven.musicmap.screens.main.musicmemory.create.SearchFragment;
 import com.groupseven.musicmap.screens.profile.ProfileActivity;
-import com.groupseven.musicmap.firebase.Session;
-import com.groupseven.musicmap.models.User;
 import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.permissions.LocationPermission;
 import com.groupseven.musicmap.util.ui.FragmentUtil;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends SessionListenerActivity {
 
