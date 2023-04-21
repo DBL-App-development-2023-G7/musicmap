@@ -27,7 +27,7 @@ import com.groupseven.musicmap.util.permissions.LocationPermission;
 import com.groupseven.musicmap.util.ui.FragmentUtil;
 import com.groupseven.musicmap.util.ui.Message;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HomeActivity extends SessionListenerActivity {
 
@@ -163,10 +163,16 @@ public class HomeActivity extends SessionListenerActivity {
         });
     }
 
+    /**
+     * Whether a check for the Spotify connection has been performed yet.
+     */
+    private final AtomicBoolean hasRanBefore = new AtomicBoolean();
+
     private void checkIsPostEnabled() {
-        SpotifyAccess spotifyAccess = SpotifyAccess.getSpotifyAccessInstance();
-        waitUserFuture().thenAcceptAsync(
-                unused -> spotifyAccess.refreshToken(new SpotifyAccess.TokenCallback() {
+        Runnable runnable = () -> {
+            if (Session.getInstance().isUserLoaded() && !hasRanBefore.getAndSet(true)) {
+                SpotifyAccess spotifyAccess = SpotifyAccess.getSpotifyAccessInstance();
+                spotifyAccess.refreshToken(new SpotifyAccess.TokenCallback() {
                     @Override
                     public void onValidToken() {
                         hasSpotifyConnection = true;
@@ -181,29 +187,14 @@ public class HomeActivity extends SessionListenerActivity {
                     public void onInvalidToken() {
                         hasSpotifyConnection = false;
                     }
-                }), this.getMainExecutor()
-        );
+                });
+            }
+        };
+
+        Session.getInstance().addListener(runnable::run);
 
         hasGooglePlayServices = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
                 == ConnectionResult.SUCCESS;
-
-    }
-
-    // TODO I NEED THIS OTHERWISE APP CRASHES
-    // IS THERE A BETTER SOLUTION?
-    private CompletableFuture<Void> waitUserFuture() {
-        Session session = Session.getInstance();
-        return CompletableFuture.supplyAsync(
-                () -> {
-                    while (!session.isUserLoaded()){
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                    return null;
-                });
     }
 
 }
