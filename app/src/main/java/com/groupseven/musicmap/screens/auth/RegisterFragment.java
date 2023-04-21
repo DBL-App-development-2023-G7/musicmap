@@ -118,13 +118,11 @@ public class RegisterFragment extends AuthFragment {
 
     /**
      * Validates all {@link #updateFormValues() previously retrieved} form input values.
-     * <p>
-     * This method may block to validate the username.
      *
-     * @return whether the form input is valid.
+     * @return a future that checks whether the form inputs are valid.
      */
     protected CompletableFuture<Boolean> validate() {
-        CompletableFuture<Boolean> future = InputChecker.checkUsername(username, usernameInput);
+        CompletableFuture<Boolean> checkUsernameFuture = InputChecker.checkUsername(username, usernameInput);
 
         boolean valid = InputChecker.checkFirstName(firstName, firstNameInput);
         valid &= InputChecker.checkLastName(lastName, lastNameInput);
@@ -137,7 +135,7 @@ public class RegisterFragment extends AuthFragment {
             return CompletableFuture.completedFuture(false);
         }
 
-        return future;
+        return checkUsernameFuture;
     }
 
     /**
