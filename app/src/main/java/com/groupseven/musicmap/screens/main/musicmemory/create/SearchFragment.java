@@ -2,7 +2,6 @@ package com.groupseven.musicmap.screens.main.musicmemory.create;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,31 +27,37 @@ import se.michaelthelin.spotify.model_objects.specification.Track;
  */
 public class SearchFragment extends MainFragment {
 
-    private static final int COUNTDOWN_DELAY = 400;
-
-    // this list is computed only once at the start in order to avoid excessive calls to the API
+    /**
+     * Stores the tracks the user has recently listened to.
+     * <p>
+     * In a list to avoid excessive Spotify API calls.
+     */
     private final List<Track> recentTrackList = Collections.synchronizedList(new ArrayList<>());
-    private View rootView;
 
-    // a countdown timer for the search query to reduce API spam
-    private CountDownTimer searchQueryCountdown;
+    /**
+     * The {@link ListView} displaying the feed of songs the user can choose from.
+     */
+    private ListView songListView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        songListView = rootView.findViewById(R.id.spotify_search_song_list);
+
         SpotifyAccess spotifyAccess = SpotifyAccess.getSpotifyAccessInstance();
 
-        // add current track on the top of the track list
+        // The song that is currently playing
         CompletableFuture<Void> currentTrackFuture = SpotifyUtils.getCurrentTrackFuture(spotifyAccess)
                 .thenAccept(track -> {
                     if (track != null) {
                         recentTrackList.add(0, track);
                     }
                 });
-
+        // The songs recently listened to
         CompletableFuture<Void> recentTracksFuture = SpotifyUtils.getRecentTracksFuture(4, spotifyAccess)
                 .thenAccept(recentTrackList::addAll);
 
+        // When both requests are done, update the song feed
         CompletableFuture.allOf(currentTrackFuture, recentTracksFuture).thenAcceptAsync(unused ->
                         updateSongListView(recentTrackList),
                 requireActivity().getMainExecutor());
@@ -65,30 +70,51 @@ public class SearchFragment extends MainFragment {
         return rootView;
     }
 
+    /**
+     * Displays the given list of tracks in the feed.
+     *
+     * @param trackList the tracks.
+     */
     private void updateSongListView(List<Track> trackList) {
         SpotifySongAdapter songAdapter = new SpotifySongAdapter(
                 requireActivity(),
                 R.layout.single_post_layout_feed,
                 trackList
         );
-        ListView songListView = rootView.findViewById(R.id.spotify_search_song_list);
         songListView.setAdapter(songAdapter);
     }
 
+    /**
+     * Listens to changes in the query text field.
+     */
     private class SearchQueryTextListener implements SearchView.OnQueryTextListener {
+
+        /**
+         * The amount of milliseconds between Spotify API requests while entering a query.
+         */
+        private static final int COUNTDOWN_DELAY = 400;
+
+        /**
+         * A countdown for API requests to reduce the amount of Spotify API requests.
+         */
+        private CountDownTimer queryCountdown;
+
         @Override
         public boolean onQueryTextSubmit(String query) {
-            // re-render feed
+            // Re-renders feed
             return false;
         }
 
         @Override
         public boolean onQueryTextChange(String query) {
-            if (searchQueryCountdown != null) {
-                searchQueryCountdown.cancel();
+            // Cancel the request from the previous query change if applicable
+            if (queryCountdown != null) {
+                queryCountdown.cancel();
             }
 
-            searchQueryCountdown = new CountDownTimer(COUNTDOWN_DELAY, 100) {
+            // A countdown system to prevent sending API requests for every character typed,
+            //  only send a request when the user hasn't typed for QUERY_INTERVAL ms
+            queryCountdown = new CountDownTimer(COUNTDOWN_DELAY, COUNTDOWN_DELAY) {
                 @Override
                 public void onTick(long l) { }
 
@@ -106,7 +132,7 @@ public class SearchFragment extends MainFragment {
                 }
             };
 
-            searchQueryCountdown.start();
+            queryCountdown.start();
             return false;
         }
     }
