@@ -3,6 +3,9 @@ package com.groupseven.musicmap.models;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
+
+import android.net.Uri;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,21 +47,17 @@ public class SongTest {
 
     @Test
     public void testGetImageUri() {
-        // null since the uri object is mocked
-        // otherwise it throws a runtime exception with message:
-        // "Method parse in android.net.Uri not mocked"
-        assertEquals(null, song.getImageUri());
+        assertEquals(Uri.parse("http://test.com/image.jpg"), song.getImageUri());
     }
 
     @Test
     public void testGetMusicPreviewUri() {
-        assertEquals(null, song.getMusicPreviewUri());
+        assertEquals(Uri.parse("http://test.com/preview.mp3"), song.getMusicPreviewUri());
         assertNull(songWithoutPreview.getMusicPreviewUri());
     }
 
     @Test
     public void testEquals() {
-
         Song song1 = new Song(
                 "Test song",
                 "Test artist",
