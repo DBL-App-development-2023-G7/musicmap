@@ -103,10 +103,6 @@ public class HomeActivity extends SessionListenerActivity {
         updateNavbar(currentUser);
         setupProfileButton(currentUser);
 
-        // Gray out post button as a default
-        View postButton = findViewById(R.id.navbarPost);
-        postButton.setAlpha(0.5F);
-
         bottomNavigationView.setOnItemSelectedListener(item -> {
             // using ifs instead of switch as resource IDs will be non-final by default in
             // Android Gradle Plugin version 8.0, therefore not to be used in switch
@@ -186,6 +182,10 @@ public class HomeActivity extends SessionListenerActivity {
     private void checkIsPostEnabled() {
         Runnable runnable = () -> {
             if (Session.getInstance().isUserLoaded() && !hasRanBefore.getAndSet(true)) {
+                // Gray out post button as a default
+                View postButton = findViewById(R.id.navbarPost);
+                postButton.setAlpha(0.5F);
+
                 SpotifyAccess spotifyAccess = SpotifyAccess.getSpotifyAccessInstance();
                 spotifyAccess.refreshToken(new SpotifyAccess.TokenCallback() {
                     @Override
@@ -206,10 +206,12 @@ public class HomeActivity extends SessionListenerActivity {
             }
         };
 
-        Session.getInstance().addListener(runnable::run);
-
         hasGooglePlayServices = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
                 == ConnectionResult.SUCCESS;
+
+        if (Session.getInstance().isUserLoaded()) runnable.run();
+        Session.getInstance().addListener(runnable::run);
+
     }
 
 }
