@@ -61,7 +61,7 @@ To see all dependencies the app uses, please take a look at the ![build.gradle (
 
 | Post Screen | Feed Screen | Map Screen|
 |-|-|-|
-| <img src="https://user-images.githubusercontent.com/30039677/233588744-f21283ce-c23f-40ec-bbd2-648a4b739032.jpg" width="250"> | <img src="https://user-images.githubusercontent.com/30039677/233581090-064c9c08-3def-4b3f-955d-2cf7fc9c8486.jpg" width="250"> | <img src="https://user-images.githubusercontent.com/30039677/233453045-2598dca0-8725-44f0-a521-d9cad87a5d4c.jpg" width="250" /> |
+| <img src="https://user-images.githubusercontent.com/30039677/233595520-540ca09a-86be-4431-9bf4-82d75432cca4.jpg" width="250"> | <img src="https://user-images.githubusercontent.com/30039677/233581090-064c9c08-3def-4b3f-955d-2cf7fc9c8486.jpg" width="250"> | <img src="https://user-images.githubusercontent.com/30039677/233453045-2598dca0-8725-44f0-a521-d9cad87a5d4c.jpg" width="250" /> |
 
 <h3>Auth Screens</h3>
 
@@ -79,7 +79,7 @@ To see all dependencies the app uses, please take a look at the ![build.gradle (
 
 | MusicMemory Screen | Profile Screen | Profile Screen |
 |-|-|-|
-| <img src="https://user-images.githubusercontent.com/30039677/233595520-540ca09a-86be-4431-9bf4-82d75432cca4.jpg"  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233595517-63a6a17d-5b64-46ae-ba51-21f51b2cf33f.jpg"  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233595512-b9f4e806-5d95-4447-b014-aabc71b76dd8.jpg" width="250"> |
+| <img src=""  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233595517-63a6a17d-5b64-46ae-ba51-21f51b2cf33f.jpg"  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233595512-b9f4e806-5d95-4447-b014-aabc71b76dd8.jpg" width="250"> |
 
 <h2>Building</h2>
 
