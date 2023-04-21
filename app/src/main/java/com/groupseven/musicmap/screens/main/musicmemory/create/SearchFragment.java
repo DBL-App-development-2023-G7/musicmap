@@ -59,7 +59,7 @@ public class SearchFragment extends MainFragment {
 
         // Setup search widget
         SearchView searchView = rootView.findViewById(R.id.spotify_search_view);
-        searchView.setQueryHint("Search for a song...");
+        searchView.setQueryHint(getString(R.string.song_search_hint));
         searchView.setOnQueryTextListener(new SearchQueryTextListener());
 
         return rootView;
