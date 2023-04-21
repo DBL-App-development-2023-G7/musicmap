@@ -29,7 +29,7 @@
 
 <h2></h2>
 <p align="justify">
-<b>MusicMap</b> is a unique <b>Android</b> application that facilitates music lovers in sharing their favorite tunes and discovering new ones from other users. Its functionality is based on MusicMemories, which are user-created posts that reveal what song they are listening to at their present location along with an attached picture. These MusicMemories can be viewed by the user on their feed or a map. Furthermore, <b>MusicMap</b> not only benefits the users but also provides useful insights to the artists. It helps them gain valuable information about the number of listeners to their music and identifies the most popular locations where their music is being played. This data is available to artists on the app's data screen, assisting them in enhancing their music and reaching a broader audience.
+<b>[MusicMap](https://github.com/DBL-App-development-2023-G7/musicmap)</b> is a unique <b>Android</b> application that facilitates music lovers in sharing their favorite tunes and discovering new ones from other users. Its functionality is based on MusicMemories, which are user-created posts that reveal what song they are listening to at their present location along with an attached picture. These MusicMemories can be viewed by the user on their feed or a map. Furthermore, <b>MusicMap</b> not only benefits the users but also provides useful insights to the artists. It helps them gain valuable information about the number of listeners to their music and identifies the most popular locations where their music is being played. This data is available to artists on the app's data screen, assisting them in enhancing their music and reaching a broader audience.
 </p>
 
 <h2>Features</h2>
@@ -46,7 +46,7 @@
 
 - See how many and where people used your songs to create MusicMemories.
 
-<h2>Requirements</h2>
+## Requirements
 
 OS: $\geq$ Android 9 (API 28)
 <br/>
@@ -118,7 +118,7 @@ We will describe the scenario of a user that does not have a MusicMap account an
 3. The user browses the feed and map screens for MusicMemories.
 4. The user clicks on a MusicMemory.
 5. The user enjoys a MusicMemory.
-6. The steps 3-5 can be reapated until the user decides to close the app.
+6. The steps 3-5 can be repeated until the user decides to close the app.
 
 <h2>Building</h2>
 
