@@ -1,11 +1,12 @@
 package com.groupseven.musicmap.listeners;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
+import android.os.Handler;
+import android.util.Log;
 
-import com.groupseven.musicmap.util.Constants;
+import com.groupseven.musicmap.util.ui.NetworkUtils;
 
 /**
  * Responsible for monitoring the network connectivity changes and broadcasting
@@ -30,6 +31,10 @@ public class NetworkChangeListener extends ConnectivityManager.NetworkCallback {
      */
     public NetworkChangeListener(Context context) {
         this.context = context.getApplicationContext();
+        new Handler().post(() -> {
+            isConnected = NetworkUtils.isInternetConnectionAvailable(context);
+            NetworkUtils.sendInternetBroadcast(context, isConnected);
+        });
     }
 
     /**
@@ -43,7 +48,7 @@ public class NetworkChangeListener extends ConnectivityManager.NetworkCallback {
     public void onAvailable(Network network) {
         super.onAvailable(network);
         isConnected = true;
-        sendInternetBroadcastWithIsConnected();
+        NetworkUtils.sendInternetBroadcast(context, true);
     }
 
     /**
@@ -57,17 +62,7 @@ public class NetworkChangeListener extends ConnectivityManager.NetworkCallback {
     public void onLost(Network network) {
         super.onLost(network);
         isConnected = false;
-        sendInternetBroadcastWithIsConnected();
-    }
-
-    /**
-     * Sends a broadcast to other components of the application indicating the current internet
-     * connectivity status.
-     */
-    private void sendInternetBroadcastWithIsConnected() {
-        Intent broadcastIntent = new Intent(Constants.INTERNET_BROADCAST_ACTION);
-        broadcastIntent.putExtra(Constants.INTERNET_BROADCAST_BUNDLE_KEY, isConnected);
-        context.sendBroadcast(broadcastIntent);
+        NetworkUtils.sendInternetBroadcast(context, false);
     }
 
     /**
