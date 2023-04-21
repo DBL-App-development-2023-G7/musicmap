@@ -56,10 +56,14 @@ public class PostFragment extends MainFragment {
 
     private static final String TAG = "PostFragment";
 
+    /**
+     * The key to find the chosen song from {@link SearchFragment}.
+     */
+    public static final String SONG_RESULT_KEY = "searchSong";
+
     private final LocationPermission locationPermission = new LocationPermission(this);
     private final CameraPermission cameraPermission = new CameraPermission(this);
     private FusedLocationProviderClient fusedLocationClient;
-    public static final String FRAGMENT_RESULT_KEY = "searchSong";
 
     private Session currentSession;
     private SessionListenerActivity parentActivity;
@@ -143,13 +147,14 @@ public class PostFragment extends MainFragment {
         model.setSongToCurrentUserSong();
         // Setup callback from search result fragment
         getParentFragmentManager().setFragmentResultListener(
-                "searchSong",
+                SONG_RESULT_KEY,
                 this,
                 (requestKey, bundle) -> {
-                    Log.d(TAG, "result!");
-                    Song resultSong = (Song) bundle.getSerializable("song");
+                    Song resultSong = (Song) bundle.getSerializable(SONG_RESULT_KEY);
+                    Log.d(TAG, "Song chosen: " + resultSong);
+
                     model.getSelectedSong().setValue(resultSong);
-        });
+                });
 
     }
 
