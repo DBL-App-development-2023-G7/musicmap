@@ -29,8 +29,6 @@ public class SearchFragment extends MainFragment {
 
     private static final int COUNTDOWN_DELAY = 400;
 
-    // temporary store used by post fragment to get search result (I am too lazy to use a Model)
-
     // this list is computed only once at the start in order to avoid excessive calls to the API
     private final List<Track> recentTrackList = new ArrayList<>();
     private View rootView;
