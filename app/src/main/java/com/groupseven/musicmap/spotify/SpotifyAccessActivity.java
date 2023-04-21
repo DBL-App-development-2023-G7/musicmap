@@ -1,6 +1,7 @@
 package com.groupseven.musicmap.spotify;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,9 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.firebase.Session;
+import com.groupseven.musicmap.listeners.SessionListenerActivity;
+import com.groupseven.musicmap.screens.settings.SettingsActivity;
 import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.firebase.SpotifyTokenStorage;
 import com.groupseven.musicmap.util.spotify.SpotifyUtils;
+import com.groupseven.musicmap.util.ui.Message;
 
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 
@@ -107,10 +111,10 @@ public class SpotifyAccessActivity extends AppCompatActivity {
                         finish();
                     }
             );
+        } else {
+            setResult(Activity.RESULT_CANCELED);
+            finish();
         }
-
-        setResult(Activity.RESULT_CANCELED);
-        finish();
     }
 
 }

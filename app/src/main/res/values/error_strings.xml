@@ -31,4 +31,6 @@
     <string name="create_mm_success">Successfully created the music memory</string>
     <string name="username_does_not_exist">Username does not exist</string>
     <string name="profile_error_user_data_loading_failed">Could not load user data</string>
+    <string name="spotify_connection_success">Successfully connected to your Spotify account</string>
+    <string name="spotify_connection_failure">Could not connect to your Spotify account!</string>
 </resources>
