@@ -123,6 +123,7 @@ We will describe the scenario of a user that does not have a MusicMap account an
 <h2>Building</h2>
 
 To build the application run the following command:
+
 Windows:
 ```
 gradlew build
