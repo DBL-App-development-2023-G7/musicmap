@@ -1,7 +1,7 @@
 [//]: # (To view this README.md file in the best way, please visit this link https://github.com/DBL-App-development-2023-G7/musicmap)
 
 <p align="center">
-  <img width="250" height="250" src="https://user-images.githubusercontent.com/30039677/233731966-79a53b55-d5b7-4881-a5b2-5e89e7011767.png">
+  <img width="250" height="250" src="https://user-images.githubusercontent.com/30039677/233732937-55afe6cf-3bba-4373-bc62-b634ea6828e4.png">
 </p>
 
 <p align="center">
