@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  An Android app to discover music in a memorial way
+  An Android app to discover music in a fun way!
 </p>
 
 <p align="center">
@@ -17,6 +17,9 @@
 <img src="https://img.shields.io/github/issues-pr/DBL-App-development-2023-G7/musicmap?style=flat-square" />
 </a>
 </p>
+
+<h2></h2>
+MusicMap is a unique Android application that facilitates music lovers in sharing their favorite tunes and discovering new ones by other users. Its functionality is based on MusicMemories, which are user-created posts that reveal what song they are listening to at their present location along with an attached picture. These MusicMemories can be viewed by the user on their feed or on a map. Furthermore, MusicMap not only benefits the users but also provides useful insights to the artists. It helps them gain valuable information about the number of listeners for their music and identifies the most popular locations where their music is being played. This data is available to artists on the app's data screen, assisting them in enhancing their music and reaching a broader audience.
 
 <h2>Features</h2>
 <h3>For users:</h3>
