@@ -22,7 +22,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 public class RegisterFragment extends AuthFragment {
 
@@ -119,13 +118,11 @@ public class RegisterFragment extends AuthFragment {
 
     /**
      * Validates all {@link #updateFormValues() previously retrieved} form input values.
-     * <p>
-     * This method may block to validate the username.
      *
-     * @return whether the form input is valid.
+     * @return a future that checks whether the form inputs are valid.
      */
-    protected boolean validate() {
-        CompletableFuture<Boolean> future = InputChecker.checkUsername(username, usernameInput);
+    protected CompletableFuture<Boolean> validate() {
+        CompletableFuture<Boolean> checkUsernameFuture = InputChecker.checkUsername(username, usernameInput);
 
         boolean valid = InputChecker.checkFirstName(firstName, firstNameInput);
         valid &= InputChecker.checkLastName(lastName, lastNameInput);
@@ -134,14 +131,11 @@ public class RegisterFragment extends AuthFragment {
         valid &= InputChecker.checkRepeatPassword(repeatPassword, password, repeatPasswordInput);
         valid &= checkBirthdate(birthdate);
 
-        try {
-            valid &= future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            Log.e(TAG, "Exception occurred while checking username", e);
-            valid = false;
+        if (!valid) {
+            return CompletableFuture.completedFuture(false);
         }
 
-        return valid;
+        return checkUsernameFuture;
     }
 
     /**
@@ -161,21 +155,23 @@ public class RegisterFragment extends AuthFragment {
     protected void register() {
         updateFormValues();
 
-        if (!validate()) {
-            Message.showFailureMessage(getActivity(),
-                    getString(R.string.auth_error_invalid_values));
-            return;
-        }
+        validate().thenAcceptAsync(valid -> {
+            if (!valid) {
+                Message.showFailureMessage(getActivity(),
+                        getString(R.string.auth_error_invalid_values));
+                return;
+            }
 
-        AuthSystem.register(createUserData(), password)
-                .whenCompleteAsync((unused, throwable) -> {
-                    if (throwable == null) {
-                        this.getAuthActivity().loadHomeActivity();
-                    } else {
-                        Log.e(TAG, "Exception occurred during registration", throwable);
-                        Message.showFailureMessage(getActivity(), throwable.getMessage());
-                    }
-                }, ContextCompat.getMainExecutor(requireContext()));
+            AuthSystem.register(createUserData(), password)
+                    .whenCompleteAsync((unused, throwable) -> {
+                        if (throwable == null) {
+                            this.getAuthActivity().loadHomeActivity();
+                        } else {
+                            Log.e(TAG, "Exception occurred during registration", throwable);
+                            Message.showFailureMessage(getActivity(), throwable.getMessage());
+                        }
+                    }, ContextCompat.getMainExecutor(requireContext()));
+        }, ContextCompat.getMainExecutor(requireContext()));
     }
 
     private void back() {
