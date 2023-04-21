@@ -107,7 +107,7 @@ Windows:
 ```
 gradlew build
 ```
-Linux:
+Unix based systems:
 ```
 ./gradlew build
 ```
@@ -120,7 +120,7 @@ Windows:
 ```
 gradlew test
 ```
-Linux:
+Unix based systems:
 ```
 ./gradlew test
 ```
@@ -131,7 +131,7 @@ Windows:
 ```
 gradlew checkstyle
 ```
-Linux:
+Unix based systems:
 ```
 ./gradlew checkstyle
 ```
@@ -145,7 +145,7 @@ Windows:
 ```
 gradlew connectedCheck
 ```
-Linux:
+Unix based systems:
 ```
 ./gradlew connectedCheck
 ```
