@@ -86,7 +86,7 @@ public class PostFragment extends MainFragment {
     private boolean shouldClearData = true;
 
     /**
-     * Launcher that launches the camera activity and handles the result
+     * Launcher that launches the camera activity and handles the result.
      */
     private final ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
