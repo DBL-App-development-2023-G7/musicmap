@@ -22,7 +22,7 @@ public class RegisterArtistFragment extends RegisterFragment {
                              Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        if(rootView == null) {
+        if (rootView == null) {
             throw new IllegalStateException("The super class of the RegisterArtistFragment should return a nonnull "
                     + "view.");
         }
