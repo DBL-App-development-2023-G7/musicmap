@@ -97,7 +97,7 @@ We will describe the scenario of a user that does not have a MusicMap account an
 2. The user creates a new account and verifies their email address.
 3. The user navigates to the settings by clicking on the profile icon and then on the settings icon.
 4. The user links their Spotify account with the MusicMap profile.
-5. The user notifies a developer so that they can use the Spotify features. **IMPORTANT**
+5. The user [notifies a developer](mailto:a.popescu1@student.tue.nl) so that they can use the Spotify features. **IMPORTANT**
    1. The app is still in **DEV** mode, we would require to send a formal letter to Spotify to make all the features work without this step.
    2. We have to add the user's Spotify email in the Spotify dashboard.
 6. The user goes to the main screen.
