@@ -87,6 +87,18 @@ To see all dependencies the app uses, please take a look at the ![build.gradle (
 
 <h2>User scenario</h2>
 
+We will describe the scenario of a user that does not have an account and would like to share a MusicMemory for everyone to see it. The user will create a MusicMap that has a photo, location and a song attached to it.
+
+1. The user installs the app on a valid phone. (check ![requirements](#requirements))
+2. The user creates a new account.
+3. The user goes into the settings by clicking on the profile icon and then on the cog icon.
+4. The user links their Spotify account with the MusicMap profile.
+5. The user goes to the main screen.
+6. The user creates a MusicMemory.
+  6.1 The user takes a picture.
+  6.2 The user chooses a song
+  6.3 The user clicks on the post button.
+7.
 
 <h2>Building</h2>
 
