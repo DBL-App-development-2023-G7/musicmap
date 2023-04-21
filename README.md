@@ -91,6 +91,7 @@ To see all dependencies the app uses, please take a look at the ![build.gradle (
 <h2>Building</h2>
 
 To build the application run the following command:
+Windows:
 ```
 gradlew build
 ```
