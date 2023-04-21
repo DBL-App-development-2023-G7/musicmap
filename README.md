@@ -95,15 +95,15 @@ We will describe the scenario of a user that does not have a MusicMap account an
 2. The user creates a new account.
 3. The user navigates to the settings by clicking on the profile icon and then on the settings icon.
 4. The user links their Spotify account with the MusicMap profile.
-5. The user notifies an admin that he wants to use the Spotify features.
-  5.1 **REQUIRED** because the app is still in **DEV** mode, we would require to send a formal letter to Spotify to make all the features work without this step)
-  5.2 We have to add the user's Spotify email in the Spotify dashboard.
+5. The user notifies an admin that he wants to use the Spotify features. **IMPORTANT**
+   1. The app is still in **DEV** mode, we would require to send a formal letter to Spotify to make all the features work without this step)
+   2. We have to add the user's Spotify email in the Spotify dashboard.
 6. The user goes to the main screen.
 7. The user navigates to the post screen using the bottom navigation bar.
 8. The user creates a MusicMemory.
-  8.1 The user takes a picture.
-  8.2 The user chooses a song.
-  8.3 The user clicks on the post button.
+   1. The user takes a picture.
+   2. The user chooses a song.
+   3. The user clicks on the post button.
 9. The user should see the post they created on the both the feed and map screens.
 10. Other users should see their post.
 
