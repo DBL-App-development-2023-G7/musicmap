@@ -94,15 +94,14 @@ public class SearchFragment extends MainFragment {
 
                 @Override
                 public void onFinish() {
-                    if (query.equals("")) {
-                        Log.d("poop", "empty q");
+                    if (query.isEmpty()) {
                         updateSongListView(recentTrackList);
                     } else {
                         SpotifyUtils.getSearchTrackRequest(SpotifyAccess.getSpotifyAccessInstance(), query)
-                            .executeAsync().thenAcceptAsync(trackPaging -> {
-                                List<Track> searchedTrackList = Arrays.asList(trackPaging.getItems());
-                                updateSongListView(searchedTrackList);
-                            }, requireActivity().getMainExecutor());
+                                .executeAsync().thenAcceptAsync(trackPaging -> {
+                                    List<Track> searchedTrackList = Arrays.asList(trackPaging.getItems());
+                                    updateSongListView(searchedTrackList);
+                                }, requireActivity().getMainExecutor());
                     }
                 }
             };
