@@ -30,7 +30,7 @@ public class NetworkChangeListener extends ConnectivityManager.NetworkCallback {
      * @param handler for DI, and doing a non-blocking initial check for internet connection.
      */
     public NetworkChangeListener(Context context, Handler handler) {
-        this.context = context.getApplicationContext();
+        this.context = context;
         // do a non-blocking initial check for internet connection
         handler.post(() -> {
             isConnected = NetworkUtils.isInternetConnectionAvailable(context);
