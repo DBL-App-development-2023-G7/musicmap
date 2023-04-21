@@ -23,7 +23,6 @@ public class ArtistTest {
         ArtistData unverifiedArtistData = new ArtistData(userData, false, "spotify-id");
         artist = new Artist(artistData, "uid");
         unverifiedArtist = new Artist(unverifiedArtistData, "uid");
-
     }
 
     @Test

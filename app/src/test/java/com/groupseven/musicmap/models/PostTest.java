@@ -52,12 +52,13 @@ public class PostTest {
         });
     }
 
+    /**
+     * A basic implementation of {@link Post}.
+     */
     private static class PostImpl extends Post {
-
         public PostImpl(String authorUid, Date timePosted, GeoPoint location) {
             super(authorUid, timePosted, location);
         }
-
     }
 
 }

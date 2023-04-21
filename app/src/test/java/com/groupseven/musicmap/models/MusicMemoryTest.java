@@ -16,7 +16,7 @@ public class MusicMemoryTest {
     private Song song;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         song = new Song("name", "artistName", "spotifyArtistId", "imageUri", "musicPreviewUri");
         GeoPoint geoPoint = new GeoPoint(0.0, 0.0);
         Date date = new Date();

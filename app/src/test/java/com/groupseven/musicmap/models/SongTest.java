@@ -25,7 +25,6 @@ public class SongTest {
                 "http://test.com/image.jpg",
                 null
         );
-
     }
 
     @Test
