@@ -1,6 +1,5 @@
 package com.groupseven.musicmap.models;
 
-import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.GeoPoint;
@@ -18,9 +17,6 @@ public abstract class Post {
     private String authorUid;
     private Date timePosted;
     private GeoPoint location;
-
-    @Exclude
-    private final transient TaskCompletionSource<User> authorFuture = new TaskCompletionSource<>();
 
     protected Post() { }
 

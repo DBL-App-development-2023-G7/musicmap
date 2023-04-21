@@ -28,7 +28,6 @@
             android:windowSoftInputMode="adjustPan"
             android:launchMode="singleTask">
         </activity>
-        <service android:name=".services.InternetCheckService" />
         <activity
             android:name=".spotify.SpotifyAccessActivity"
             android:exported="true"
@@ -53,8 +52,7 @@
         <activity
             android:name=".screens.main.musicmemory.create.CameraActivity"
             android:exported="false"
-            android:theme="@style/Theme.MusicMap.NoActionBar"
-            />
+            android:theme="@style/Theme.MusicMap.NoActionBar" />
         <activity
             android:name=".screens.main.musicmemory.view.MusicMemoryActivity"
             android:exported="false"

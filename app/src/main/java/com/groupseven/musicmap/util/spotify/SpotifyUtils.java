@@ -2,6 +2,7 @@ package com.groupseven.musicmap.util.spotify;
 
 import android.util.Log;
 
+import com.groupseven.musicmap.models.Song;
 import com.groupseven.musicmap.spotify.SpotifyAccess;
 
 import org.apache.hc.core5.http.ParseException;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 import se.michaelthelin.spotify.enums.ModelObjectType;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.miscellaneous.CurrentlyPlaying;
+import se.michaelthelin.spotify.model_objects.specification.ArtistSimplified;
 import se.michaelthelin.spotify.model_objects.specification.PagingCursorbased;
 import se.michaelthelin.spotify.model_objects.specification.PlayHistory;
 import se.michaelthelin.spotify.model_objects.specification.Track;
@@ -51,7 +53,7 @@ public class SpotifyUtils {
      * representing the user's most recent tracks.
      */
     public static CompletableFuture<List<Track>> getRecentTracksFuture(int maxTracks, SpotifyAccess spotifyAccess) {
-        return CompletableFuture.supplyAsync(() -> {
+        return checkForSpotifyToken(spotifyAccess).thenApply(unused -> {
             List<Track> recentTrackList = new ArrayList<>();
             try {
                 PagingCursorbased<PlayHistory> pageHistory = SpotifyUtils
@@ -88,7 +90,7 @@ public class SpotifyUtils {
      * the user's currently playing track.
      */
     public static CompletableFuture<Track> getCurrentTrackFuture(SpotifyAccess spotifyAccess) {
-        return CompletableFuture.supplyAsync(() -> {
+        return checkForSpotifyToken(spotifyAccess).thenApply(unused -> {
             Track currentTrack = null;
             try {
                 CurrentlyPlaying currentSimpleTrack = getCurrentPlayingTrackRequest(spotifyAccess).execute();
@@ -220,6 +222,32 @@ public class SpotifyUtils {
                 .getUsersCurrentlyPlayingTrack()
                 .additionalTypes("track")
                 .build();
+    }
+
+    /**
+     * Creates a {@link Song} from the given {@link Track}.
+     *
+     * @param track the track to convert.
+     * @return the created song.
+     */
+    public static Song createSongFromTrack(Track track) {
+        if (track.getArtists().length < 1) {
+            throw new IllegalArgumentException("Track does not have any artists");
+        }
+
+        if (track.getAlbum().getImages().length < 1) {
+            throw new IllegalArgumentException("Track does not have any album images");
+        }
+
+        ArtistSimplified spotifyArtist = track.getArtists()[0];
+
+        return new Song(
+                track.getName(),
+                spotifyArtist.getName(),
+                spotifyArtist.getId(),
+                track.getAlbum().getImages()[0].getUrl(),
+                track.getPreviewUrl()
+        );
     }
 
 }
