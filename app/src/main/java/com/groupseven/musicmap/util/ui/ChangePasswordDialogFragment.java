@@ -63,6 +63,7 @@ public class ChangePasswordDialogFragment extends DialogFragment {
                     .whenCompleteAsync((unused, throwable) -> {
                         if (throwable == null) {
                             this.dismiss();
+                            Message.showSuccessMessage(requireActivity(), getString(R.string.change_password_success));
                         } else {
                             String message = throwable.getMessage();
                             oldPasswordInput.setError(message);
