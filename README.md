@@ -91,8 +91,8 @@ To see all dependencies the app uses, please take a look at the ![build.gradle (
 
 We will describe the scenario of a user that does not have a MusicMap account and would really like to share a MusicMemory. The user will create a MusicMap that has a photo, location and a song attached to it. The user is required to have a Spotify account.
 
-1. The user installs the app on a valid phone. (check ![requirements](#requirements))
-2. The user creates a new account.
+1. The user installs the app on a valid phone. (if the app is not installed) (check ![requirements](#Requirements))
+2. The user creates a new account and checks their email address.
 3. The user navigates to the settings by clicking on the profile icon and then on the settings icon.
 4. The user links their Spotify account with the MusicMap profile.
 5. The user notifies an admin that he wants to use the Spotify features. **IMPORTANT**
@@ -108,7 +108,14 @@ We will describe the scenario of a user that does not have a MusicMap account an
 10. Other users should see their post.
 
 <h3>Enjoying MusicMemories</h3>
-We will describe the scenario of a user that does not have a MusicMap account and would really like to enjoy some MusicMemories. The user should be able to see all the MusicMemories that were posted in the past 24 hours. If the user does not see any posts it means that there were no posts made in that time period. The user is **NOT** required to have a Spotify account.
+We will describe the scenario of a user that does not have a MusicMap account and would really like to enjoy some MusicMemories. The user should be able to see all the MusicMemories that were posted in the past 24 hours. If the user does not see any posts it means that there were no posts made in that time period. The user is <b>NOT</b> required to have a Spotify account.
+
+1. The user installs the app on a valid phone. (if the app is not installed) (check ![requirements](#Requirements))
+2. The user creates a new account and checks their email address.
+3. The user browses the feed and map screens for MusicMemories.
+4. The user clicks on a MusicMemory.
+5. The user enjoys a MusicMemory.
+6. The steps 3-5 can be reapated until the user decides to close the app.
 
 <h2>Building</h2>
 
