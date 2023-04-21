@@ -21,6 +21,7 @@
     <string name="feed_error_loading">Could not load feed</string>
     <string name="no_internet_error">Oops! MusicMap requires an active internet connection to function. We\'re trying to find a connection</string>
     <string name="error_spotify_not_connected">We could not detect a connection to your Spotify account.</string>
+    <string name="error_google_play_not_connected">We could not detect a connection to Google Play SErvices.</string>
     <string name="spotify_already_connected">Your spotify account is already connected!</string>
     <string name="location_permission_not_granted">Permission not granted for location</string>
     <string name="gps_required">Google Play services is required</string>
