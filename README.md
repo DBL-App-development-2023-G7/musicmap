@@ -43,6 +43,7 @@
 <h2>Requirements</h2>
 
 OS: $\geq$ Android 9 (API 28)
+<br/>
 Other: Google Play Services (installed)
 
 <h2>Dependencies</h2>
