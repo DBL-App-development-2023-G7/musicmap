@@ -60,7 +60,7 @@ To see all dependencies the app uses, please take a look at the ![build.gradle (
 
 | Post Screen | Feed Screen | Map Screen|
 |-|-|-|
-| | <img src="https://user-images.githubusercontent.com/30039677/233581090-064c9c08-3def-4b3f-955d-2cf7fc9c8486.jpg" width="250"> | <img src="https://user-images.githubusercontent.com/30039677/233453045-2598dca0-8725-44f0-a521-d9cad87a5d4c.jpg" width="250" /> |
+| <img src="https://user-images.githubusercontent.com/30039677/233588744-f21283ce-c23f-40ec-bbd2-648a4b739032.jpg" width="250"> | <img src="https://user-images.githubusercontent.com/30039677/233581090-064c9c08-3def-4b3f-955d-2cf7fc9c8486.jpg" width="250"> | <img src="https://user-images.githubusercontent.com/30039677/233453045-2598dca0-8725-44f0-a521-d9cad87a5d4c.jpg" width="250" /> |
 
 <h3>Auth Screens</h3>
 
