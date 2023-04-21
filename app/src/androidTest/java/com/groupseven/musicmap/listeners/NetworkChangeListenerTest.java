@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -26,6 +27,7 @@ public class NetworkChangeListenerTest {
 
     @Before
     public void setUp() {
+        MockitoAnnotations.openMocks(this);
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         Handler handler = new Handler(Looper.getMainLooper());
         networkChangeListener = new NetworkChangeListener(context, handler);
