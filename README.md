@@ -68,11 +68,18 @@ To see all dependencies the app uses, please take a look at the ![build.gradle (
 | Login Screen | Register Screen | Verification Screen|
 |-|-|-|
 | <img src="https://user-images.githubusercontent.com/30039677/233587768-c2eaa259-ee28-48d4-8077-e8600e729ab4.jpg"  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233587780-f209ff56-3831-45a4-ba5f-fb7659c3318f.jpg"  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233592203-483fc340-72b9-4eba-a4d0-8c6eefc8e79f.jpg"  width="250"/> |
+
 <h3>Settings Screens</h3>
 
 | Settings Screen | Account Settings | Connection Settings |
 |-|-|-|
 | <img src="https://user-images.githubusercontent.com/30039677/233579698-4f8a8339-3144-46dc-8bba-0129024d3d02.jpg"  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233592218-cd91944a-50c5-40b9-9e48-4edd379a7caf.jpg"  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233580281-26c1484e-0633-4463-a64e-174357bbeecd.jpg" width="250"> |
+
+<h3>Other Screens</h3>
+
+| MusicMemory Screen | Profile Screen | Profile Screen |
+|-|-|-|
+| <img src="https://user-images.githubusercontent.com/30039677/233595520-540ca09a-86be-4431-9bf4-82d75432cca4.jpg"  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233595517-63a6a17d-5b64-46ae-ba51-21f51b2cf33f.jpg"  width="250"/> | <img src="https://user-images.githubusercontent.com/30039677/233595512-b9f4e806-5d95-4447-b014-aabc71b76dd8.jpg" width="250"> |
 
 <h2>Building</h2>
 
