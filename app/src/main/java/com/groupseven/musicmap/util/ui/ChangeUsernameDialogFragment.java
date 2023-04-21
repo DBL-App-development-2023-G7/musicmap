@@ -62,6 +62,7 @@ public class ChangeUsernameDialogFragment extends DialogFragment {
                 AuthSystem.updateUsername(newUsername).whenCompleteAsync((unused, throwable) -> {
                     if (throwable == null) {
                         this.dismiss();
+                        Message.showSuccessMessage(requireActivity(), getString(R.string.change_username_success));
                     } else {
                         Log.e(TAG, "Exception occurred while changing username", throwable);
                         String message = throwable.getMessage();

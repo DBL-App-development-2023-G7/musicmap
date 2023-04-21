@@ -61,6 +61,7 @@ public class ChangeEmailDialogFragment extends DialogFragment {
             AuthSystem.updateEmail(newEmail, password).whenCompleteAsync((unused, throwable) -> {
                 if (throwable == null) {
                     this.dismiss();
+                    Message.showSuccessMessage(requireActivity(), getString(R.string.change_email_success));
                 } else {
                     String message = throwable.getMessage();
                     newEmailInput.setError(message);

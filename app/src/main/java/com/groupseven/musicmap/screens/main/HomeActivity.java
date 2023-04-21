@@ -4,10 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.firebase.Session;
@@ -17,10 +21,15 @@ import com.groupseven.musicmap.screens.main.artist.ArtistDataFragment;
 import com.groupseven.musicmap.screens.main.feed.FeedFragment;
 import com.groupseven.musicmap.screens.main.map.PostMapFragment;
 import com.groupseven.musicmap.screens.main.musicmemory.create.PostFragment;
+import com.groupseven.musicmap.screens.main.musicmemory.create.SearchFragment;
 import com.groupseven.musicmap.screens.profile.ProfileActivity;
+import com.groupseven.musicmap.spotify.SpotifyAccess;
 import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.permissions.LocationPermission;
 import com.groupseven.musicmap.util.ui.FragmentUtil;
+import com.groupseven.musicmap.util.ui.Message;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HomeActivity extends SessionListenerActivity {
 
@@ -29,6 +38,9 @@ public class HomeActivity extends SessionListenerActivity {
 
     private BottomNavigationView bottomNavigationView;
     private ImageView profileButton;
+
+    private boolean hasSpotifyConnection = false;
+    private boolean hasGooglePlayServices = false;
 
     @Override
     protected void onInternetStateChange(boolean internetAvailable) {
@@ -46,6 +58,19 @@ public class HomeActivity extends SessionListenerActivity {
             setContentView(R.layout.activity_home);
             currentLayout = R.layout.activity_home;
             setupActivity();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment currentFragment = fragmentManager.findFragmentById(R.id.fragment_view);
+
+        if (currentFragment instanceof SearchFragment) {
+            FragmentUtil.replaceFragment(this.getSupportFragmentManager(), R.id.fragment_view,
+                    PostFragment.class);
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -78,6 +103,10 @@ public class HomeActivity extends SessionListenerActivity {
         updateNavbar(currentUser);
         setupProfileButton(currentUser);
 
+        // Gray out post button as a default
+        View postButton = findViewById(R.id.navbarPost);
+        postButton.setAlpha(0.5F);
+
         bottomNavigationView.setOnItemSelectedListener(item -> {
             // using ifs instead of switch as resource IDs will be non-final by default in
             // Android Gradle Plugin version 8.0, therefore not to be used in switch
@@ -88,7 +117,16 @@ public class HomeActivity extends SessionListenerActivity {
                 return true;
             }
 
+            checkIsPostEnabled();
+
             if (item.getItemId() == R.id.navbarPost) {
+                if (!hasSpotifyConnection) {
+                    Message.showFailureMessage(this, getString(R.string.error_spotify_not_connected));
+                    return false;
+                } if (!hasGooglePlayServices) {
+                    Message.showFailureMessage(this, getString(R.string.error_google_play_not_connected));
+                    return false;
+                }
                 FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.fragment_view,
                         PostFragment.class);
                 lastFragmentClass = PostFragment.class;
@@ -138,6 +176,40 @@ public class HomeActivity extends SessionListenerActivity {
             startActivity(intent);
             finish();
         });
+    }
+
+    /**
+     * Whether a check for the Spotify connection has been performed yet.
+     */
+    private final AtomicBoolean hasRanBefore = new AtomicBoolean();
+
+    private void checkIsPostEnabled() {
+        Runnable runnable = () -> {
+            if (Session.getInstance().isUserLoaded() && !hasRanBefore.getAndSet(true)) {
+                SpotifyAccess spotifyAccess = SpotifyAccess.getSpotifyAccessInstance();
+                spotifyAccess.refreshToken(new SpotifyAccess.TokenCallback() {
+                    @Override
+                    public void onValidToken() {
+                        hasSpotifyConnection = true;
+                        View postButton = findViewById(R.id.navbarPost);
+                        // Only enable postButton if both preconditions are true
+                        if (hasGooglePlayServices) {
+                            postButton.setAlpha(1);
+                        }
+                    }
+
+                    @Override
+                    public void onInvalidToken() {
+                        hasSpotifyConnection = false;
+                    }
+                });
+            }
+        };
+
+        Session.getInstance().addListener(runnable::run);
+
+        hasGooglePlayServices = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
+                == ConnectionResult.SUCCESS;
     }
 
 }

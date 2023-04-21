@@ -81,6 +81,7 @@ public class SpotifyAccessActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Uri uri = intent.getData();
+
         if (uri != null) {
             String authCode = uri.getQueryParameter(Constants.SPOTIFY_QUERY_PARAM_KEY);
             Log.d(TAG, uri.toString());
@@ -107,10 +108,10 @@ public class SpotifyAccessActivity extends AppCompatActivity {
                         finish();
                     }
             );
+        } else {
+            setResult(Activity.RESULT_CANCELED);
+            finish();
         }
-
-        setResult(Activity.RESULT_CANCELED);
-        finish();
     }
 
 }

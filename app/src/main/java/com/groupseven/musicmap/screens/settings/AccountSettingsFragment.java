@@ -1,5 +1,7 @@
 package com.groupseven.musicmap.screens.settings;
 
+import static com.groupseven.musicmap.R.string.change_profile_picture_success;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -56,10 +58,14 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat {
                     }
 
                     Uri photoUri = data.getData();
-                    AuthSystem.updateProfilePicture(photoUri).exceptionally(throwable -> {
-                        Message.showFailureMessage(activity, throwable.getMessage());
-                        return null;
-                    });
+                    AuthSystem.updateProfilePicture(photoUri)
+                            .thenRun(() -> {
+                                Message.showSuccessMessage(activity, getString(change_profile_picture_success));
+                            })
+                            .exceptionally(throwable -> {
+                                Message.showFailureMessage(activity, throwable.getMessage());
+                                return null;
+                            });
                 }
             });
 
