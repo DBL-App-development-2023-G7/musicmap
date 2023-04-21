@@ -23,8 +23,7 @@ public class RegisterArtistFragment extends RegisterFragment {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
         if (rootView == null) {
-            throw new IllegalStateException("The super class of the RegisterArtistFragment should return a nonnull "
-                    + "view.");
+            throw new IllegalStateException("The super.onCreateView() method should return a nonnull view.");
         }
 
         EditText firstNameInput = rootView.findViewById(R.id.username_editText);
