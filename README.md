@@ -7,6 +7,10 @@
 </p>
 
 <p align="center">
+  Made for the <b>2IS70 DBL App development</b> course offered by <b>TU/e</b>.
+</p>
+
+<p align="center">
 <a href="" target="blank">
 <img src="https://img.shields.io/github/actions/workflow/status/DBL-App-development-2023-G7/musicmap/gradle.yml?style=flat-square" />
 </a>
@@ -128,3 +132,14 @@ Linux:
 ```
 ./gradlew connectedCheck
 ```
+
+<h2>Made by:</h2>
+
+Team 07
+
+- Andrei Tudor Popescu
+- Teun Peters
+- Pradyuman Dixit
+- Wiliam Dokov
+- Robin van Dijke
+- Tjeerd Roks
