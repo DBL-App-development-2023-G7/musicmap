@@ -19,8 +19,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
@@ -35,7 +33,7 @@ import com.groupseven.musicmap.screens.main.feed.FeedFragment;
 import com.groupseven.musicmap.util.firebase.Actions;
 import com.groupseven.musicmap.util.permissions.CameraPermission;
 import com.groupseven.musicmap.util.permissions.LocationPermission;
-import com.groupseven.musicmap.util.spotify.SpotifyAuthActivity;
+import com.groupseven.musicmap.spotify.SpotifyAccess;
 import com.groupseven.musicmap.util.spotify.SpotifyUtils;
 import com.groupseven.musicmap.util.ui.FragmentUtil;
 import com.groupseven.musicmap.util.ui.ImageUtils;
@@ -81,34 +79,8 @@ public class PostFragment extends MainFragment {
     private ImageView capturedImagePreview;
     private Button postMemoryButton;
     private boolean shouldClearData = true;
-    private SpotifyAuthActivity parentActivity;
 
-    // a launcher that launches the camera activity and handles the result
-    private final ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    Intent resultIntent = result.getData();
-                    if (resultIntent == null) {
-                        Log.w(TAG, "Activity result from CameraActivity is null");
-                        return;
-                    }
-
-                    Uri imageUri = resultIntent.getData();
-
-                    Log.d(TAG, "Camera Activity result is called, URI: " + imageUri);
-
-                    try {
-                        Picasso.get().load(imageUri)
-                                .rotate(ImageUtils.getImageRotationFromEXIF(parentActivity, imageUri))
-                                .into(cameraImageTarget);
-                    } catch (IOException e) {
-                        Log.e(TAG, "Exception occurred while setting the image", e);
-                    }
-                }
-            }
-    );
+    private SpotifyAccess spotifyAccess;
 
     // this is a Picasso target into which Picasso will load the image taken from the camera
     // in a field so it won't be garbage collected
@@ -132,11 +104,35 @@ public class PostFragment extends MainFragment {
         }
     };
 
+    private final ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                Intent resultIntent = result.getData();
+                if (resultIntent == null) {
+                    Log.w(TAG, "Activity result from CameraActivity is null");
+                    return;
+                }
+
+                Uri imageUri = resultIntent.getData();
+
+                Log.d(TAG, "Camera Activity result is called, URI: " + imageUri);
+
+                try {
+                    Picasso.get().load(imageUri)
+                            .rotate(ImageUtils.getImageRotationFromEXIF(this.currentActivity, imageUri))
+                            .into(cameraImageTarget);
+                } catch (IOException e) {
+                    Log.e(TAG, "Exception occurred while setting the image", e);
+                }
+            }
+    );
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.currentSession = Session.getInstance();
         this.currentActivity = requireActivity();
+        this.spotifyAccess = SpotifyAccess.getSpotifyAccessInstance();
 
         locationPermission.forceRequest();
 
@@ -150,20 +146,6 @@ public class PostFragment extends MainFragment {
 
         fetchUserLocation();
         getPermission();
-
-        parentActivity = (SpotifyAuthActivity) this.currentActivity;
-        parentActivity.refreshToken(new SpotifyAuthActivity.TokenCallback() {
-            @Override
-            public void onValidToken(String apiToken) {
-                postMemoryButton.setEnabled(true);
-            }
-
-            @Override
-            public void onInvalidToken() {
-                Message.showFailureMessage(currentActivity, getString(R.string.error_spotify_not_connected));
-                postMemoryButton.setEnabled(false);
-            }
-        });
     }
 
     @Override
@@ -187,8 +169,8 @@ public class PostFragment extends MainFragment {
 
         // get current song if no song has been searched for
         if (SearchFragment.getResultTrack() == null) {
-            SpotifyUtils.getWaitForTokenFuture().thenApply(
-                    unused -> SpotifyUtils.getCurrentTrackFuture().join()
+            SpotifyUtils.checkForSpotifyToken(spotifyAccess).thenApply(
+                    unused -> SpotifyUtils.getCurrentTrackFuture(spotifyAccess).join()
             ).thenAcceptAsync(
                     track -> {
                         if (track != null) {
@@ -196,7 +178,7 @@ public class PostFragment extends MainFragment {
                             setSelectedTrack(track);
                         }
                     },
-                    parentActivity.getMainExecutor()
+                    this.currentActivity.getMainExecutor()
             );
         } else {
             setSelectedTrack(SearchFragment.getResultTrack());
@@ -207,6 +189,19 @@ public class PostFragment extends MainFragment {
 
         postMemoryButton = rootView.findViewById(R.id.postMemoryButton);
         postMemoryButton.setOnClickListener(view -> postMusicMemory());
+        spotifyAccess.refreshToken(new SpotifyAccess.TokenCallback() {
+            @Override
+            public void onValidToken() {
+                postMemoryButton.setEnabled(true);
+            }
+
+            @Override
+            public void onInvalidToken() {
+                Message.showFailureMessage(currentActivity, getString(R.string.error_spotify_not_connected));
+                postMemoryButton.setEnabled(false);
+            }
+        });
+
         return rootView;
     }
 

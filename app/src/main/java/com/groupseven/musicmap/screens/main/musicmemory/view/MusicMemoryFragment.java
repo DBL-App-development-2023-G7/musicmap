@@ -13,7 +13,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.groupseven.musicmap.R;
-import com.groupseven.musicmap.models.UserData;
 import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.firebase.AuthSystem;
 import com.groupseven.musicmap.util.firebase.Queries;
@@ -28,7 +27,7 @@ import java.util.Date;
 
 /**
  * A fragment displaying a single music memory.
- *
+ * <p>
  * Requires two string arguments: author UID and post UID.
  */
 public class MusicMemoryFragment extends Fragment {
@@ -51,7 +50,7 @@ public class MusicMemoryFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args == null) {
-            return;
+            throw new NullPointerException("No arguments provided to MusicMemoryMapFragment");
         }
 
         musicMemoryUid = args.getString(Constants.MUSIC_MEMORY_UID_ARGUMENT_KEY);
@@ -105,22 +104,20 @@ public class MusicMemoryFragment extends Fragment {
                     musicMemory.getSong().getMusicPreviewUri());
             Picasso.get().load(musicMemory.getPhoto()).into(imageView);
 
-            AuthSystem.getUserData(musicMemory.getAuthorUid()).addOnCompleteListener(userDataTask -> {
-                if (!userDataTask.isSuccessful()) {
+            AuthSystem.getUserData(musicMemory.getAuthorUid()).whenCompleteAsync((data, userDataThrowable) -> {
+                if (userDataThrowable != null) {
                     Log.e(TAG, "MusicMemory author data could not be loaded in MusicMemoryFragment",
-                            userDataTask.getException());
+                            userDataThrowable);
                     Message.showFailureMessage(container, "Music Memory author data could not be loaded");
                     return;
                 }
-
-                UserData data = userDataTask.getResult();
 
                 this.usernameView.setText(data.getUsername());
 
                 Picasso.get().load(data.getProfilePictureUri())
                         .transform(new CircleTransform())
                         .into(this.profilePictureView);
-            });
+            }, ContextCompat.getMainExecutor(requireContext()));
             Date postedDate = musicMemory.getTimePosted();
 
             DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getContext());
