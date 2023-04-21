@@ -5,7 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.os.Handler;
 
-import com.groupseven.musicmap.util.ui.NetworkUtils;
+import com.groupseven.musicmap.util.network.NetworkUtils;
 
 /**
  * Responsible for monitoring the network connectivity changes and broadcasting

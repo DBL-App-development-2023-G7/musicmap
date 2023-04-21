@@ -1,4 +1,4 @@
-package com.groupseven.musicmap.util.ui;
+package com.groupseven.musicmap.util.network;
 
 import android.content.Context;
 import android.content.Intent;
