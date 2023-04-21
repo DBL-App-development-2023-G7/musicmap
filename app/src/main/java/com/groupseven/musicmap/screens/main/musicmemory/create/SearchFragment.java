@@ -1,11 +1,7 @@
 package com.groupseven.musicmap.screens.main.musicmemory.create;
 
-import static com.groupseven.musicmap.util.spotify.SpotifyUtils.getCurrentTrackFuture;
-import static com.groupseven.musicmap.util.spotify.SpotifyUtils.getRecentTracksFuture;
-
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +10,15 @@ import android.widget.SearchView;
 
 import com.groupseven.musicmap.R;
 import com.groupseven.musicmap.screens.main.MainFragment;
+import com.groupseven.musicmap.spotify.SpotifyAccess;
 import com.groupseven.musicmap.util.adapters.SpotifySongAdapter;
 import com.groupseven.musicmap.util.spotify.SpotifyUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import se.michaelthelin.spotify.model_objects.specification.Track;
 
@@ -28,108 +27,112 @@ import se.michaelthelin.spotify.model_objects.specification.Track;
  */
 public class SearchFragment extends MainFragment {
 
-    private static final int COUNTDOWN_DELAY = 400;
+    /**
+     * Stores the tracks the user has recently listened to.
+     * <p>
+     * In a list to avoid excessive Spotify API calls.
+     */
+    private final List<Track> recentTrackList = Collections.synchronizedList(new ArrayList<>());
 
-    // temporary store used by post fragment to get search result (I am too lazy to use a Model)
-    private static Track resultTrack;
-
-    // this list is computed only once at the start in order to avoid excessive calls to the API
-    private final List<Track> recentTrackList = new ArrayList<>();
-    private View rootView;
-
-    // a countdown timer for the search query to reduce API spam
-    private CountDownTimer searchQueryCountdown;
-
-    public static Track getResultTrack() {
-        return resultTrack;
-    }
-
-    public static void setResultTrack(Track resultTrack) {
-        SearchFragment.resultTrack = resultTrack;
-    }
+    /**
+     * The {@link ListView} displaying the feed of songs the user can choose from.
+     */
+    private ListView songListView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragmen_search, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        songListView = rootView.findViewById(R.id.spotify_search_song_list);
 
-        // If a spotify token is present
-        // get recent tracks and add them to the view.
-        SpotifyUtils.getWaitForTokenFuture()
-                .thenCompose(unused ->
-                        getRecentTracksFuture(2).thenAcceptBoth(
-                                getCurrentTrackFuture(),
-                                (trackList, currentTrack) -> {
-                                    Log.d("debug", String.format("track size: %d", trackList.size()));
-                                    if (currentTrack != null) {
-                                        recentTrackList.add(currentTrack);
-                                    }
-                                    recentTrackList.addAll(trackList);
-                                    Log.d("debug", String.format("track size2: %d", recentTrackList.size()));
-                                }
-                        )
-                ).thenAcceptAsync(
-                        unused -> {
-                            Log.d("debug", "Draw track");
-                            updateSongListView(recentTrackList);
-                        },
-                        requireActivity().getMainExecutor()
-                //CSOFF: Indentation
-                );
-        //CSON: Indentation
+        SpotifyAccess spotifyAccess = SpotifyAccess.getSpotifyAccessInstance();
 
-        // setup search widget
+        // The song that is currently playing
+        CompletableFuture<Void> currentTrackFuture = SpotifyUtils.getCurrentTrackFuture(spotifyAccess)
+                .thenAccept(track -> {
+                    if (track != null) {
+                        recentTrackList.add(0, track);
+                    }
+                });
+        // The songs recently listened to
+        CompletableFuture<Void> recentTracksFuture = SpotifyUtils.getRecentTracksFuture(4, spotifyAccess)
+                .thenAccept(recentTrackList::addAll);
+
+        // When both requests are done, update the song feed
+        CompletableFuture.allOf(currentTrackFuture, recentTracksFuture).thenAcceptAsync(unused ->
+                        updateSongListView(recentTrackList),
+                requireActivity().getMainExecutor());
+
+        // Setup search widget
         SearchView searchView = rootView.findViewById(R.id.spotify_search_view);
-        searchView.setQueryHint("Search for a song...");
-
+        searchView.setQueryHint(getString(R.string.song_search_hint));
         searchView.setOnQueryTextListener(new SearchQueryTextListener());
 
         return rootView;
     }
 
-    // TODO find a more efficient method of rendering results
-    // currently we just destroy and rebuild the view
+    /**
+     * Displays the given list of tracks in the feed.
+     *
+     * @param trackList the tracks.
+     */
     private void updateSongListView(List<Track> trackList) {
         SpotifySongAdapter songAdapter = new SpotifySongAdapter(
                 requireActivity(),
                 R.layout.single_post_layout_feed,
                 trackList
         );
-        ListView songListView = rootView.findViewById(R.id.spotify_search_song_list);
         songListView.setAdapter(songAdapter);
     }
 
+    /**
+     * Listens to changes in the query text field.
+     */
     private class SearchQueryTextListener implements SearchView.OnQueryTextListener {
+
+        /**
+         * The amount of milliseconds between Spotify API requests while entering a query.
+         */
+        private static final int COUNTDOWN_DELAY = 400;
+
+        /**
+         * A countdown for API requests to reduce the amount of Spotify API requests.
+         */
+        private CountDownTimer queryCountdown;
+
         @Override
         public boolean onQueryTextSubmit(String query) {
-            // re-render feed
+            // Re-renders feed
             return false;
         }
 
         @Override
         public boolean onQueryTextChange(String query) {
-            if (searchQueryCountdown != null) {
-                searchQueryCountdown.cancel();
+            // Cancel the request from the previous query change if applicable
+            if (queryCountdown != null) {
+                queryCountdown.cancel();
             }
 
-            searchQueryCountdown = new CountDownTimer(COUNTDOWN_DELAY, 100) {
+            // A countdown system to prevent sending API requests for every character typed,
+            //  only send a request when the user hasn't typed for QUERY_INTERVAL ms
+            queryCountdown = new CountDownTimer(COUNTDOWN_DELAY, COUNTDOWN_DELAY) {
                 @Override
                 public void onTick(long l) { }
 
                 @Override
                 public void onFinish() {
-                    if (query.equals("")) {
+                    if (query.isEmpty()) {
                         updateSongListView(recentTrackList);
                     } else {
-                        SpotifyUtils.getSearchTrackRequest(query).executeAsync()
-                                .thenAcceptAsync(trackPaging -> {
-                                    List<Track> trackList = Arrays.asList(trackPaging.getItems());
-                                    updateSongListView(trackList);
+                        SpotifyUtils.getSearchTrackRequest(SpotifyAccess.getSpotifyAccessInstance(), query)
+                                .executeAsync().thenAcceptAsync(trackPaging -> {
+                                    List<Track> searchedTrackList = Arrays.asList(trackPaging.getItems());
+                                    updateSongListView(searchedTrackList);
                                 }, requireActivity().getMainExecutor());
                     }
                 }
             };
 
-            searchQueryCountdown.start();
+            queryCountdown.start();
             return false;
         }
     }

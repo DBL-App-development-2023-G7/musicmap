@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.groupseven.musicmap.R;
@@ -58,19 +59,16 @@ public class ChangeUsernameDialogFragment extends DialogFragment {
 
         InputChecker.checkUsername(newUsername, newUsernameInput).thenAccept(valid -> {
             if (valid) {
-                AuthSystem.updateUsername(newUsername).addOnCompleteListener(
-                        task -> {
-                            if (task.isSuccessful()) {
-                                this.dismiss();
-                            } else {
-                                Exception exception = task.getException();
-                                Log.e(TAG, "Exception occurred while changing username", exception);
-                                if (exception != null) {
-                                    String message = exception.getMessage();
-                                    newUsernameInput.setError(message);
-                                }
-                            }
-                        });
+                AuthSystem.updateUsername(newUsername).whenCompleteAsync((unused, throwable) -> {
+                    if (throwable == null) {
+                        this.dismiss();
+                        Message.showSuccessMessage(requireActivity(), getString(R.string.change_username_success));
+                    } else {
+                        Log.e(TAG, "Exception occurred while changing username", throwable);
+                        String message = throwable.getMessage();
+                        newUsernameInput.setError(message);
+                    }
+                }, ContextCompat.getMainExecutor(requireContext()));
             }
         });
     }

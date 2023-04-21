@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.groupseven.musicmap.R;
@@ -58,17 +59,16 @@ public class ChangePasswordDialogFragment extends DialogFragment {
 
         if (InputChecker.checkPassword(oldPassword, oldPasswordInput) & InputChecker.checkPassword(newPassword,
                 newPasswordInput)) {
-            AuthSystem.updatePassword(oldPassword, newPassword).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    this.dismiss();
-                } else {
-                    Exception exception = task.getException();
-                    if (exception != null) {
-                        String message = exception.getMessage();
-                        oldPasswordInput.setError(message);
-                    }
-                }
-            });
+            AuthSystem.updatePassword(oldPassword, newPassword)
+                    .whenCompleteAsync((unused, throwable) -> {
+                        if (throwable == null) {
+                            this.dismiss();
+                            Message.showSuccessMessage(requireActivity(), getString(R.string.change_password_success));
+                        } else {
+                            String message = throwable.getMessage();
+                            oldPasswordInput.setError(message);
+                        }
+                    }, ContextCompat.getMainExecutor(requireContext()));
         }
     }
 

@@ -1,18 +1,32 @@
 package com.groupseven.musicmap;
 
 import android.app.Application;
-import android.content.Intent;
+import android.content.Context;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
+import android.os.Handler;
 
-import com.groupseven.musicmap.services.InternetCheckService;
+import com.groupseven.musicmap.listeners.NetworkChangeListener;
 
 /**
  * The main Application.
  */
 public class MusicMap extends Application {
 
+    /**
+     * This is the application instance.
+     */
     private static MusicMap instance;
+
+    /**
+     * This is instance for the app resources.
+     */
     private static Resources resources;
+
+    /**
+     * The {@link NetworkChangeListener} object to register internet check throughout the app.
+     */
+    private NetworkChangeListener networkChangeListener;
 
     /**
      * Gets the instance of this application.
@@ -37,10 +51,32 @@ public class MusicMap extends Application {
         super.onCreate();
         instance = this;
         resources = getResources();
+        registerNetworkCallback();
+    }
 
-        // Start internet check
-        Intent intent = new Intent(this, InternetCheckService.class);
-        startService(intent);
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        unregisterNetworkCallback();
+    }
+
+    /**
+     * Registers the network callback for {@link MusicMap#networkChangeListener}.
+     */
+    private void registerNetworkCallback() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        networkChangeListener = new NetworkChangeListener(this, new Handler());
+        connectivityManager.registerDefaultNetworkCallback(networkChangeListener);
+    }
+
+    /**
+     * Unregisters the network callback for {@link MusicMap#networkChangeListener}.
+     */
+    private void unregisterNetworkCallback() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        connectivityManager.unregisterNetworkCallback(networkChangeListener);
     }
 
 }

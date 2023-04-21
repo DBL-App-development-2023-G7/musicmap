@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.groupseven.musicmap.R;
@@ -56,18 +57,16 @@ public class ChangeEmailDialogFragment extends DialogFragment {
         String newEmail = newEmailInput.getText().toString();
         String password = passwordInput.getText().toString();
 
-        if (InputChecker.checkEmail(newEmail, newEmailInput) | InputChecker.checkPassword(password, passwordInput)) {
-            AuthSystem.updateEmail(newEmail, password).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
+        if (InputChecker.checkEmail(newEmail, newEmailInput) || InputChecker.checkPassword(password, passwordInput)) {
+            AuthSystem.updateEmail(newEmail, password).whenCompleteAsync((unused, throwable) -> {
+                if (throwable == null) {
                     this.dismiss();
+                    Message.showSuccessMessage(requireActivity(), getString(R.string.change_email_success));
                 } else {
-                    Exception exception = task.getException();
-                    if (exception != null) {
-                        String message = exception.getMessage();
-                        newEmailInput.setError(message);
-                    }
+                    String message = throwable.getMessage();
+                    newEmailInput.setError(message);
                 }
-            });
+            }, ContextCompat.getMainExecutor(requireContext()));
         }
     }
 }

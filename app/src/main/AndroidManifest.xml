@@ -20,7 +20,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MusicMap"
         tools:targetApi="31">
-
         <activity
             android:name=".screens.settings.SettingsActivity"
             android:exported="true"
@@ -28,17 +27,20 @@
             android:theme="@style/Theme.MusicMap.NoActionBar"
             android:windowSoftInputMode="adjustPan"
             android:launchMode="singleTask">
+        </activity>
+        <activity
+            android:name=".spotify.SpotifyAccessActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
                     android:host="spotify-auth"
                     android:scheme="musicmap"/>
             </intent-filter>
         </activity>
-        <service android:name=".services.InternetCheckService" />
         <activity
             android:name=".screens.verification.VerificationActivity"
             android:exported="false"
@@ -50,8 +52,7 @@
         <activity
             android:name=".screens.main.musicmemory.create.CameraActivity"
             android:exported="false"
-            android:theme="@style/Theme.MusicMap.NoActionBar"
-            />
+            android:theme="@style/Theme.MusicMap.NoActionBar" />
         <activity
             android:name=".screens.main.musicmemory.view.MusicMemoryActivity"
             android:exported="false"
