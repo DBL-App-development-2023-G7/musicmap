@@ -17,6 +17,7 @@ import com.groupseven.musicmap.util.spotify.SpotifyUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -30,7 +31,7 @@ public class SearchFragment extends MainFragment {
     private static final int COUNTDOWN_DELAY = 400;
 
     // this list is computed only once at the start in order to avoid excessive calls to the API
-    private final List<Track> recentTrackList = new ArrayList<>();
+    private final List<Track> recentTrackList = Collections.synchronizedList(new ArrayList<>());
     private View rootView;
 
     // a countdown timer for the search query to reduce API spam
