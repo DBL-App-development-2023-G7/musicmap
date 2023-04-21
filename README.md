@@ -81,6 +81,9 @@ To see all dependencies the app uses, please take a look at the ![build.gradle (
 |-|-|-|
 | <img src="https://user-images.githubusercontent.com/30039677/233595517-63a6a17d-5b64-46ae-ba51-21f51b2cf33f.jpg"  width="250" /> | <img src="https://user-images.githubusercontent.com/30039677/233597244-29571b59-7491-46f6-b957-5e039715fc7d.jpg"  width="250" /> | <img src="https://user-images.githubusercontent.com/30039677/233595512-b9f4e806-5d95-4447-b014-aabc71b76dd8.jpg" width="250" /> |
 
+<h2>User scenario</h2>
+
+
 <h2>Building</h2>
 
 To build the application run the following command:
@@ -92,12 +95,22 @@ To build the application run the following command:
 
 <h3>Java Unit Tests</h3>
 
+Windows:
+```
+gradlew test
+```
+Linux:
 ```
 ./gradlew test
 ```
 
 <h3>Checkstyle</h3>
 
+Windows:
+```
+gradlew checkstyle
+```
+Linux:
 ```
 ./gradlew checkstyle
 ```
@@ -107,6 +120,11 @@ To build the application run the following command:
 | ! Make sure you have a valid emulator running or a valid phone connected (with USB debugging) to your machine, before running the Android tests !|
 |-|
 
+Windows:
+```
+gradlew connectedCheck
+```
+Linux:
 ```
 ./gradlew connectedCheck
 ```
