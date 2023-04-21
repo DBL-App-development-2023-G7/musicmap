@@ -68,6 +68,10 @@
     <string name="change_profile_picture">Change profile picture</string>
     <string name="security">Security</string>
     <string name="other">Other</string>
+    <string name="change_password_success">Successfully updated the password!</string>
+    <string name="change_username_success">Successfully updated the username!</string>
+    <string name="change_email_success">Successfully updated the email!</string>
+    <string name="change_profile_picture_success">Successfully updated the profile picture!</string>
     <!--profile settings end-->
     
     <!--delete account start-->
@@ -80,8 +84,8 @@
     <!--connection settings start-->
     <string name="connections">Connections</string>
     <string name="connections_description">Connect your account with other platforms.</string>
+    <string name="spotify_connection_success">Successfully connected to your Spotify account!</string>
     <!--connection settings end-->
-
 
     <!--link spotify start-->
     <string name="spotify">Spotify</string>
@@ -95,5 +99,6 @@
     <string name="posted_on">posted on %s</string>
     <string name="feed_song_name">Song Name</string>
     <string name="feed_song_details">Song Details</string>
+    <string name="create_mm_success">Successfully created the music memory</string>
     <string name="song_search_hint">Search for a song…</string>
 </resources>

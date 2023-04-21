@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.groupseven.musicmap.R;
@@ -17,6 +18,7 @@ import com.groupseven.musicmap.screens.main.artist.ArtistDataFragment;
 import com.groupseven.musicmap.screens.main.feed.FeedFragment;
 import com.groupseven.musicmap.screens.main.map.PostMapFragment;
 import com.groupseven.musicmap.screens.main.musicmemory.create.PostFragment;
+import com.groupseven.musicmap.screens.main.musicmemory.create.SearchFragment;
 import com.groupseven.musicmap.screens.profile.ProfileActivity;
 import com.groupseven.musicmap.util.Constants;
 import com.groupseven.musicmap.util.permissions.LocationPermission;
@@ -46,6 +48,19 @@ public class HomeActivity extends SessionListenerActivity {
             setContentView(R.layout.activity_home);
             currentLayout = R.layout.activity_home;
             setupActivity();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment currentFragment = fragmentManager.findFragmentById(R.id.fragment_view);
+
+        if (currentFragment instanceof SearchFragment) {
+            FragmentUtil.replaceFragment(this.getSupportFragmentManager(), R.id.fragment_view,
+                    PostFragment.class);
+        } else {
+            super.onBackPressed();
         }
     }
 
