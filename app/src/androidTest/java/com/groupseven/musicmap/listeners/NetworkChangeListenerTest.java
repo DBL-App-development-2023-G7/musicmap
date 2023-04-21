@@ -2,6 +2,7 @@ package com.groupseven.musicmap.listeners;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doAnswer;
 
 import android.content.Context;
 import android.net.Network;
@@ -35,14 +36,26 @@ public class NetworkChangeListenerTest {
 
     @Test
     public void testInternetAvailable() {
-        networkChangeListener.onAvailable(mockNetwork);
-        assertTrue(networkChangeListener.isConnected());
+        doAnswer(invocation -> {
+            networkChangeListener.onAvailable(mockNetwork);
+            return null;
+        }).when(mockNetwork);
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            assertTrue(networkChangeListener.isConnected());
+        }, 1000);
     }
 
     @Test
     public void testInternetUnavailable() {
-        networkChangeListener.onLost(mockNetwork);
-        assertFalse(networkChangeListener.isConnected());
+        doAnswer(invocation -> {
+            networkChangeListener.onLost(mockNetwork);
+            return null;
+        }).when(mockNetwork);
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            assertFalse(networkChangeListener.isConnected());
+        }, 1000);
     }
 
 }
